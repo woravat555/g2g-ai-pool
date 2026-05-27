@@ -6874,7 +6874,7 @@ app.get("/api/drive/file/:fileId", async (req, res) => {
 // POST /api/drive/sync-position/:positionId — sync position memory file ขึ้น Drive
 app.post("/api/drive/sync-position/:positionId", async (req, res) => {
   const positionId = req.params.positionId;
-  const memPath = path.join(__dirname, "public", "position-data", "position-memory", `${positionId}.json`);
+  const memPath = join(__dirname, "public", "position-data", "position-memory", `${positionId}.json`);
   if (!fs.existsSync(memPath)) {
     return res.status(404).json({ ok: false, error: "Position memory file not found locally" });
   }
@@ -14194,7 +14194,7 @@ global.checkDelegationLineCommand = checkDelegationLineCommand;
 global.getAgencyAdminCode = getAdminCode;
 
 // ===== G2G CAREER PLATFORM API =====
-const OCCUPATION_DB_PATH = path.join(__dirname, 'public', 'occupation-knowledge.json');
+const OCCUPATION_DB_PATH = join(__dirname, 'public', 'occupation-knowledge.json');
 
 // GET /api/career/occupations — ดึงฐานข้อมูลอาชีพทั้งหมด
 app.get('/api/career/occupations', (req, res) => {
@@ -14271,6 +14271,86 @@ ${user_context ? 'บริบทผู้ใช้: ' + user_context : ''}`;
     res.json({ ok: true, reply: d.content?.[0]?.text || 'ขออภัย ไม่สามารถตอบได้' });
   } catch (e) {
     res.json({ ok: false, reply: 'ขออภัย ระบบ AI ขัดข้อง กรุณาลองใหม่', error: e.message });
+  }
+});
+
+// POST /api/career/analyze-image — AI วินิจฉัยโรคพืชจากภาพถ่าย
+app.post('/api/career/analyze-image', async (req, res) => {
+  const { imageBase64, mimeType, question, crop } = req.body;
+  if (!imageBase64) return res.status(400).json({ ok: false, error: 'imageBase64_required' });
+
+  const apiKey = process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_KEY_1;
+  if (!apiKey) return res.json({ ok: false, error: 'no_api_key' });
+
+  const userQ = question || 'วิเคราะห์สุขภาพพืชในภาพนี้ มีโรคหรือแมลงหรือไม่ และแนะนำวิธีแก้ไข';
+  const cropCtx = crop ? `พืชที่กำลังดูแล: ${crop}` : 'พืชสวนทั่วไป';
+
+  try {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 800,
+        system: `คุณคือ AI นักพฤกษศาสตร์และผู้เชี่ยวชาญโรคพืชของ G2G Career Platform
+${cropCtx}
+วิเคราะห์ภาพถ่ายพืชและให้คำตอบภาษาไทย กระชับ ใช้งานได้จริง ในรูปแบบ:
+1. 🔍 สิ่งที่พบ: [อธิบายสั้นๆ]
+2. ⚠️ การวินิจฉัย: [ชื่อโรค/แมลง หรือ "ปกติดี"]
+3. 🌡️ สาเหตุ: [อธิบายสาเหตุ]
+4. ✅ วิธีแก้ไขทันที: [3 ขั้นตอนที่ทำได้เลย]
+5. 🛡️ ป้องกันต่อไป: [1-2 วิธี]`,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: mimeType || 'image/jpeg', data: imageBase64 } },
+            { type: 'text', text: userQ }
+          ]
+        }]
+      })
+    });
+    const d = await r.json();
+    if (d.error) throw new Error(d.error.message);
+    res.json({ ok: true, analysis: d.content?.[0]?.text || 'วิเคราะห์ไม่ได้ กรุณาลองภาพใหม่' });
+  } catch (e) {
+    res.json({ ok: false, analysis: 'ขออภัย ระบบวิเคราะห์ภาพขัดข้อง: ' + e.message });
+  }
+});
+
+// POST /api/career/week-plan — AI สร้างแผนงานสัปดาห์ตามระยะการเจริญเติบโต
+app.post('/api/career/week-plan', async (req, res) => {
+  const { weekNum, crop, area, soilPH, lastRain, temp, humidity } = req.body;
+  const apiKey = process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_KEY_1;
+  if (!apiKey) return res.json({ ok: false, error: 'no_api_key' });
+
+  const ctx = `สัปดาห์ที่ ${weekNum}/52 | พืช: ${crop || 'ผลไม้'} | พื้นที่: ${area || '1'} ไร่ | pH: ${soilPH || 6.0} | อุณหภูมิ: ${temp || 30}°C | ความชื้น: ${humidity || 70}% | ฝนล่าสุด: ${lastRain || 'ไม่ทราบ'}`;
+
+  try {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 700,
+        system: `คุณคือ AI ที่ปรึกษาสวนผลไม้ระดับชาติ สร้างแผนงานสัปดาห์ที่ปฏิบัติได้จริง
+ตอบภาษาไทย ใน format:
+🌱 ระยะพืช: [ระยะปัจจุบัน]
+📋 งาน 5 อย่างสัปดาห์นี้:
+1. [งาน + วิธีทำ]
+2. [งาน + วิธีทำ]
+3. [งาน + วิธีทำ]
+4. [งาน + วิธีทำ]
+5. [งาน + วิธีทำ]
+⚠️ ความเสี่ยงที่ต้องระวัง: [โรค/แมลง/สภาพอากาศ]
+💡 เคล็ดลับสัปดาห์นี้: [1 ข้อ]`,
+        messages: [{ role: 'user', content: `วางแผนงานสวน: ${ctx}` }]
+      })
+    });
+    const d = await r.json();
+    if (d.error) throw new Error(d.error.message);
+    res.json({ ok: true, plan: d.content?.[0]?.text });
+  } catch (e) {
+    res.json({ ok: false, plan: 'ขออภัย ระบบขัดข้อง: ' + e.message });
   }
 });
 

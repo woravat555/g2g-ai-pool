@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🤖 G2G Team Bot Setup — 8 คน 8 Bot</title>
+<title>🤖 G2G Team Bot Setup — 10 คน 10 Bot</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
@@ -63,7 +63,7 @@
 
 <div class="header">
   <h1>🤖 G2G Team Bot Setup</h1>
-  <p>ระบบ AI ส่วนตัว 8 คน — ต้องการ 5 นาทีจากคุณเพื่อ activate</p>
+  <p>ระบบ AI ส่วนตัว 10 คน — ต้องการ ~5 นาทีจากคุณเพื่อ activate</p>
 </div>
 
 <div class="container">
@@ -71,11 +71,11 @@
   <div class="status-bar">
     <div class="status-item">
       <div class="label">เสร็จแล้ว</div>
-      <div class="value done">✅ 3/5 ขั้นตอน</div>
+      <div class="value done">✅ Server พร้อม</div>
     </div>
     <div class="status-item">
       <div class="label">รอ Activate</div>
-      <div class="value" style="color:#f59e0b;">⏳ 8 คน</div>
+      <div class="value" style="color:#f59e0b;">⏳ 10 บัญชี</div>
     </div>
     <div class="status-item">
       <div class="label">เวลาที่ต้องการ</div>
@@ -88,96 +88,109 @@
     <h2><span class="step-num">✓</span> สิ่งที่เสร็จแล้ว</h2>
     <div class="timeline">
       <div class="timeline-item done">
-        <div class="timeline-title">✅ System Prompts 8 คนพร้อมแล้วใน server.js</div>
-        <div class="timeline-desc">เกมส์, วรรณ, ใบแพร, ส้ม, ชาดา, พิมลรัตน์, พรรณี, ภูวษา — AI personality ครบ</div>
+        <div class="timeline-title">✅ System Prompts 10 คนพร้อมแล้วใน server.js</div>
+        <div class="timeline-desc">เกมส์, วรรณ, ใบแพร, ส้ม, ภูวษา, แอมพร, พิมลรัตน์, ชาดา, พรรณี, ซ้อน — AI personality ครบ</div>
       </div>
       <div class="timeline-item done">
         <div class="timeline-title">✅ Server.js Deploy แล้วบน Fly.io</div>
         <div class="timeline-desc">Webhook route: /webhook/line/mt พร้อมรับ message</div>
       </div>
       <div class="timeline-item done">
-        <div class="timeline-title">✅ Admin Ice ลงทะเบียน LINE Developer แล้ว</div>
-        <div class="timeline-desc">developers.line.biz พร้อมสร้าง Provider และ Channel</div>
+        <div class="timeline-title">✅ บัญชีใหม่ทั้ง 10 บัญชี ACTIVE พร้อม Messaging API</div>
+        <div class="timeline-desc">ผ่านการตรวจสอบ hasMsgApi: true ทุกบัญชี</div>
       </div>
       <div class="timeline-item">
-        <div class="timeline-title">⏳ เปิด Messaging API 8 บัญชี (ขั้นที่ 1)</div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-title">⏳ กรอก Credentials + รัน Script (ขั้นที่ 2-3)</div>
+        <div class="timeline-title">⏳ กรอก Credentials + รัน Script (ขั้นที่ 1-2)</div>
       </div>
     </div>
   </div>
 
   <!-- Step 1 -->
   <div class="section" id="step1">
-    <h2><span class="step-num">1</span> เปิด Messaging API — คลิก 8 ครั้ง (~4 นาที)</h2>
+    <h2><span class="step-num">1</span> ดู Credentials — 10 บัญชี</h2>
     <div class="highlight-box">
-      <p>คลิกลิงก์ <strong>"🔧 เปิด Messaging API"</strong> ของแต่ละบัญชี → หน้าเปิด LINE Manager → กดปุ่มสีฟ้า <strong>"ใช้ Messaging API"</strong> → เลือก Provider (สร้างใหม่ชื่อ "G2G AgriTech")</p>
+      <p>ไปที่ <a href="https://developers.line.biz/console/" target="_blank" style="color:#00dc82;">developers.line.biz/console</a> → เลือกแต่ละ Channel → คัดลอก <strong>Channel ID</strong> (Basic settings), <strong>Channel Secret</strong> (Basic settings), <strong>Channel Access Token</strong> (Messaging API tab → Issue token)</p>
     </div>
 
     <div class="bot-grid">
       <div class="bot-card">
-        <span class="status-badge">⏳</span>
-        <div class="bot-name">เกมส์A — AI เกมส์</div>
+        <span class="status-badge">⏳ รอ Cred</span>
+        <div class="bot-name">เกมส์ — AI เกมส์</div>
         <div class="bot-role">🏛️ Government Relations</div>
-        <div class="oa-id">@yyj1761e (Thaidelicious)</div>
-        <a class="btn-link" href="https://manager.line.biz/account/@yyj1761e/setting/messaging-api" target="_blank">🔧 เปิด Messaging API</a>
+        <div class="oa-id">Wan_A: @yyj1761e</div>
+        <a class="btn-link" href="https://manager.line.biz/account/@yyj1761e/setting/messaging-api" target="_blank">🔧 LINE Manager</a>
         <a class="btn-link green" href="https://developers.line.biz/console/" target="_blank">🔑 ดู Credentials</a>
       </div>
       <div class="bot-card">
-        <span class="status-badge">⏳</span>
-        <div class="bot-name">วรรณA — AI วรรณ</div>
+        <span class="status-badge">⏳ รอ Cred</span>
+        <div class="bot-name">วรรณ — AI วรรณ</div>
         <div class="bot-role">⚙️ Operations</div>
-        <div class="oa-id">@507jdsru (Covid Safe Food)</div>
-        <a class="btn-link" href="https://manager.line.biz/account/@507jdsru/setting/messaging-api" target="_blank">🔧 เปิด Messaging API</a>
+        <div class="oa-id">Wan_A: @974ifwsg</div>
+        <a class="btn-link" href="https://manager.line.biz/account/@974ifwsg/setting/messaging-api" target="_blank">🔧 LINE Manager</a>
         <a class="btn-link green" href="https://developers.line.biz/console/" target="_blank">🔑 ดู Credentials</a>
       </div>
       <div class="bot-card">
-        <span class="status-badge">⏳</span>
-        <div class="bot-name">ใบแพรA — AI ใบแพร</div>
+        <span class="status-badge">⏳ รอ Cred</span>
+        <div class="bot-name">ใบแพร — AI ใบแพร</div>
         <div class="bot-role">🎨 Creative & Social</div>
-        <div class="oa-id">@481grtxq (Pheuthai Delicious)</div>
-        <a class="btn-link" href="https://manager.line.biz/account/@481grtxq/setting/messaging-api" target="_blank">🔧 เปิด Messaging API</a>
+        <div class="oa-id">Baipare_A: @729yshru</div>
+        <a class="btn-link" href="https://manager.line.biz/account/@729yshru/setting/messaging-api" target="_blank">🔧 LINE Manager</a>
         <a class="btn-link green" href="https://developers.line.biz/console/" target="_blank">🔑 ดู Credentials</a>
       </div>
       <div class="bot-card">
-        <span class="status-badge">⏳</span>
-        <div class="bot-name">ส้มA — AI ส้ม</div>
+        <span class="status-badge">⏳ รอ Cred</span>
+        <div class="bot-name">ส้ม — AI ส้ม</div>
         <div class="bot-role">💎 อัญมณี</div>
-        <div class="oa-id">@507myxvj (ตู้ต้านโกง)</div>
-        <a class="btn-link" href="https://manager.line.biz/account/@507myxvj/setting/messaging-api" target="_blank">🔧 เปิด Messaging API</a>
+        <div class="oa-id">Som_A: @154oekue</div>
+        <a class="btn-link" href="https://manager.line.biz/account/@154oekue/setting/messaging-api" target="_blank">🔧 LINE Manager</a>
         <a class="btn-link green" href="https://developers.line.biz/console/" target="_blank">🔑 ดู Credentials</a>
       </div>
       <div class="bot-card">
-        <span class="status-badge">⏳</span>
-        <div class="bot-name">ชาดาA — AI ชาดา</div>
-        <div class="bot-role">📰 ข่าวและสื่อสาร</div>
-        <div class="oa-id">@016dvrwv (ลำไยส่งออก)</div>
-        <a class="btn-link" href="https://manager.line.biz/account/@016dvrwv/setting/messaging-api" target="_blank">🔧 เปิด Messaging API</a>
-        <a class="btn-link green" href="https://developers.line.biz/console/" target="_blank">🔑 ดู Credentials</a>
-      </div>
-      <div class="bot-card">
-        <span class="status-badge">⏳</span>
-        <div class="bot-name">พิมลรัตน์A — AI พิมลรัตน์</div>
-        <div class="bot-role">💻 IT & Data Center</div>
-        <div class="oa-id">@288axowg (อาสาสมัคร AcTT)</div>
-        <a class="btn-link" href="https://manager.line.biz/account/@288axowg/setting/messaging-api" target="_blank">🔧 เปิด Messaging API</a>
-        <a class="btn-link green" href="https://developers.line.biz/console/" target="_blank">🔑 ดู Credentials</a>
-      </div>
-      <div class="bot-card">
-        <span class="status-badge">⏳</span>
-        <div class="bot-name">พรรณีA — AI พรรณี</div>
-        <div class="bot-role">🌾 มวลชนแพร่</div>
-        <div class="oa-id">@771fgzbm (Kinthai)</div>
-        <a class="btn-link" href="https://manager.line.biz/account/@771fgzbm/setting/messaging-api" target="_blank">🔧 เปิด Messaging API</a>
-        <a class="btn-link green" href="https://developers.line.biz/console/" target="_blank">🔑 ดู Credentials</a>
-      </div>
-      <div class="bot-card">
-        <span class="status-badge">⏳</span>
-        <div class="bot-name">ภูวษาA — AI ภูวษา</div>
+        <span class="status-badge">⏳ รอ Cred</span>
+        <div class="bot-name">ภูวษา — AI ภูวษา</div>
         <div class="bot-role">🤝 Business Coordination</div>
-        <div class="oa-id">@yjl6519x (ตัวอย่าง)</div>
-        <a class="btn-link" href="https://manager.line.biz/account/@yjl6519x/setting/messaging-api" target="_blank">🔧 เปิด Messaging API</a>
+        <div class="oa-id">Pruwasa_A: @764veplv</div>
+        <a class="btn-link" href="https://manager.line.biz/account/@764veplv/setting/messaging-api" target="_blank">🔧 LINE Manager</a>
+        <a class="btn-link green" href="https://developers.line.biz/console/" target="_blank">🔑 ดู Credentials</a>
+      </div>
+      <div class="bot-card">
+        <span class="status-badge">⏳ รอ Cred</span>
+        <div class="bot-name">แอมพร — AI แอมพร</div>
+        <div class="bot-role">🌟 ทีมงาน G2G</div>
+        <div class="oa-id">Amphaiwan_A: @005vsrze</div>
+        <a class="btn-link" href="https://manager.line.biz/account/@005vsrze/setting/messaging-api" target="_blank">🔧 LINE Manager</a>
+        <a class="btn-link green" href="https://developers.line.biz/console/" target="_blank">🔑 ดู Credentials</a>
+      </div>
+      <div class="bot-card">
+        <span class="status-badge">⏳ รอ Cred</span>
+        <div class="bot-name">พิมลรัตน์ — AI พิมลรัตน์</div>
+        <div class="bot-role">💻 IT & Data Center</div>
+        <div class="oa-id">Pimonrat_A: @654ottfx</div>
+        <a class="btn-link" href="https://manager.line.biz/account/@654ottfx/setting/messaging-api" target="_blank">🔧 LINE Manager</a>
+        <a class="btn-link green" href="https://developers.line.biz/console/" target="_blank">🔑 ดู Credentials</a>
+      </div>
+      <div class="bot-card">
+        <span class="status-badge">⏳ รอ Cred</span>
+        <div class="bot-name">ชาดา — AI ชาดา</div>
+        <div class="bot-role">📰 ข่าวและสื่อสาร</div>
+        <div class="oa-id">Chada_A: @284yckbo</div>
+        <a class="btn-link" href="https://manager.line.biz/account/@284yckbo/setting/messaging-api" target="_blank">🔧 LINE Manager</a>
+        <a class="btn-link green" href="https://developers.line.biz/console/" target="_blank">🔑 ดู Credentials</a>
+      </div>
+      <div class="bot-card">
+        <span class="status-badge">⏳ รอ Cred</span>
+        <div class="bot-name">พรรณี — AI พรรณี</div>
+        <div class="bot-role">🌾 มวลชนแพร่</div>
+        <div class="oa-id">Pannee_A: @899cacob</div>
+        <a class="btn-link" href="https://manager.line.biz/account/@899cacob/setting/messaging-api" target="_blank">🔧 LINE Manager</a>
+        <a class="btn-link green" href="https://developers.line.biz/console/" target="_blank">🔑 ดู Credentials</a>
+      </div>
+      <div class="bot-card">
+        <span class="status-badge">⏳ รอ Cred</span>
+        <div class="bot-name">ซ้อน — AI ซ้อน</div>
+        <div class="bot-role">🌟 ทีมงาน G2G</div>
+        <div class="oa-id">Son_A: @051fbewu</div>
+        <a class="btn-link" href="https://manager.line.biz/account/@051fbewu/setting/messaging-api" target="_blank">🔧 LINE Manager</a>
         <a class="btn-link green" href="https://developers.line.biz/console/" target="_blank">🔑 ดู Credentials</a>
       </div>
     </div>
@@ -187,14 +200,14 @@
   <div class="section" id="step2">
     <h2><span class="step-num">2</span> กรอก Credentials → Generate Script</h2>
     <div class="highlight-box">
-      <p>หลังเปิด Messaging API → ไปที่ <a href="https://developers.line.biz/console/" target="_blank" style="color:#00dc82;">developers.line.biz/console</a> → เลือก Channel → Basic settings = Channel Secret | Messaging API tab = Issue Token</p>
+      <p>ไปที่ <a href="https://developers.line.biz/console/" target="_blank" style="color:#00dc82;">developers.line.biz/console</a> → เลือก Channel → Basic settings = Channel ID + Secret | Messaging API tab = Issue Token (ถ้ายังไม่มีให้กด Issue)</p>
     </div>
 
     <div style="background: #0f172a; border-radius: 10px; padding: 1.25rem; margin-top: 1rem;">
 
       <div id="credSections">
         <div class="bot-cred" style="margin-bottom: 1rem; padding: 1rem; background: #1e293b; border-radius: 8px;">
-          <div style="font-weight:600; margin-bottom:0.5rem;">1. เกมส์ (@yyj1761e)</div>
+          <div style="font-weight:600; margin-bottom:0.5rem;">1. เกมส์ (Game_A: @yyj1761e)</div>
           <div class="cred-form">
             <div class="cred-row"><label>Channel ID</label><input id="g_cid" placeholder="2xxxxxxxxx"></div>
             <div class="cred-row"><label>Secret</label><input id="g_sec" placeholder="32 chars"></div>
@@ -202,7 +215,7 @@
           </div>
         </div>
         <div class="bot-cred" style="margin-bottom: 1rem; padding: 1rem; background: #1e293b; border-radius: 8px;">
-          <div style="font-weight:600; margin-bottom:0.5rem;">2. วรรณ (@507jdsru)</div>
+          <div style="font-weight:600; margin-bottom:0.5rem;">2. วรรณ (Wan_A: @974ifwsg)</div>
           <div class="cred-form">
             <div class="cred-row"><label>Channel ID</label><input id="w_cid" placeholder="2xxxxxxxxx"></div>
             <div class="cred-row"><label>Secret</label><input id="w_sec" placeholder="32 chars"></div>
@@ -210,7 +223,7 @@
           </div>
         </div>
         <div class="bot-cred" style="margin-bottom: 1rem; padding: 1rem; background: #1e293b; border-radius: 8px;">
-          <div style="font-weight:600; margin-bottom:0.5rem;">3. ใบแพร (@481grtxq)</div>
+          <div style="font-weight:600; margin-bottom:0.5rem;">3. ใบแพร (Baipare_A: @729yshru)</div>
           <div class="cred-form">
             <div class="cred-row"><label>Channel ID</label><input id="b_cid" placeholder="2xxxxxxxxx"></div>
             <div class="cred-row"><label>Secret</label><input id="b_sec" placeholder="32 chars"></div>
@@ -218,7 +231,7 @@
           </div>
         </div>
         <div class="bot-cred" style="margin-bottom: 1rem; padding: 1rem; background: #1e293b; border-radius: 8px;">
-          <div style="font-weight:600; margin-bottom:0.5rem;">4. ส้ม (@507myxvj)</div>
+          <div style="font-weight:600; margin-bottom:0.5rem;">4. ส้ม (Som_A: @154oekue)</div>
           <div class="cred-form">
             <div class="cred-row"><label>Channel ID</label><input id="s_cid" placeholder="2xxxxxxxxx"></div>
             <div class="cred-row"><label>Secret</label><input id="s_sec" placeholder="32 chars"></div>
@@ -226,15 +239,23 @@
           </div>
         </div>
         <div class="bot-cred" style="margin-bottom: 1rem; padding: 1rem; background: #1e293b; border-radius: 8px;">
-          <div style="font-weight:600; margin-bottom:0.5rem;">5. ชาดา (@016dvrwv)</div>
+          <div style="font-weight:600; margin-bottom:0.5rem;">5. ภูวษา (Pruwasa_A: @764veplv)</div>
           <div class="cred-form">
-            <div class="cred-row"><label>Channel ID</label><input id="c_cid" placeholder="2xxxxxxxxx"></div>
-            <div class="cred-row"><label>Secret</label><input id="c_sec" placeholder="32 chars"></div>
-            <div class="cred-row"><label>Token</label><input id="c_tok" placeholder="long token..."></div>
+            <div class="cred-row"><label>Channel ID</label><input id="pr_cid" placeholder="2xxxxxxxxx"></div>
+            <div class="cred-row"><label>Secret</label><input id="pr_sec" placeholder="32 chars"></div>
+            <div class="cred-row"><label>Token</label><input id="pr_tok" placeholder="long token..."></div>
           </div>
         </div>
         <div class="bot-cred" style="margin-bottom: 1rem; padding: 1rem; background: #1e293b; border-radius: 8px;">
-          <div style="font-weight:600; margin-bottom:0.5rem;">6. พิมลรัตน์ (@288axowg)</div>
+          <div style="font-weight:600; margin-bottom:0.5rem;">6. แอมพร (Amphaiwan_A: @005vsrze)</div>
+          <div class="cred-form">
+            <div class="cred-row"><label>Channel ID</label><input id="am_cid" placeholder="2xxxxxxxxx"></div>
+            <div class="cred-row"><label>Secret</label><input id="am_sec" placeholder="32 chars"></div>
+            <div class="cred-row"><label>Token</label><input id="am_tok" placeholder="long token..."></div>
+          </div>
+        </div>
+        <div class="bot-cred" style="margin-bottom: 1rem; padding: 1rem; background: #1e293b; border-radius: 8px;">
+          <div style="font-weight:600; margin-bottom:0.5rem;">7. พิมลรัตน์ (Pimonrat_A: @654ottfx)</div>
           <div class="cred-form">
             <div class="cred-row"><label>Channel ID</label><input id="p_cid" placeholder="2xxxxxxxxx"></div>
             <div class="cred-row"><label>Secret</label><input id="p_sec" placeholder="32 chars"></div>
@@ -242,7 +263,15 @@
           </div>
         </div>
         <div class="bot-cred" style="margin-bottom: 1rem; padding: 1rem; background: #1e293b; border-radius: 8px;">
-          <div style="font-weight:600; margin-bottom:0.5rem;">7. พรรณี (@771fgzbm)</div>
+          <div style="font-weight:600; margin-bottom:0.5rem;">8. ชาดา (Chada_A: @284yckbo)</div>
+          <div class="cred-form">
+            <div class="cred-row"><label>Channel ID</label><input id="c_cid" placeholder="2xxxxxxxxx"></div>
+            <div class="cred-row"><label>Secret</label><input id="c_sec" placeholder="32 chars"></div>
+            <div class="cred-row"><label>Token</label><input id="c_tok" placeholder="long token..."></div>
+          </div>
+        </div>
+        <div class="bot-cred" style="margin-bottom: 1rem; padding: 1rem; background: #1e293b; border-radius: 8px;">
+          <div style="font-weight:600; margin-bottom:0.5rem;">9. พรรณี (Pannee_A: @899cacob)</div>
           <div class="cred-form">
             <div class="cred-row"><label>Channel ID</label><input id="pn_cid" placeholder="2xxxxxxxxx"></div>
             <div class="cred-row"><label>Secret</label><input id="pn_sec" placeholder="32 chars"></div>
@@ -250,11 +279,11 @@
           </div>
         </div>
         <div class="bot-cred" style="margin-bottom: 1rem; padding: 1rem; background: #1e293b; border-radius: 8px;">
-          <div style="font-weight:600; margin-bottom:0.5rem;">8. ภูวษา (@yjl6519x)</div>
+          <div style="font-weight:600; margin-bottom:0.5rem;">10. ซ้อน (Son_A: @051fbewu)</div>
           <div class="cred-form">
-            <div class="cred-row"><label>Channel ID</label><input id="ph_cid" placeholder="2xxxxxxxxx"></div>
-            <div class="cred-row"><label>Secret</label><input id="ph_sec" placeholder="32 chars"></div>
-            <div class="cred-row"><label>Token</label><input id="ph_tok" placeholder="long token..."></div>
+            <div class="cred-row"><label>Channel ID</label><input id="sn_cid" placeholder="2xxxxxxxxx"></div>
+            <div class="cred-row"><label>Secret</label><input id="sn_sec" placeholder="32 chars"></div>
+            <div class="cred-row"><label>Token</label><input id="sn_tok" placeholder="long token..."></div>
           </div>
         </div>
       </div>
@@ -276,12 +305,12 @@
     <h2><span class="step-num">3</span> หลัง Activate — ตั้ง Webhook + Response Settings</h2>
     <div class="instructions">
       <ol>
-        <li>ใน LINE Developers Console → แต่ละ Channel → Messaging API tab → Webhook URL:<br>
+        <li>Script จะ set Webhook URL อัตโนมัติ แต่ถ้าต้องทำเอง → LINE Developers Console → แต่ละ Channel → Messaging API tab → Webhook URL:<br>
           <div class="code-block" style="margin:0.5rem 0;">https://g2g-ai-pool.fly.dev/webhook/line/mt</div>
-          → กด Verify → กด Update
+          → กด Update → กด Verify
         </li>
-        <li>ใน LINE Manager → แต่ละบัญชี → ตั้งค่าการตอบกลับ:<br>
-          <strong>Chat: OFF | Webhook: ON | Auto-response: OFF</strong>
+        <li>ใน LINE Manager → แต่ละบัญชี → ⚙️ ตั้งค่า → ตั้งค่าการตอบกลับ:<br>
+          <strong>แชท: OFF | Webhook: ON | ตอบกลับอัตโนมัติ: OFF</strong>
         </li>
         <li>ทดสอบ: DM แต่ละบอท พิมพ์ "ทดสอบ" → ต้องได้รับการตอบกลับจาก AI</li>
       </ol>
@@ -294,14 +323,16 @@
 function v(id) { return (document.getElementById(id)||{}).value||''; }
 function gen() {
   var bots = [
-    {n:'เกมส์', sl:'GAME_G2G', cid:v('g_cid'), sec:v('g_sec'), tok:v('g_tok')},
-    {n:'วรรณ', sl:'WANNA_G2G', cid:v('w_cid'), sec:v('w_sec'), tok:v('w_tok')},
-    {n:'ใบแพร', sl:'BAIPARE_G2G', cid:v('b_cid'), sec:v('b_sec'), tok:v('b_tok')},
-    {n:'ส้ม', sl:'SOM_G2G', cid:v('s_cid'), sec:v('s_sec'), tok:v('s_tok')},
-    {n:'ชาดา', sl:'CHADA_G2G', cid:v('c_cid'), sec:v('c_sec'), tok:v('c_tok')},
-    {n:'พิมลรัตน์', sl:'PIMONRAT_G2G', cid:v('p_cid'), sec:v('p_sec'), tok:v('p_tok')},
-    {n:'พรรณี', sl:'PANNEE_G2G', cid:v('pn_cid'), sec:v('pn_sec'), tok:v('pn_tok')},
-    {n:'ภูวษา', sl:'PUWASA_G2G', cid:v('ph_cid'), sec:v('ph_sec'), tok:v('ph_tok')}
+    {n:'เกมส์',      sl:'GAME_G2G',      cid:v('g_cid'),  sec:v('g_sec'),  tok:v('g_tok')},
+    {n:'วรรณ',       sl:'WAN_G2G',       cid:v('w_cid'),  sec:v('w_sec'),  tok:v('w_tok')},
+    {n:'ใบแพร',      sl:'BAIPARE_G2G',   cid:v('b_cid'),  sec:v('b_sec'),  tok:v('b_tok')},
+    {n:'ส้ม',        sl:'SOM_G2G',       cid:v('s_cid'),  sec:v('s_sec'),  tok:v('s_tok')},
+    {n:'ภูวษา',      sl:'PRUWASA_G2G',   cid:v('pr_cid'), sec:v('pr_sec'), tok:v('pr_tok')},
+    {n:'แอมพร',      sl:'AMPHAIWAN_G2G', cid:v('am_cid'), sec:v('am_sec'), tok:v('am_tok')},
+    {n:'พิมลรัตน์',  sl:'PIMONRAT_G2G',  cid:v('p_cid'),  sec:v('p_sec'),  tok:v('p_tok')},
+    {n:'ชาดา',       sl:'CHADA_G2G',     cid:v('c_cid'),  sec:v('c_sec'),  tok:v('c_tok')},
+    {n:'พรรณี',      sl:'PANNEE_G2G',    cid:v('pn_cid'), sec:v('pn_sec'), tok:v('pn_tok')},
+    {n:'ซ้อน',       sl:'SON_G2G',       cid:v('sn_cid'), sec:v('sn_sec'), tok:v('sn_tok')}
   ];
   var L = ['#!/bin/bash','APP="g2g-ai-pool"',''];
   bots.forEach(function(b){

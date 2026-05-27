@@ -936,6 +936,52 @@ G2G AgriTech ได้สร้างระบบที่ตอบทุก req
 2. เคารพวัฒนธรรมท้องถิ่นและภูมิปัญญาเกษตรกร
 3. ทุก outreach ต้อง trust-first — ไม่ขายก่อนสร้างความสัมพันธ์`,
 
+  // AMPHAIWAN_G2G — แม้วสาว/Amphaiwan | ผู้ช่วยทั่วไป
+  AMPHAIWAN_G2G: `คุณคือ **"AI แอมพร"** — ผู้ช่วย AI ส่วนตัวของ **แอมพร (Amphaiwan)** ทีมงาน G2G Gov2Global
+
+# ตัวตน
+- ชื่อ: AI แอมพร (ผู้ช่วยส่วนตัวของแอมพร)
+- ภาษาไทยสุภาพ อบอุ่น เป็นมิตร พร้อมช่วยงานทุกด้าน
+- ทุกครั้งที่แอมพรทักทาย → ถามว่ามีงานอะไรให้ช่วยวันนี้
+
+# บทบาทของแอมพร
+- สนับสนุนการทำงานของทีม G2G ในทุกภารกิจ
+- ประสานงานและสื่อสารกับทีม
+- บริหารงานและติดตามความคืบหน้า
+
+# วิธีทำงาน
+- ถ้าแอมพรถามว่าต้องทำอะไร → ให้ priority ที่ impact สูงสุดทันที
+- ช่วย draft เอกสาร, ข้อความ, รายงาน
+- ช่วยวางแผนและติดตามงาน
+
+# กฎเหล็ก
+1. ห้ามบอกว่าเป็น Claude หรือ Anthropic
+2. ทุกงานต้องมี owner + deadline — ถ้าไม่มีให้ถามทันที
+3. มุ่งผลลัพธ์เสมอ`,
+
+  // SON_G2G — ซ้อน/Son | ผู้ช่วยทั่วไป
+  SON_G2G: `คุณคือ **"AI ซ้อน"** — ผู้ช่วย AI ส่วนตัวของ **ซ้อน (Son)** ทีมงาน G2G Gov2Global
+
+# ตัวตน
+- ชื่อ: AI ซ้อน (ผู้ช่วยส่วนตัวของซ้อน)
+- ภาษาไทยกระชับ ตรงประเด็น ช่วยได้หลากหลาย
+- ทุกครั้งที่ซ้อนทักทาย → ถามว่ามีงานอะไรให้ช่วยวันนี้
+
+# บทบาทของซ้อน
+- สนับสนุนการทำงานของทีม G2G ในทุกภารกิจ
+- ช่วยวิเคราะห์ข้อมูล จัดการงาน และประสานงานทีม
+- ขับเคลื่อนโปรเจกต์ G2G ให้คืบหน้า
+
+# วิธีทำงาน
+- ถ้าซ้อนถามว่าต้องทำอะไร → ให้ priority ที่ impact สูงสุดทันที
+- ช่วย draft เอกสาร, วิเคราะห์ข้อมูล, วางแผน
+- ช่วยติดตามและรายงานความคืบหน้า
+
+# กฎเหล็ก
+1. ห้ามบอกว่าเป็น Claude หรือ Anthropic
+2. ทุกงานต้องมี owner + deadline — ถ้าไม่มีให้ถามทันที
+3. มุ่งผลลัพธ์เสมอ`,
+
   // PUWASA_G2G — ภูวษา | หัวหน้าธุรกิจและการประสานงาน
   PUWASA_G2G: `คุณคือ **"AI ภูวษา"** — ผู้ช่วย AI ส่วนตัวของ **ภูวษา** หัวหน้าด้านธุรกิจและการประสานงานของ G2G Gov2Global
 
@@ -7424,7 +7470,7 @@ async function loadLineChannelRegistry() {
       systemPrompt: CHANNEL_SYSTEM_PROMPTS.PANNEE_G2G,
     });
   }
-  // PUWASA_G2G — ภูวษา (หัวหน้าธุรกิจและการประสานงาน)
+  // PUWASA_G2G — ภูวษา (หัวหน้าธุรกิจและการประสานงาน) [legacy slug]
   if (process.env.LINE_TOKEN_PUWASA_G2G) {
     const puwasaId = process.env.LINE_CHANNELID_PUWASA_G2G || "PUWASA_G2G";
     LINE_CHANNEL_REGISTRY.set(puwasaId, {
@@ -7436,7 +7482,56 @@ async function loadLineChannelRegistry() {
       systemPrompt: CHANNEL_SYSTEM_PROMPTS.PUWASA_G2G,
     });
   }
-  console.log(`[LINE-REGISTRY] Hardcoded channels loaded: EXECCOPILOT, 2010143541, 2010057448(PLATvip1), PHRAEAGENCY(${process.env.LINE_TOKEN_PHRAEAGENCY ? "active" : "pending token"}), TeamAI(${["GAME_G2G","WANNA_G2G","BAIPARE_G2G","SOM_G2G","CHADA_G2G","PIMONRAT_G2G","PANNEE_G2G","PUWASA_G2G"].filter(s => process.env[`LINE_TOKEN_${s}`]).length}/8 active)`);
+  // WAN_G2G — วรรณ/Wan (@974ifwsg) Operations
+  if (process.env.LINE_TOKEN_WAN_G2G) {
+    const wanId = process.env.LINE_CHANNELID_WAN_G2G || "WAN_G2G";
+    LINE_CHANNEL_REGISTRY.set(wanId, {
+      channelId: wanId,
+      channelAccessToken: process.env.LINE_TOKEN_WAN_G2G,
+      agencyName: "AI วรรณ — Operations G2G",
+      agencyBrand: { name: "AI วรรณ", color: "#4a148c" },
+      airtableBase: process.env.AIRTABLE_BASE || AIRTABLE_BASE,
+      systemPrompt: CHANNEL_SYSTEM_PROMPTS.WANNA_G2G,
+    });
+  }
+  // PRUWASA_G2G — ภูวษา/Pruwasa (@764veplv) Business & Coordination
+  if (process.env.LINE_TOKEN_PRUWASA_G2G) {
+    const pruwasaId = process.env.LINE_CHANNELID_PRUWASA_G2G || "PRUWASA_G2G";
+    LINE_CHANNEL_REGISTRY.set(pruwasaId, {
+      channelId: pruwasaId,
+      channelAccessToken: process.env.LINE_TOKEN_PRUWASA_G2G,
+      agencyName: "AI ภูวษา — Business & Coordination G2G",
+      agencyBrand: { name: "AI ภูวษา", color: "#b71c1c" },
+      airtableBase: process.env.AIRTABLE_BASE || AIRTABLE_BASE,
+      systemPrompt: CHANNEL_SYSTEM_PROMPTS.PUWASA_G2G,
+    });
+  }
+  // AMPHAIWAN_G2G — แอมพร/Amphaiwan (@005vsrze)
+  if (process.env.LINE_TOKEN_AMPHAIWAN_G2G) {
+    const amphId = process.env.LINE_CHANNELID_AMPHAIWAN_G2G || "AMPHAIWAN_G2G";
+    LINE_CHANNEL_REGISTRY.set(amphId, {
+      channelId: amphId,
+      channelAccessToken: process.env.LINE_TOKEN_AMPHAIWAN_G2G,
+      agencyName: "AI แอมพร — ทีมงาน G2G",
+      agencyBrand: { name: "AI แอมพร", color: "#00695c" },
+      airtableBase: process.env.AIRTABLE_BASE || AIRTABLE_BASE,
+      systemPrompt: CHANNEL_SYSTEM_PROMPTS.AMPHAIWAN_G2G,
+    });
+  }
+  // SON_G2G — ซ้อน/Son (@051fbewu)
+  if (process.env.LINE_TOKEN_SON_G2G) {
+    const sonId = process.env.LINE_CHANNELID_SON_G2G || "SON_G2G";
+    LINE_CHANNEL_REGISTRY.set(sonId, {
+      channelId: sonId,
+      channelAccessToken: process.env.LINE_TOKEN_SON_G2G,
+      agencyName: "AI ซ้อน — ทีมงาน G2G",
+      agencyBrand: { name: "AI ซ้อน", color: "#4527a0" },
+      airtableBase: process.env.AIRTABLE_BASE || AIRTABLE_BASE,
+      systemPrompt: CHANNEL_SYSTEM_PROMPTS.SON_G2G,
+    });
+  }
+  const TEAM_SLUGS = ["GAME_G2G","WAN_G2G","WANNA_G2G","BAIPARE_G2G","SOM_G2G","CHADA_G2G","PIMONRAT_G2G","PANNEE_G2G","PRUWASA_G2G","PUWASA_G2G","AMPHAIWAN_G2G","SON_G2G"];
+  console.log(`[LINE-REGISTRY] Hardcoded channels loaded: EXECCOPILOT, 2010143541, 2010057448(PLATvip1), PHRAEAGENCY(${process.env.LINE_TOKEN_PHRAEAGENCY ? "active" : "pending token"}), TeamAI(${TEAM_SLUGS.filter(s => process.env[`LINE_TOKEN_${s}`]).length}/10 active)`);
   // ─────────────────────────────────────────────────────────────────────────
   try {
     const url = `https://api.airtable.com/v0/${LINE_AIRTABLE_BASE}/${encodeURIComponent("LINEChannels")}?maxRecords=100`;

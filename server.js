@@ -14193,6 +14193,90 @@ function checkDelegationLineCommand(text, agencySlug, adminCode) {
 global.checkDelegationLineCommand = checkDelegationLineCommand;
 global.getAgencyAdminCode = getAdminCode;
 
+// ===== G2G CAREER PLATFORM API =====
+const OCCUPATION_DB_PATH = path.join(__dirname, 'public', 'occupation-knowledge.json');
+
+// GET /api/career/occupations — ดึงฐานข้อมูลอาชีพทั้งหมด
+app.get('/api/career/occupations', (req, res) => {
+  try {
+    const db = JSON.parse(fs.readFileSync(OCCUPATION_DB_PATH, 'utf8'));
+    const { sector, search } = req.query;
+    let data = db.sectors;
+    if (sector) data = data.filter(s => s.id === sector);
+    if (search) {
+      const q = search.toLowerCase();
+      data = data.map(s => ({
+        ...s,
+        occupations: s.occupations.filter(o =>
+          o.name.toLowerCase().includes(q) ||
+          (o.knowledge_gaps || []).some(g => g.toLowerCase().includes(q))
+        )
+      })).filter(s => s.occupations.length > 0);
+    }
+    res.json({ ok: true, sectors: data, meta: db.meta });
+  } catch (e) {
+    res.status(500).json({ ok: false, error: e.message });
+  }
+});
+
+// GET /api/career/occupation/:id — ดึงข้อมูลอาชีพเดี่ยว
+app.get('/api/career/occupation/:id', (req, res) => {
+  try {
+    const db = JSON.parse(fs.readFileSync(OCCUPATION_DB_PATH, 'utf8'));
+    for (const s of db.sectors) {
+      const occ = s.occupations.find(o => o.id === req.params.id);
+      if (occ) return res.json({ ok: true, sector: s.name, sector_icon: s.icon, occupation: occ });
+    }
+    res.status(404).json({ ok: false, error: 'not_found' });
+  } catch (e) {
+    res.status(500).json({ ok: false, error: e.message });
+  }
+});
+
+// POST /api/career/ai-advice — AI ให้คำแนะนำอาชีพเฉพาะบุคคล
+app.post('/api/career/ai-advice', async (req, res) => {
+  const { question, occupation_id, user_context } = req.body;
+  if (!question) return res.status(400).json({ ok: false, error: 'question_required' });
+
+  let occupationContext = '';
+  try {
+    const db = JSON.parse(fs.readFileSync(OCCUPATION_DB_PATH, 'utf8'));
+    if (occupation_id) {
+      for (const s of db.sectors) {
+        const occ = s.occupations.find(o => o.id === occupation_id);
+        if (occ) {
+          occupationContext = `\nอาชีพ: ${occ.name}\nช่องว่างความรู้หลัก: ${occ.knowledge_gaps.join(', ')}\nเทคนิคที่ต้องเรียน: ${occ.techniques.join(', ')}\nเทคโนโลยีที่ช่วยได้: ${occ.technology.join(', ')}`;
+          break;
+        }
+      }
+    }
+  } catch (e) {}
+
+  const apiKey = process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_KEY_1;
+  if (!apiKey) return res.json({ ok: true, reply: 'ขออภัย ระบบ AI ไม่พร้อมในขณะนี้' });
+
+  try {
+    const systemPrompt = `คุณคือ AI ที่ปรึกษาอาชีพระดับชาติของ G2G Career Platform ประเทศไทย
+ภารกิจ: ช่วยคนไทยทุกคนพัฒนาอาชีพ เพิ่มรายได้ และใช้เทคโนโลยี
+ตอบภาษาไทย กระชับ ใช้งานได้จริง เน้น Action Steps ที่ทำได้ทันที${occupationContext}
+${user_context ? 'บริบทผู้ใช้: ' + user_context : ''}`;
+
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 600, system: systemPrompt, messages: [{ role: 'user', content: question }] })
+    });
+    const d = await r.json();
+    if (d.error) throw new Error(d.error.message);
+    res.json({ ok: true, reply: d.content?.[0]?.text || 'ขออภัย ไม่สามารถตอบได้' });
+  } catch (e) {
+    res.json({ ok: false, reply: 'ขออภัย ระบบ AI ขัดข้อง กรุณาลองใหม่', error: e.message });
+  }
+});
+
+console.log('[G2G] Career Platform API registered ✅ (/api/career/*)');
+// ===== END G2G CAREER PLATFORM API =====
+
 console.log('[G2G] Delegation system registered ✅ (/api/delegation/*)');
 
 app.listen(PORT, () => {

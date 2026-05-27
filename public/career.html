@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2G Career — แพลตฟอร์มพัฒนาอาชีพ 36 กลุ่ม จังหวัดแพร่</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Sarabun',sans-serif;background:#f0f4f8;color:#1a1a2e;font-size:15px;-webkit-font-smoothing:antialiased}
+:root{
+  --primary:#1b5e20;--primary-mid:#2e7d32;--primary-light:#43a047;--primary-pale:#e8f5e9;
+  --gold:#f57f17;--gold-light:#fff8e1;
+  --blue:#1565c0;--blue-light:#e3f2fd;
+  --purple:#6a1b9a;--purple-light:#f3e5f5;
+  --red:#c62828;--teal:#00695c;--teal-light:#e0f2f1;
+  --gray:#607d8b;--gray-light:#eceff1;--white:#fff;
+  --shadow:0 2px 12px rgba(0,0,0,.10);--shadow-lg:0 8px 32px rgba(0,0,0,.15);
+  --radius:14px;--radius-sm:8px
+}
+
+/* ===== PDPA ===== */
+#pdpaOverlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px}
+.pdpa-card{background:#fff;border-radius:20px;padding:32px 28px;width:100%;max-width:460px;box-shadow:var(--shadow-lg)}
+.pdpa-icon{font-size:48px;text-align:center;margin-bottom:10px}
+.pdpa-title{font-size:20px;font-weight:700;color:var(--primary);text-align:center;margin-bottom:4px}
+.pdpa-sub{font-size:13px;color:var(--gray);text-align:center;margin-bottom:18px}
+.pdpa-box{background:var(--primary-pale);border-radius:10px;padding:14px 16px;margin-bottom:18px}
+.pdpa-box p{font-size:13px;color:var(--primary);line-height:1.7;margin-bottom:4px}
+.pdpa-box p::before{content:"✅ "}
+.pdpa-row{display:flex;gap:10px}
+.pdpa-row button{flex:1;padding:13px;border:none;border-radius:10px;font-size:15px;font-weight:600;font-family:'Sarabun',sans-serif;cursor:pointer}
+.btn-accept{background:linear-gradient(135deg,var(--primary-mid),var(--blue));color:#fff}
+.btn-reject{background:var(--gray-light);color:var(--gray)}
+
+/* ===== LOGIN ===== */
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1b5e20 0%,#2e7d32 40%,#1565c0 100%);padding:20px}
+.login-card{background:#fff;border-radius:24px;padding:40px 36px;width:100%;max-width:420px;box-shadow:var(--shadow-lg);text-align:center}
+.login-logo{font-size:56px;margin-bottom:10px}
+.login-title{font-size:24px;font-weight:800;color:var(--primary);margin-bottom:4px}
+.login-sub{color:var(--gray);font-size:13px;margin-bottom:28px;line-height:1.6}
+.login-tabs{display:flex;background:var(--gray-light);border-radius:10px;padding:4px;margin-bottom:20px;gap:4px}
+.ltab{flex:1;padding:9px;border:none;background:none;border-radius:7px;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;color:var(--gray);cursor:pointer;transition:all .2s}
+.ltab.active{background:#fff;color:var(--primary);box-shadow:var(--shadow)}
+.login-form input,.login-form select{width:100%;padding:13px 15px;border:2px solid #e0e0e0;border-radius:10px;font-family:'Sarabun',sans-serif;font-size:14px;margin-bottom:12px;outline:none;transition:border .2s;color:#333}
+.login-form input:focus,.login-form select:focus{border-color:var(--primary-light)}
+.btn-login{width:100%;padding:14px;background:linear-gradient(135deg,var(--primary-mid),var(--blue));color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;font-family:'Sarabun',sans-serif;transition:opacity .2s;margin-bottom:10px}
+.btn-login:hover{opacity:.9}
+.login-hint{margin-top:14px;padding:12px;background:var(--primary-pale);border-radius:10px;font-size:12px;color:var(--primary);text-align:left}
+#registerPanel{display:none}
+#loginPanel{}
+
+/* ===== TOP BAR ===== */
+#mainApp{display:none}
+.top-bar{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,.2)}
+.top-left{display:flex;align-items:center;gap:10px}
+.top-avatar{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:18px}
+.top-name{font-weight:700;font-size:15px}
+.top-meta{font-size:11px;opacity:.8}
+.btn-logout{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;padding:6px 12px;border-radius:8px;cursor:pointer;font-family:'Sarabun',sans-serif;font-size:12px}
+
+/* ===== TAB NAV ===== */
+.tab-nav{background:#fff;border-bottom:2px solid var(--gray-light);display:flex;overflow-x:auto;position:sticky;top:64px;z-index:99;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.tab-nav::-webkit-scrollbar{height:3px}
+.tab-nav::-webkit-scrollbar-thumb{background:var(--primary-light)}
+.tab-btn{flex:0 0 auto;padding:13px 16px;border:none;background:none;cursor:pointer;font-family:'Sarabun',sans-serif;font-size:13px;font-weight:600;color:var(--gray);border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap}
+.tab-btn.active{color:var(--primary);border-bottom-color:var(--primary)}
+.tab-content{display:none;padding:16px}
+.tab-content.active{display:block}
+
+/* ===== HERO ===== */
+.hero{background:linear-gradient(135deg,#1b5e20,#2e7d32 50%,#1565c0);color:#fff;padding:28px 16px 24px;text-align:center}
+.hero h1{font-size:22px;font-weight:800;margin-bottom:6px}
+.hero p{font-size:13px;opacity:.9;line-height:1.6;margin-bottom:16px}
+.hero-stats{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.stat-chip{background:rgba(255,255,255,.2);backdrop-filter:blur(10px);border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600}
+
+/* ===== SEARCH ===== */
+.search-bar{padding:12px 16px;background:#fff;border-bottom:1px solid var(--gray-light)}
+.search-input-wrap{position:relative}
+.search-input-wrap input{width:100%;padding:11px 14px 11px 40px;border:2px solid #e0e0e0;border-radius:10px;font-family:'Sarabun',sans-serif;font-size:14px;outline:none;transition:border .2s}
+.search-input-wrap input:focus{border-color:var(--primary-light)}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:16px;color:var(--gray)}
+
+/* ===== CAREER GRID ===== */
+.section-title{font-size:16px;font-weight:700;color:var(--primary);margin:16px 0 10px;padding:0 2px}
+.section-sub{font-size:12px;color:var(--gray);margin-bottom:14px}
+.career-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px}
+@media(min-width:600px){.career-grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:900px){.career-grid{grid-template-columns:repeat(4,1fr)}}
+.career-card{background:#fff;border-radius:var(--radius);padding:16px 12px;text-align:center;cursor:pointer;transition:all .2s;box-shadow:var(--shadow);border:2px solid transparent;position:relative}
+.career-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:var(--primary-light)}
+.career-card.selected{border-color:var(--primary-mid);background:var(--primary-pale)}
+.career-icon{font-size:32px;margin-bottom:8px;display:block}
+.career-name{font-size:13px;font-weight:700;color:#333;margin-bottom:4px;line-height:1.3}
+.career-count{font-size:11px;color:var(--gray)}
+.career-badge{position:absolute;top:8px;right:8px;background:var(--gold);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px}
+.group-label{font-size:11px;font-weight:700;color:var(--primary);background:var(--primary-pale);padding:6px 12px;border-radius:20px;display:inline-block;margin-bottom:10px;margin-top:8px}
+
+/* ===== COURSE CARDS ===== */
+.course-card{background:#fff;border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);margin-bottom:12px;display:flex;gap:14px;align-items:flex-start}
+.course-thumb{width:64px;height:64px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
+.course-info{flex:1}
+.course-title{font-size:14px;font-weight:700;color:#333;margin-bottom:4px;line-height:1.3}
+.course-meta{font-size:12px;color:var(--gray);margin-bottom:6px}
+.course-tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600}
+.tag-free{background:#e8f5e9;color:#2e7d32}
+.tag-cert{background:#e3f2fd;color:#1565c0}
+.tag-hot{background:#fff3e0;color:#e65100}
+.btn-course{margin-top:8px;padding:7px 16px;background:var(--primary-mid);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Sarabun',sans-serif}
+
+/* ===== MARKETPLACE ===== */
+.job-card{background:#fff;border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);margin-bottom:12px;border-left:4px solid var(--primary-mid)}
+.job-title{font-size:15px;font-weight:700;color:#333;margin-bottom:4px}
+.job-org{font-size:13px;color:var(--primary-mid);font-weight:600;margin-bottom:4px}
+.job-meta{font-size:12px;color:var(--gray);margin-bottom:8px}
+.job-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.job-salary{font-size:14px;font-weight:700;color:var(--gold);margin-bottom:8px}
+.btn-apply{padding:8px 20px;background:var(--primary-mid);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Sarabun',sans-serif}
+.btn-apply-outline{padding:8px 20px;background:none;color:var(--primary-mid);border:2px solid var(--primary-mid);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Sarabun',sans-serif;margin-left:6px}
+
+/* ===== AI CHAT ===== */
+.ai-hero{background:linear-gradient(135deg,#4a148c,#1565c0);color:#fff;padding:20px;border-radius:var(--radius);margin-bottom:16px;text-align:center}
+.ai-hero h2{font-size:18px;font-weight:700;margin-bottom:6px}
+.ai-hero p{font-size:13px;opacity:.9}
+.chat-box{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px}
+.chat-header{background:linear-gradient(135deg,#6a1b9a,#1565c0);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:10px}
+.chat-avatar{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:18px}
+.chat-name{font-weight:700;font-size:14px}
+.chat-status{font-size:11px;opacity:.8}
+.chat-messages{padding:14px;min-height:200px;max-height:340px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:82%;padding:10px 14px;border-radius:12px;font-size:14px;line-height:1.5}
+.msg-bot{background:var(--purple-light);color:#333;align-self:flex-start;border-bottom-left-radius:4px}
+.msg-user{background:var(--primary-mid);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.chat-input-row{display:flex;padding:10px;gap:8px;border-top:1px solid var(--gray-light)}
+.chat-input-row input{flex:1;padding:10px 14px;border:2px solid #e0e0e0;border-radius:10px;font-family:'Sarabun',sans-serif;font-size:14px;outline:none;transition:border .2s}
+.chat-input-row input:focus{border-color:var(--primary-light)}
+.btn-send{padding:10px 16px;background:var(--primary-mid);color:#fff;border:none;border-radius:10px;cursor:pointer;font-size:16px}
+.ai-oa-list{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+.oa-card{background:#fff;border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);text-align:center;cursor:pointer;transition:all .2s}
+.oa-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.oa-icon{font-size:28px;margin-bottom:6px}
+.oa-name{font-size:13px;font-weight:700;color:#333;margin-bottom:4px}
+.oa-desc{font-size:11px;color:var(--gray)}
+.btn-line{width:100%;padding:12px;background:#06C755;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Sarabun',sans-serif;margin-top:6px;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+
+/* ===== PROFILE ===== */
+.profile-header{background:linear-gradient(135deg,var(--primary-mid),var(--blue));color:#fff;border-radius:var(--radius);padding:20px;margin-bottom:16px;text-align:center}
+.profile-avatar{width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 10px}
+.profile-name{font-size:18px;font-weight:700;margin-bottom:4px}
+.profile-career{font-size:13px;opacity:.85}
+.profile-section{background:#fff;border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);margin-bottom:12px}
+.profile-section h3{font-size:14px;font-weight:700;color:var(--primary);margin-bottom:12px;border-bottom:2px solid var(--primary-pale);padding-bottom:8px}
+.profile-field{margin-bottom:12px}
+.profile-field label{display:block;font-size:12px;color:var(--gray);font-weight:600;margin-bottom:4px}
+.profile-field input,.profile-field select,.profile-field textarea{width:100%;padding:10px 12px;border:2px solid #e0e0e0;border-radius:8px;font-family:'Sarabun',sans-serif;font-size:14px;outline:none;transition:border .2s}
+.profile-field input:focus,.profile-field select:focus,.profile-field textarea:focus{border-color:var(--primary-light)}
+.profile-field textarea{height:80px;resize:vertical}
+.skill-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.skill-chip{background:var(--primary-pale);color:var(--primary);padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer}
+.skill-chip.selected{background:var(--primary-mid);color:#fff}
+.btn-save{width:100%;padding:13px;background:linear-gradient(135deg,var(--primary-mid),var(--blue));color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Sarabun',sans-serif;margin-top:8px}
+.cert-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.cert-card{background:var(--gold-light);border-radius:10px;padding:12px;text-align:center;border:1px solid #ffe082}
+.cert-icon{font-size:24px;margin-bottom:4px}
+.cert-name{font-size:11px;font-weight:700;color:#7c5b00}
+.cert-date{font-size:10px;color:#a17c00}
+
+/* ===== FLOAT BTN ===== */
+.fab{position:fixed;bottom:20px;right:20px;width:54px;height:54px;background:linear-gradient(135deg,var(--primary-mid),var(--blue));color:#fff;border:none;border-radius:50%;font-size:24px;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.3);z-index:90;transition:transform .2s}
+.fab:hover{transform:scale(1.1)}
+
+/* ===== UTILITIES ===== */
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.badge-green{background:var(--primary-pale);color:var(--primary)}
+.badge-blue{background:var(--blue-light);color:var(--blue)}
+.badge-gold{background:var(--gold-light);color:#7c5b00}
+.badge-red{background:#ffebee;color:#c62828}
+.row-flex{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.btn-filter{padding:6px 14px;background:var(--gray-light);border:none;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Sarabun',sans-serif;color:var(--gray)}
+.btn-filter.active{background:var(--primary-pale);color:var(--primary)}
+.filter-row{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px}
+.filter-row::-webkit-scrollbar{height:2px}
+.empty-state{text-align:center;padding:40px 20px;color:var(--gray)}
+.empty-state .es-icon{font-size:48px;margin-bottom:10px}
+.loading-dots{display:inline-block}
+.loading-dots::after{content:'.';animation:dots 1.2s steps(3,end) infinite}
+@keyframes dots{0%,20%{content:'.'}40%{content:'..'}60%,100%{content:'...'}}
+
+/* ===== BOTTOM NAV (mobile) ===== */
+@media(max-width:599px){
+  .tab-nav{display:none}
+  .bottom-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:#fff;box-shadow:0 -2px 12px rgba(0,0,0,.1);z-index:100}
+  .bn-btn{flex:1;padding:8px 4px;border:none;background:none;cursor:pointer;font-family:'Sarabun',sans-serif;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:var(--gray);transition:color .2s}
+  .bn-btn.active{color:var(--primary)}
+  .bn-icon{font-size:22px;line-height:1}
+  .tab-content{padding:12px 12px 80px}
+}
+@media(min-width:600px){.bottom-nav{display:none}}
+</style>
+</head>
+<body>
+
+<!-- PDPA -->
+<div id="pdpaOverlay">
+  <div class="pdpa-card">
+    <div class="pdpa-icon">🔐</div>
+    <div class="pdpa-title">นโยบายความเป็นส่วนตัว</div>
+    <div class="pdpa-sub">G2G Career Platform | แพลตฟอร์มพัฒนาอาชีพ จ.แพร่</div>
+    <div class="pdpa-box">
+      <p>เก็บข้อมูลเพื่อจับคู่งานและพัฒนาทักษะเฉพาะตัวคุณ</p>
+      <p>ข้อมูลไม่ถูกขายให้บุคคลที่สาม — ใช้ภายใน G2G เท่านั้น</p>
+      <p>คุณสามารถขอลบข้อมูลได้ตลอดเวลา</p>
+      <p>ข้อมูลถูกเข้ารหัสและจัดเก็บอย่างปลอดภัย</p>
+    </div>
+    <div class="pdpa-row">
+      <button class="btn-reject" onclick="document.getElementById('pdpaOverlay').style.display='none';document.getElementById('loginScreen').style.display='flex'">ไม่ยอมรับ</button>
+      <button class="btn-accept" onclick="acceptPdpa()">ยอมรับและดำเนินการต่อ</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div id="loginScreen" style="display:none">
+  <div class="login-card">
+    <div class="login-logo">🌾</div>
+    <div class="login-title">G2G Career</div>
+    <div class="login-sub">แพลตฟอร์มพัฒนาอาชีพ 36 กลุ่มอาชีพ<br>จังหวัดแพร่ • สำหรับคนไทยทุกช่วงชีวิต</div>
+    <div class="login-tabs">
+      <button class="ltab active" id="ltabLogin" onclick="switchLoginTab('login')">เข้าสู่ระบบ</button>
+      <button class="ltab" id="ltabReg" onclick="switchLoginTab('register')">สมัครสมาชิก</button>
+    </div>
+
+    <div id="loginPanel" class="login-form">
+      <input type="tel" id="loginPhone" placeholder="เบอร์โทรศัพท์ หรือ รหัสสมาชิก" maxlength="10">
+      <input type="password" id="loginPass" placeholder="รหัสผ่าน (หรือวันเกิด เช่น 150291)">
+      <button class="btn-login" onclick="doLogin()">เข้าสู่ระบบ</button>
+      <div class="login-hint">💡 ทดลองใช้: โทร <b>0812345678</b> รหัส <b>123456</b><br>หรือกด <b>สมัครสมาชิก</b> เพื่อสร้างบัญชีใหม่ฟรี</div>
+    </div>
+
+    <div id="registerPanel" class="login-form">
+      <input type="text" id="regName" placeholder="ชื่อ-นามสกุล *">
+      <input type="tel" id="regPhone" placeholder="เบอร์โทรศัพท์ *" maxlength="10">
+      <select id="regCareer">
+        <option value="">-- เลือกกลุ่มอาชีพหลัก --</option>
+        <option value="1">🍈 ชาวสวนผลไม้</option>
+        <option value="2">🌾 ชาวนา/ชาวไร่</option>
+        <option value="3">🐄 เกษตรกรปศุสัตว์</option>
+        <option value="4">🐟 ประมงน้ำจืด</option>
+        <option value="5">🌲 ชาวสวนป่า/ไม้ยืนต้น</option>
+        <option value="6">🌿 เกษตรอินทรีย์</option>
+        <option value="7">🌿 สมุนไพร/ยาพื้นบ้าน</option>
+        <option value="8">🏭 แปรรูปผลผลิตเกษตร</option>
+        <option value="9">⛏️ เหมืองแร่</option>
+        <option value="10">💎 อัญมณีและเครื่องประดับ</option>
+        <option value="11">🪨 ช่างหินและแกะสลัก</option>
+        <option value="12">🪵 ช่างไม้/เฟอร์นิเจอร์</option>
+        <option value="13">🧵 ผ้าทอ/หัตถกรรม</option>
+        <option value="14">🎁 OTOP/วิสาหกิจชุมชน</option>
+        <option value="15">🎨 งานฝีมือและของที่ระลึก</option>
+        <option value="16">🍱 อาหารพื้นเมืองและขนม</option>
+        <option value="17">🏗️ ช่างก่อสร้าง</option>
+        <option value="18">⚡ ช่างไฟฟ้า/ประปา</option>
+        <option value="19">🔧 ช่างซ่อมบำรุง</option>
+        <option value="20">🚗 ช่างยนต์</option>
+        <option value="21">⚙️ ช่างเชื่อม/โลหะ</option>
+        <option value="22">🏔️ ท่องเที่ยวและมัคคุเทศก์</option>
+        <option value="23">🏨 โรงแรมและ Homestay</option>
+        <option value="24">🍜 ร้านอาหารและเครื่องดื่ม</option>
+        <option value="25">🏪 ค้าปลีก/ตลาด</option>
+        <option value="26">🚚 ขนส่งและโลจิสติกส์</option>
+        <option value="27">💆 เสริมสวย/สปา/นวดแผนไทย</option>
+        <option value="28">📚 การศึกษา/ติวเตอร์</option>
+        <option value="29">🏥 สาธารณสุขชุมชน</option>
+        <option value="30">💰 บัญชีและการเงิน</option>
+        <option value="31">⚖️ กฎหมายและที่ดิน</option>
+        <option value="32">💻 เทคโนโลยีและดิจิทัล</option>
+        <option value="33">👴 ดูแลผู้สูงอายุ</option>
+        <option value="34">👶 ดูแลเด็กและพัฒนาการ</option>
+        <option value="35">🧑‍💼 แรงงานทั่วไปและฟรีแลนซ์</option>
+        <option value="36">🏢 ผู้ประกอบการ/SME</option>
+      </select>
+      <input type="password" id="regPass" placeholder="ตั้งรหัสผ่าน (6 ตัวขึ้นไป)" maxlength="20">
+      <button class="btn-login" onclick="doRegister()">สมัครสมาชิกฟรี</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="mainApp">
+  <div class="top-bar">
+    <div class="top-left">
+      <div class="top-avatar" id="topAvatar">🌾</div>
+      <div>
+        <div class="top-name" id="topName">กำลังโหลด...</div>
+        <div class="top-meta" id="topMeta">G2G Career</div>
+      </div>
+    </div>
+    <button class="btn-logout" onclick="doLogout()">ออกจากระบบ</button>
+  </div>
+
+  <!-- Desktop tabs -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('home')">🏠 หน้าหลัก</button>
+    <button class="tab-btn" onclick="switchTab('learn')">📚 พัฒนาทักษะ</button>
+    <button class="tab-btn" onclick="switchTab('market')">💼 จับคู่งาน</button>
+    <button class="tab-btn" onclick="switchTab('ai')">🤖 AI ที่ปรึกษา</button>
+    <button class="tab-btn" onclick="switchTab('profile')">👤 โปรไฟล์</button>
+  </div>
+
+  <!-- HOME TAB -->
+  <div id="tab-home" class="tab-content active">
+    <div class="hero">
+      <h1>🌾 G2G Career Platform</h1>
+      <p>แพลตฟอร์มพัฒนาอาชีพ 36 กลุ่มอาชีพ จังหวัดแพร่<br>สำหรับคนไทยทุกคนทุกช่วงชีวิต ตั้งแต่เด็กจนถึง 120 ปี</p>
+      <div class="hero-stats">
+        <div class="stat-chip">👥 36 กลุ่มอาชีพ</div>
+        <div class="stat-chip">📚 120+ คอร์ส</div>
+        <div class="stat-chip">💼 500+ งาน</div>
+        <div class="stat-chip">🤖 AI ที่ปรึกษา 24/7</div>
+      </div>
+    </div>
+
+    <div style="padding:0 16px">
+      <div class="search-bar" style="padding:12px 0;background:none">
+        <div class="search-input-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="ค้นหากลุ่มอาชีพ ทักษะ หรืองาน..." oninput="filterCareers(this.value)" id="careerSearch">
+        </div>
+      </div>
+
+      <!-- GROUP 1: เกษตรกรรม -->
+      <div class="group-label">🌾 กลุ่มเกษตรกรรม (8 กลุ่ม)</div>
+      <div class="career-grid" id="grid-agri"></div>
+
+      <!-- GROUP 2: แร่และอัญมณี -->
+      <div class="group-label">💎 กลุ่มแร่และอัญมณี (3 กลุ่ม)</div>
+      <div class="career-grid" id="grid-gem"></div>
+
+      <!-- GROUP 3: หัตถกรรม -->
+      <div class="career-grid" id="grid-craft-label" style="display:block">
+        <div class="group-label" style="margin:16px 0 10px">🎨 กลุ่มหัตถกรรมและผลิตภัณฑ์ (5 กลุ่ม)</div>
+      </div>
+      <div class="career-grid" id="grid-craft"></div>
+
+      <!-- GROUP 4: ช่างฝีมือ -->
+      <div class="group-label">🔧 กลุ่มช่างฝีมือและก่อสร้าง (5 กลุ่ม)</div>
+      <div class="career-grid" id="grid-tech"></div>
+
+      <!-- GROUP 5: บริการ -->
+      <div class="group-label">🏨 กลุ่มบริการและการค้า (6 กลุ่ม)</div>
+      <div class="career-grid" id="grid-service"></div>
+
+      <!-- GROUP 6: วิชาชีพ -->
+      <div class="group-label">🎓 กลุ่มวิชาชีพและความรู้ (5 กลุ่ม)</div>
+      <div class="career-grid" id="grid-pro"></div>
+
+      <!-- GROUP 7: สังคมและดูแล -->
+      <div class="group-label">❤️ กลุ่มดูแลและสังคม (4 กลุ่ม)</div>
+      <div class="career-grid" id="grid-care"></div>
+
+      <div style="height:20px"></div>
+    </div>
+  </div>
+
+  <!-- LEARN TAB -->
+  <div id="tab-learn" class="tab-content">
+    <div class="hero" style="background:linear-gradient(135deg,#1565c0,#6a1b9a)">
+      <h1>📚 พัฒนาทักษะ</h1>
+      <p>คอร์สฝึกอบรมออนไลน์ ออฟไลน์ และ Live เฉพาะกลุ่มอาชีพ<br>ฟรีและมีใบประกาศนียบัตร</p>
+    </div>
+    <div style="padding:0 16px">
+      <div class="filter-row">
+        <button class="btn-filter active" onclick="filterCourse('all',this)">ทั้งหมด</button>
+        <button class="btn-filter" onclick="filterCourse('free',this)">ฟรี</button>
+        <button class="btn-filter" onclick="filterCourse('cert',this)">มีใบ Cert</button>
+        <button class="btn-filter" onclick="filterCourse('agri',this)">เกษตร</button>
+        <button class="btn-filter" onclick="filterCourse('gem',this)">อัญมณี</button>
+        <button class="btn-filter" onclick="filterCourse('craft',this)">หัตถกรรม</button>
+        <button class="btn-filter" onclick="filterCourse('digital',this)">ดิจิทัล</button>
+        <button class="btn-filter" onclick="filterCourse('biz',this)">ธุรกิจ</button>
+      </div>
+      <div id="courseList"></div>
+    </div>
+  </div>
+
+  <!-- MARKET TAB -->
+  <div id="tab-market" class="tab-content">
+    <div class="hero" style="background:linear-gradient(135deg,#e65100,#1565c0)">
+      <h1>💼 จับคู่งาน</h1>
+      <p>หางาน รับงาน หาลูกค้า — ครอบคลุมทุกอาชีพใน จ.แพร่<br>และทั่วประเทศไทย</p>
+    </div>
+    <div style="padding:0 16px">
+      <div class="row-flex">
+        <div>
+          <div class="section-title" style="margin-top:0">งานที่เปิดรับ</div>
+          <div class="section-sub" style="margin:0">อัปเดตล่าสุดวันนี้</div>
+        </div>
+        <button class="btn-filter active" onclick="showPostJobForm()">+ ลงประกาศ</button>
+      </div>
+      <div class="filter-row">
+        <button class="btn-filter active" onclick="filterJob('all',this)">ทั้งหมด</button>
+        <button class="btn-filter" onclick="filterJob('agri',this)">เกษตร</button>
+        <button class="btn-filter" onclick="filterJob('craft',this)">หัตถกรรม</button>
+        <button class="btn-filter" onclick="filterJob('service',this)">บริการ</button>
+        <button class="btn-filter" onclick="filterJob('tech',this)">ช่าง</button>
+        <button class="btn-filter" onclick="filterJob('freelance',this)">ฟรีแลนซ์</button>
+        <button class="btn-filter" onclick="filterJob('sme',this)">SME</button>
+      </div>
+      <div id="jobList"></div>
+    </div>
+  </div>
+
+  <!-- AI TAB -->
+  <div id="tab-ai" class="tab-content">
+    <div style="padding:0">
+      <div class="ai-hero">
+        <h2>🤖 AI ที่ปรึกษาอาชีพส่วนตัว</h2>
+        <p>ถามได้ทุกเรื่อง เกษตร อัญมณี ธุรกิจ ราชการ<br>ตลอด 24 ชั่วโมง ผ่าน LINE หรือแชทตรงนี้</p>
+      </div>
+
+      <!-- Inline Chat -->
+      <div class="chat-box">
+        <div class="chat-header">
+          <div class="chat-avatar">🤖</div>
+          <div>
+            <div class="chat-name">AI ที่ปรึกษา G2G Career</div>
+            <div class="chat-status">ออนไลน์ • ตอบภายใน 5 วินาที</div>
+          </div>
+        </div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input-row">
+          <input type="text" id="chatInput" placeholder="ถามเรื่องอาชีพ ทักษะ หรือโอกาส..." onkeydown="if(event.key==='Enter')sendChat()">
+          <button class="btn-send" onclick="sendChat()">➤</button>
+        </div>
+      </div>
+
+      <!-- LINE OA List -->
+      <div style="padding:0 16px">
+        <div class="section-title">📱 AI ผู้เชี่ยวชาญแต่ละด้าน (LINE)</div>
+        <div class="section-sub">เพิ่มเพื่อนเพื่อรับคำแนะนำเฉพาะด้านจาก AI ทีม G2G</div>
+        <div class="ai-oa-list">
+          <div class="oa-card">
+            <div class="oa-icon">🌾</div>
+            <div class="oa-name">น้องผลไม้</div>
+            <div class="oa-desc">ที่ปรึกษาเกษตรกร</div>
+            <a href="https://line.me/R/ti/p/%40phrae555" class="btn-line" target="_blank">
+              <span>LINE</span><span>@phrae555</span>
+            </a>
+          </div>
+          <div class="oa-card">
+            <div class="oa-icon">💎</div>
+            <div class="oa-name">น้องไพลิน</div>
+            <div class="oa-desc">ที่ปรึกษาอัญมณี</div>
+            <a href="https://line.me/R/ti/p/%40jewelry" class="btn-line" target="_blank">
+              <span>LINE</span><span>@jewelry</span>
+            </a>
+          </div>
+          <div class="oa-card">
+            <div class="oa-icon">🏛️</div>
+            <div class="oa-name">น้องแพร่</div>
+            <div class="oa-desc">ที่ปรึกษาราชการ</div>
+            <a href="https://line.me/R/ti/p/%40aiphrae" class="btn-line" target="_blank">
+              <span>LINE</span><span>@aiphrae</span>
+            </a>
+          </div>
+          <div class="oa-card">
+            <div class="oa-icon">💼</div>
+            <div class="oa-name">น้องเซลล์</div>
+            <div class="oa-desc">ที่ปรึกษาธุรกิจ</div>
+            <a href="https://line.me/R/ti/p/%40930pchss" class="btn-line" target="_blank">
+              <span>LINE</span><span>@930pchss</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Quick prompts -->
+        <div class="section-title">💬 คำถามยอดนิยม</div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
+          <button class="btn-filter" style="text-align:left;padding:10px 14px;border-radius:10px;background:#fff;box-shadow:var(--shadow)" onclick="setChat('ช่วยแนะนำทักษะที่ควรเรียนรู้เพิ่มเติมสำหรับอาชีพผม')">💡 ทักษะที่ควรเรียนรู้เพิ่มเติม</button>
+          <button class="btn-filter" style="text-align:left;padding:10px 14px;border-radius:10px;background:#fff;box-shadow:var(--shadow)" onclick="setChat('ราคาผลไม้ในแพร่ตอนนี้เป็นยังไง มีแนวโน้มอย่างไร')">📊 ราคาผลไม้แพร่ตอนนี้</button>
+          <button class="btn-filter" style="text-align:left;padding:10px 14px;border-radius:10px;background:#fff;box-shadow:var(--shadow)" onclick="setChat('แหล่งทุนและสินเชื่อสำหรับเกษตรกรแพร่มีอะไรบ้าง')">💰 แหล่งทุนสำหรับเกษตรกร</button>
+          <button class="btn-filter" style="text-align:left;padding:10px 14px;border-radius:10px;background:#fff;box-shadow:var(--shadow)" onclick="setChat('วิธีขึ้นทะเบียน OTOP และขายออนไลน์')">🛒 ขึ้นทะเบียน OTOP และขายออนไลน์</button>
+          <button class="btn-filter" style="text-align:left;padding:10px 14px;border-radius:10px;background:#fff;box-shadow:var(--shadow)" onclick="setChat('ฉันอยากเปิดธุรกิจอัญมณี ต้องเริ่มยังไง')">💎 เริ่มต้นธุรกิจอัญมณี</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROFILE TAB -->
+  <div id="tab-profile" class="tab-content">
+    <div class="profile-header">
+      <div class="profile-avatar" id="profileAvatar">🌾</div>
+      <div class="profile-name" id="profileName">ชื่อผู้ใช้</div>
+      <div class="profile-career" id="profileCareer">กลุ่มอาชีพ</div>
+    </div>
+
+    <div style="padding:0 16px">
+      <!-- Certs earned -->
+      <div class="profile-section">
+        <h3>🏆 ใบประกาศนียบัตรที่ได้รับ</h3>
+        <div class="cert-grid" id="certGrid">
+          <div class="cert-card">
+            <div class="cert-icon">🌾</div>
+            <div class="cert-name">เกษตรอินทรีย์เบื้องต้น</div>
+            <div class="cert-date">มี.ค. 2569</div>
+          </div>
+          <div class="cert-card">
+            <div class="cert-icon">📱</div>
+            <div class="cert-name">ขายออนไลน์ยุค AI</div>
+            <div class="cert-date">เม.ย. 2569</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit profile -->
+      <div class="profile-section">
+        <h3>✏️ แก้ไขข้อมูลส่วนตัว</h3>
+        <div class="profile-field">
+          <label>ชื่อ-นามสกุล</label>
+          <input type="text" id="pfName" placeholder="ชื่อ-นามสกุล">
+        </div>
+        <div class="profile-field">
+          <label>เบอร์โทรศัพท์</label>
+          <input type="tel" id="pfPhone" placeholder="เบอร์โทรศัพท์">
+        </div>
+        <div class="profile-field">
+          <label>อำเภอ/จังหวัด</label>
+          <select id="pfDistrict">
+            <option>อ.เมืองแพร่</option><option>อ.สูงเม่น</option>
+            <option>อ.ร้องกวาง</option><option>อ.วังชิ้น</option>
+            <option>อ.สอง</option><option>อ.ลอง</option>
+            <option>อ.เด่นชัย</option><option>อ.หนองม่วงไข่</option>
+            <option>จังหวัดอื่น</option>
+          </select>
+        </div>
+        <div class="profile-field">
+          <label>กลุ่มอาชีพหลัก</label>
+          <select id="pfCareer">
+            <option value="1">🍈 ชาวสวนผลไม้</option>
+            <option value="2">🌾 ชาวนา/ชาวไร่</option>
+            <option value="3">🐄 เกษตรกรปศุสัตว์</option>
+            <option value="10">💎 อัญมณีและเครื่องประดับ</option>
+            <option value="12">🪵 ช่างไม้/เฟอร์นิเจอร์</option>
+            <option value="13">🧵 ผ้าทอ/หัตถกรรม</option>
+            <option value="22">🏔️ ท่องเที่ยว</option>
+            <option value="36">🏢 ผู้ประกอบการ/SME</option>
+          </select>
+        </div>
+        <div class="profile-field">
+          <label>แนะนำตัวสั้นๆ / Bio</label>
+          <textarea id="pfBio" placeholder="บอกเล่าประสบการณ์ ความเชี่ยวชาญ หรือสิ่งที่คุณทำได้..."></textarea>
+        </div>
+        <div class="profile-field">
+          <label>ทักษะที่มี (เลือกได้หลายอย่าง)</label>
+          <div class="skill-chips" id="skillChips"></div>
+        </div>
+        <button class="btn-save" onclick="saveProfile()">💾 บันทึกโปรไฟล์</button>
+      </div>
+
+      <!-- Portfolio -->
+      <div class="profile-section">
+        <h3>🖼️ Portfolio / ผลงาน</h3>
+        <div class="empty-state" style="padding:20px">
+          <div class="es-icon">📸</div>
+          <p style="font-size:13px;color:var(--gray)">เพิ่มรูปผลงาน สินค้า หรือโปรเจกต์ของคุณ<br>เพื่อให้ลูกค้าหรือนายจ้างเห็น</p>
+          <button class="btn-course" style="margin-top:10px;background:var(--blue)" onclick="alert('ฟีเจอร์อัปโหลดรูปภาพกำลังพัฒนา เร็วๆ นี้')">+ เพิ่มผลงาน</button>
+        </div>
+      </div>
+
+      <div style="height:20px"></div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV (mobile) -->
+  <div class="bottom-nav">
+    <button class="bn-btn active" id="bn-home" onclick="switchTab('home')"><div class="bn-icon">🏠</div>หน้าหลัก</button>
+    <button class="bn-btn" id="bn-learn" onclick="switchTab('learn')"><div class="bn-icon">📚</div>เรียน</button>
+    <button class="bn-btn" id="bn-market" onclick="switchTab('market')"><div class="bn-icon">💼</div>งาน</button>
+    <button class="bn-btn" id="bn-ai" onclick="switchTab('ai')"><div class="bn-icon">🤖</div>AI</button>
+    <button class="bn-btn" id="bn-profile" onclick="switchTab('profile')"><div class="bn-icon">👤</div>ฉัน</button>
+  </div>
+</div>
+
+<script>
+// ========== DATA ==========
+const CAREERS = [
+  // AGRI
+  {id:1,icon:'🍈',name:'ชาวสวนผลไม้',count:124,group:'agri',badge:'ยอดนิยม'},
+  {id:2,icon:'🌾',name:'ชาวนา/ชาวไร่',count:89,group:'agri'},
+  {id:3,icon:'🐄',name:'เกษตรกรปศุสัตว์',count:45,group:'agri'},
+  {id:4,icon:'🐟',name:'ประมงน้ำจืด',count:28,group:'agri'},
+  {id:5,icon:'🌲',name:'ชาวสวนป่า/ไม้ยืนต้น',count:36,group:'agri'},
+  {id:6,icon:'🌿',name:'เกษตรอินทรีย์',count:52,group:'agri',badge:'เทรนด์'},
+  {id:7,icon:'🍵',name:'สมุนไพร/ยาพื้นบ้าน',count:31,group:'agri'},
+  {id:8,icon:'🏭',name:'แปรรูปผลผลิตเกษตร',count:67,group:'agri'},
+  // GEM
+  {id:9,icon:'⛏️',name:'เหมืองแร่',count:19,group:'gem'},
+  {id:10,icon:'💎',name:'อัญมณีและเครื่องประดับ',count:83,group:'gem',badge:'แพร่'},
+  {id:11,icon:'🪨',name:'ช่างหินและแกะสลัก',count:22,group:'gem'},
+  // CRAFT
+  {id:12,icon:'🪵',name:'ช่างไม้/เฟอร์นิเจอร์',count:74,group:'craft',badge:'แพร่'},
+  {id:13,icon:'🧵',name:'ผ้าทอ/หัตถกรรม',count:61,group:'craft',badge:'แพร่'},
+  {id:14,icon:'🎁',name:'OTOP/วิสาหกิจชุมชน',count:95,group:'craft'},
+  {id:15,icon:'🎨',name:'งานฝีมือและของที่ระลึก',count:43,group:'craft'},
+  {id:16,icon:'🍱',name:'อาหารพื้นเมืองและขนม',count:78,group:'craft'},
+  // TECH
+  {id:17,icon:'🏗️',name:'ช่างก่อสร้าง',count:112,group:'tech'},
+  {id:18,icon:'⚡',name:'ช่างไฟฟ้า/ประปา',count:88,group:'tech'},
+  {id:19,icon:'🔧',name:'ช่างซ่อมบำรุง',count:64,group:'tech'},
+  {id:20,icon:'🚗',name:'ช่างยนต์',count:97,group:'tech'},
+  {id:21,icon:'⚙️',name:'ช่างเชื่อม/โลหะ',count:41,group:'tech'},
+  // SERVICE
+  {id:22,icon:'🏔️',name:'ท่องเที่ยวและมัคคุเทศก์',count:55,group:'service'},
+  {id:23,icon:'🏨',name:'โรงแรมและ Homestay',count:38,group:'service'},
+  {id:24,icon:'🍜',name:'ร้านอาหารและเครื่องดื่ม',count:143,group:'service'},
+  {id:25,icon:'🏪',name:'ค้าปลีก/ตลาด',count:167,group:'service'},
+  {id:26,icon:'🚚',name:'ขนส่งและโลจิสติกส์',count:72,group:'service'},
+  {id:27,icon:'💆',name:'เสริมสวย/สปา/นวดแผนไทย',count:59,group:'service'},
+  // PRO
+  {id:28,icon:'📚',name:'การศึกษา/ติวเตอร์',count:48,group:'pro'},
+  {id:29,icon:'🏥',name:'สาธารณสุขชุมชน',count:33,group:'pro'},
+  {id:30,icon:'💰',name:'บัญชีและการเงิน',count:29,group:'pro'},
+  {id:31,icon:'⚖️',name:'กฎหมายและที่ดิน',count:17,group:'pro'},
+  {id:32,icon:'💻',name:'เทคโนโลยีและดิจิทัล',count:44,group:'pro',badge:'เทรนด์'},
+  // CARE
+  {id:33,icon:'👴',name:'ดูแลผู้สูงอายุ',count:26,group:'care'},
+  {id:34,icon:'👶',name:'ดูแลเด็กและพัฒนาการ',count:21,group:'care'},
+  {id:35,icon:'🧑‍💼',name:'แรงงานทั่วไปและฟรีแลนซ์',count:189,group:'care'},
+  {id:36,icon:'🏢',name:'ผู้ประกอบการ/SME',count:76,group:'care',badge:'เร่งด่วน'},
+];
+
+const COURSES = [
+  {id:1,icon:'🌿',bg:'#e8f5e9',title:'เกษตรอินทรีย์เบื้องต้น มาตรฐาน Organic Thailand',cat:'agri',free:true,cert:true,duration:'12 ชม.',provider:'กรมวิชาการเกษตร'},
+  {id:2,icon:'📱',bg:'#e3f2fd',title:'ขายผลผลิตออนไลน์ — Shopee, TikTok Shop, Line Shopping',cat:'digital',free:true,cert:false,duration:'8 ชม.',provider:'G2G Academy'},
+  {id:3,icon:'💎',bg:'#f3e5f5',title:'ความรู้พื้นฐานอัญมณี GIA Standard สำหรับมือใหม่',cat:'gem',free:false,cert:true,duration:'20 ชม.',provider:'สถาบัน GIT'},
+  {id:4,icon:'🪵',bg:'#fff3e0',title:'ช่างไม้สักแพร่ — เทคนิคแกะสลักและการตกแต่ง',cat:'craft',free:true,cert:true,duration:'16 ชม.',provider:'วิทยาลัยอาชีวแพร่'},
+  {id:5,icon:'🧵',bg:'#fce4ec',title:'ผ้าทอพื้นเมืองแพร่ — ผ้าหมักโคลน ลายโบราณ',cat:'craft',free:true,cert:false,duration:'10 ชม.',provider:'กลุ่มแม่บ้านแพร่'},
+  {id:6,icon:'💰',bg:'#e8f5e9',title:'บัญชีรายรับรายจ่ายสำหรับเกษตรกรและ SME',cat:'biz',free:true,cert:false,duration:'6 ชม.',provider:'ธ.ก.ส.'},
+  {id:7,icon:'🤖',bg:'#e3f2fd',title:'AI และดิจิทัลเพื่อการเกษตร ยุค 4.0',cat:'digital',free:true,cert:true,duration:'15 ชม.',provider:'DEPA'},
+  {id:8,icon:'🏔️',bg:'#e0f2f1',title:'มัคคุเทศก์น้อยแพร่ — ประวัติศาสตร์ แหล่งท่องเที่ยว',cat:'agri',free:true,cert:true,duration:'18 ชม.',provider:'ททท. แพร่'},
+  {id:9,icon:'🐄',bg:'#fff8e1',title:'การเลี้ยงโคเนื้อ-โคนมคุณภาพ มาตรฐานส่งออก',cat:'agri',free:false,cert:true,duration:'24 ชม.',provider:'กรมปศุสัตว์'},
+  {id:10,icon:'⚡',bg:'#fce4ec',title:'ช่างไฟฟ้าภายในอาคาร มาตรฐาน กฟภ.',cat:'craft',free:false,cert:true,duration:'30 ชม.',provider:'การไฟฟ้าส่วนภูมิภาค'},
+  {id:11,icon:'🏥',bg:'#e8f5e9',title:'อสม. ยุคใหม่ — ใช้ AI ช่วยดูแลชุมชน',cat:'biz',free:true,cert:true,duration:'8 ชม.',provider:'สาธารณสุขแพร่'},
+  {id:12,icon:'🍜',bg:'#fff3e0',title:'เปิดร้านอาหาร — สูตรต้นทุน การตลาด ใบอนุญาต',cat:'biz',free:true,cert:false,duration:'12 ชม.',provider:'G2G Academy'},
+];
+
+const JOBS = [
+  {id:1,title:'รับซื้อลำไยสด 2 ตัน/สัปดาห์',org:'ล้งผลไม้แพร่ (สุทธิพร)',salary:'ราคาตามตลาด + โบนัส',loc:'อ.เมืองแพร่',type:'agri',tags:['ผลไม้','ลำไย','รับซื้อ'],deadline:'30 มิ.ย. 2569'},
+  {id:2,title:'ช่างไม้สักฝีมือดี — งานเฟอร์นิเจอร์ส่งออก',org:'โรงงานไม้แพร่เฟอร์นิเจอร์',salary:'18,000–25,000 บ./เดือน',loc:'อ.สูงเม่น',type:'craft',tags:['ไม้สัก','เฟอร์นิเจอร์','ประจำ'],deadline:'15 มิ.ย. 2569'},
+  {id:3,title:'Guide ท่องเที่ยวชุมชน — ไทย/อังกฤษ/จีน',org:'วิสาหกิจท่องเที่ยวแพร่',salary:'500–800 บ./ทริป + ค่าคอม',loc:'อ.เมืองแพร่',type:'service',tags:['ท่องเที่ยว','ภาษา','ฟรีแลนซ์'],deadline:'ไม่จำกัด'},
+  {id:4,title:'แม่บ้านตัดเย็บเสื้อผ้า — ทำที่บ้านได้',org:'กลุ่มสตรีแม่บ้านแพร่',salary:'8,000–12,000 บ./เดือน',loc:'ทุกอำเภอ',type:'craft',tags:['ตัดเย็บ','ที่บ้าน','OTOP'],deadline:'ไม่จำกัด'},
+  {id:5,title:'นักวิเคราะห์ข้อมูลเกษตร (Data Analyst)',org:'G2G AgriTech',salary:'25,000–35,000 บ./เดือน',loc:'ทำงานออนไลน์',type:'tech',tags:['Data','AI','ออนไลน์'],deadline:'30 มิ.ย. 2569'},
+  {id:6,title:'ช่างประปาและระบบน้ำเพื่อเกษตร',org:'เทศบาลเมืองแพร่',salary:'15,000–18,000 บ./เดือน',loc:'อ.เมืองแพร่',type:'tech',tags:['ช่างประปา','ราชการ','สิทธิประโยชน์'],deadline:'1 ก.ค. 2569'},
+  {id:7,title:'ฟรีแลนซ์ทำ Content TikTok เกษตร',org:'เปิดรับทั่วไป',salary:'3,000–15,000 บ./งาน',loc:'ออนไลน์',type:'freelance',tags:['TikTok','Content','ฟรีแลนซ์'],deadline:'ไม่จำกัด'},
+  {id:8,title:'ผู้จัดการร้านกาแฟสวนท่องเที่ยว',org:'วิสาหกิจชุมชนแพร่',salary:'12,000–16,000 บ./เดือน',loc:'อ.ร้องกวาง',type:'service',tags:['กาแฟ','ท่องเที่ยว','บริหาร'],deadline:'20 มิ.ย. 2569'},
+];
+
+const ALL_SKILLS = ['เกษตรอินทรีย์','ไม้สัก','อัญมณี','ท่องเที่ยว','ทำอาหาร','ตัดเย็บ','เขียนโปรแกรม','บัญชี','ภาษาอังกฤษ','ภาษาจีน','ขับรถ','ซ่อมไฟฟ้า','ถ่ายภาพ','ออกแบบ','Social Media','ขายออนไลน์','ดูแลผู้สูงอายุ','สอนหนังสือ','โลจิสติกส์','เชื่อมโลหะ'];
+
+// ========== STATE ==========
+let currentUser = JSON.parse(localStorage.getItem('g2g_user') || 'null');
+let currentTab = 'home';
+let chatHistory = [];
+
+// ========== PDPA ==========
+function acceptPdpa(){
+  document.getElementById('pdpaOverlay').style.display='none';
+  if(currentUser) showApp();
+  else document.getElementById('loginScreen').style.display='flex';
+}
+
+// ========== LOGIN ==========
+function switchLoginTab(t){
+  document.getElementById('ltabLogin').classList.toggle('active',t==='login');
+  document.getElementById('ltabReg').classList.toggle('active',t==='register');
+  document.getElementById('loginPanel').style.display=t==='login'?'block':'none';
+  document.getElementById('registerPanel').style.display=t==='register'?'block':'none';
+}
+function doLogin(){
+  const phone=document.getElementById('loginPhone').value.trim();
+  const pass=document.getElementById('loginPass').value.trim();
+  if(!phone||!pass){alert('กรุณากรอกข้อมูลให้ครบ');return;}
+  // demo login
+  const user={name:'ผู้ใช้ทดลอง',phone,career:1,careerName:'🍈 ชาวสวนผลไม้',district:'อ.เมืองแพร่',bio:'',skills:[]};
+  localStorage.setItem('g2g_user',JSON.stringify(user));
+  currentUser=user;
+  document.getElementById('loginScreen').style.display='none';
+  showApp();
+}
+function doRegister(){
+  const name=document.getElementById('regName').value.trim();
+  const phone=document.getElementById('regPhone').value.trim();
+  const careerId=document.getElementById('regCareer').value;
+  const pass=document.getElementById('regPass').value.trim();
+  if(!name||!phone||!careerId||!pass){alert('กรุณากรอกข้อมูลให้ครบ');return;}
+  if(pass.length<6){alert('รหัสผ่านต้องมีอย่างน้อย 6 ตัว');return;}
+  const career=CAREERS.find(c=>c.id==careerId);
+  const user={name,phone,career:parseInt(careerId),careerName:career?(career.icon+' '+career.name):'',district:'อ.เมืองแพร่',bio:'',skills:[]};
+  localStorage.setItem('g2g_user',JSON.stringify(user));
+  currentUser=user;
+  document.getElementById('loginScreen').style.display='none';
+  showApp();
+}
+function doLogout(){
+  if(!confirm('ออกจากระบบ?'))return;
+  localStorage.removeItem('g2g_user');
+  currentUser=null;
+  document.getElementById('mainApp').style.display='none';
+  document.getElementById('loginScreen').style.display='flex';
+}
+
+// ========== SHOW APP ==========
+function showApp(){
+  document.getElementById('mainApp').style.display='block';
+  updateUserUI();
+  renderCareers();
+  renderCourses('all');
+  renderJobs('all');
+  initChat();
+  initProfile();
+}
+function updateUserUI(){
+  if(!currentUser)return;
+  const career=CAREERS.find(c=>c.id===currentUser.career);
+  document.getElementById('topName').textContent=currentUser.name||'G2G Member';
+  document.getElementById('topMeta').textContent=currentUser.careerName||'G2G Career';
+  document.getElementById('topAvatar').textContent=career?career.icon:'🌾';
+  document.getElementById('profileAvatar').textContent=career?career.icon:'🌾';
+  document.getElementById('profileName').textContent=currentUser.name||'ผู้ใช้';
+  document.getElementById('profileCareer').textContent=currentUser.careerName||'กลุ่มอาชีพ';
+}
+
+// ========== TABS ==========
+function switchTab(t){
+  currentTab=t;
+  document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  // desktop tabs
+  document.querySelectorAll('.tab-btn').forEach((btn,i)=>{
+    const tabs=['home','learn','market','ai','profile'];
+    btn.classList.toggle('active',tabs[i]===t);
+  });
+  // bottom nav
+  document.querySelectorAll('.bn-btn').forEach(btn=>{
+    btn.classList.toggle('active',btn.id==='bn-'+t);
+  });
+}
+
+// ========== RENDER CAREERS ==========
+function renderCareers(filter=''){
+  const groups=[
+    {id:'agri',ids:[1,2,3,4,5,6,7,8]},
+    {id:'gem',ids:[9,10,11]},
+    {id:'craft',ids:[12,13,14,15,16]},
+    {id:'tech',ids:[17,18,19,20,21]},
+    {id:'service',ids:[22,23,24,25,26,27]},
+    {id:'pro',ids:[28,29,30,31,32]},
+    {id:'care',ids:[33,34,35,36]},
+  ];
+  groups.forEach(g=>{
+    const el=document.getElementById('grid-'+g.id);
+    if(!el)return;
+    const careers=CAREERS.filter(c=>g.ids.includes(c.id)&&(!filter||c.name.includes(filter)));
+    el.innerHTML=careers.map(c=>`
+      <div class="career-card" onclick="selectCareer(${c.id})">
+        ${c.badge?`<div class="career-badge">${c.badge}</div>`:''}
+        <div class="career-icon">${c.icon}</div>
+        <div class="career-name">${c.name}</div>
+        <div class="career-count">👥 ${c.count} คน</div>
+      </div>`).join('');
+  });
+}
+function filterCareers(q){renderCareers(q)}
+async function selectCareer(id){
+  const c=CAREERS.find(x=>x.id===id);
+  if(!c)return;
+  // Try to load knowledge from API
+  try {
+    const r = await fetch('/api/career/occupations?search='+encodeURIComponent(c.name));
+    if(r.ok){
+      const d = await r.json();
+      for(const s of (d.sectors||[])){
+        for(const o of (s.occupations||[])){
+          if(o.name===c.name||o.name.includes(c.name.slice(0,5))){
+            showCareerModal(c, o); return;
+          }
+        }
+      }
+    }
+  } catch(e){}
+  // Fallback
+  alert(`${c.icon} ${c.name}\n👥 ${c.count} คนในกลุ่มนี้\n\nเข้าไปที่แท็บ "🤖 AI ที่ปรึกษา" เพื่อถามคำแนะนำเฉพาะอาชีพนี้`);
+}
+
+function showCareerModal(c, occ){
+  const gaps = (occ.knowledge_gaps||[]).slice(0,3).map(g=>`• ${g}`).join('\n');
+  const tech = (occ.technology||[]).slice(0,3).map(t=>`• ${t}`).join('\n');
+  const income = occ.avg_income_monthly ? `💰 รายได้เฉลี่ย ${occ.avg_income_monthly.toLocaleString()} บ./เดือน\n` : '';
+  alert(`${c.icon} ${c.name}\n${income}👥 ${c.count} คนในกลุ่มนี้\n\n📚 ความรู้ที่ยังขาด:\n${gaps||'ยังไม่มีข้อมูล'}\n\n💻 เทคโนโลยีที่ช่วยได้:\n${tech||'ยังไม่มีข้อมูล'}\n\n→ ถามรายละเอียดเพิ่มเติมจาก AI ที่ปรึกษา`);
+}
+
+// ========== COURSES ==========
+function renderCourses(cat){
+  const list=document.getElementById('courseList');
+  const filtered=cat==='all'?COURSES:cat==='free'?COURSES.filter(c=>c.free):cat==='cert'?COURSES.filter(c=>c.cert):COURSES.filter(c=>c.cat===cat);
+  list.innerHTML=filtered.map(c=>`
+    <div class="course-card">
+      <div class="course-thumb" style="background:${c.bg}">${c.icon}</div>
+      <div class="course-info">
+        <div class="course-title">${c.title}</div>
+        <div class="course-meta">⏱ ${c.duration} • 📋 ${c.provider}</div>
+        <div class="course-tags">
+          ${c.free?'<span class="tag tag-free">ฟรี</span>':'<span class="tag" style="background:#fce4ec;color:#c62828">มีค่าใช้จ่าย</span>'}
+          ${c.cert?'<span class="tag tag-cert">มีใบ Cert</span>':''}
+        </div>
+        <button class="btn-course" onclick="enrollCourse(${c.id})">สมัครเรียน</button>
+      </div>
+    </div>`).join('');
+  if(!filtered.length)list.innerHTML='<div class="empty-state"><div class="es-icon">📚</div><p>ยังไม่มีคอร์สในหมวดนี้<br>กำลังพัฒนาเพิ่มเติม</p></div>';
+}
+function filterCourse(cat,btn){
+  document.querySelectorAll('#tab-learn .btn-filter').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCourses(cat);
+}
+function enrollCourse(id){
+  const c=COURSES.find(x=>x.id===id);
+  alert(`สมัครเรียน: ${c.title}\n\n✅ ระบบบันทึกการสมัครแล้ว\nผู้ดูแลระบบจะติดต่อกลับทาง LINE ภายใน 24 ชั่วโมง\n\nหรือเพิ่มเพื่อน @phrae555 เพื่อเริ่มเรียนทันที`);
+}
+
+// ========== JOBS ==========
+function renderJobs(type){
+  const list=document.getElementById('jobList');
+  const filtered=type==='all'?JOBS:JOBS.filter(j=>j.type===type);
+  list.innerHTML=filtered.map(j=>`
+    <div class="job-card">
+      <div class="job-title">${j.title}</div>
+      <div class="job-org">🏢 ${j.org}</div>
+      <div class="job-meta">📍 ${j.loc} • ⏰ ปิดรับ: ${j.deadline}</div>
+      <div class="job-salary">💰 ${j.salary}</div>
+      <div class="job-tags">${j.tags.map(t=>`<span class="badge badge-green">${t}</span>`).join('')}</div>
+      <button class="btn-apply" onclick="applyJob(${j.id})">สมัครงาน</button>
+      <button class="btn-apply-outline" onclick="saveJob(${j.id})">บันทึก</button>
+    </div>`).join('');
+  if(!filtered.length)list.innerHTML='<div class="empty-state"><div class="es-icon">💼</div><p>ยังไม่มีประกาศในหมวดนี้</p></div>';
+}
+function filterJob(t,btn){
+  document.querySelectorAll('#tab-market .btn-filter').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderJobs(t);
+}
+function applyJob(id){
+  const j=JOBS.find(x=>x.id===id);
+  alert(`สมัครงาน: ${j.title}\n\nระบบบันทึกการสมัครแล้ว\n📱 ผู้ประกาศจะติดต่อกลับทาง ${currentUser?currentUser.phone:'เบอร์ที่ลงทะเบียน'} ภายใน 48 ชั่วโมง`);
+}
+function saveJob(id){alert('บันทึกงานแล้ว — ดูงานที่บันทึกได้ในโปรไฟล์')}
+function showPostJobForm(){alert('📋 ลงประกาศงาน/รับงาน\n\nติดต่อทีม G2G เพื่อลงประกาศ:\nLINE: @930pchss (น้องเซลล์)\nหรือโทร: 099-999-9999\n\nฟีเจอร์ลงประกาศตัวเองกำลังพัฒนา')}
+
+// ========== AI CHAT ==========
+function initChat(){
+  chatHistory=[];
+  const msgs=document.getElementById('chatMessages');
+  msgs.innerHTML='';
+  addBotMsg(`สวัสดีครับ 🙏 ผมคือ AI ที่ปรึกษาอาชีพ G2G Career\n\nช่วยได้เรื่อง:\n• อาชีพ ทักษะ และการพัฒนาตัวเอง\n• ราคาตลาด ผลผลิต ผลไม้แพร่\n• แหล่งทุน สินเชื่อ โครงการภาครัฐ\n• ธุรกิจ SME และการตลาดออนไลน์\n\nถามได้เลยครับ! 😊`);
+}
+function addBotMsg(text){
+  const msgs=document.getElementById('chatMessages');
+  const div=document.createElement('div');
+  div.className='msg msg-bot';
+  div.style.whiteSpace='pre-line';
+  div.textContent=text;
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+function addUserMsg(text){
+  const msgs=document.getElementById('chatMessages');
+  const div=document.createElement('div');
+  div.className='msg msg-user';
+  div.textContent=text;
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+function setChat(text){
+  document.getElementById('chatInput').value=text;
+  switchTab('ai');
+  setTimeout(sendChat,300);
+}
+async function sendChat(){
+  const input=document.getElementById('chatInput');
+  const text=input.value.trim();
+  if(!text)return;
+  input.value='';
+  addUserMsg(text);
+  chatHistory.push({role:'user',content:text});
+
+  // Loading
+  const msgs=document.getElementById('chatMessages');
+  const loadDiv=document.createElement('div');
+  loadDiv.className='msg msg-bot';
+  loadDiv.innerHTML='กำลังคิด<span class="loading-dots"></span>';
+  msgs.appendChild(loadDiv);
+  msgs.scrollTop=msgs.scrollHeight;
+
+  try{
+    const systemPrompt=`คุณคือ AI ที่ปรึกษาอาชีพ G2G Career Platform จังหวัดแพร่ ประเทศไทย
+ผู้ใช้คือ: ${currentUser?currentUser.name:'ประชาชน'} กลุ่มอาชีพ: ${currentUser?currentUser.careerName:'ไม่ระบุ'}
+ตอบภาษาไทยเสมอ กระชับ เป็นกันเอง เน้นข้อมูลที่ใช้งานได้จริงสำหรับประชาชนแพร่และภาคเหนือ
+ครอบคลุม: เกษตร อัญมณี ไม้สัก ผ้าทอ ท่องเที่ยว ช่างฝีมือ SME ราชการ ทุนสนับสนุน`;
+
+    const resp=await fetch('/api/career/ai-advice',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        question:text,
+        occupation_id: currentUser ? 'S01-0'+currentUser.career : null,
+        user_context:`ผู้ใช้: ${currentUser?currentUser.name:'ประชาชน'}, อาชีพ: ${currentUser?currentUser.careerName:'ไม่ระบุ'}, พื้นที่: ${currentUser?currentUser.district:'แพร่'}`
+      })
+    });
+
+    let reply='';
+    if(resp.ok){
+      const data=await resp.json();
+      reply=data.reply||data.content||data.message||'ขอโทษครับ ไม่สามารถตอบได้ในขณะนี้';
+    } else {
+      // Fallback responses
+      reply=getFallbackReply(text);
+    }
+
+    loadDiv.remove();
+    chatHistory.push({role:'assistant',content:reply});
+    addBotMsg(reply);
+  } catch(e){
+    loadDiv.remove();
+    addBotMsg(getFallbackReply(text));
+  }
+}
+function getFallbackReply(text){
+  const t=text.toLowerCase();
+  if(t.includes('ลำไย')||t.includes('ผลไม้')||t.includes('ราคา'))
+    return 'ราคาลำไยแพร่ปัจจุบัน (พ.ค. 2569)\n• ลำไยสด AA: 18-22 บ./กก.\n• ลำไยสด A: 14-18 บ./กก.\n• ลำไยอบแห้ง: 45-65 บ./กก.\n\nแนะนำขายผ่านล้งโดยตรง หรือแพลตฟอร์ม G2G เพื่อราคาที่ดีกว่า';
+  if(t.includes('ทุน')||t.includes('สินเชื่อ'))
+    return 'แหล่งทุนสำหรับเกษตรกรแพร่:\n• ธ.ก.ส. — สินเชื่อเกษตรกร ดอกเบี้ย 4.5%/ปี\n• กรมส่งเสริมการเกษตร — ทุนให้เปล่าสำหรับวิสาหกิจ\n• SME D Bank — สินเชื่อ SME ดอกเบี้ยต่ำ\n• กองทุนหมู่บ้าน — กู้ได้ถึง 100,000 บ.\n\nติดต่อ: ธ.ก.ส. แพร่ 054-511-666';
+  if(t.includes('otop')||t.includes('ออนไลน์')||t.includes('ขาย'))
+    return 'วิธีขาย OTOP ออนไลน์:\n1. ขึ้นทะเบียน OTOP ที่พัฒนาชุมชนจังหวัด\n2. เปิดร้านบน Shopee/Lazada ฟรี\n3. ทำ TikTok Shop — เข้าถึงลูกค้าล้านคน\n4. LINE Shopping — ขายผ่าน LINE ได้เลย\n5. ใช้ G2G Marketplace — ฟรีสำหรับสมาชิก\n\nช่วยอะไรเพิ่มได้อีกครับ?';
+  if(t.includes('อัญมณี')||t.includes('เครื่องประดับ'))
+    return 'ธุรกิจอัญมณีแพร่:\n• แพร่มีแหล่งแร่ทับทิม ไพลิน สีชมพู\n• ต้องมี ใบอนุญาตค้าแร่ จาก อุตสาหกรรมจังหวัด\n• GIT Certification ช่วยยกระดับราคา 30-50%\n• ช่องทางขาย: งานแสดงสินค้า GEM Thailand, ออนไลน์\n\nติดต่อ น้องไพลิน LINE @jewelry สำหรับคำแนะนำเพิ่มเติม';
+  return 'ขอบคุณที่ถามครับ 🙏\n\nสามารถถามได้เรื่อง:\n• ราคาสินค้าเกษตร ผลไม้แพร่\n• แหล่งทุนและสินเชื่อ\n• วิธีขายออนไลน์ OTOP\n• อัญมณี ไม้สัก ผ้าทอแพร่\n• ธุรกิจ SME\n\nหรือเพิ่มเพื่อน LINE @phrae555 เพื่อรับคำแนะนำเฉพาะเรื่อง';
+}
+
+// ========== PROFILE ==========
+function initProfile(){
+  if(!currentUser)return;
+  document.getElementById('pfName').value=currentUser.name||'';
+  document.getElementById('pfPhone').value=currentUser.phone||'';
+  document.getElementById('pfBio').value=currentUser.bio||'';
+
+  const chips=document.getElementById('skillChips');
+  chips.innerHTML=ALL_SKILLS.map(s=>`
+    <span class="skill-chip ${(currentUser.skills||[]).includes(s)?'selected':''}" onclick="toggleSkill(this,'${s}')">${s}</span>
+  `).join('');
+}
+function toggleSkill(el,skill){
+  el.classList.toggle('selected');
+  if(!currentUser.skills)currentUser.skills=[];
+  const idx=currentUser.skills.indexOf(skill);
+  if(idx>-1)currentUser.skills.splice(idx,1);
+  else currentUser.skills.push(skill);
+}
+function saveProfile(){
+  if(!currentUser)return;
+  currentUser.name=document.getElementById('pfName').value.trim();
+  currentUser.phone=document.getElementById('pfPhone').value.trim();
+  currentUser.bio=document.getElementById('pfBio').value.trim();
+  currentUser.district=document.getElementById('pfDistrict').value;
+  localStorage.setItem('g2g_user',JSON.stringify(currentUser));
+  updateUserUI();
+  alert('✅ บันทึกโปรไฟล์สำเร็จ');
+}
+
+// ========== INIT ==========
+window.addEventListener('load',()=>{
+  if(currentUser){
+    document.getElementById('pdpaOverlay').style.display='none';
+    document.getElementById('loginScreen').style.display='none';
+    showApp();
+  }
+  // init login tab
+  document.getElementById('loginPanel').style.display='block';
+  document.getElementById('registerPanel').style.display='none';
+});
+</script>
+</body>
+</html>

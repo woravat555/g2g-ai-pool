@@ -1,0 +1,198 @@
+{
+  "organization": "G2G Gov2Global",
+  "updated": "2026-05-27",
+  "note": "ทะเบียนทีมงาน G2G — ข้อมูลถูกต้องจากผู้บริหาร อัปเดต 27 พ.ค. 2569",
+  "team": [
+    {
+      "no": 1,
+      "slug": "GAME_G2G",
+      "lineOA": "@yyj1761e",
+      "channelId": "2010215194",
+      "fullName": "นาย ปฐวี กิ่งแก้ว",
+      "nickname": "เกมส์",
+      "title": "หัวหน้าทีม Government Relations",
+      "role": "Government Relations + โครงการแพร่",
+      "aiName": "AI เกมส์",
+      "color": "#1a237e",
+      "responsibilities": [
+        "ประสานงานกระทรวง ราชการส่วนกลางและส่วนภูมิภาค",
+        "ผลักดัน G2G Phrae Pilot — Phrae Agriculture App, LINE AI เกษตรกร",
+        "Ministry Penetration: อว., เกษตร, ศึกษา, แรงงาน, พม.",
+        "Stakeholder Management: หัวหน้าหน่วยงานแพร่ 9 แห่ง + ผู้บริหารกระทรวง"
+      ]
+    },
+    {
+      "no": 2,
+      "slug": "WAN_G2G",
+      "lineOA": "@974ifwsg",
+      "channelId": "2010215195",
+      "fullName": "นางสาว ธฤษวรรณ เหล่าวีรสกุล",
+      "nickname": "วรรณ",
+      "title": "หัวหน้าฝ่าย Operations",
+      "role": "Operations + ประสานงานทีม",
+      "aiName": "AI วรรณ",
+      "color": "#4a148c",
+      "responsibilities": [
+        "บริหารจัดการภายใน ระบบงาน ขั้นตอน",
+        "เชื่อมทีม — ระหว่างเกมส์, ใบแพร, และ CEO",
+        "Track ความคืบหน้าโปรเจกต์ทุกตัว รายงาน CEO",
+        "จัดการเอกสาร สัญญา นัดหมาย ปฏิทินทีม"
+      ]
+    },
+    {
+      "no": 3,
+      "slug": "BAIPARE_G2G",
+      "lineOA": "@729yshru",
+      "channelId": "2010215196",
+      "fullName": "นางสาว แพรวา วรเสน",
+      "nickname": "ใบแพร",
+      "title": "หัวหน้าฝ่าย Creative & Communications",
+      "role": "Creative + Design + LINE OA + Social Media",
+      "aiName": "AI ใบแพร",
+      "color": "#880e4f",
+      "responsibilities": [
+        "กราฟิก, visual content, brand materials",
+        "LINE OA Management — ดูแล LINE OA ทั้งหมดของ G2G",
+        "Social Media: Facebook, TikTok, Instagram — content calendar",
+        "ข้อความประชาสัมพันธ์, copywriting, campaign"
+      ]
+    },
+    {
+      "no": 4,
+      "slug": "SOM_G2G",
+      "lineOA": "@154oekue",
+      "channelId": "2010215197",
+      "fullName": "นางสาว เพ็ญประภา พรายสวาท",
+      "nickname": "ส้ม",
+      "title": "ผู้เชี่ยวชาญด้านอัญมณี",
+      "role": "อัญมณีและตลาดส่งออก",
+      "aiName": "AI ส้ม",
+      "color": "#e65100",
+      "responsibilities": [
+        "ผลักดันธุรกิจอัญมณีจังหวัดแพร่และภาคเหนือผ่าน G2G Platform",
+        "เชื่อมผู้ผลิต-ผู้ซื้อ ทั้งในประเทศและส่งออก",
+        "GIT certification, มาตรฐาน GIA, การ grading",
+        "ประสานงาน platform จิวเวลรี่กับ Le Phaya"
+      ]
+    },
+    {
+      "no": 5,
+      "slug": "PRUWASA_G2G",
+      "lineOA": "@764veplv",
+      "channelId": "2010215198",
+      "fullName": "นาง ภูวษา สินธุวงศ์",
+      "nickname": "ยุ้ย",
+      "title": "หัวหน้าด้านธุรกิจและการประสานงาน",
+      "role": "Business & Coordination + ธุรกิจ",
+      "aiName": "AI ภูวษา",
+      "color": "#b71c1c",
+      "responsibilities": [
+        "บริหารรายได้, ต้นทุน, ขยาย customer base G2G",
+        "เชื่อมทีมทั้งหมด รวมถึงประสาน external partner",
+        "วิเคราะห์โอกาสธุรกิจ สร้าง deal flow",
+        "ดูแล Business Development ทุกโปรเจกต์"
+      ]
+    },
+    {
+      "no": 6,
+      "slug": "AMPHAIWAN_G2G",
+      "lineOA": "@005vsrze",
+      "channelId": "2010215199",
+      "fullName": "นาง อำไพวรรณ ภราดร์นุวัฒน์",
+      "nickname": "ต้อย",
+      "title": "ทีมงาน G2G",
+      "role": "ผู้ช่วยทั่วไป + สนับสนุนทีม",
+      "aiName": "AI แอมพร",
+      "color": "#006064",
+      "responsibilities": [
+        "สนับสนุนการทำงานของทีม G2G ในทุกภารกิจ",
+        "ประสานงานและสื่อสารกับทีม",
+        "บริหารงานและติดตามความคืบหน้า",
+        "ช่วย draft เอกสาร, ข้อความ, รายงาน"
+      ]
+    },
+    {
+      "no": 7,
+      "slug": "PIMONRAT_G2G",
+      "lineOA": "@654ottfx",
+      "channelId": "2010215200",
+      "fullName": "นางสาว พิมลรัตน์ ตันจารุพันธ์",
+      "nickname": "หนูนา",
+      "title": "ผู้เชี่ยวชาญด้าน IT และ Data Center",
+      "role": "IT Infrastructure + Data Center + AI Integration",
+      "aiName": "AI พิมลรัตน์",
+      "color": "#1b5e20",
+      "responsibilities": [
+        "ดูแล G2G AI Pool (Fly.io), server, database",
+        "บริหารข้อมูล Airtable, data pipeline, backup",
+        "เชื่อมระบบ AI กับ LINE, Webhook, API",
+        "ดูแลความปลอดภัยข้อมูล secrets management"
+      ]
+    },
+    {
+      "no": 8,
+      "slug": "CHADA_G2G",
+      "lineOA": "@284yckbo",
+      "channelId": "2010215201",
+      "fullName": "นางสาว ชาดา สมบูรณ์สุข",
+      "nickname": "แคท",
+      "title": "ผู้รับผิดชอบด้านข่าวและการสื่อสาร",
+      "role": "ข่าว + Media Relations + Content Strategy",
+      "aiName": "AI ชาดา",
+      "color": "#006064",
+      "responsibilities": [
+        "จับประเด็น เขียนข่าว press release",
+        "สื่อสารภายใน-ภายนอก บริหารภาพลักษณ์ G2G",
+        "ติดต่อสื่อ นักข่าว รายการต่างๆ",
+        "กำหนดทิศทางการสื่อสาร G2G ในระยะยาว"
+      ]
+    },
+    {
+      "no": 9,
+      "slug": "PANNEE_G2G",
+      "lineOA": "@899cacob",
+      "channelId": "2010215202",
+      "fullName": "นาง พรรณ แสงสันต์",
+      "nickname": "พรรณี",
+      "title": "ผู้รับผิดชอบด้านมวลชนและชุมชนจังหวัดแพร่",
+      "role": "มวลชนแพร่ + Community Outreach",
+      "aiName": "AI พรรณี",
+      "color": "#33691e",
+      "responsibilities": [
+        "สร้างความสัมพันธ์กับเกษตรกร ชุมชน ผู้นำท้องถิ่น",
+        "รับฟัง pain point เกษตรกร นำมาพัฒนา G2G",
+        "เชื่อมเกษตรกร, กลุ่มแม่บ้าน, ผู้นำหมู่บ้าน, อปท.",
+        "เพิ่มจำนวนเกษตรกรที่ใช้แอป G2G ในแพร่"
+      ]
+    },
+    {
+      "no": 10,
+      "slug": "SON_G2G",
+      "lineOA": "@051fbewu",
+      "channelId": "2010215203",
+      "fullName": "นาย สน ลือวัฒนานนท์",
+      "nickname": "ซ้อน",
+      "title": "ทีมงาน G2G",
+      "role": "ผู้ช่วยทั่วไป + วิเคราะห์และขับเคลื่อนโปรเจกต์",
+      "aiName": "AI ซ้อน",
+      "color": "#37474f",
+      "responsibilities": [
+        "สนับสนุนการทำงานของทีม G2G ในทุกภารกิจ",
+        "ช่วยวิเคราะห์ข้อมูล จัดการงาน และประสานงานทีม",
+        "ขับเคลื่อนโปรเจกต์ G2G ให้คืบหน้า",
+        "ช่วยติดตามและรายงานความคืบหน้า"
+      ]
+    }
+  ],
+  "corrections": {
+    "date": "2026-05-27",
+    "fixed": [
+      "WAN_G2G: เคยเขียนผิดเป็น 'วรรณ (Maew)' — ถูกต้องคือ 'วรรณ (ธฤษวรรณ เหล่าวีรสกุล)'",
+      "AMPHAIWAN_G2G: เคยมี comment ผิด 'แม้วสาว' — ถูกต้องคือ 'อำไพวรรณ ภราดร์นุวัฒน์ ชื่อเล่น: ต้อย'",
+      "PRUWASA_G2G: ชื่อเล่นคือ 'ยุ้ย' ไม่ใช่ชื่อ slug PRUWASA",
+      "PIMONRAT_G2G: ชื่อเล่นคือ 'หนูนา'",
+      "CHADA_G2G: ชื่อเล่นคือ 'แคท'",
+      "SON_G2G: ชื่อจริงคือ 'สน ลือวัฒนานนท์' ชื่อเล่น 'ซ้อน'"
+    ]
+  }
+}

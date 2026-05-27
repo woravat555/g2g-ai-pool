@@ -1,0 +1,48 @@
+{
+  "ministry": {
+    "name_th": "กระทรวงดิจิทัลเพื่อเศรษฐกิจและสังคม",
+    "name_en": "Ministry of Digital Economy and Society",
+    "acronym": "ดศ.",
+    "code": "mdes",
+    "minister": "รมว.ดิจิทัลฯ",
+    "established": 2559,
+    "budget_2568": 35000,
+    "color_primary": "#00695c",
+    "color_secondary": "#00897b",
+    "color_accent": "#00e5ff",
+    "icon": "💻",
+    "api_key": "mdes2026",
+    "api_base": "https://g2g-ai-pool.fly.dev"
+  },
+  "departments": [
+    {"code": "etda", "name": "สำนักงานพัฒนาธุรกรรมทางอิเล็กทรอนิกส์", "name_en": "ETDA", "budget": 2800, "staff": 800, "focus": "e-Commerce/e-Transaction"},
+    {"code": "depa", "name": "สำนักงานส่งเสริมเศรษฐกิจดิจิทัล", "name_en": "DEPA", "budget": 4500, "staff": 600, "focus": "Digital Startup/SME"},
+    {"code": "dga", "name": "สำนักงานพัฒนารัฐบาลดิจิทัล", "name_en": "DGA", "budget": 3200, "staff": 500, "focus": "รัฐบาลดิจิทัล"},
+    {"code": "nbt", "name": "คณะกรรมการกิจการกระจายเสียง", "name_en": "NBTC", "budget": 5000, "staff": 1200, "focus": "โทรคมนาคม/5G"},
+    {"code": "nt", "name": "บริษัท โทรคมนาคมแห่งชาติ", "name_en": "NT", "budget": 8000, "staff": 15000, "focus": "โครงข่าย/อินเทอร์เน็ต"},
+    {"code": "cat", "name": "สำนักงานคณะกรรมการคุ้มครองข้อมูล", "name_en": "PDPC", "budget": 800, "staff": 200, "focus": "PDPA/ข้อมูลส่วนบุคคล"}
+  ],
+  "policies": [
+    {"id": 1, "title": "Thailand Digital Valley", "description": "สร้างเมืองดิจิทัลศูนย์กลางอาเซียน", "status": "กำลังดำเนินการ", "progress": 55, "budget": 12000},
+    {"id": 2, "title": "5G ทั่วไทย", "description": "ขยายโครงข่าย 5G ครอบคลุม 77 จังหวัด", "status": "กำลังดำเนินการ", "progress": 68, "budget": 25000},
+    {"id": 3, "title": "Digital ID แห่งชาติ", "description": "ระบบยืนยันตัวตนดิจิทัลแห่งชาติ", "status": "กำลังดำเนินการ", "progress": 80, "budget": 4500},
+    {"id": 4, "title": "Cloud Government", "description": "ย้ายระบบราชการขึ้น Cloud", "status": "กำลังดำเนินการ", "progress": 60, "budget": 8000},
+    {"id": 5, "title": "AI สำหรับเกษตร", "description": "ประยุกต์ AI ช่วยเกษตรกรทำนายผลผลิต", "status": "เริ่มดำเนินการ", "progress": 35, "budget": 2000},
+    {"id": 6, "title": "Cybersecurity แห่งชาติ", "description": "ป้องกันภัยไซเบอร์ระดับชาติ", "status": "กำลังดำเนินการ", "progress": 72, "budget": 6000}
+  ],
+  "key_kpis": {
+    "internet_coverage_pct": 92,
+    "digital_govt_services": 1250,
+    "digital_economy_gdp_pct": 30,
+    "startup_unicorn": 3,
+    "broadband_household_pct": 85,
+    "data_center_count": 45
+  },
+  "province_rollout": [
+    {"province": "เชียงราย", "province_code": "chiangrai", "completion_pct": 82, "phase": 1, "focus": "5G+ดิจิทัลเกษตร"},
+    {"province": "อุดรธานี", "province_code": "udonthani", "completion_pct": 75, "phase": 1, "focus": "Cloud อปท."},
+    {"province": "เชียงใหม่", "province_code": "chiangmai", "completion_pct": 88, "phase": 1, "focus": "Digital Hub"},
+    {"province": "ขอนแก่น", "province_code": "khonkaen", "completion_pct": 70, "phase": 2, "focus": "Smart City"},
+    {"province": "สงขลา", "province_code": "songkhla", "completion_pct": 65, "phase": 2, "focus": "5G ชายแดน"}
+  ]
+}

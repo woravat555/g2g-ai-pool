@@ -1,0 +1,125 @@
+{
+  "_comment": "HR / Payroll static cache — G2G AgriTech (phrae / chiangrai / udonthani). Iron Rule #1 fallback. Generated 2026-05-25.",
+  "_version": "1.0.0",
+  "_generated": "2026-05-25",
+  "_source_refs": [
+    "พ.ร.บ.ระเบียบข้าราชการพลเรือน 2551",
+    "บัญชีเงินเดือนขั้นต่ำ-ขั้นสูงของข้าราชการพลเรือนสามัญ (ปรับปรุง 2567)",
+    "ประมวลรัษฎากร — ภาษีเงินได้บุคคลธรรมดา 2568",
+    "พ.ร.บ.ประกันสังคม 2533 (เพดาน 750 บ./เดือน @ 5% ของ 15,000)",
+    "พ.ร.บ.กองทุนบำเหน็จบำนาญข้าราชการ 2539 (กบข. 3%)"
+  ],
+
+  "salary_scale": {
+    "_note": "บัญชีเงินเดือนข้าราชการพลเรือนสามัญ — แท่งวิชาการ (K), แท่งทั่วไป (O/S), แท่งบริหาร (M) — ใช้ขั้นกลาง (mid-step)",
+    "academic": [
+      { "code": "K1", "level_name": "ปฏิบัติการ",        "min_salary": 16190, "mid_salary": 22500, "max_salary": 27000, "experience_years": "0–4 ปี" },
+      { "code": "K2", "level_name": "ชำนาญการ (ชก.)",    "min_salary": 21080, "mid_salary": 33000, "max_salary": 45200, "experience_years": "4–10 ปี" },
+      { "code": "K3", "level_name": "ชำนาญการพิเศษ (ชพ.)","min_salary": 29980, "mid_salary": 45000, "max_salary": 58390, "experience_years": "10–16 ปี" },
+      { "code": "K4", "level_name": "เชี่ยวชาญ (ชช.)",    "min_salary": 41720, "mid_salary": 57000, "max_salary": 69040, "experience_years": "16+ ปี" },
+      { "code": "K5", "level_name": "ทรงคุณวุฒิ (ทว.)",   "min_salary": 56380, "mid_salary": 67000, "max_salary": 76800, "experience_years": "ผู้เชี่ยวชาญพิเศษ" }
+    ],
+    "general": [
+      { "code": "S1", "level_name": "ปฏิบัติงาน",        "min_salary": 13280, "mid_salary": 18500, "max_salary": 21010, "experience_years": "0–6 ปี (วุฒิ ปวช./ปวส.)" },
+      { "code": "S2", "level_name": "ชำนาญงาน",          "min_salary": 15440, "mid_salary": 25000, "max_salary": 38750, "experience_years": "6–12 ปี" },
+      { "code": "S3", "level_name": "อาวุโส",            "min_salary": 25390, "mid_salary": 38000, "max_salary": 54820, "experience_years": "12+ ปี" },
+      { "code": "S4", "level_name": "ทักษะพิเศษ",        "min_salary": 38690, "mid_salary": 50000, "max_salary": 69040, "experience_years": "ผู้มีทักษะพิเศษ" }
+    ],
+    "executive": [
+      { "code": "M1", "level_name": "อำนวยการต้น/ผอ.ระดับต้น",  "min_salary": 28190, "mid_salary": 45000, "max_salary": 70360, "experience_years": "ผอ.กลุ่ม/ส่วน" },
+      { "code": "M2", "level_name": "อำนวยการสูง/ผอ.จังหวัด",   "min_salary": 41720, "mid_salary": 58000, "max_salary": 75330, "experience_years": "ผอ.สำนักงานจังหวัด" }
+    ],
+    "deduction_rules": {
+      "social_security_rate": 0.05,
+      "social_security_cap_base": 15000,
+      "social_security_cap_amount": 750,
+      "gpf_rate": 0.03,
+      "gpf_applies_to": "ข้าราชการ",
+      "tax_brackets_2568": [
+        { "from": 0,        "to": 150000,    "rate": 0.00 },
+        { "from": 150001,   "to": 300000,    "rate": 0.05 },
+        { "from": 300001,   "to": 500000,    "rate": 0.10 },
+        { "from": 500001,   "to": 750000,    "rate": 0.15 },
+        { "from": 750001,   "to": 1000000,   "rate": 0.20 },
+        { "from": 1000001,  "to": 2000000,   "rate": 0.25 },
+        { "from": 2000001,  "to": 5000000,   "rate": 0.30 },
+        { "from": 5000001,  "to": null,      "rate": 0.35 }
+      ],
+      "tax_allowances": {
+        "personal":  60000,
+        "spouse":    60000,
+        "child":     30000,
+        "expense_max_40pct_capped": 100000
+      },
+      "_tax_note": "ระบบใช้สูตรย่อ withholding 5% เป็น default ตามที่ HR ส่วนใหญ่หัก ณ ที่จ่ายล่วงหน้า. เปลี่ยน effective_tax_rate ได้รายบุคคล. คำนวณภาษีปลายปีต้องยื่น ภงด.91"
+    }
+  },
+
+  "phrae": {
+    "payslips": [
+      { "id":"PSL-PRE-001", "personnel_id":"recx6kcd9TNmyroFa", "full_name":"นายสุพล ภูมิเป็นสุข",      "agency_name":"สำนักงานเกษตรจังหวัดแพร่",   "position_level":"ชำนาญการ (ชก.)", "level_code":"K2", "base_salary":33000, "ot_amount":0,    "allowance":2500, "ssf":750, "gpf":990, "tax":1583, "net":32177, "month":"2026-05", "status":"จ่ายแล้ว" },
+      { "id":"PSL-PRE-002", "personnel_id":"rechYG2stR5TMyVqA", "full_name":"นายสมจิตร แสนสวรรค์",     "agency_name":"สำนักงานปศุสัตว์จังหวัดแพร่","position_level":"ชำนาญการ (ชก.)", "level_code":"K2", "base_salary":33000, "ot_amount":1500, "allowance":2500, "ssf":750, "gpf":990, "tax":1658, "net":33602, "month":"2026-05", "status":"จ่ายแล้ว" },
+      { "id":"PSL-PRE-003", "personnel_id":"rec9fd11IpvaN4RCg", "full_name":"นายวิชาชาญ กานันท์ธัญ",   "agency_name":"สำนักงานประมงจังหวัดแพร่",   "position_level":"ชำนาญการ (ชก.)", "level_code":"K2", "base_salary":33000, "ot_amount":0,    "allowance":2500, "ssf":750, "gpf":990, "tax":1583, "net":32177, "month":"2026-05", "status":"จ่ายแล้ว" },
+      { "id":"PSL-PRE-004", "personnel_id":"recAVrZlzzCgWv2ww", "full_name":"นายพุทธิพงษ์ วิเศษศิลป์", "agency_name":"สำนักงานส่งเสริมและพัฒนาการเกษตรที่ 6", "position_level":"ชำนาญการสูงสุด", "level_code":"M2", "base_salary":58000, "ot_amount":0, "allowance":7000, "ssf":750, "gpf":1740, "tax":3033, "net":59477, "month":"2026-05", "status":"จ่ายแล้ว" },
+      { "id":"PSL-PRE-005", "personnel_id":"recx6kcd9TNmyroFa", "full_name":"นายสุพล ภูมิเป็นสุข",      "agency_name":"สำนักงานเกษตรจังหวัดแพร่",   "position_level":"ชำนาญการ (ชก.)", "level_code":"K2", "base_salary":33000, "ot_amount":0,    "allowance":2500, "ssf":750, "gpf":990, "tax":1583, "net":32177, "month":"2026-04", "status":"จ่ายแล้ว" },
+      { "id":"PSL-PRE-006", "personnel_id":"rechYG2stR5TMyVqA", "full_name":"นายสมจิตร แสนสวรรค์",     "agency_name":"สำนักงานปศุสัตว์จังหวัดแพร่","position_level":"ชำนาญการ (ชก.)", "level_code":"K2", "base_salary":33000, "ot_amount":0,    "allowance":2500, "ssf":750, "gpf":990, "tax":1583, "net":32177, "month":"2026-04", "status":"จ่ายแล้ว" },
+      { "id":"PSL-PRE-007", "personnel_id":"recx6kcd9TNmyroFa", "full_name":"นายสุพล ภูมิเป็นสุข",      "agency_name":"สำนักงานเกษตรจังหวัดแพร่",   "position_level":"ชำนาญการ (ชก.)", "level_code":"K2", "base_salary":33000, "ot_amount":2000, "allowance":2500, "ssf":750, "gpf":990, "tax":1683, "net":34077, "month":"2026-03", "status":"จ่ายแล้ว" },
+      { "id":"PSL-PRE-008", "personnel_id":"rechYG2stR5TMyVqA", "full_name":"นายสมจิตร แสนสวรรค์",     "agency_name":"สำนักงานปศุสัตว์จังหวัดแพร่","position_level":"ชำนาญการ (ชก.)", "level_code":"K2", "base_salary":33000, "ot_amount":0,    "allowance":2500, "ssf":750, "gpf":990, "tax":1583, "net":32177, "month":"2026-03", "status":"จ่ายแล้ว" }
+    ],
+    "leaves": [
+      { "id":"LV-PRE-001", "personnel_id":"recx6kcd9TNmyroFa", "full_name":"นายสุพล ภูมิเป็นสุข",  "leave_type":"ลาพักผ่อน", "days":3, "from":"2026-05-12", "to":"2026-05-14", "reason":"พักผ่อนประจำปี", "status":"อนุมัติ" },
+      { "id":"LV-PRE-002", "personnel_id":"rechYG2stR5TMyVqA", "full_name":"นายสมจิตร แสนสวรรค์","leave_type":"ลาป่วย",    "days":2, "from":"2026-05-05", "to":"2026-05-06", "reason":"ป่วยไข้หวัด",    "status":"อนุมัติ" },
+      { "id":"LV-PRE-003", "personnel_id":"rec9fd11IpvaN4RCg", "full_name":"นายวิชาชาญ กานันท์ธัญ","leave_type":"ลากิจ",     "days":1, "from":"2026-04-22", "to":"2026-04-22", "reason":"ติดต่อราชการ",   "status":"อนุมัติ" },
+      { "id":"LV-PRE-004", "personnel_id":"rec1Or4Palc1mG01g", "full_name":"นายคมกริช ทองสุก",   "leave_type":"ลาพักผ่อน", "days":5, "from":"2026-04-01", "to":"2026-04-05", "reason":"ลาประจำปี",      "status":"อนุมัติ" }
+    ],
+    "ot_records": [
+      { "id":"OT-PRE-001", "personnel_id":"rechYG2stR5TMyVqA", "full_name":"นายสมจิตร แสนสวรรค์", "date":"2026-05-08", "hours":3, "rate":150, "amount":450,  "reason":"ตรวจสุขภาพสัตว์เร่งด่วน", "status":"อนุมัติ" },
+      { "id":"OT-PRE-002", "personnel_id":"rechYG2stR5TMyVqA", "full_name":"นายสมจิตร แสนสวรรค์", "date":"2026-05-15", "hours":4, "rate":150, "amount":600,  "reason":"ฉีดวัคซีนกลุ่มฟาร์ม",   "status":"อนุมัติ" },
+      { "id":"OT-PRE-003", "personnel_id":"recx6kcd9TNmyroFa", "full_name":"นายสุพล ภูมิเป็นสุข",  "date":"2026-03-20", "hours":5, "rate":150, "amount":750,  "reason":"ประชุมแผนแปลงใหญ่",     "status":"อนุมัติ" }
+    ]
+  },
+
+  "chiangrai": {
+    "payslips": [
+      { "id":"PSL-CRI-001", "personnel_id":"rec5dea115d7504fe", "full_name":"นายสมชาย ใจดี",      "agency_name":"เกษตรและสหกรณ์จังหวัดเชียงราย", "position_level":"อำนวยการสูง",    "level_code":"M2", "base_salary":58000, "ot_amount":0,    "allowance":7000, "ssf":750, "gpf":1740, "tax":3033, "net":59477, "month":"2026-05", "status":"จ่ายแล้ว" },
+      { "id":"PSL-CRI-002", "personnel_id":"rec5dea115d7504ff", "full_name":"นางสาวสมศรี รักเรียน","agency_name":"สำนักงานเกษตรจังหวัดเชียงราย",  "position_level":"ชำนาญการพิเศษ (ชพ.)","level_code":"K3","base_salary":45000, "ot_amount":1200, "allowance":3500, "ssf":750, "gpf":1350, "tax":2335, "net":45265, "month":"2026-05", "status":"จ่ายแล้ว" },
+      { "id":"PSL-CRI-003", "personnel_id":"rec5dea115d750500", "full_name":"นายวิชัย สามารถ",    "agency_name":"สำนักงานปศุสัตว์จังหวัดเชียงราย","position_level":"ชำนาญการ (ชก.)","level_code":"K2", "base_salary":33000, "ot_amount":0,    "allowance":2500, "ssf":750, "gpf":990,  "tax":1583, "net":32177, "month":"2026-05", "status":"จ่ายแล้ว" },
+      { "id":"PSL-CRI-004", "personnel_id":"rec5dea115d750501", "full_name":"นางสมหญิง พากเพียร",  "agency_name":"สำนักงานประมงจังหวัดเชียงราย",  "position_level":"ปฏิบัติการ",      "level_code":"K1", "base_salary":22500, "ot_amount":600,  "allowance":1500, "ssf":750, "gpf":675,  "tax":1153, "net":22022, "month":"2026-05", "status":"จ่ายแล้ว" },
+      { "id":"PSL-CRI-005", "personnel_id":"rec5dea115d7504fe", "full_name":"นายสมชาย ใจดี",      "agency_name":"เกษตรและสหกรณ์จังหวัดเชียงราย", "position_level":"อำนวยการสูง",    "level_code":"M2", "base_salary":58000, "ot_amount":0,    "allowance":7000, "ssf":750, "gpf":1740, "tax":3033, "net":59477, "month":"2026-04", "status":"จ่ายแล้ว" },
+      { "id":"PSL-CRI-006", "personnel_id":"rec5dea115d7504ff", "full_name":"นางสาวสมศรี รักเรียน","agency_name":"สำนักงานเกษตรจังหวัดเชียงราย",  "position_level":"ชำนาญการพิเศษ (ชพ.)","level_code":"K3","base_salary":45000, "ot_amount":0,    "allowance":3500, "ssf":750, "gpf":1350, "tax":2275, "net":44125, "month":"2026-04", "status":"จ่ายแล้ว" },
+      { "id":"PSL-CRI-007", "personnel_id":"rec5dea115d7504fe", "full_name":"นายสมชาย ใจดี",      "agency_name":"เกษตรและสหกรณ์จังหวัดเชียงราย", "position_level":"อำนวยการสูง",    "level_code":"M2", "base_salary":58000, "ot_amount":1800, "allowance":7000, "ssf":750, "gpf":1740, "tax":3123, "net":61187, "month":"2026-03", "status":"จ่ายแล้ว" },
+      { "id":"PSL-CRI-008", "personnel_id":"rec5dea115d750500", "full_name":"นายวิชัย สามารถ",    "agency_name":"สำนักงานปศุสัตว์จังหวัดเชียงราย","position_level":"ชำนาญการ (ชก.)","level_code":"K2", "base_salary":33000, "ot_amount":0,    "allowance":2500, "ssf":750, "gpf":990,  "tax":1583, "net":32177, "month":"2026-03", "status":"จ่ายแล้ว" }
+    ],
+    "leaves": [
+      { "id":"LV-CRI-001", "personnel_id":"rec5dea115d7504fe", "full_name":"นายสมชาย ใจดี",      "leave_type":"ลาพักผ่อน", "days":2, "from":"2026-05-19", "to":"2026-05-20", "reason":"ตรวจราชการลำพูน", "status":"อนุมัติ" },
+      { "id":"LV-CRI-002", "personnel_id":"rec5dea115d7504ff", "full_name":"นางสาวสมศรี รักเรียน","leave_type":"ลาป่วย",    "days":3, "from":"2026-05-08", "to":"2026-05-10", "reason":"ไข้หวัดใหญ่",     "status":"อนุมัติ" },
+      { "id":"LV-CRI-003", "personnel_id":"rec5dea115d750500", "full_name":"นายวิชัย สามารถ",    "leave_type":"ลากิจ",     "days":1, "from":"2026-04-15", "to":"2026-04-15", "reason":"ติดต่อราชการที่ลำพูน","status":"อนุมัติ" }
+    ],
+    "ot_records": [
+      { "id":"OT-CRI-001", "personnel_id":"rec5dea115d7504ff", "full_name":"นางสาวสมศรี รักเรียน","date":"2026-05-09", "hours":4, "rate":150, "amount":600,  "reason":"จัดงานวันลำไยเชียงราย",    "status":"อนุมัติ" },
+      { "id":"OT-CRI-002", "personnel_id":"rec5dea115d750501", "full_name":"นางสมหญิง พากเพียร",  "date":"2026-05-12", "hours":4, "rate":150, "amount":600,  "reason":"ตรวจคุณภาพน้ำกระชังปลา",   "status":"อนุมัติ" }
+    ]
+  },
+
+  "udonthani": {
+    "payslips": [
+      { "id":"PSL-UDN-001", "personnel_id":"rec_udn_001", "full_name":"นายปกครอง ดีพร้อม", "agency_name":"เกษตรและสหกรณ์จังหวัดอุดรธานี",     "position_level":"อำนวยการสูง",        "level_code":"M2", "base_salary":58000, "ot_amount":0,    "allowance":7000, "ssf":750, "gpf":1740, "tax":3033, "net":59477, "month":"2026-05", "status":"จ่ายแล้ว" },
+      { "id":"PSL-UDN-002", "personnel_id":"rec_udn_002", "full_name":"นางสายฝน สุขศรี",   "agency_name":"สำนักงานเกษตรจังหวัดอุดรธานี",      "position_level":"ชำนาญการพิเศษ (ชพ.)", "level_code":"K3", "base_salary":45000, "ot_amount":900,  "allowance":3500, "ssf":750, "gpf":1350, "tax":2320, "net":44980, "month":"2026-05", "status":"จ่ายแล้ว" },
+      { "id":"PSL-UDN-003", "personnel_id":"rec_udn_003", "full_name":"นายมั่นคง สุขเกษม",   "agency_name":"สำนักงานปศุสัตว์จังหวัดอุดรธานี",   "position_level":"ชำนาญการ (ชก.)",       "level_code":"K2", "base_salary":33000, "ot_amount":0,    "allowance":2500, "ssf":750, "gpf":990,  "tax":1583, "net":32177, "month":"2026-05", "status":"จ่ายแล้ว" },
+      { "id":"PSL-UDN-004", "personnel_id":"rec_udn_004", "full_name":"นางสาวพรเพ็ญ มีสุข",  "agency_name":"สำนักงานประมงจังหวัดอุดรธานี",      "position_level":"ปฏิบัติการ",            "level_code":"K1", "base_salary":22500, "ot_amount":450,  "allowance":1500, "ssf":750, "gpf":675,  "tax":1131, "net":21894, "month":"2026-05", "status":"จ่ายแล้ว" },
+      { "id":"PSL-UDN-005", "personnel_id":"rec_udn_001", "full_name":"นายปกครอง ดีพร้อม", "agency_name":"เกษตรและสหกรณ์จังหวัดอุดรธานี",     "position_level":"อำนวยการสูง",        "level_code":"M2", "base_salary":58000, "ot_amount":0,    "allowance":7000, "ssf":750, "gpf":1740, "tax":3033, "net":59477, "month":"2026-04", "status":"จ่ายแล้ว" },
+      { "id":"PSL-UDN-006", "personnel_id":"rec_udn_002", "full_name":"นางสายฝน สุขศรี",   "agency_name":"สำนักงานเกษตรจังหวัดอุดรธานี",      "position_level":"ชำนาญการพิเศษ (ชพ.)", "level_code":"K3", "base_salary":45000, "ot_amount":0,    "allowance":3500, "ssf":750, "gpf":1350, "tax":2275, "net":44125, "month":"2026-04", "status":"จ่ายแล้ว" },
+      { "id":"PSL-UDN-007", "personnel_id":"rec_udn_001", "full_name":"นายปกครอง ดีพร้อม", "agency_name":"เกษตรและสหกรณ์จังหวัดอุดรธานี",     "position_level":"อำนวยการสูง",        "level_code":"M2", "base_salary":58000, "ot_amount":2200, "allowance":7000, "ssf":750, "gpf":1740, "tax":3143, "net":61567, "month":"2026-03", "status":"จ่ายแล้ว" },
+      { "id":"PSL-UDN-008", "personnel_id":"rec_udn_003", "full_name":"นายมั่นคง สุขเกษม",   "agency_name":"สำนักงานปศุสัตว์จังหวัดอุดรธานี",   "position_level":"ชำนาญการ (ชก.)",       "level_code":"K2", "base_salary":33000, "ot_amount":0,    "allowance":2500, "ssf":750, "gpf":990,  "tax":1583, "net":32177, "month":"2026-03", "status":"จ่ายแล้ว" }
+    ],
+    "leaves": [
+      { "id":"LV-UDN-001", "personnel_id":"rec_udn_001", "full_name":"นายปกครอง ดีพร้อม", "leave_type":"ลาพักผ่อน", "days":4, "from":"2026-05-21", "to":"2026-05-24", "reason":"พักผ่อนประจำปี",  "status":"อนุมัติ" },
+      { "id":"LV-UDN-002", "personnel_id":"rec_udn_002", "full_name":"นางสายฝน สุขศรี",   "leave_type":"ลาป่วย",    "days":2, "from":"2026-05-13", "to":"2026-05-14", "reason":"ป่วยกระเพาะ",     "status":"อนุมัติ" },
+      { "id":"LV-UDN-003", "personnel_id":"rec_udn_003", "full_name":"นายมั่นคง สุขเกษม",   "leave_type":"ลากิจ",     "days":1, "from":"2026-04-28", "to":"2026-04-28", "reason":"กิจธุระส่วนตัว",  "status":"อนุมัติ" }
+    ],
+    "ot_records": [
+      { "id":"OT-UDN-001", "personnel_id":"rec_udn_002", "full_name":"นางสายฝน สุขศรี",  "date":"2026-05-06", "hours":3, "rate":150, "amount":450, "reason":"จัดทำงบประมาณกลางปี", "status":"อนุมัติ" },
+      { "id":"OT-UDN-002", "personnel_id":"rec_udn_004", "full_name":"นางสาวพรเพ็ญ มีสุข","date":"2026-05-14", "hours":3, "rate":150, "amount":450, "reason":"จับปลาเก็บข้อมูล",    "status":"อนุมัติ" }
+    ]
+  }
+}

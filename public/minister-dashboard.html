@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ศูนย์บัญชาการรัฐมนตรี — ภาพรวมระบบราชการไทย</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   RESET & ROOT VARIABLES
+═══════════════════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0d1b2a;
+  --navy2:#132333;
+  --navy3:#1a3048;
+  --navy4:#254d6e;
+  --gold:#FFD700;
+  --gold2:#e6c200;
+  --gold3:#fff3a0;
+  --bg:#f5f7fa;
+  --bg2:#eaeff5;
+  --surface:#ffffff;
+  --border:#d1dae6;
+  --text:#1a2433;
+  --text2:#4a5c72;
+  --text3:#8a9ab0;
+  --green:#166534;
+  --green2:#22c55e;
+  --green-bg:#dcfce7;
+  --red:#b91c1c;
+  --red2:#ef4444;
+  --red-bg:#fee2e2;
+  --orange:#c2410c;
+  --orange2:#f97316;
+  --orange-bg:#ffedd5;
+  --blue:#1d4ed8;
+  --blue2:#3b82f6;
+  --blue-bg:#dbeafe;
+  --purple:#6d28d9;
+  --purple2:#8b5cf6;
+  --purple-bg:#ede9fe;
+  --teal:#0f766e;
+  --teal2:#14b8a6;
+  --teal-bg:#ccfbf1;
+}
+body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.55;overflow-x:hidden}
+button{font-family:inherit;cursor:pointer}
+input,select{font-family:inherit;font-size:13px}
+
+/* ═══════════════════════════════════════════
+   LOGIN SCREEN
+═══════════════════════════════════════════ */
+#login-screen{
+  display:flex;align-items:center;justify-content:center;
+  min-height:100vh;
+  background:linear-gradient(145deg,var(--navy) 0%,#0e2235 50%,#0f2c42 100%);
+  position:relative;overflow:hidden;
+}
+#login-screen::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(rgba(255,215,0,.06) 1px,transparent 1px);
+  background-size:28px 28px;pointer-events:none;
+}
+.login-card{
+  background:rgba(255,255,255,.97);
+  border-radius:20px;padding:42px 44px 36px;
+  width:min(500px,95vw);
+  box-shadow:0 32px 90px rgba(0,0,0,.5),0 0 0 1px rgba(255,215,0,.15);
+  position:relative;z-index:2;
+}
+.lc-header{display:flex;align-items:center;gap:16px;margin-bottom:22px;padding-bottom:18px;border-bottom:2px solid var(--bg2)}
+.lc-flag{font-size:44px;line-height:1}
+.lc-title-wrap .t1{font-size:17px;font-weight:800;color:var(--navy)}
+.lc-title-wrap .t2{font-size:11px;color:var(--text3);letter-spacing:.04em;margin-top:1px}
+.lc-heading{font-size:19px;font-weight:800;color:var(--navy);margin-bottom:4px}
+.lc-sub{font-size:12px;color:var(--text3);margin-bottom:22px}
+.lc-label{font-size:12px;font-weight:700;color:var(--text2);display:block;margin-bottom:6px}
+.lc-input{
+  width:100%;padding:12px 16px;
+  border:2px solid var(--border);border-radius:10px;
+  font-size:15px;font-weight:600;
+  color:var(--navy);background:#fff;
+  outline:none;transition:.2s;letter-spacing:.08em;
+}
+.lc-input:focus{border-color:var(--navy4)}
+.lc-input::placeholder{color:var(--text3);font-weight:400;letter-spacing:0}
+.lc-btn{
+  width:100%;margin-top:18px;padding:14px;
+  background:linear-gradient(135deg,var(--navy),var(--navy3));
+  color:#fff;border:none;border-radius:10px;
+  font-size:15px;font-weight:700;letter-spacing:.03em;
+  transition:.2s;box-shadow:0 4px 16px rgba(13,27,42,.35);
+}
+.lc-btn:hover{opacity:.9;transform:translateY(-1px)}
+.lc-btn:active{transform:translateY(0)}
+.lc-error{
+  margin-top:12px;padding:10px 14px;
+  background:var(--red-bg);border:1px solid #fca5a5;
+  border-radius:8px;font-size:12px;color:var(--red);
+  display:none;font-weight:600;
+}
+.lc-foot{margin-top:20px;text-align:center;font-size:11px;color:var(--text3)}
+.lc-foot span{color:var(--gold2);font-weight:700}
+.lc-hint{
+  margin-top:14px;padding:10px 14px;
+  background:#f0f7ff;border:1px solid #bfdbfe;
+  border-radius:8px;font-size:11px;color:var(--blue);
+}
+
+/* ═══════════════════════════════════════════
+   APP SHELL
+═══════════════════════════════════════════ */
+#app{display:none;flex-direction:column;min-height:100vh}
+
+/* ── HEADER ── */
+.hdr{
+  background:var(--navy);color:#fff;
+  padding:0 20px;height:58px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:300;
+  box-shadow:0 2px 12px rgba(0,0,0,.35);
+  flex-shrink:0;
+}
+.hdr-left{display:flex;align-items:center;gap:14px;min-width:0}
+.hdr-flag{font-size:28px;line-height:1}
+.hdr-title{min-width:0}
+.hdr-t1{font-size:15px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hdr-t2{font-size:10px;opacity:.6;letter-spacing:.04em;white-space:nowrap}
+.hdr-sep{width:1px;height:28px;background:rgba(255,255,255,.2);flex-shrink:0}
+.hdr-user{min-width:0}
+.hdr-name{font-size:13px;font-weight:700;white-space:nowrap}
+.hdr-role{font-size:10px;opacity:.6;white-space:nowrap}
+.hdr-right{display:flex;align-items:center;gap:14px;flex-shrink:0}
+.hdr-clock{font-size:13px;font-weight:600;opacity:.85;white-space:nowrap;font-variant-numeric:tabular-nums}
+.hdr-logout{
+  background:rgba(255,215,0,.15);border:1px solid rgba(255,215,0,.35);
+  color:var(--gold);padding:6px 14px;border-radius:8px;
+  font-size:12px;font-weight:700;transition:.2s;
+}
+.hdr-logout:hover{background:rgba(255,215,0,.25)}
+
+/* ── KPI ROW ── */
+.kpi-section{
+  background:var(--navy2);padding:14px 20px;
+  display:grid;grid-template-columns:repeat(6,1fr);gap:10px;
+  flex-shrink:0;
+}
+.kpi-card{
+  background:rgba(255,255,255,.07);border-radius:10px;
+  padding:12px 14px;border:1px solid rgba(255,255,255,.1);
+  transition:.2s;
+}
+.kpi-card:hover{background:rgba(255,255,255,.12)}
+.kpi-val{font-size:22px;font-weight:800;color:var(--gold);line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi-lbl{font-size:10px;color:rgba(255,255,255,.55);margin-top:3px;line-height:1.3}
+.kpi-sub{font-size:10px;color:rgba(255,255,255,.4);margin-top:2px}
+
+/* ── ALERT BANNER ── */
+.alert-banner{
+  background:linear-gradient(90deg,#7f1d1d,#991b1b);
+  color:#fff;padding:8px 20px;
+  display:flex;align-items:center;gap:10px;font-size:12px;
+  flex-shrink:0;min-height:36px;
+  transition:.3s;
+}
+.alert-banner.warn{background:linear-gradient(90deg,#78350f,#92400e)}
+.alert-banner.info{background:linear-gradient(90deg,#1e3a5f,#1e40af);display:none}
+.alert-banner.hidden{display:none}
+.ab-icon{font-size:16px;flex-shrink:0}
+.ab-text{flex:1;font-weight:600}
+.ab-count{background:rgba(255,255,255,.2);padding:2px 10px;border-radius:12px;font-weight:700;flex-shrink:0}
+
+/* ── BODY 3-COL ── */
+.body-grid{
+  display:grid;
+  grid-template-columns:280px 1fr 300px;
+  gap:0;flex:1;
+  overflow:hidden;
+  min-height:0;
+}
+.col-left,.col-center,.col-right{overflow-y:auto;height:calc(100vh - 58px - 72px - 36px - 44px)}
+
+/* LEFT: Ministry Cards */
+.col-left{
+  background:var(--bg2);border-right:1px solid var(--border);
+  padding:14px 12px;display:flex;flex-direction:column;gap:10px;
+}
+.ministry-card{
+  background:var(--surface);border-radius:12px;
+  padding:14px;border:2px solid transparent;
+  cursor:pointer;transition:.2s;
+  box-shadow:0 1px 4px rgba(0,0,0,.07);
+}
+.ministry-card:hover{border-color:var(--navy4);box-shadow:0 4px 14px rgba(0,0,0,.12)}
+.ministry-card.active{border-color:var(--gold2);box-shadow:0 4px 14px rgba(255,215,0,.25)}
+.mc-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.mc-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.mc-name{font-size:13px;font-weight:800;color:var(--navy);line-height:1.3}
+.mc-abbr{font-size:10px;color:var(--text3);font-weight:500}
+.mc-budget-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px}
+.mc-budget-lbl{font-size:11px;color:var(--text3)}
+.mc-budget-pct{font-size:14px;font-weight:800;color:var(--navy)}
+.mc-progress-wrap{background:var(--bg2);border-radius:99px;height:6px;overflow:hidden;margin-bottom:8px}
+.mc-progress{height:100%;border-radius:99px;transition:.5s}
+.mc-footer{display:flex;justify-content:space-between;align-items:center}
+.mc-agency-count{font-size:10px;color:var(--text3)}
+.mc-detail-btn{
+  font-size:10px;font-weight:700;
+  background:var(--navy);color:#fff;
+  border:none;padding:4px 10px;border-radius:6px;
+  transition:.2s;
+}
+.mc-detail-btn:hover{background:var(--navy3)}
+.mc-status{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px}
+
+/* CENTER: Drill-down Panel */
+.col-center{background:var(--surface);padding:18px 20px}
+.dd-title{font-size:16px;font-weight:800;color:var(--navy);margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.dd-sub{font-size:11px;color:var(--text3);margin-bottom:16px}
+.dd-table{width:100%;border-collapse:collapse}
+.dd-table th{
+  font-size:10px;font-weight:700;text-transform:uppercase;
+  color:var(--text3);letter-spacing:.05em;
+  padding:8px 12px;text-align:left;
+  border-bottom:2px solid var(--border);
+  background:var(--bg);position:sticky;top:0;
+}
+.dd-table td{
+  padding:10px 12px;border-bottom:1px solid var(--border);
+  font-size:12px;vertical-align:middle;
+}
+.dd-table tr:last-child td{border-bottom:none}
+.dd-table tr:hover td{background:var(--bg)}
+.dd-agency-name{font-weight:700;color:var(--navy);font-size:12px}
+.dd-agency-type{font-size:10px;color:var(--text3);margin-top:1px}
+.dd-progress-mini{background:var(--bg2);border-radius:99px;height:4px;width:80px;overflow:hidden;margin-top:4px}
+.dd-progress-fill{height:100%;border-radius:99px}
+.dd-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;white-space:nowrap}
+.dd-alert-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
+
+/* RIGHT: Alerts Panel */
+.col-right{
+  background:var(--bg2);border-left:1px solid var(--border);
+  padding:14px 12px;display:flex;flex-direction:column;gap:0;
+}
+.rp-head{font-size:13px;font-weight:800;color:var(--navy);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.rp-count{background:var(--red2);color:#fff;font-size:10px;padding:1px 7px;border-radius:10px}
+.alert-item{
+  background:var(--surface);border-radius:10px;padding:10px 12px;
+  margin-bottom:8px;border-left:4px solid var(--border);
+  box-shadow:0 1px 3px rgba(0,0,0,.06);transition:.2s;
+}
+.alert-item:hover{box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.alert-item.critical{border-left-color:var(--red2)}
+.alert-item.warning{border-left-color:var(--orange2)}
+.alert-item.info{border-left-color:var(--blue2)}
+.ai-level{display:flex;align-items:center;gap:5px;margin-bottom:4px}
+.ai-badge{font-size:10px;font-weight:800;padding:1px 7px;border-radius:8px}
+.ai-badge.critical{background:var(--red-bg);color:var(--red)}
+.ai-badge.warning{background:var(--orange-bg);color:var(--orange)}
+.ai-badge.info{background:var(--blue-bg);color:var(--blue)}
+.ai-ministry{font-size:10px;color:var(--text3);margin-left:auto}
+.ai-msg{font-size:12px;color:var(--text);font-weight:600;line-height:1.4;margin-bottom:4px}
+.ai-agency{font-size:10px;color:var(--text2)}
+.ai-time{font-size:10px;color:var(--text3);margin-top:3px}
+
+/* ── FOOTER ── */
+.footer{
+  background:var(--navy);color:rgba(255,255,255,.5);
+  padding:10px 20px;font-size:11px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:8px;flex-shrink:0;
+}
+.footer a{color:rgba(255,215,0,.7);text-decoration:none;font-weight:600}
+.footer a:hover{color:var(--gold)}
+.footer-links{display:flex;gap:14px;flex-wrap:wrap}
+.refresh-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green2);margin-right:5px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ── SKELETON LOADER ── */
+.skeleton{background:linear-gradient(90deg,#e8edf4 25%,#f5f7fa 50%,#e8edf4 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:6px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.sk-line{height:12px;margin-bottom:8px}
+.sk-card{height:120px;border-radius:12px;margin-bottom:10px}
+
+/* ── EMPTY STATE ── */
+.empty-state{text-align:center;padding:40px 20px;color:var(--text3)}
+.empty-state .es-icon{font-size:40px;margin-bottom:10px}
+.empty-state .es-msg{font-size:13px;font-weight:600}
+.empty-state .es-sub{font-size:11px;margin-top:4px}
+
+/* ── REFRESH STATUS BAR ── */
+.status-bar{
+  background:var(--navy2);padding:6px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:10px;color:rgba(255,255,255,.5);flex-shrink:0;
+}
+.sb-refresh{display:flex;align-items:center;gap:6px}
+.sb-countdown{font-variant-numeric:tabular-nums;color:rgba(255,215,0,.8)}
+.sb-links{display:flex;gap:10px}
+.sb-link{color:rgba(255,215,0,.6);cursor:pointer;text-decoration:none;font-weight:600}
+.sb-link:hover{color:var(--gold)}
+
+/* ── OVERVIEW CARDS GRID (center default view) ── */
+.ov-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.ov-stat{background:var(--bg);border-radius:10px;padding:14px;border:1px solid var(--border)}
+.ov-val{font-size:24px;font-weight:800;color:var(--navy)}
+.ov-lbl{font-size:11px;color:var(--text3);margin-top:2px}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .kpi-section{grid-template-columns:repeat(3,1fr)}
+  .body-grid{grid-template-columns:1fr;overflow:auto;height:auto}
+  .col-left,.col-center,.col-right{height:auto;overflow:visible;border:none;border-bottom:1px solid var(--border)}
+  .hdr-sep,.hdr-user{display:none}
+}
+@media(max-width:600px){
+  .kpi-section{grid-template-columns:repeat(2,1fr)}
+  .hdr-t1{font-size:12px}
+  .login-card{padding:28px 22px 24px}
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════
+     LOGIN SCREEN
+════════════════════════════════════════════ -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="lc-header">
+      <div class="lc-flag">🇹🇭</div>
+      <div class="lc-title-wrap">
+        <div class="t1">ราชอาณาจักรไทย — ระบบบูรณาการราชการ</div>
+        <div class="t2">KINGDOM OF THAILAND · GOV INTEGRATION PLATFORM</div>
+      </div>
+    </div>
+    <div class="lc-heading">ศูนย์บัญชาการรัฐมนตรี</div>
+    <div class="lc-sub">กรุณากรอกรหัสผ่านเพื่อเข้าสู่ระบบ Minister Command Center</div>
+    <label class="lc-label" for="minister-code">รหัสรัฐมนตรี (Minister Code)</label>
+    <input class="lc-input" type="password" id="minister-code" placeholder="MINISTER-XXXX" autocomplete="off" onkeydown="handleLoginKey(event)">
+    <div class="lc-error" id="login-error">❌ รหัสไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง</div>
+    <button class="lc-btn" onclick="doLogin()">🔐 เข้าสู่ระบบ</button>
+    <div class="lc-hint">💡 ระบบนี้สงวนสิทธิ์เฉพาะรัฐมนตรีและผู้ได้รับอนุญาต<br>การเข้าใช้งานทุกครั้งจะถูกบันทึกไว้ในระบบ</div>
+    <div class="lc-foot">G2G Gov Platform · <span>Gov2Global.com</span> · ระบบราชการดิจิทัลไทย</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     APP SHELL
+════════════════════════════════════════════ -->
+<div id="app">
+
+  <!-- HEADER -->
+  <header class="hdr">
+    <div class="hdr-left">
+      <span class="hdr-flag">🇹🇭</span>
+      <div class="hdr-title">
+        <div class="hdr-t1">ศูนย์บัญชาการรัฐมนตรี — ภาพรวมระบบราชการไทย</div>
+        <div class="hdr-t2">MINISTER COMMAND CENTER · ROYAL THAI GOVERNMENT</div>
+      </div>
+      <div class="hdr-sep"></div>
+      <div class="hdr-user">
+        <div class="hdr-name" id="hdr-name">รัฐมนตรี</div>
+        <div class="hdr-role" id="hdr-role">Minister · ระดับบัญชาการ</div>
+      </div>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-clock" id="hdr-clock">--:--:--</div>
+      <button class="hdr-logout" onclick="doLogout()">ออกจากระบบ</button>
+    </div>
+  </header>
+
+  <!-- KPI ROW -->
+  <div class="kpi-section" id="kpi-section">
+    <div class="kpi-card">
+      <div class="kpi-val skeleton sk-line" id="kpi-budget" style="width:90px;height:22px">&nbsp;</div>
+      <div class="kpi-lbl">งบรวมทุกกระทรวง (ล้านบาท)</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val skeleton sk-line" id="kpi-disbursed" style="width:80px;height:22px">&nbsp;</div>
+      <div class="kpi-lbl">เบิกจ่ายแล้ว (ล้านบาท)</div>
+      <div class="kpi-sub" id="kpi-disbursed-pct">— %</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val skeleton sk-line" id="kpi-personnel" style="width:70px;height:22px">&nbsp;</div>
+      <div class="kpi-lbl">บุคลากรรวม (คน)</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val skeleton sk-line" id="kpi-projects" style="width:60px;height:22px">&nbsp;</div>
+      <div class="kpi-lbl">โครงการรวม</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val skeleton sk-line" id="kpi-delayed" style="width:50px;height:22px">&nbsp;</div>
+      <div class="kpi-lbl">โครงการล่าช้า</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val skeleton sk-line" id="kpi-ministries" style="width:40px;height:22px">&nbsp;</div>
+      <div class="kpi-lbl">จำนวนกระทรวง</div>
+    </div>
+  </div>
+
+  <!-- ALERT BANNER -->
+  <div class="alert-banner" id="alert-banner">
+    <span class="ab-icon">🔴</span>
+    <span class="ab-text" id="ab-text">กำลังโหลดข้อมูลการแจ้งเตือน...</span>
+    <span class="ab-count" id="ab-count">-</span>
+  </div>
+
+  <!-- STATUS BAR -->
+  <div class="status-bar">
+    <div class="sb-refresh">
+      <span class="refresh-dot"></span>
+      <span>อัปเดตอัตโนมัติทุก 60 วินาที · ถัดไปใน <span class="sb-countdown" id="sb-countdown">60</span> วินาที</span>
+    </div>
+    <div class="sb-links">
+      <a class="sb-link" href="management.html" target="_blank">🏛 ระบบบริหาร</a>
+      <a class="sb-link" href="phrae.html" target="_blank">🌾 เกษตรแพร่</a>
+      <a class="sb-link" href="personnel-registry.html" target="_blank">👤 ทะเบียนบุคลากร</a>
+      <a class="sb-link" href="policy-center.html" target="_blank">📋 ศูนย์นโยบาย</a>
+      <a class="sb-link" href="budget-erp.html" target="_blank">💰 งบประมาณ ERP</a>
+    </div>
+  </div>
+
+  <!-- BODY 3-COLUMNS -->
+  <div class="body-grid">
+
+    <!-- LEFT: Ministry Cards -->
+    <div class="col-left" id="col-left">
+      <div class="sk-card skeleton"></div>
+      <div class="sk-card skeleton"></div>
+      <div class="sk-card skeleton"></div>
+    </div>
+
+    <!-- CENTER: Drill-down Panel -->
+    <div class="col-center" id="col-center">
+      <div class="sk-card skeleton" style="height:200px"></div>
+      <div class="sk-card skeleton" style="height:150px"></div>
+    </div>
+
+    <!-- RIGHT: Alerts Panel -->
+    <div class="col-right" id="col-right">
+      <div class="rp-head">🔔 การแจ้งเตือน <span class="rp-count" id="rp-count">-</span></div>
+      <div id="alerts-list">
+        <div class="sk-card skeleton" style="height:80px"></div>
+        <div class="sk-card skeleton" style="height:70px;margin-top:10px"></div>
+        <div class="sk-card skeleton" style="height:65px;margin-top:10px"></div>
+      </div>
+    </div>
+
+  </div><!-- /body-grid -->
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div>🇹🇭 ศูนย์บัญชาการรัฐมนตรี · <a href="https://gov2global.com" target="_blank">Gov2Global.com</a> · ปีงบประมาณ 2569</div>
+    <div class="footer-links">
+      <a href="management.html" target="_blank">แพลตฟอร์มบริหาร</a>
+      <a href="personnel-registry.html" target="_blank">ทะเบียนบุคลากร</a>
+      <a href="finance-module.html" target="_blank">การเงิน</a>
+      <a href="project-manager.html" target="_blank">โครงการ</a>
+    </div>
+  </footer>
+
+</div><!-- /app -->
+
+<script>
+/* ════════════════════════════════════════════
+   CONSTANTS & STATE
+════════════════════════════════════════════ */
+const MINISTER_CODE = 'MINISTER-2026';
+let currentMinistryId = null;
+let allData = null;
+let countdownVal = 60;
+let countdownTimer = null;
+let refreshTimer = null;
+
+/* ── MOCK DATA (fallback when API unavailable) ── */
+const MOCK_MINISTRIES = [
+  {
+    id:'moi', name:'กระทรวงมหาดไทย', abbr:'มท.', icon:'🏛', color:'#1d4ed8',
+    colorBg:'#dbeafe', budget:185000, disbursed:142300,
+    agencies:[
+      {id:'dopa',name:'กรมการปกครอง',type:'กรมหลัก',budget:42000,disbursed:36500,projects:28,delayed:2,personnel:15200,status:'on_track',alerts:0},
+      {id:'dla',name:'กรมส่งเสริมการปกครองท้องถิ่น',type:'กรมหลัก',budget:38000,disbursed:29800,projects:45,delayed:5,personnel:8600,status:'warning',alerts:2},
+      {id:'dpt',name:'กรมโยธาธิการและผังเมือง',type:'กรมหลัก',budget:28500,disbursed:19200,projects:32,delayed:7,personnel:6400,status:'critical',alerts:3},
+      {id:'disaster',name:'กรมป้องกันและบรรเทาสาธารณภัย',type:'กรมหลัก',budget:15200,disbursed:14800,projects:18,delayed:1,personnel:4800,status:'on_track',alerts:0},
+      {id:'province',name:'สำนักงานจังหวัด (77 จังหวัด)',type:'ส่วนภูมิภาค',budget:61300,disbursed:42000,projects:890,delayed:45,personnel:82000,status:'warning',alerts:8},
+    ]
+  },
+  {
+    id:'moac', name:'กระทรวงเกษตรและสหกรณ์', abbr:'กษ.', icon:'🌾', color:'#166534',
+    colorBg:'#dcfce7', budget:92000, disbursed:68400,
+    agencies:[
+      {id:'doae',name:'กรมส่งเสริมการเกษตร',type:'กรมหลัก',budget:18500,disbursed:15200,projects:156,delayed:8,personnel:9800,status:'on_track',alerts:1},
+      {id:'rid',name:'กรมชลประทาน',type:'กรมหลัก',budget:32000,disbursed:21500,projects:42,delayed:12,personnel:18600,status:'warning',alerts:4},
+      {id:'dld',name:'กรมปศุสัตว์',type:'กรมหลัก',budget:14200,disbursed:12800,projects:38,delayed:3,personnel:7200,status:'on_track',alerts:0},
+      {id:'fisheries',name:'กรมประมง',type:'กรมหลัก',budget:11800,disbursed:8900,projects:29,delayed:5,personnel:5400,status:'warning',alerts:2},
+      {id:'baac',name:'ธ.ก.ส.',type:'รัฐวิสาหกิจ',budget:15500,disbursed:10000,projects:22,delayed:0,personnel:18000,status:'on_track',alerts:0},
+    ]
+  },
+  {
+    id:'moph', name:'กระทรวงสาธารณสุข', abbr:'สธ.', icon:'🏥', color:'#0f766e',
+    colorBg:'#ccfbf1', budget:145000, disbursed:118600,
+    agencies:[
+      {id:'ddc',name:'กรมควบคุมโรค',type:'กรมหลัก',budget:22000,disbursed:20100,projects:48,delayed:2,personnel:6800,status:'on_track',alerts:1},
+      {id:'dmh',name:'กรมสุขภาพจิต',type:'กรมหลัก',budget:12500,disbursed:11200,projects:35,delayed:1,personnel:8500,status:'on_track',alerts:0},
+      {id:'dms',name:'กรมการแพทย์',type:'กรมหลัก',budget:38000,disbursed:32400,projects:28,delayed:3,personnel:42000,status:'on_track',alerts:0},
+      {id:'nhso',name:'สปสช.',type:'องค์การมหาชน',budget:72500,disbursed:54900,projects:15,delayed:1,personnel:2800,status:'warning',alerts:1},
+    ]
+  },
+  {
+    id:'moe', name:'กระทรวงศึกษาธิการ', abbr:'ศธ.', icon:'📚', color:'#7c3aed',
+    colorBg:'#ede9fe', budget:328000, disbursed:264500,
+    agencies:[
+      {id:'obec',name:'สพฐ.',type:'กรมหลัก',budget:198000,disbursed:165000,projects:892,delayed:28,personnel:420000,status:'warning',alerts:6},
+      {id:'vec',name:'สอศ.',type:'กรมหลัก',budget:45000,disbursed:38500,projects:145,delayed:8,personnel:28000,status:'on_track',alerts:0},
+      {id:'opec',name:'สช.',type:'กรมหลัก',budget:32000,disbursed:28600,projects:88,delayed:4,personnel:12000,status:'on_track',alerts:1},
+      {id:'boe',name:'สป.ศธ.',type:'กรมหลัก',budget:53000,disbursed:32400,projects:65,delayed:15,personnel:8800,status:'critical',alerts:4},
+    ]
+  },
+  {
+    id:'moc', name:'กระทรวงพาณิชย์', abbr:'พณ.', icon:'🏪', color:'#c2410c',
+    colorBg:'#ffedd5', budget:28500, disbursed:19800,
+    agencies:[
+      {id:'dbd',name:'กรมพัฒนาธุรกิจการค้า',type:'กรมหลัก',budget:8200,disbursed:6400,projects:45,delayed:3,personnel:4200,status:'on_track',alerts:0},
+      {id:'dft',name:'กรมการค้าต่างประเทศ',type:'กรมหลัก',budget:6800,disbursed:4200,projects:28,delayed:5,personnel:2800,status:'warning',alerts:2},
+      {id:'dit',name:'กรมการค้าภายใน',type:'กรมหลัก',budget:7500,disbursed:6200,projects:38,delayed:2,personnel:3600,status:'on_track',alerts:1},
+      {id:'dip',name:'กรมทรัพย์สินทางปัญญา',type:'กรมหลัก',budget:6000,disbursed:3000,projects:22,delayed:4,personnel:1800,status:'critical',alerts:2},
+    ]
+  },
+  {
+    id:'mdes', name:'กระทรวงดิจิทัลฯ', abbr:'ดศ.', icon:'💻', color:'#0369a1',
+    colorBg:'#e0f2fe', budget:32000, disbursed:18500,
+    agencies:[
+      {id:'etda',name:'ETDA',type:'องค์การมหาชน',budget:4800,disbursed:3200,projects:35,delayed:4,personnel:580,status:'warning',alerts:2},
+      {id:'onde',name:'สดช.',type:'กรมหลัก',budget:8200,disbursed:4500,projects:28,delayed:8,personnel:420,status:'critical',alerts:5},
+      {id:'nso',name:'สสช.',type:'กรมหลัก',budget:6800,disbursed:5200,projects:42,delayed:2,personnel:2800,status:'on_track',alerts:0},
+      {id:'dga',name:'DGA',type:'องค์การมหาชน',budget:12200,disbursed:5600,projects:18,delayed:6,personnel:380,status:'critical',alerts:3},
+    ]
+  }
+];
+
+const MOCK_ALERTS = [
+  {id:1,level:'critical',msg:'งบประมาณโครงการชลประทานแล้งฝน เบิกจ่ายล่าช้ากว่าแผน 38%',agency:'กรมชลประทาน',ministry:'กษ.',time:'10 นาทีที่แล้ว'},
+  {id:2,level:'critical',msg:'DGA พบช่องโหว่ระบบ e-Government เร่งด่วนต้องแก้ไข',agency:'DGA',ministry:'ดศ.',time:'25 นาทีที่แล้ว'},
+  {id:3,level:'critical',msg:'สป.ศธ. โครงการก่อสร้างโรงเรียน 15 โครงการล่าช้าเกิน 180 วัน',agency:'สป.ศธ.',ministry:'ศธ.',time:'1 ชั่วโมงที่แล้ว'},
+  {id:4,level:'warning',msg:'สพฐ. รายงานโรงเรียนขาดครู 28 จังหวัด รวม 6,420 อัตรา',agency:'สพฐ.',ministry:'ศธ.',time:'2 ชั่วโมงที่แล้ว'},
+  {id:5,level:'warning',msg:'กรมส่งเสริมการปกครองท้องถิ่น งบ อปท. 5 จังหวัดติดค้าง',agency:'สถ.',ministry:'มท.',time:'3 ชั่วโมงที่แล้ว'},
+  {id:6,level:'warning',msg:'กรมการค้าต่างประเทศ ยอดส่งออกเดือนนี้ต่ำกว่าเป้า 12%',agency:'กต.',ministry:'พณ.',time:'4 ชั่วโมงที่แล้ว'},
+  {id:7,level:'warning',msg:'ONDE แผนดิจิทัลชุมชนล่าช้า เบิกจ่ายเพียง 55%',agency:'สดช.',ministry:'ดศ.',time:'5 ชั่วโมงที่แล้ว'},
+  {id:8,level:'info',msg:'สปสช. รายงานผู้รับบริการหลักประกันสุขภาพเพิ่ม 2.3% ไตรมาสนี้',agency:'สปสช.',ministry:'สธ.',time:'6 ชั่วโมงที่แล้ว'},
+  {id:9,level:'info',msg:'กรมส่งเสริมการเกษตร เปิดตัวแอปเกษตรกรดิจิทัลครบ 20 จังหวัด',agency:'กสก.',ministry:'กษ.',time:'1 วันที่แล้ว'},
+];
+
+/* ════════════════════════════════════════════
+   AUTH FUNCTIONS
+════════════════════════════════════════════ */
+function handleLoginKey(e) {
+  if (e.key === 'Enter') doLogin();
+}
+
+function doLogin() {
+  var code = document.getElementById('minister-code').value.trim().toUpperCase();
+  var errEl = document.getElementById('login-error');
+  if (code === MINISTER_CODE) {
+    errEl.style.display = 'none';
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+    document.getElementById('app').style.flexDirection = 'column';
+    startClock();
+    startCountdown();
+    initData();
+  } else {
+    errEl.style.display = 'block';
+    var inp = document.getElementById('minister-code');
+    inp.style.borderColor = '#ef4444';
+    setTimeout(function() { inp.style.borderColor = ''; }, 1500);
+  }
+}
+
+function doLogout() {
+  if (confirm('ต้องการออกจากระบบหรือไม่?')) {
+    clearInterval(refreshTimer);
+    clearInterval(countdownTimer);
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('minister-code').value = '';
+  }
+}
+
+/* ════════════════════════════════════════════
+   CLOCK
+════════════════════════════════════════════ */
+function startClock() {
+  function tick() {
+    var now = new Date();
+    var d = now.toLocaleDateString('th-TH',{weekday:'short',year:'numeric',month:'short',day:'numeric'});
+    var t = now.toLocaleTimeString('th-TH');
+    document.getElementById('hdr-clock').textContent = d + ' ' + t;
+  }
+  tick();
+  setInterval(tick, 1000);
+}
+
+/* ════════════════════════════════════════════
+   COUNTDOWN & AUTO-REFRESH
+════════════════════════════════════════════ */
+function startCountdown() {
+  countdownVal = 60;
+  if (countdownTimer) clearInterval(countdownTimer);
+  countdownTimer = setInterval(function() {
+    countdownVal--;
+    var el = document.getElementById('sb-countdown');
+    if (el) el.textContent = countdownVal;
+    if (countdownVal <= 0) {
+      countdownVal = 60;
+    }
+  }, 1000);
+  if (refreshTimer) clearInterval(refreshTimer);
+  refreshTimer = setInterval(loadAllData, 60000);
+}
+
+/* ════════════════════════════════════════════
+   DATA LOADING
+════════════════════════════════════════════ */
+async function initData() {
+  try {
+    await ensureMockData();
+  } catch(e) {
+    // ignore – will use mock data
+  }
+  await loadAllData();
+}
+
+async function ensureMockData() {
+  try {
+    var resp = await fetch('/api/hub/mock-data', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({init:true}),
+      signal:AbortSignal.timeout(4000)
+    });
+    return resp.ok;
+  } catch(e) {
+    return false;
+  }
+}
+
+async function loadAllData() {
+  try {
+    var resp = await fetch('/api/hub/minister', {signal:AbortSignal.timeout(5000)});
+    if (!resp.ok) throw new Error('api-fail');
+    var data = await resp.json();
+    allData = data;
+    renderAll(data);
+  } catch(e) {
+    // Use mock data gracefully
+    allData = buildMockSummary();
+    renderAll(allData);
+  }
+
+  // Load alerts separately
+  try {
+    var aresp = await fetch('/api/hub/alerts', {signal:AbortSignal.timeout(4000)});
+    if (!aresp.ok) throw new Error('alerts-fail');
+    var adata = await aresp.json();
+    renderAlerts(adata.alerts || []);
+    renderAlertBanner(adata.alerts || []);
+  } catch(e) {
+    renderAlerts(MOCK_ALERTS);
+    renderAlertBanner(MOCK_ALERTS);
+  }
+}
+
+function buildMockSummary() {
+  var totalBudget = 0, totalDisbursed = 0, totalPersonnel = 0, totalProjects = 0, totalDelayed = 0;
+  MOCK_MINISTRIES.forEach(function(m) {
+    totalBudget += m.budget;
+    totalDisbursed += m.disbursed;
+    m.agencies.forEach(function(a) {
+      totalPersonnel += a.personnel;
+      totalProjects += a.projects;
+      totalDelayed += a.delayed;
+    });
+  });
+  return {
+    totalBudget: totalBudget,
+    totalDisbursed: totalDisbursed,
+    totalPersonnel: totalPersonnel,
+    totalProjects: totalProjects,
+    totalDelayed: totalDelayed,
+    ministryCount: MOCK_MINISTRIES.length,
+    ministries: MOCK_MINISTRIES
+  };
+}
+
+async function selectMinistry(ministryId) {
+  currentMinistryId = ministryId;
+
+  // Highlight card
+  document.querySelectorAll('.ministry-card').forEach(function(c) {
+    c.classList.remove('active');
+  });
+  var activeCard = document.getElementById('mc-' + ministryId);
+  if (activeCard) activeCard.classList.add('active');
+
+  // Try API first
+  try {
+    var resp = await fetch('/api/hub/ministry/' + ministryId, {signal:AbortSignal.timeout(5000)});
+    if (!resp.ok) throw new Error('not-found');
+    var data = await resp.json();
+    renderDrilldown(data);
+    return;
+  } catch(e) {
+    // Fall through to mock
+  }
+
+  // Use mock data
+  var ministry = MOCK_MINISTRIES.find(function(m) { return m.id === ministryId; });
+  if (ministry) renderDrilldown(ministry);
+}
+
+function showOverview() {
+  currentMinistryId = null;
+  document.querySelectorAll('.ministry-card').forEach(function(c) {
+    c.classList.remove('active');
+  });
+  renderOverview();
+}
+
+/* ════════════════════════════════════════════
+   RENDER FUNCTIONS
+════════════════════════════════════════════ */
+function renderAll(data) {
+  updateKPIs(data);
+  renderMinistryCards(data.ministries || MOCK_MINISTRIES);
+  if (!currentMinistryId) renderOverview();
+}
+
+function updateKPIs(data) {
+  setKPI('kpi-budget', fmtNum(data.totalBudget));
+  setKPI('kpi-disbursed', fmtNum(data.totalDisbursed));
+  setKPI('kpi-personnel', fmtNum(data.totalPersonnel));
+  setKPI('kpi-projects', fmtNum(data.totalProjects));
+  setKPI('kpi-delayed', fmtNum(data.totalDelayed));
+  setKPI('kpi-ministries', data.ministryCount || MOCK_MINISTRIES.length);
+  var pct = data.totalBudget ? Math.round(data.totalDisbursed/data.totalBudget*100) : 0;
+  var pctEl = document.getElementById('kpi-disbursed-pct');
+  if (pctEl) pctEl.textContent = pct + '%';
+}
+
+function setKPI(id, val) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.className = 'kpi-val';
+  el.textContent = val;
+}
+
+function renderMinistryCards(ministries) {
+  var container = document.getElementById('col-left');
+  var h = '';
+  ministries.forEach(function(m) {
+    h += renderMinistryCard(m);
+  });
+  container.innerHTML = h;
+}
+
+function renderMinistryCard(m) {
+  var pct = m.budget ? Math.round(m.disbursed / m.budget * 100) : 0;
+  var agencyCount = m.agencies ? m.agencies.length : 0;
+  var totalAlerts = 0;
+  var delayed = 0;
+  if (m.agencies) {
+    m.agencies.forEach(function(a) {
+      totalAlerts += (a.alerts || 0);
+      delayed += (a.delayed || 0);
+    });
+  }
+  var barColor = pct >= 80 ? '#22c55e' : pct >= 50 ? '#f59e0b' : '#ef4444';
+  var alertBadge = totalAlerts > 0
+    ? '<span style="background:' + (totalAlerts > 3 ? '#fee2e2;color:#b91c1c' : '#ffedd5;color:#c2410c') + ';font-size:10px;font-weight:700;padding:2px 7px;border-radius:9px;margin-left:6px">' + totalAlerts + ' แจ้งเตือน</span>'
+    : '';
+
+  return '<div class="ministry-card" id="mc-' + m.id + '" onclick="selectMinistry(\'' + m.id + '\')">' +
+    '<div class="mc-head">' +
+      '<div class="mc-icon" style="background:' + m.colorBg + '">' + m.icon + '</div>' +
+      '<div style="flex:1;min-width:0">' +
+        '<div class="mc-name">' + m.name + alertBadge + '</div>' +
+        '<div class="mc-abbr">' + m.abbr + ' · ' + agencyCount + ' หน่วยงาน</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="mc-budget-row">' +
+      '<span class="mc-budget-lbl">เบิกจ่าย ' + fmtNum(m.disbursed) + ' / ' + fmtNum(m.budget) + ' ล้าน</span>' +
+      '<span class="mc-budget-pct" style="color:' + barColor + '">' + pct + '%</span>' +
+    '</div>' +
+    '<div class="mc-progress-wrap">' +
+      '<div class="mc-progress" style="width:' + Math.min(pct,100) + '%;background:' + barColor + '"></div>' +
+    '</div>' +
+    '<div class="mc-footer">' +
+      '<span class="mc-agency-count">📋 ' + delayed + ' โครงการล่าช้า</span>' +
+      '<button class="mc-detail-btn" onclick="selectMinistry(\'' + m.id + '\');event.stopPropagation()">ดูรายละเอียด →</button>' +
+    '</div>' +
+  '</div>';
+}
+
+function renderOverview() {
+  var data = allData || buildMockSummary();
+  var ministries = data.ministries || MOCK_MINISTRIES;
+  var h = '';
+  h += '<div class="dd-title">🏛 ภาพรวมทุกกระทรวง <span style="font-size:12px;font-weight:500;color:var(--text3)">' + ministries.length + ' กระทรวง</span></div>';
+  h += '<div class="dd-sub">คลิกการ์ดกระทรวงด้านซ้ายเพื่อดูรายละเอียดหน่วยงาน · อัปเดต: ' + new Date().toLocaleTimeString('th-TH') + '</div>';
+
+  // Summary grid
+  h += '<div class="ov-grid">';
+  h += '<div class="ov-stat"><div class="ov-val">' + fmtNum(data.totalBudget) + '</div><div class="ov-lbl">💰 งบรวม (ล้านบาท)</div></div>';
+  h += '<div class="ov-stat"><div class="ov-val">' + fmtNum(data.totalDisbursed) + '</div><div class="ov-lbl">✅ เบิกจ่ายแล้ว (ล้านบาท)</div></div>';
+  h += '<div class="ov-stat"><div class="ov-val">' + fmtNum(data.totalPersonnel) + '</div><div class="ov-lbl">👥 บุคลากรรวม (คน)</div></div>';
+  h += '<div class="ov-stat"><div class="ov-val">' + fmtNum(data.totalProjects) + '</div><div class="ov-lbl">📋 โครงการทั้งหมด</div></div>';
+  h += '</div>';
+
+  // Ministry summary table
+  h += '<table class="dd-table">';
+  h += '<thead><tr><th>กระทรวง</th><th>งบ %</th><th>โครงการ</th><th>ล่าช้า</th><th>บุคลากร</th><th>สถานะ</th></tr></thead>';
+  h += '<tbody>';
+  ministries.forEach(function(m) {
+    var pct = m.budget ? Math.round(m.disbursed / m.budget * 100) : 0;
+    var totalProjects = 0, totalDelayed = 0, totalPersonnel = 0;
+    if (m.agencies) {
+      m.agencies.forEach(function(a) {
+        totalProjects += a.projects || 0;
+        totalDelayed += a.delayed || 0;
+        totalPersonnel += a.personnel || 0;
+      });
+    }
+    var overallStatus = totalDelayed > 10 ? 'critical' : totalDelayed > 3 ? 'warning' : 'on_track';
+    h += '<tr onclick="selectMinistry(\'' + m.id + '\')" style="cursor:pointer">';
+    h += '<td><div style="display:flex;align-items:center;gap:8px">' +
+         '<span style="font-size:16px">' + m.icon + '</span>' +
+         '<div><div class="dd-agency-name">' + m.name + '</div><div class="dd-agency-type">' + m.abbr + '</div></div>' +
+         '</div></td>';
+    h += '<td>' +
+         '<div style="display:flex;align-items:center;gap:6px">' +
+         '<span style="font-weight:700;color:' + (pct>=70?'#166534':pct>=50?'#c2410c':'#b91c1c') + '">' + pct + '%</span>' +
+         '</div>' +
+         '<div class="dd-progress-mini"><div class="dd-progress-fill" style="width:' + Math.min(pct,100) + '%;background:' + (pct>=70?'#22c55e':pct>=50?'#f97316':'#ef4444') + '"></div></div>' +
+         '</td>';
+    h += '<td style="font-weight:600">' + totalProjects + '</td>';
+    h += '<td><span style="color:' + (totalDelayed>10?'#b91c1c':totalDelayed>3?'#c2410c':'#166534') + ';font-weight:700">' + totalDelayed + '</span></td>';
+    h += '<td>' + fmtNum(totalPersonnel) + '</td>';
+    h += '<td>' + statusBadge(overallStatus) + '</td>';
+    h += '</tr>';
+  });
+  h += '</tbody></table>';
+
+  document.getElementById('col-center').innerHTML = h;
+}
+
+function renderDrilldown(ministry) {
+  var agencies = ministry.agencies || [];
+  var h = '';
+  h += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">' +
+       '<button onclick="showOverview()" style="background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;color:var(--text2)">← ภาพรวม</button>' +
+       '<div class="dd-title">' + ministry.icon + ' ' + ministry.name + '</div>' +
+       '</div>';
+  var pct = ministry.budget ? Math.round(ministry.disbursed / ministry.budget * 100) : 0;
+  h += '<div class="dd-sub">งบรวม ' + fmtNum(ministry.budget) + ' ล้านบาท · เบิกแล้ว ' + fmtNum(ministry.disbursed) + ' ล้าน (' + pct + '%) · ' + agencies.length + ' หน่วยงาน · อัปเดต: ' + new Date().toLocaleTimeString('th-TH') + '</div>';
+
+  // Ministry budget bar
+  h += '<div style="background:var(--bg);border-radius:10px;padding:12px 14px;margin-bottom:14px;border:1px solid var(--border)">' +
+       '<div style="display:flex;justify-content:space-between;margin-bottom:6px">' +
+       '<span style="font-size:11px;font-weight:700;color:var(--text2)">ภาพรวมการเบิกจ่าย</span>' +
+       '<span style="font-size:14px;font-weight:800;color:' + (pct>=70?'var(--green)':pct>=50?'var(--orange)':'var(--red)') + '">' + pct + '%</span>' +
+       '</div>' +
+       '<div style="background:var(--border);border-radius:99px;height:8px;overflow:hidden">' +
+       '<div style="width:' + Math.min(pct,100) + '%;height:100%;background:' + (pct>=70?'#22c55e':pct>=50?'#f97316':'#ef4444') + ';border-radius:99px;transition:.5s"></div>' +
+       '</div>' +
+       '</div>';
+
+  if (agencies.length === 0) {
+    h += '<div class="empty-state"><div class="es-icon">📂</div><div class="es-msg">รอรับรายงาน</div><div class="es-sub">ยังไม่มีข้อมูลหน่วยงาน</div></div>';
+  } else {
+    h += '<table class="dd-table">';
+    h += '<thead><tr><th>หน่วยงาน</th><th>งบ %</th><th>โครงการ</th><th>บุคลากร</th><th>สถานะ</th><th>แจ้งเตือน</th></tr></thead>';
+    h += '<tbody>';
+    agencies.forEach(function(a) {
+      var apct = a.budget ? Math.round(a.disbursed / a.budget * 100) : 0;
+      h += '<tr>';
+      h += '<td><div class="dd-agency-name">' + a.name + '</div><div class="dd-agency-type">' + (a.type || '') + '</div></td>';
+      h += '<td>' +
+           '<div style="display:flex;align-items:center;gap:5px">' +
+           '<span style="font-weight:700;font-size:12px;color:' + (apct>=70?'#166534':apct>=50?'#c2410c':'#b91c1c') + '">' + apct + '%</span>' +
+           '</div>' +
+           '<div class="dd-progress-mini"><div class="dd-progress-fill" style="width:' + Math.min(apct,100) + '%;background:' + (apct>=70?'#22c55e':apct>=50?'#f97316':'#ef4444') + '"></div></div>' +
+           '<div style="font-size:9px;color:var(--text3);margin-top:2px">' + fmtNum(a.disbursed) + ' / ' + fmtNum(a.budget) + ' ล้าน</div>' +
+           '</td>';
+      h += '<td>' +
+           '<div style="font-weight:600">' + (a.projects || 0) + '</div>' +
+           '<div style="font-size:10px;color:' + (a.delayed>5?'#b91c1c':a.delayed>2?'#c2410c':'var(--text3)') + '">ล่าช้า ' + (a.delayed || 0) + '</div>' +
+           '</td>';
+      h += '<td style="font-size:11px">' + fmtNum(a.personnel || 0) + '</td>';
+      h += '<td>' + statusBadge(a.status || 'on_track') + '</td>';
+      h += '<td>';
+      if (a.alerts && a.alerts > 0) {
+        h += '<span class="dd-badge" style="background:' + (a.alerts>2?'var(--red-bg)':'var(--orange-bg)') + ';color:' + (a.alerts>2?'var(--red)':'var(--orange)') + '">' +
+             (a.alerts > 2 ? '🔴' : '🟡') + ' ' + a.alerts + '</span>';
+      } else {
+        h += '<span style="color:var(--text3);font-size:11px">—</span>';
+      }
+      h += '</td></tr>';
+    });
+    h += '</tbody></table>';
+  }
+
+  document.getElementById('col-center').innerHTML = h;
+}
+
+function renderAlerts(alerts) {
+  var container = document.getElementById('alerts-list');
+  if (!alerts || alerts.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="es-icon">✅</div><div class="es-msg">ไม่มีการแจ้งเตือน</div></div>';
+    var countEl = document.getElementById('rp-count');
+    if (countEl) { countEl.textContent = '0'; countEl.style.background = '#22c55e'; }
+    return;
+  }
+  var h = '';
+  alerts.forEach(function(a) {
+    h += '<div class="alert-item ' + a.level + '">';
+    h += '<div class="ai-level">';
+    h += '<span class="ai-badge ' + a.level + '">' + levelIcon(a.level) + ' ' + levelLabel(a.level) + '</span>';
+    h += '<span class="ai-ministry">' + (a.ministry || '') + '</span>';
+    h += '</div>';
+    h += '<div class="ai-msg">' + escHtml(a.msg) + '</div>';
+    h += '<div class="ai-agency">📌 ' + escHtml(a.agency || '') + '</div>';
+    h += '<div class="ai-time">🕐 ' + escHtml(a.time || '') + '</div>';
+    h += '</div>';
+  });
+  container.innerHTML = h;
+
+  var countEl = document.getElementById('rp-count');
+  if (countEl) {
+    countEl.textContent = alerts.length;
+    var critCount = alerts.filter(function(a) { return a.level === 'critical'; }).length;
+    countEl.style.background = critCount > 0 ? '#ef4444' : '#f97316';
+  }
+}
+
+function renderAlertBanner(alerts) {
+  var banner = document.getElementById('alert-banner');
+  var textEl = document.getElementById('ab-text');
+  var countEl = document.getElementById('ab-count');
+  if (!alerts || alerts.length === 0) {
+    banner.className = 'alert-banner hidden';
+    return;
+  }
+  var critCount = alerts.filter(function(a) { return a.level === 'critical'; }).length;
+  var warnCount = alerts.filter(function(a) { return a.level === 'warning'; }).length;
+  if (critCount > 0) {
+    banner.className = 'alert-banner';
+    textEl.textContent = '⚠️ มีสถานการณ์วิกฤต ' + critCount + ' รายการที่ต้องดำเนินการด่วน — ' + alerts[0].agency + ': ' + alerts[0].msg.substring(0,60) + '...';
+    countEl.textContent = 'วิกฤต ' + critCount + ' / เตือน ' + warnCount;
+  } else if (warnCount > 0) {
+    banner.className = 'alert-banner warn';
+    textEl.textContent = '⚡ มีการแจ้งเตือน ' + warnCount + ' รายการ — ' + alerts[0].msg.substring(0,60) + '...';
+    countEl.textContent = 'เตือน ' + warnCount;
+  } else {
+    banner.className = 'alert-banner info';
+    textEl.textContent = 'ℹ️ ข้อมูลเชิงสารสนเทศ ' + alerts.length + ' รายการ';
+    countEl.textContent = alerts.length;
+  }
+}
+
+/* ════════════════════════════════════════════
+   UTILITIES
+════════════════════════════════════════════ */
+function fmtNum(n) {
+  if (n === undefined || n === null) return '—';
+  if (n >= 1000000) return (n/1000000).toFixed(1).replace(/\.0$/,'') + 'M';
+  if (n >= 1000) return (n/1000).toFixed(1).replace(/\.0$/,'') + 'K';
+  return n.toLocaleString('th-TH');
+}
+
+function statusBadge(status) {
+  var map = {
+    'on_track': ['var(--green-bg)','var(--green)','✅ ปกติ'],
+    'warning':  ['var(--orange-bg)','var(--orange)','⚡ เฝ้าระวัง'],
+    'critical': ['var(--red-bg)','var(--red)','🔴 วิกฤต'],
+    'pending':  ['var(--bg2)','var(--text2)','⏳ รอรายงาน'],
+  };
+  var s = map[status] || map['pending'];
+  return '<span class="dd-badge" style="background:' + s[0] + ';color:' + s[1] + '">' + s[2] + '</span>';
+}
+
+function levelIcon(level) {
+  return level === 'critical' ? '🔴' : level === 'warning' ? '🟡' : '🔵';
+}
+
+function levelLabel(level) {
+  return level === 'critical' ? 'วิกฤต' : level === 'warning' ? 'เตือน' : 'สารสนเทศ';
+}
+
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+</script>
+<script>
+window.G2G_PAGE_CONFIG = {
+  pageName: 'แดชบอร์ดรัฐมนตรี — ภาพรวมทุกกระทรวง',
+  agencyId: 'minister-office', ministryId: 'all',
+  manualText: 'แดชบอร์ดสำหรับรัฐมนตรีตรวจสอบข้อมูลทุกกระทรวงในระบบ G2G — รหัสผ่าน: MINISTER-2026',
+  manualSteps: [
+    '1. ใส่รหัส MINISTER-2026 เพื่อเข้าสู่ระบบ',
+    '2. ดูภาพรวม KPI ทุกกระทรวง งบรวม บุคลากร โครงการ แจ้งเตือน',
+    '3. คลิกการ์ดกระทรวงเพื่อ drill-down ดูรายละเอียดแต่ละกระทรวง',
+    '4. แถบ แจ้งเตือน: ดูปัญหาเร่งด่วนจากทุกหน่วยงาน',
+    '5. ข้อมูล refresh อัตโนมัติทุก 60 วินาที'
+  ]
+};
+</script>
+<script src="/access-bar.js"></script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+{
+  "department": {
+    "name_th": "กรมส่งเสริมการเกษตร",
+    "name_en": "Department of Agricultural Extension",
+    "abbr": "DOAE",
+    "ministry": "กระทรวงเกษตรและสหกรณ์",
+    "director_general": "นายสมชาย รักษ์เกษตร",
+    "established": "2510",
+    "total_provinces": 77,
+    "reporting_provinces": 1,
+    "pilot_province": "แพร่"
+  },
+  "budget_summary": {
+    "fiscal_year": "2569",
+    "total_budget": 15420000000,
+    "personnel": 8200000000,
+    "operations": 4800000000,
+    "investment": 1900000000,
+    "subsidy": 520000000
+  },
+  "personnel_summary": {
+    "total": 18420,
+    "central": 1850,
+    "provincial": 16570
+  },
+  "central_personnel": [
+    {
+      "id": "CEN-001",
+      "name": "นายสมชาย รักษ์เกษตร",
+      "position": "อธิบดีกรมส่งเสริมการเกษตร",
+      "level": "10",
+      "dept": "สำนักงานอธิบดี",
+      "phone": "02-5793810",
+      "email": "dg@doae.go.th"
+    },
+    {
+      "id": "CEN-002",
+      "name": "นางสาวพิมพ์ใจ อารยะเกษตร",
+      "position": "รองอธิบดี (ด้านวิชาการ)",
+      "level": "9",
+      "dept": "สำนักงานอธิบดี",
+      "phone": "02-5793811",
+      "email": "ddag@doae.go.th"
+    },
+    {
+      "id": "CEN-003",
+      "name": "นายวิชัย ภูมิพัฒน์",
+      "position": "รองอธิบดี (ด้านบริหาร)",
+      "level": "9",
+      "dept": "สำนักงานอธิบดี",
+      "phone": "02-5793812",
+      "email": "ddab@doae.go.th"
+    },
+    {
+      "id": "CEN-004",
+      "name": "นางมาลี ส่งเสริมไทย",
+      "position": "ผู้อำนวยการสำนักพัฒนาการเกษตรเขตที่ 1",
+      "level": "9",
+      "dept": "สำนักพัฒนาการเกษตรเขตที่ 1",
+      "phone": "02-5793820",
+      "email": "r1dir@doae.go.th"
+    },
+    {
+      "id": "CEN-005",
+      "name": "นายประสิทธิ์ เกษตรดี",
+      "position": "ผู้อำนวยการสำนักส่งเสริมและจัดการสินค้าเกษตร",
+      "level": "9",
+      "dept": "สำนักส่งเสริมและจัดการสินค้าเกษตร",
+      "phone": "02-5793830",
+      "email": "aggr@doae.go.th"
+    },
+    {
+      "id": "CEN-006",
+      "name": "นางสาวอรุณี ดิจิทัลเกษตร",
+      "position": "ผู้อำนวยการกองวิจัยและพัฒนางานส่งเสริมการเกษตร",
+      "level": "9",
+      "dept": "กองวิจัยและพัฒนางานส่งเสริมการเกษตร",
+      "phone": "02-5793840",
+      "email": "rnd@doae.go.th"
+    },
+    {
+      "id": "CEN-007",
+      "name": "นายธีระพงษ์ บริหารราชการ",
+      "position": "ผู้อำนวยการกองคลัง",
+      "level": "9",
+      "dept": "กองคลัง",
+      "phone": "02-5793850",
+      "email": "finance@doae.go.th"
+    },
+    {
+      "id": "CEN-008",
+      "name": "นางจันทิมา สารสนเทศ",
+      "position": "ผู้อำนวยการศูนย์เทคโนโลยีสารสนเทศและการสื่อสาร",
+      "level": "9",
+      "dept": "ศูนย์เทคโนโลยีสารสนเทศและการสื่อสาร",
+      "phone": "02-5793860",
+      "email": "ict@doae.go.th"
+    }
+  ],
+  "policies": [
+    {
+      "id": "DOAE-POL-001",
+      "title": "นโยบายส่งเสริมการใช้เทคโนโลยีดิจิทัลในภาคเกษตร",
+      "issued_date": "2026-01-15",
+      "status": "active",
+      "priority": "สูง",
+      "target_provinces": 77,
+      "received_provinces": 1,
+      "description": "ส่งเสริมการนำเทคโนโลยีดิจิทัล IoT และ AI มาใช้ในการเกษตรเพื่อเพิ่มผลผลิตและลดต้นทุน",
+      "issued_by": "อธิบดีกรมส่งเสริมการเกษตร"
+    },
+    {
+      "id": "DOAE-POL-002",
+      "title": "นโยบายระบบแปลงใหญ่ 2569",
+      "issued_date": "2026-02-01",
+      "status": "active",
+      "priority": "สูง",
+      "target_provinces": 77,
+      "received_provinces": 1,
+      "description": "ขยายพื้นที่ระบบส่งเสริมการเกษตรแบบแปลงใหญ่ให้ครอบคลุมทุกจังหวัด เป้าหมาย 1,000 แปลงทั่วประเทศ",
+      "issued_by": "อธิบดีกรมส่งเสริมการเกษตร"
+    },
+    {
+      "id": "DOAE-POL-003",
+      "title": "นโยบายพัฒนาเกษตรกรปราดเปรื่อง (Smart Farmer) ระยะที่ 2",
+      "issued_date": "2026-03-10",
+      "status": "active",
+      "priority": "กลาง",
+      "target_provinces": 77,
+      "received_provinces": 1,
+      "description": "พัฒนาเกษตรกรให้มีความรู้ ทักษะ และเจตคติที่ดีในการประกอบอาชีพการเกษตร",
+      "issued_by": "รองอธิบดี (ด้านวิชาการ)"
+    }
+  ],
+  "communications": []
+}

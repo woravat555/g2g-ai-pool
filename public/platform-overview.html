@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>🏛️ G2G สารบัญแพลตฟอร์ม — ระบบบริหารราชการดิจิทัล</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gov-blue: #1a237e;
+  --gov-blue2: #283593;
+  --gov-blue3: #3949ab;
+  --gov-blue-light: #e8eaf6;
+  --moac: #0d47a1;
+  --moac-light: #e3f2fd;
+  --mhesi: #1b5e20;
+  --mhesi-light: #e8f5e9;
+  --moi: #880e4f;
+  --moi-light: #fce4ec;
+  --moph: #b71c1c;
+  --moph-light: #ffebee;
+  --mdes: #e65100;
+  --mdes-light: #fff3e0;
+  --moc: #4a148c;
+  --moc-light: #f3e5f5;
+  --province: #01579b;
+  --province-light: #e1f5fe;
+  --support: #37474f;
+  --support-light: #eceff1;
+  --minister: #4e342e;
+  --minister-light: #efebe9;
+  --bg: #f0f2f5;
+  --white: #ffffff;
+  --text: #1a237e;
+  --text-dark: #212121;
+  --sub: #546e7a;
+  --border: #c5cae9;
+  --gold: #f9a825;
+  --green: #2e7d32;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Sarabun', sans-serif; }
+body { background: var(--bg); color: var(--text-dark); min-height: 100vh; }
+
+/* ===== HEADER ===== */
+.header {
+  background: linear-gradient(135deg, var(--gov-blue) 0%, var(--gov-blue2) 60%, #1565c0 100%);
+  color: #fff;
+  padding: 0;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  box-shadow: 0 3px 16px rgba(0,0,0,.35);
+}
+.header-inner {
+  padding: 18px 32px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.header-left { display: flex; align-items: center; gap: 18px; }
+.header-emblem {
+  width: 58px; height: 58px;
+  background: rgba(255,255,255,.12);
+  border: 2px solid rgba(255,255,255,.3);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px; flex-shrink: 0;
+}
+.header-title { font-size: 22px; font-weight: 800; letter-spacing: .3px; line-height: 1.2; }
+.header-sub { font-size: 13px; opacity: .78; margin-top: 3px; font-weight: 400; }
+.header-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.live-badge {
+  background: #43a047;
+  color: #fff;
+  padding: 7px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.25);
+  white-space: nowrap;
+}
+.date-badge {
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.25);
+  color: #fff;
+  padding: 7px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+/* ===== STATUS BAR ===== */
+.status-bar {
+  background: var(--gov-blue2);
+  border-top: 1px solid rgba(255,255,255,.12);
+  padding: 9px 32px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: rgba(255,255,255,.85);
+}
+.stat-item {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(255,255,255,.1);
+  border-radius: 10px;
+  padding: 3px 11px;
+  white-space: nowrap;
+}
+.stat-item strong { color: #fff; font-weight: 700; }
+.stat-sep { opacity: .35; font-size: 14px; }
+
+/* ===== MAIN CONTENT ===== */
+.main { padding: 28px 32px 48px; max-width: 1400px; margin: 0 auto; }
+
+/* ===== SECTION ===== */
+.section { margin-bottom: 36px; }
+.section-header {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 3px solid;
+}
+.section-header.col-minister { border-color: var(--minister); }
+.section-header.col-moac { border-color: var(--moac); }
+.section-header.col-mhesi { border-color: var(--mhesi); }
+.section-header.col-moi { border-color: var(--moi); }
+.section-header.col-moph { border-color: var(--moph); }
+.section-header.col-mdes { border-color: var(--mdes); }
+.section-header.col-moc { border-color: var(--moc); }
+.section-header.col-province { border-color: var(--province); }
+.section-header.col-support { border-color: var(--support); }
+
+.section-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+}
+.si-minister { background: var(--minister-light); }
+.si-moac     { background: var(--moac-light); }
+.si-mhesi    { background: var(--mhesi-light); }
+.si-moi      { background: var(--moi-light); }
+.si-moph     { background: var(--moph-light); }
+.si-mdes     { background: var(--mdes-light); }
+.si-moc      { background: var(--moc-light); }
+.si-province { background: var(--province-light); }
+.si-support  { background: var(--support-light); }
+
+.section-title { font-size: 18px; font-weight: 800; color: var(--text-dark); }
+.section-count {
+  margin-left: auto;
+  font-size: 12px;
+  background: #e8eaf6;
+  color: var(--gov-blue);
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+/* ===== GRID ===== */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+@media (max-width: 1100px) { .cards-grid { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 680px)  { .cards-grid { grid-template-columns: 1fr; } }
+
+/* ===== CARD ===== */
+.card {
+  background: var(--white);
+  border-radius: 14px;
+  padding: 0;
+  box-shadow: 0 2px 10px rgba(0,0,0,.07);
+  border: 1px solid #e0e0e0;
+  overflow: hidden;
+  transition: transform .2s, box-shadow .2s;
+  display: flex;
+  flex-direction: column;
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,.13);
+}
+.card-stripe {
+  height: 5px;
+  flex-shrink: 0;
+}
+.cs-minister { background: var(--minister); }
+.cs-moac     { background: var(--moac); }
+.cs-mhesi    { background: var(--mhesi); }
+.cs-moi      { background: var(--moi); }
+.cs-moph     { background: var(--moph); }
+.cs-mdes     { background: var(--mdes); }
+.cs-moc      { background: var(--moc); }
+.cs-province { background: var(--province); }
+.cs-support  { background: var(--support); }
+
+.card-body { padding: 18px 20px 16px; flex: 1; display: flex; flex-direction: column; }
+.card-top { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
+.card-icon {
+  width: 46px; height: 46px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+}
+.card-meta { flex: 1; min-width: 0; }
+.card-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1.3;
+  display: flex; align-items: center; gap: 6px;
+  flex-wrap: wrap;
+}
+.auth-badge {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 10px;
+  background: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffc107;
+  padding: 2px 7px;
+  border-radius: 8px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.card-desc { font-size: 12px; color: var(--sub); margin-top: 4px; line-height: 1.5; }
+.card-url { font-size: 11px; color: #9e9e9e; margin-top: 6px; font-family: monospace; }
+.card-actions { margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap; }
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  color: #fff;
+  border: none; cursor: pointer;
+  font-family: inherit;
+  transition: opacity .15s, transform .1s;
+  white-space: nowrap;
+}
+.btn-primary:hover { opacity: .88; transform: scale(1.03); }
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 7px 14px;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1.5px solid;
+  cursor: pointer;
+  font-family: inherit;
+  background: transparent;
+  transition: background .15s, transform .1s;
+  white-space: nowrap;
+}
+.btn-secondary:hover { transform: scale(1.03); }
+
+/* Button color variants */
+.bb-minister { background: var(--minister); }
+.bb-moac     { background: var(--moac); }
+.bb-mhesi    { background: var(--mhesi); }
+.bb-moi      { background: var(--moi); }
+.bb-moph     { background: var(--moph); }
+.bb-mdes     { background: var(--mdes); }
+.bb-moc      { background: var(--moc); }
+.bb-province { background: var(--province); }
+.bb-support  { background: var(--support); }
+
+.bs-province { border-color: var(--province); color: var(--province); }
+.bs-province:hover { background: var(--province-light); }
+.bs-moac { border-color: var(--moac); color: var(--moac); }
+.bs-moac:hover { background: var(--moac-light); }
+
+/* Province pair card */
+.province-pair { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+
+/* ===== FOOTER ===== */
+.footer {
+  background: var(--gov-blue);
+  color: rgba(255,255,255,.8);
+  padding: 24px 32px;
+  margin-top: 0;
+}
+.footer-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.legal-pills {
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.legal-pill {
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.2);
+  color: rgba(255,255,255,.85);
+  padding: 5px 13px;
+  border-radius: 20px;
+  font-size: 11.5px;
+  white-space: nowrap;
+  transition: background .15s;
+}
+.legal-pill:hover { background: rgba(255,255,255,.18); }
+.footer-bottom {
+  margin-top: 18px;
+  border-top: 1px solid rgba(255,255,255,.15);
+  padding-top: 14px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 10px;
+  font-size: 11px;
+  color: rgba(255,255,255,.55);
+}
+.footer-logo { font-size: 20px; }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="header">
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="header-emblem">🏛️</div>
+      <div>
+        <div class="header-title">G2G ระบบบริหารราชการดิจิทัล</div>
+        <div class="header-sub">สารบัญแพลตฟอร์มทั้งหมด — Government to Government AI Platform</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="date-badge" id="date-badge">📅 กำลังโหลด...</div>
+      <div class="live-badge">DEPLOY: ✅ LIVE</div>
+    </div>
+  </div>
+
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <div class="stat-item">📄 <strong>50 หน้า</strong></div>
+    <span class="stat-sep">|</span>
+    <div class="stat-item">🏛️ <strong>6 กระทรวง</strong></div>
+    <span class="stat-sep">|</span>
+    <div class="stat-item">🗺️ <strong>3 จังหวัด</strong></div>
+    <span class="stat-sep">|</span>
+    <div class="stat-item">♿ access-bar <strong>✅ ทุกหน้า</strong></div>
+    <span class="stat-sep">|</span>
+    <div class="stat-item">🔊 เสียง Niwat &amp; Preamwadee <strong>✅</strong></div>
+    <span class="stat-sep">|</span>
+    <div class="stat-item">🌐 <strong>g2g-ai-pool.fly.dev</strong></div>
+  </div>
+</header>
+
+<!-- ===== MAIN ===== -->
+<main class="main">
+
+  <!-- SECTION 1: ระดับรัฐมนตรี -->
+  <div class="section">
+    <div class="section-header col-minister">
+      <div class="section-icon si-minister">👑</div>
+      <div>
+        <div class="section-title">ระดับรัฐมนตรี</div>
+      </div>
+      <div class="section-count">2 แพลตฟอร์ม</div>
+    </div>
+    <div class="cards-grid">
+
+      <!-- Minister Dashboard -->
+      <div class="card">
+        <div class="card-stripe cs-minister"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-icon si-minister">👑</div>
+            <div class="card-meta">
+              <div class="card-name">
+                ศูนย์บัญชาการรัฐมนตรี
+                <span class="auth-badge">🔑 MINISTER-2026</span>
+              </div>
+              <div class="card-desc">Command Center สำหรับรัฐมนตรี — ภาพรวมทุกกระทรวง ตัวชี้วัด นโยบาย</div>
+              <div class="card-url">/minister-dashboard.html</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/minister-dashboard.html" class="btn-primary bb-minister">เข้าสู่ระบบ →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ministry Hub -->
+      <div class="card">
+        <div class="card-stripe cs-minister"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-icon si-minister">🏛️</div>
+            <div class="card-meta">
+              <div class="card-name">ศูนย์ข้อมูลกระทรวง</div>
+              <div class="card-desc">ภาพรวมข้อมูลทุกกระทรวง งบประมาณ บุคลากร โครงการ KPI รวมศูนย์</div>
+              <div class="card-url">/ministry-hub.html</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/ministry-hub.html" class="btn-primary bb-minister">ดูข้อมูล →</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION 2: MOAC -->
+  <div class="section">
+    <div class="section-header col-moac">
+      <div class="section-icon si-moac">🌾</div>
+      <div>
+        <div class="section-title">กระทรวงเกษตรและสหกรณ์ (MOAC)</div>
+      </div>
+      <div class="section-count">5 แพลตฟอร์ม</div>
+    </div>
+    <div class="cards-grid">
+
+      <div class="card">
+        <div class="card-stripe cs-moac"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-icon si-moac">📊</div>
+            <div class="card-meta">
+              <div class="card-name">แดชบอร์ดกระทรวง</div>
+              <div class="card-desc">ภาพรวม MOAC — งบประมาณ บุคลากร กรม/หน่วยงาน โครงการเกษตร</div>
+              <div class="card-url">/ministry-agriculture.html</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/ministry-agriculture.html" class="btn-primary bb-moac">ดูแดชบอร์ด →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-stripe cs-moac"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-icon si-moac">⚙️</div>
+            <div class="card-meta">
+              <div class="card-name">
+                ระบบบริหาร MOAC
+                <span class="auth-badge">🔑 g2gadmin2026</span>
+              </div>
+              <div class="card-desc">จัดการข้อมูลกระทรวงเกษตร บุคลากร งบประมาณ โครงการ สำหรับผู้ดูแลระบบ</div>
+              <div class="card-url">/management-moac.html</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/management-moac.html" class="btn-primary bb-moac">บริหารระบบ →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-stripe cs-moac"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-icon si-moac">🌱</div>
+            <div class="card-meta">
+              <div class="card-name">กรมส่งเสริมการเกษตร</div>
+              <div class="card-desc">DOAE — ข้อมูลกรมส่งเสริมการเกษตร เขตพื้นที่ สำนักงานจังหวัด เกษตรกร</div>
+              <div class="card-url">/doae-central.html</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/doae-central.html" class="btn-primary bb-moac">ดูกรม →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-stripe cs-moac"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-icon si-moac">🧑‍🌾</div>
+            <div class="card-meta">
+              <div class="card-name">ที่ปรึกษาเกษตรกร</div>
+              <div class="card-desc">AI Farmer Advisory — คำแนะนำการเกษตร พยากรณ์อากาศ ราคาตลาด แบบส่วนตัว</div>
+              <div class="card-url">/farmer-advisory.html</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/farmer-advisory.html" class="btn-primary bb-moac">เข้าใช้งาน →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-stripe cs-moac"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-icon si-moac">📅</div>
+            <div class="card-meta">
+              <div class="card-name">ปฏิทินเพาะปลูก</div>
+              <div class="card-desc">Crop Calendar — ตารางเพาะปลูกรายพืช ตามฤดูกาลและภูมิภาค</div>
+              <div class="card-url">/crop-calendar.html</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/crop-calendar.html" class="btn-primary bb-moac">ดูปฏิทิน →</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION 3: MHESI -->
+  <div class="section">
+    <div class="section-header col-mhesi">
+      <div class="section-icon si-mhesi">🎓</div>
+      <div>
+        <div class="section-title">กระทรวงอุดมศึกษา วิทยาศาสตร์ วิจัยและนวัตกรรม (MHESI)</div>
+      </div>
+      <div class="section-count">4 แพลตฟอร์ม</div>
+    </div>
+    <div class="cards-grid">
+
+      <div class="card">
+        <div class="card-stripe cs-mhesi"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-icon si-mhesi">📊</div>
+            <div class="card-meta">
+              <div class="card-name">แดชบอร์ดกระทรวง</div>
+              <div class="card-desc">ภาพรวม MHESI — อุดมศึกษา วิจัย นวัตกรรม มหาวิทยาลัย งบ ววน.</div>
+              <div class="card-url">/ministry-mhesi.html</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/ministry-mhesi.html" class="btn-primary bb-mhesi">ดูแดชบอร์ด →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-stripe cs-mhesi"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-icon si-mhesi">🏛️</div>
+            <div class="card-meta">
+              <div class="card-name">ศูนย์บริหารผู้บริหาร อว. (Hub)</div>
+              <div class="card-desc">Executive Portal — แยกแดชบอร์ดผู้บริหารทุกระดับ รมว./ปลัด/อธิบดี/ประธานบอร์ด/ผอ.องค์การมหาชน</div>
+              <div class="card-url">/mhesi-hub.html</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/mhesi-hub.html" class="btn-primary bb-mhesi">เข้าสู่ Hub →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-stripe cs-mhesi"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-icon si-mhesi">⚙️</div>
+            <div class="card-meta">
+              <div class="card-name">
+                ระบบบริหาร ปลัดกระทรวง อว.
+                <span class="auth-badge">🔑 ปลัด</span>
+              </div>
+              <div class="card-desc">ระบบบริหารส่วนตัวของปลัดกระทรวง — บุคลากร งบประมาณ HEMIS วิจัย ววน. และ LINE AI บอท</div>
+              <div class="card-url">/mhesi-ps.html</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/mhesi-ps.html" class="btn-primary bb-mhesi">เข้าสู่ระบบ →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-stripe cs-mhesi"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-icon si-mhesi">⚙️</div>
+            <div class="card-meta">
+              <div class="card-name">
+                HEMIS ระบบบริหาร
+                <span class="auth-badge">🔑 g2gadmin2026</span>
+              </div>
+              <div class="card-desc">Higher Education Management Information System — จัดการข้อมูล อว. สำหรับผู้ดูแล</div>
+              <div class="card-url">/management-mhesi.html</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/management-mhesi.html" class="btn-primary bb-mhesi">บริหารระบบ →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-stripe cs-mhesi"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-icon si-mhesi">📚</div>
+            <div class="card-meta">
+              <div class="card-name">การเรียนรู้ตลอดชีวิต</div>
+              <div class="card-desc">Lifelong Learning Platform — หลักสูตร ทักษะ Reskill/Upskill ออนไลน์</div>
+              <div class="card-url">/learning.html</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/learning.html" class="btn-primary bb-mhesi">เรียนรู้ →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-stripe cs-mhesi"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-icon si-mhesi">🤖</div>
+            <div class="card-meta">
+              <div class="card-name">AI ตลอดชีวิต</div>
+              <div class="card-desc">AI Lifelong — ผู้ช่วย AI ส่วนตัวเพื่อการเรียนรู้และพัฒนาศักยภาพตลอดชีวิต</div>
+              <div class="card-url">/lifelong.html</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/lifelong.html" class="btn-primary bb-mhesi">ใช้งาน AI →</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION 4: MOI -->
+  <div class="section">
+    <div class="section-header col-moi">
+      <div class="section-icon si-moi">🏠</div>
+      <div>
+        <div class="section-title">กระทรวงมหาดไทย (MOI)</div>
+      </div>
+      <div class="section-count">2 แพลตฟอร์ม</div>
+    </div>
+    <div class="cards-grid">
+
+      <div class="card">
+        <div class="card-stripe cs-moi"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-icon si-moi">📊</div>
+            <div class="card-meta">
+              <div class="card-name">แดชบอร์ดกระทรวง</div>
+              <div class="card-desc">ภาพรวม MOI — การปกครอง ท้องถิ่น อปท. ทะเบียนราษฎร์ สาธารณภัย</div>
+              <div class="card-url">/ministry-moi.html</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/ministry-moi.html" class="btn-primary bb-moi">ดูแดชบอร์ด →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-stripe cs-moi"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-icon si-moi">⚙️</div>
+            <div class="card-meta">
+              <div class="card-name">
+                ระบบบริหาร MOI
+                <span class="auth-badge">🔑 g2gadmin2026</span>
+              </div>
+              <div class="card-desc">จัดการข้อมูลมหาดไทย จังหวัด อำเภอ อปท. บุคลากร งบประมาณ</div>
+              <div class="card-url">/management-moi.html</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/management-moi.html" class="btn-primary bb-moi">บริหารระบบ →</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION 5: MOPH -->
+  <div class="section">
+    <div class="section-header col-moph">
+      <div class="section-icon si-moph">🏥</div>
+      <div>
+        <div class="section-title">กระทรวงสาธารณสุข (MOPH)</div>
+      </div>
+      <div class="section-count">2 แพลตฟอร์ม</div>
+    </div>
+    <div class="cards-grid">
+
+      <div class="card">
+        <div class="card-stripe cs-moph"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-icon si-moph">📊</div>
+            <div class="card-meta">
+              <div class="card-name">แดชบอร์ดกระทรวง</div>
+              <div class="card-desc">ภาพรวม MOPH — โรงพยาบาล บุคลากรสาธารณสุข งบประมาณ ตัวชี้วัดสุขภาพ</div>
+              <div class="card-url">/ministry-moph.html</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/ministry-moph.html" class="btn-primary bb-moph">ดูแดชบอร์ด →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-stripe cs-moph"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-icon si-moph">⚙️</div>
+            <div class="card-meta">
+              <div class="card-name">
+                ระบบบริหาร MOPH
+                <span class="auth-badge">🔑 g2gadmin2026</span>
+              </div>
+              <div class="card-desc">จัดการข้อมูลสาธารณสุข โรงพยาบาล บุคลากร งบประมาณ สำหรับผู้ดูแล</div>
+              <div class="card-url">/management-moph.html</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/management-moph.html" class="btn-primary bb-moph">บริหารระบบ →</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION 6: MDES -->
+  <div class="section">
+    <div class="section-header col-mdes">
+      <div class="section-icon si-mdes">💻</div>
+      <div>
+        <div class="section-title">กระทรวงดิจิทัลเพื่อเศรษฐกิจและสังคม (MDES)</div>
+      </div>
+      <div class="section-count">2 แพลตฟอร์ม</div>
+    </div>
+    <div class="cards-grid">
+
+      <div class="card">
+        <div class="card-stripe cs-mdes"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-icon si-mdes">📊</div>
+            <div class="card-meta">
+              <div class="card-name">แดชบอร์ดกระทรวง</div>
+              <div class="card-desc">ภาพรวม MDES — โครงสร้างพื้นฐานดิจิทัล รัฐบาลดิจิทัล Data Economy</div>
+              <div class="card-url">/ministry-mdes.html</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/ministry-mdes.html" class="btn-primary bb-mdes">ดูแดชบอร์ด →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-stripe cs-mdes"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-icon si-mdes">⚙️</div>
+            <div class="card-meta">
+              <div class="card-name">
+                ระบบบริหาร MDES
+                <span class="auth-badge">🔑 g2gadmin2026</span>
+              </div>
+              <div class="card-desc">จัดการข้อมูลดิจิทัล โครงการเทคโนโลยี บุคลากร งบประมาณ สำหรับผู้ดูแล</div>
+              <div class="card-url">/management-mdes.html</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/management-mdes.html" class="btn-primary bb-mdes">บริหารระบบ →</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION 7: MOC -->
+  <div class="section">
+    <div class="section-header col-moc">
+      <div class="section-icon si-moc">🛒</div>
+      <div>
+        <div class="section-title">กระทรวงพาณิชย์ (MOC)</div>
+      </div>
+      <div class="section-count">2 แพลตฟอร์ม</div>
+    </div>
+    <div class="cards-grid">
+
+      <div class="card">
+        <div class="card-stripe cs-moc"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-icon si-moc">📊</div>
+            <div class="card-meta">
+              <div class="card-name">แดชบอร์ดกระทรวง</div>
+              <div class="card-desc">ภาพรวม MOC — การค้า ราคาสินค้า ส่งออก-นำเข้า ธุรกิจ SME</div>
+              <div class="card-url">/ministry-moc.html</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/ministry-moc.html" class="btn-primary bb-moc">ดูแดชบอร์ด →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-stripe cs-moc"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-icon si-moc">⚙️</div>
+            <div class="card-meta">
+              <div class="card-name">
+                ระบบบริหาร MOC
+                <span class="auth-badge">🔑 g2gadmin2026</span>
+              </div>
+              <div class="card-desc">จัดการข้อมูลพาณิชย์ ราคาสินค้า การค้า บุคลากร งบประมาณ สำหรับผู้ดูแล</div>
+              <div class="card-url">/management-moc.html</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/management-moc.html" class="btn-primary bb-moc">บริหารระบบ →</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION 8: จังหวัด -->
+  <div class="section">
+    <div class="section-header col-province">
+      <div class="section-icon si-province">🗺️</div>
+      <div>
+        <div class="section-title">แพลตฟอร์มจังหวัด (Province Platforms)</div>
+      </div>
+      <div class="section-count">3 จังหวัด | 6 แพลตฟอร์ม</div>
+    </div>
+    <div class="cards-grid">
+
+      <!-- แพร่ -->
+      <div class="card">
+        <div class="card-stripe cs-province"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-icon si-province">🌲</div>
+            <div class="card-meta">
+              <div class="card-name">จังหวัดแพร่ — AgriPhrae</div>
+              <div class="card-desc">แพลตฟอร์มนำร่อง Province-First — เกษตร ท้องถิ่น บุคลากร โครงการ จ.แพร่</div>
+              <div class="card-url">/phrae.html | /management.html</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/phrae.html" class="btn-primary bb-province">แพลตฟอร์มแพร่ →</a>
+            <a href="/management.html" class="btn-secondary bs-province">บริหาร</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- เชียงราย -->
+      <div class="card">
+        <div class="card-stripe cs-province"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-icon si-province">🏔️</div>
+            <div class="card-meta">
+              <div class="card-name">จังหวัดเชียงราย</div>
+              <div class="card-desc">แพลตฟอร์มจังหวัดเชียงราย — เกษตร ท้องถิ่น โครงการ ข้อมูลพื้นที่ภาคเหนือ</div>
+              <div class="card-url">/chiangrai.html | /management-chiangrai.html</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/chiangrai.html" class="btn-primary bb-province">แพลตฟอร์มเชียงราย →</a>
+            <a href="/management-chiangrai.html" class="btn-secondary bs-province">บริหาร</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- อุดรธานี -->
+      <div class="card">
+        <div class="card-stripe cs-province"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-icon si-province">🌾</div>
+            <div class="card-meta">
+              <div class="card-name">จังหวัดอุดรธานี</div>
+              <div class="card-desc">แพลตฟอร์มจังหวัดอุดรธานี — เกษตร ท้องถิ่น โครงการ ข้อมูลพื้นที่ภาคอีสาน</div>
+              <div class="card-url">/udonthani.html | /management-udonthani.html</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/udonthani.html" class="btn-primary bb-province">แพลตฟอร์มอุดร →</a>
+            <a href="/management-udonthani.html" class="btn-secondary bs-province">บริหาร</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION 9: ระบบสนับสนุน -->
+  <div class="section">
+    <div class="section-header col-support">
+      <div class="section-icon si-support">⚙️</div>
+      <div>
+        <div class="section-title">ระบบสนับสนุน (Support Systems)</div>
+      </div>
+      <div class="section-count">7 แพลตฟอร์ม</div>
+    </div>
+    <div class="cards-grid">
+
+      <div class="card">
+        <div class="card-stripe cs-support"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-icon si-support">💰</div>
+            <div class="card-meta">
+              <div class="card-name">Budget ERP</div>
+              <div class="card-desc">ระบบบริหารงบประมาณ ERP — 5 หมวดงบ จัดทำ ติดตาม รายงาน ตาม พรบ.วิธีการงบ 2561</div>
+              <div class="card-url">/budget-erp.html</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/budget-erp.html" class="btn-primary bb-support">ดูระบบงบ →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-stripe cs-support"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-icon si-support">👥</div>
+            <div class="card-meta">
+              <div class="card-name">HR & เงินเดือน</div>
+              <div class="card-desc">Human Resources & Payroll — บริหารทรัพยากรบุคคล เงินเดือน สวัสดิการ</div>
+              <div class="card-url">/hr-payroll.html</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/hr-payroll.html" class="btn-primary bb-support">ดูระบบ HR →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-stripe cs-support"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-icon si-support">📋</div>
+            <div class="card-meta">
+              <div class="card-name">ทะเบียนบุคลากร</div>
+              <div class="card-desc">Personnel Registry — ทะเบียนข้าราชการ ลูกจ้าง พนักงาน ตาม พรบ.ข้าราชการพลเรือน 2551</div>
+              <div class="card-url">/personnel-registry.html</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/personnel-registry.html" class="btn-primary bb-support">ดูทะเบียน →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-stripe cs-support"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-icon si-support">🗂️</div>
+            <div class="card-meta">
+              <div class="card-name">ทะเบียนตำแหน่ง</div>
+              <div class="card-desc">Position Registry — ทะเบียนตำแหน่งราชการ ระดับ สายงาน กรอบอัตรา</div>
+              <div class="card-url">/position-registry.html</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/position-registry.html" class="btn-primary bb-support">ดูตำแหน่ง →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-stripe cs-support"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-icon si-support">📐</div>
+            <div class="card-meta">
+              <div class="card-name">บริหารโครงการ</div>
+              <div class="card-desc">Project Manager — ติดตามโครงการ แผนงาน งบประมาณ KPI ผลการดำเนินงาน</div>
+              <div class="card-url">/project-manager.html</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/project-manager.html" class="btn-primary bb-support">ดูโครงการ →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-stripe cs-support"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-icon si-support">📌</div>
+            <div class="card-meta">
+              <div class="card-name">บริหารงาน</div>
+              <div class="card-desc">Work Management — จัดการงาน มอบหมาย ติดตาม รายงาน Kanban สำหรับหน่วยงาน</div>
+              <div class="card-url">/work-management.html</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/work-management.html" class="btn-primary bb-support">ดูระบบงาน →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-stripe cs-support"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-icon si-support">📒</div>
+            <div class="card-meta">
+              <div class="card-name">การเงิน-บัญชี</div>
+              <div class="card-desc">Finance Module — ระบบการเงิน-บัญชีภาครัฐ รายรับ รายจ่าย งบดุล รายงานทางการเงิน</div>
+              <div class="card-url">/finance-module.html</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <a href="/finance-module.html" class="btn-primary bb-support">ดูระบบการเงิน →</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="footer-title">
+    ⚖️ ระบบสอดคล้องกฎหมาย
+  </div>
+  <div class="legal-pills">
+    <span class="legal-pill">พรบ.ระเบียบบริหารราชการแผ่นดิน 2534</span>
+    <span class="legal-pill">พรบ.ข้าราชการพลเรือน 2551</span>
+    <span class="legal-pill">พรบ.วิธีการงบประมาณ 2561</span>
+    <span class="legal-pill">พรบ.การจัดซื้อจัดจ้างและการบริหารพัสดุภาครัฐ 2560</span>
+    <span class="legal-pill">พรบ.กำหนดแผนและขั้นตอนการกระจายอำนาจ 2542</span>
+    <span class="legal-pill">พรบ.สภานโยบายการอุดมศึกษา วิทยาศาสตร์ วิจัยและนวัตกรรมแห่งชาติ 2562</span>
+  </div>
+  <div class="footer-bottom">
+    <div>
+      <span class="footer-logo">🏛️</span>
+      <strong style="color:rgba(255,255,255,.8);margin-left:8px">G2G ระบบบริหารราชการดิจิทัล</strong>
+      — Government to Government AI Platform
+    </div>
+    <div>
+      Powered by Claude AI + Fly.io &nbsp;|&nbsp;
+      <span id="footer-date"></span>
+    </div>
+  </div>
+</footer>
+
+<script src="/access-bar.js"></script>
+<script>
+// Set dynamic date in Thai Buddhist Era
+(function() {
+  const now = new Date();
+  const months = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน',
+                   'กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+  const d = now.getDate();
+  const m = months[now.getMonth()];
+  const y = now.getFullYear() + 543;
+  const hh = String(now.getHours()).padStart(2,'0');
+  const mm = String(now.getMinutes()).padStart(2,'0');
+  const dateStr = `${d} ${m} พ.ศ. ${y}`;
+  const fullStr = `${d} ${m} ${y} | ${hh}:${mm} น.`;
+
+  const badge = document.getElementById('date-badge');
+  if (badge) badge.textContent = '📅 ' + dateStr;
+
+  const footer = document.getElementById('footer-date');
+  if (footer) footer.textContent = fullStr;
+})();
+</script>
+</body>
+</html>

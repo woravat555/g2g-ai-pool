@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#06040f">
+<title>G2G Farm AI · สวนอัจฉริยะ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap">
+<style>
+:root{
+  --bg0:#06040f;--bg1:#0e0a22;--bg2:#160f30;--bg3:#1e1540;
+  --glass:rgba(255,255,255,0.05);--glass2:rgba(255,255,255,0.09);
+  --border:rgba(255,255,255,0.10);--border2:rgba(255,255,255,0.18);
+  --gold:#d4a843;--gold-s:#f0c960;--gold-d:#8a6820;--gold-pale:rgba(212,168,67,0.15);
+  --text:#f0eaf8;--text2:rgba(220,200,255,0.65);--text3:rgba(180,160,240,0.4);
+  --eout:cubic-bezier(0.22,1,0.36,1);
+  --cr-color:#f97316;--cr-soft:#fdba74;--cr-dark:#9a3412;--cr-glass:rgba(249,115,22,0.15);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{font-size:16px;height:100%}
+body{font-family:'Bai Jamjuree','Sarabun',sans-serif;background:var(--bg0);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+button,a{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;touch-action:manipulation}
+input,select,textarea{font-family:inherit;font-size:1rem;-webkit-appearance:none}
+
+/* SPLASH */
+#splash{position:fixed;inset:0;z-index:300;background:radial-gradient(ellipse at 30% 20%,#1a0a3d 0%,#06040f 60%);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s var(--eout)}
+#splash.out{opacity:0;pointer-events:none}
+.sp-rings{position:relative;width:120px;height:120px;margin-bottom:28px}
+.sp-rings svg{position:absolute;top:0;left:0;animation:spinRing 8s linear infinite}
+.sp-rings svg:nth-child(2){animation-duration:12s;animation-direction:reverse}
+.sp-inner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:42px}
+@keyframes spinRing{to{transform:rotate(360deg)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.sp-brand{font-size:1.7rem;font-weight:700;letter-spacing:6px;background:linear-gradient(180deg,var(--gold-s) 0%,var(--gold) 60%,var(--gold-d) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:fadeUp .8s var(--eout) .3s both}
+.sp-sub{font-size:.85rem;color:rgba(212,168,67,.6);letter-spacing:3px;margin-top:6px;animation:fadeUp .8s var(--eout) .5s both}
+.sp-start{margin-top:40px;padding:14px 36px;border-radius:99px;background:linear-gradient(135deg,var(--gold-s),var(--gold));color:#06040f;font-weight:700;font-size:1rem;letter-spacing:1px;box-shadow:0 8px 28px rgba(212,168,67,.35);animation:fadeUp .8s var(--eout) .8s both;transition:transform .1s,opacity .1s}
+.sp-start:active{transform:scale(.95);opacity:.85}
+
+/* APP */
+.app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative}
+
+/* TOP HEADER */
+.app-header{padding:52px 18px 10px;display:flex;justify-content:space-between;align-items:flex-start;flex-shrink:0;position:relative;z-index:2}
+.app-header::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,4,15,.95) 60%,transparent);pointer-events:none;z-index:-1}
+.hdr-logo{font-size:1rem;font-weight:700;letter-spacing:3px;background:linear-gradient(135deg,var(--gold-s),var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hdr-crop-name{font-size:1.3rem;font-weight:700;color:var(--cr-color);margin-top:2px;transition:color .3s}
+.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.hdr-week-badge{background:var(--gold-pale);border:1px solid rgba(212,168,67,.4);border-radius:20px;padding:4px 12px;font-size:.75rem;font-weight:600;color:var(--gold)}
+.hdr-date{font-size:.72rem;color:var(--text3)}
+
+/* CROP SELECTOR */
+.crop-scroll-wrap{padding:8px 16px;flex-shrink:0;position:relative;z-index:2}
+.crop-scroll{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px}
+.crop-scroll::-webkit-scrollbar{display:none}
+.crop-tab{flex-shrink:0;display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:99px;border:1.5px solid rgba(255,255,255,.12);background:var(--glass);font-size:.8rem;font-weight:600;color:var(--text2);cursor:pointer;transition:all .25s var(--eout)}
+.crop-tab.active{border-color:var(--cr-color);background:var(--cr-glass);color:var(--cr-color);box-shadow:0 0 20px var(--cr-glass)}
+
+/* MAIN CONTENT AREA */
+.app-content{flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:90px}
+.app-content::-webkit-scrollbar{display:none}
+
+/* WEEK RING SECTION */
+.ring-section{padding:12px 18px 18px;display:flex;align-items:center;gap:16px}
+.ring-wrap{position:relative;flex-shrink:0;width:100px;height:100px}
+.ring-wrap svg{position:absolute;top:0;left:0}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-wnum{font-size:1.85rem;font-weight:700;color:var(--gold-s);line-height:1}
+.ring-wlbl{font-size:.6rem;color:var(--text2);letter-spacing:2px;margin-top:2px}
+.ring-info{flex:1}
+.ring-stage{font-size:1.05rem;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:4px}
+.ring-season{font-size:.8rem;color:var(--text2)}
+.ring-period{font-size:.75rem;color:var(--gold);margin-top:4px;background:var(--gold-pale);border-radius:8px;padding:3px 8px;display:inline-block}
+
+/* DIVIDER */
+.section-divider{display:flex;align-items:center;gap:10px;padding:2px 18px 10px;color:var(--text3);font-size:.7rem;letter-spacing:2px;text-transform:uppercase}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent)}
+
+/* WEEK CARDS */
+.weeks-section{padding:0 14px}
+.week-card{background:var(--glass);border:1px solid var(--border);border-radius:20px;margin-bottom:10px;overflow:hidden;transition:border-color .2s,box-shadow .2s;position:relative}
+.week-card.current{border-color:rgba(212,168,67,.5);box-shadow:0 0 24px rgba(212,168,67,.1)}
+.week-card.current::before{content:'สัปดาห์ปัจจุบัน';position:absolute;top:10px;right:10px;background:linear-gradient(135deg,var(--gold-s),var(--gold));color:#06040f;font-size:.6rem;font-weight:700;padding:3px 8px;border-radius:10px;letter-spacing:.5px;z-index:1}
+.wc-header{padding:14px 16px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.wc-num{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0;background:var(--cr-glass);color:var(--cr-color);border:1.5px solid var(--cr-color);transition:background .3s,color .3s,border-color .3s}
+.week-card.current .wc-num{background:linear-gradient(135deg,var(--gold-s),var(--gold));color:#06040f;border-color:transparent}
+.wc-info{flex:1}
+.wc-title{font-size:.88rem;font-weight:600;color:var(--text);line-height:1.3}
+.wc-subtitle{font-size:.75rem;color:var(--text2);margin-top:2px}
+.wc-toggle{color:var(--text3);font-size:1.1rem;transition:transform .25s var(--eout)}
+.week-card.open .wc-toggle{transform:rotate(180deg)}
+.wc-body{max-height:0;overflow:hidden;transition:max-height .35s var(--eout)}
+.week-card.open .wc-body{max-height:800px}
+.wc-tasks{padding:0 14px 14px}
+.task-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:16px 8px 14px 8px;margin-bottom:8px;background:var(--glass2);border:1px solid var(--border);cursor:pointer;transition:background .15s,border-color .15s}
+.task-item:active{background:rgba(255,255,255,.12)}
+.task-item.done{opacity:.55}
+.task-item.done .ti-text{text-decoration:line-through;color:var(--text3)}
+.ti-check{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--cr-color);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-size:.8rem;transition:background .15s}
+.task-item.done .ti-check{background:var(--cr-color);border-color:var(--cr-color)}
+.ti-content{flex:1}
+.ti-text{font-size:.85rem;color:var(--text);line-height:1.5;font-weight:500}
+.ti-dose{font-size:.75rem;color:var(--gold);margin-top:3px;background:var(--gold-pale);border-radius:6px;padding:2px 7px;display:inline-block}
+.wc-ai-row{display:flex;justify-content:flex-end;padding:0 14px 14px}
+.wc-ai-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:99px;background:var(--cr-glass);border:1.5px solid var(--cr-color);color:var(--cr-color);font-size:.8rem;font-weight:600}
+.wc-ai-btn:active{background:rgba(249,115,22,.25)}
+
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;z-index:50;padding:0 16px max(16px,env(safe-area-inset-bottom));background:linear-gradient(0deg,var(--bg0) 60%,transparent)}
+.nav-inner{background:rgba(20,14,38,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.12);border-radius:24px;display:flex;align-items:center;padding:6px 8px}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 4px;border-radius:16px;cursor:pointer;border:none;background:transparent;color:var(--text3);transition:color .2s}
+.nav-item.active{color:var(--cr-color)}
+.nav-item.active .nav-dot{background:var(--cr-color)}
+.nav-icon{font-size:1.25rem;line-height:1}
+.nav-label{font-size:.6rem;font-weight:600;letter-spacing:.5px}
+.nav-dot{width:4px;height:4px;border-radius:50%;background:transparent;margin:1px auto 0;transition:background .2s}
+
+/* FAB */
+#ai-fab{position:fixed;bottom:90px;right:18px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--gold-s),var(--gold));display:flex;align-items:center;justify-content:center;font-size:1.5rem;box-shadow:0 6px 24px rgba(212,168,67,.5);z-index:60;cursor:pointer;border:none}
+#ai-fab.pulse{animation:fabPulse 2s ease-in-out infinite}
+@keyframes fabPulse{0%,100%{box-shadow:0 6px 24px rgba(212,168,67,.5)}50%{box-shadow:0 6px 32px rgba(212,168,67,.8),0 0 0 8px rgba(212,168,67,.1)}}
+
+/* AI DRAWER */
+#ai-drawer{position:fixed;inset:0;z-index:200;pointer-events:none}
+#ai-drawer.open{pointer-events:all}
+.drawer-overlay{position:absolute;inset:0;background:rgba(0,0,0,.6);opacity:0;transition:opacity .3s;cursor:pointer}
+#ai-drawer.open .drawer-overlay{opacity:1}
+.drawer-panel{position:absolute;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:480px;background:var(--bg2);border-radius:24px 24px 0 0;border-top:1px solid rgba(255,255,255,.12);transition:transform .35s var(--eout);display:flex;flex-direction:column;max-height:85vh}
+#ai-drawer.open .drawer-panel{transform:translateX(-50%) translateY(0)}
+.drawer-handle{width:36px;height:4px;border-radius:2px;background:rgba(255,255,255,.15);margin:12px auto 0}
+.drawer-header{padding:12px 18px 10px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
+.drawer-title{flex:1;font-size:.95rem;font-weight:700;color:var(--gold)}
+.drawer-ctx{font-size:.75rem;color:var(--text2);margin-top:1px}
+.drawer-close{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:1rem}
+.drawer-msgs{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-height:80px}
+.drawer-msgs::-webkit-scrollbar{display:none}
+.dmsg{padding:10px 13px;border-radius:14px;font-size:.85rem;line-height:1.6;max-width:90%;white-space:pre-wrap}
+.dmsg.user{align-self:flex-end;background:rgba(249,115,22,.2);color:#fde68a;border:1px solid rgba(249,115,22,.25);border-bottom-right-radius:4px}
+.dmsg.ai{align-self:flex-start;background:var(--glass2);color:var(--text);border:1px solid var(--border);border-bottom-left-radius:4px}
+.drawer-input-row{padding:10px 14px max(12px,env(safe-area-inset-bottom));border-top:1px solid var(--border);display:flex;gap:8px;align-items:flex-end;background:var(--bg2)}
+.drawer-input{flex:1;background:var(--glass);border:1px solid var(--border2);border-radius:14px;padding:10px 13px;color:var(--text);font-size:.88rem;resize:none;min-height:40px;max-height:100px;outline:none}
+.drawer-input:focus{border-color:rgba(212,168,67,.4)}
+.drawer-send{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--gold-s),var(--gold));display:flex;align-items:center;justify-content:center;color:#06040f;font-size:1rem;font-weight:700;flex-shrink:0;border:none}
+.drawer-send:disabled{opacity:.4}
+.drawer-voice-btn{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--text2);flex-shrink:0;background:var(--glass)}
+.drawer-voice-btn.recording{border-color:var(--cr-color);color:var(--cr-color);animation:recPulse .8s ease-in-out infinite}
+@keyframes recPulse{0%,100%{box-shadow:none}50%{box-shadow:0 0 12px rgba(249,115,22,.5)}}
+.quick-asks{display:flex;gap:6px;flex-wrap:wrap;padding:8px 14px 0}
+.qa-chip{padding:6px 12px;border-radius:20px;background:var(--glass);border:1px solid var(--border);font-size:.75rem;color:var(--text2);cursor:pointer}
+.qa-chip:active{background:var(--glass2)}
+
+/* SCREENS */
+.screen{display:none}
+.screen.active{display:block;min-height:100vh;padding-bottom:90px}
+.screen-header{padding:52px 18px 14px;position:sticky;top:0;z-index:10;background:linear-gradient(180deg,var(--bg0) 70%,transparent)}
+.sh-title{font-size:1.1rem;font-weight:700;color:var(--text)}
+.sh-sub{font-size:.75rem;color:var(--text2);margin-top:2px}
+
+/* TOOLS */
+.tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px 12px}
+.tool-card{background:var(--glass);border:1px solid var(--border);border-radius:18px;padding:14px;cursor:pointer}
+.tool-card:active{background:var(--glass2)}
+.tc-icon{font-size:1.8rem;margin-bottom:6px}
+.tc-title{font-size:.85rem;font-weight:700;color:var(--text)}
+.tc-sub{font-size:.72rem;color:var(--text2);margin-top:3px}
+.tool-panel{background:var(--glass);border:1px solid var(--border);border-radius:18px;margin:0 14px 12px;padding:16px}
+.tool-panel h3{font-size:.88rem;font-weight:700;color:var(--gold);margin-bottom:12px}
+.tp-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.tp-label{font-size:.8rem;color:var(--text2);width:90px;flex-shrink:0}
+.tp-input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:8px 12px;color:var(--text);font-size:.88rem}
+.tp-select{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:8px 12px;color:var(--text);font-size:.82rem}
+.tp-btn{width:100%;padding:11px;border-radius:14px;background:linear-gradient(135deg,var(--cr-color),var(--cr-dark));color:#fff;font-weight:700;font-size:.88rem;border:none;margin-top:6px}
+.tp-btn:active{opacity:.8}
+.tp-result{margin-top:10px;padding:12px;background:var(--bg3);border-radius:12px;border-left:3px solid var(--gold);font-size:.82rem;color:var(--text);line-height:1.7;display:none;white-space:pre-wrap}
+.tp-result.show{display:block}
+.back-btn{margin-top:8px;width:100%;padding:8px;background:transparent;border:1px solid var(--border);border-radius:10px;color:var(--text2);font-size:.8rem;cursor:pointer}
+
+/* DIAGNOSIS */
+.diag-section{padding:0 14px}
+.diag-upload{border:2px dashed var(--border2);border-radius:20px;padding:30px 20px;text-align:center;cursor:pointer;background:var(--glass)}
+.diag-upload:active{background:var(--glass2)}
+.du-icon{font-size:2.5rem;margin-bottom:10px}
+.du-text{font-size:.85rem;color:var(--text2);line-height:1.6}
+.du-btn{display:inline-block;margin-top:12px;padding:9px 20px;border-radius:20px;background:var(--cr-glass);border:1.5px solid var(--cr-color);color:var(--cr-color);font-size:.82rem;font-weight:600}
+#diag-img-preview{width:100%;max-height:220px;object-fit:cover;border-radius:16px;margin:12px 0;display:none}
+#diag-result-box{background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:14px;margin-top:12px;font-size:.83rem;line-height:1.7;color:var(--text);white-space:pre-wrap;display:none}
+#diag-result-box.show{display:block}
+
+/* LOG */
+.log-section{padding:0 14px}
+.log-input-card{background:var(--glass);border:1px solid var(--border);border-radius:18px;padding:14px;margin-bottom:12px}
+.log-input-card textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:10px;color:var(--text);font-size:.85rem;resize:vertical;min-height:80px;outline:none}
+.log-meta{display:flex;gap:8px;margin-top:8px}
+.log-meta select{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:7px 10px;color:var(--text);font-size:.8rem}
+.log-save-btn{width:100%;padding:10px;border-radius:12px;background:var(--cr-glass);border:1.5px solid var(--cr-color);color:var(--cr-color);font-weight:700;font-size:.85rem;margin-top:8px;cursor:pointer}
+.log-entry{background:var(--glass);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:8px}
+.le-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.le-crop{font-size:.72rem;color:var(--cr-color);font-weight:600;background:var(--cr-glass);padding:3px 9px;border-radius:10px}
+.le-date{font-size:.7rem;color:var(--text3)}
+.le-text{font-size:.82rem;color:var(--text);line-height:1.6}
+
+/* MARKET */
+.market-section{padding:0 14px}
+.price-card{background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:10px}
+.pc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.pc-crop{font-size:.88rem;font-weight:700;color:var(--text)}
+.pc-updated{font-size:.7rem;color:var(--text3)}
+.pc-prices{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.pcp-item{text-align:center;background:var(--bg3);border-radius:10px;padding:8px 4px}
+.pcp-grade{font-size:.65rem;color:var(--text3);letter-spacing:.5px}
+.pcp-val{font-size:1.1rem;font-weight:700;color:var(--gold);margin:2px 0}
+.pcp-unit{font-size:.65rem;color:var(--text3)}
+.market-ai-btn{width:100%;padding:11px;border-radius:14px;background:linear-gradient(135deg,var(--bg2),var(--bg3));border:1.5px solid var(--gold);color:var(--gold);font-weight:700;font-size:.88rem;margin-bottom:10px;cursor:pointer}
+#screen-week{padding-bottom:90px}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="sp-rings">
+    <svg width="120" height="120" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="54" fill="none" stroke="rgba(212,168,67,.25)" stroke-width="2" stroke-dasharray="8 6"/>
+    </svg>
+    <svg width="120" height="120" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="42" fill="none" stroke="rgba(212,168,67,.15)" stroke-width="1.5" stroke-dasharray="4 8"/>
+    </svg>
+    <div class="sp-inner">🌾</div>
+  </div>
+  <div class="sp-brand">G2G FARM AI</div>
+  <div class="sp-sub">สวนอัจฉริยะ · แพร่</div>
+  <button class="sp-start" onclick="startApp()">เริ่มใช้งาน →</button>
+</div>
+
+<!-- APP -->
+<div class="app" id="app" style="display:none">
+
+  <!-- WEEK SCREEN -->
+  <div id="screen-week" class="screen active">
+    <div class="app-header">
+      <div class="hdr-left">
+        <div class="hdr-logo">G2G FARM AI</div>
+        <div class="hdr-crop-name" id="hdr-crop-name">ส้มเขียวหวาน</div>
+      </div>
+      <div class="hdr-right">
+        <div class="hdr-week-badge" id="hdr-week-badge">⭐ สัปดาห์ที่ 22</div>
+        <div class="hdr-date" id="hdr-date"></div>
+      </div>
+    </div>
+    <div class="crop-scroll-wrap">
+      <div class="crop-scroll" id="cropScroll"></div>
+    </div>
+    <div class="ring-section">
+      <div class="ring-wrap">
+        <svg width="100" height="100" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="7"/>
+          <circle id="ringArc" cx="50" cy="50" r="44" fill="none" stroke="var(--cr-color)" stroke-width="7" stroke-linecap="round" stroke-dasharray="276.5" stroke-dashoffset="276.5" transform="rotate(-90 50 50)" style="transition:stroke-dashoffset 1s var(--eout),stroke .3s"/>
+        </svg>
+        <div class="ring-center">
+          <div class="ring-wnum" id="ringWeekNum">22</div>
+          <div class="ring-wlbl">/ 52 สัปดาห์</div>
+        </div>
+      </div>
+      <div class="ring-info">
+        <div class="ring-stage" id="ringStage">ออกดอก → ติดผล</div>
+        <div class="ring-season" id="ringSeason">🌸 ฤดูร้อน</div>
+        <div class="ring-period" id="ringPeriod">ระยะผลอ่อน</div>
+      </div>
+    </div>
+    <div class="section-divider"><span id="weekRangeLabel">กิจกรรมสัปดาห์</span></div>
+    <div class="weeks-section" id="weeksSection"></div>
+  </div>
+
+  <!-- TOOLS SCREEN -->
+  <div id="screen-tools" class="screen">
+    <div class="screen-header"><div class="sh-title">🧪 เครื่องคำนวณ</div><div class="sh-sub">pH · N-P-K · น้ำ · สารเคมี · ความเสี่ยง</div></div>
+    <div id="toolsHome">
+      <div class="tools-grid">
+        <div class="tool-card" onclick="showTool('ph')"><div class="tc-icon">🧪</div><div class="tc-title">pH ดิน</div><div class="tc-sub">คำนวณปูน/กำมะถัน</div></div>
+        <div class="tool-card" onclick="showTool('npk')"><div class="tc-icon">🌿</div><div class="tc-title">ปุ๋ย N-P-K</div><div class="tc-sub">สูตรตามระยะพืช</div></div>
+        <div class="tool-card" onclick="showTool('water')"><div class="tc-icon">💧</div><div class="tc-title">น้ำ</div><div class="tc-sub">ปริมาณน้ำต่อต้น</div></div>
+        <div class="tool-card" onclick="showTool('chem')"><div class="tc-icon">🔬</div><div class="tc-title">สารเคมี</div><div class="tc-sub">คำนวณปริมาณผสม</div></div>
+        <div class="tool-card" onclick="showTool('growth')"><div class="tc-icon">📅</div><div class="tc-title">ระยะเจริญ</div><div class="tc-sub">คำนวณจากวันปลูก</div></div>
+        <div class="tool-card" onclick="showTool('risk')"><div class="tc-icon">⚠️</div><div class="tc-title">ความเสี่ยง</div><div class="tc-sub">โรค-แมลงจากอากาศ</div></div>
+      </div>
+    </div>
+    <div id="tool-ph" class="tool-panel" style="display:none">
+      <h3>🧪 คำนวณปรับ pH ดิน</h3>
+      <div class="tp-row"><div class="tp-label">pH ปัจจุบัน</div><input class="tp-input" type="number" id="ph-current" value="5.5" step="0.1" min="4" max="8"></div>
+      <div class="tp-row"><div class="tp-label">pH เป้าหมาย</div><input class="tp-input" type="number" id="ph-target" value="6.5" step="0.1" min="5" max="7.5"></div>
+      <div class="tp-row"><div class="tp-label">พื้นที่ (ไร่)</div><input class="tp-input" type="number" id="ph-area" value="1" step="0.5" min="0.5"></div>
+      <div class="tp-row"><div class="tp-label">ประเภทดิน</div><select class="tp-select" id="ph-soil"><option value="sandy">ดินทราย</option><option value="loam" selected>ดินร่วน</option><option value="clay">ดินเหนียว</option></select></div>
+      <button class="tp-btn" onclick="calcPH()">คำนวณ</button>
+      <div class="tp-result" id="ph-result"></div>
+      <button class="back-btn" onclick="showTool(null)">← กลับ</button>
+    </div>
+    <div id="tool-npk" class="tool-panel" style="display:none">
+      <h3>🌿 คำนวณปุ๋ย N-P-K</h3>
+      <div class="tp-row"><div class="tp-label">ชนิดพืช</div><select class="tp-select" id="npk-crop"><option value="citrus">ส้มเขียวหวาน</option><option value="longan">ลำไย</option><option value="durian">ทุเรียน</option><option value="pomelo">ส้มโอ</option></select></div>
+      <div class="tp-row"><div class="tp-label">ระยะพืช</div><select class="tp-select" id="npk-stage"><option value="veg">บำรุงต้น</option><option value="flower">ชักนำดอก</option><option value="fruit_set">ติดผลอ่อน</option><option value="fruit_dev">ผลพัฒนา</option><option value="ripen">ผลแก่/เก็บ</option><option value="after">หลังเก็บ</option></select></div>
+      <div class="tp-row"><div class="tp-label">จำนวนต้น</div><input class="tp-input" type="number" id="npk-trees" value="80" min="1"></div>
+      <div class="tp-row"><div class="tp-label">อายุต้น (ปี)</div><input class="tp-input" type="number" id="npk-age" value="5" min="1" max="30"></div>
+      <button class="tp-btn" onclick="calcNPK()">คำนวณ</button>
+      <div class="tp-result" id="npk-result"></div>
+      <button class="back-btn" onclick="showTool(null)">← กลับ</button>
+    </div>
+    <div id="tool-water" class="tool-panel" style="display:none">
+      <h3>💧 คำนวณปริมาณน้ำ</h3>
+      <div class="tp-row"><div class="tp-label">ชนิดพืช</div><select class="tp-select" id="w-crop"><option value="citrus">ส้มเขียวหวาน</option><option value="longan">ลำไย</option><option value="durian">ทุเรียน</option><option value="pomelo">ส้มโอ</option></select></div>
+      <div class="tp-row"><div class="tp-label">จำนวนต้น</div><input class="tp-input" type="number" id="w-trees" value="80" min="1"></div>
+      <div class="tp-row"><div class="tp-label">อายุต้น (ปี)</div><input class="tp-input" type="number" id="w-age" value="5" min="1" max="30"></div>
+      <div class="tp-row"><div class="tp-label">ระบบน้ำ</div><select class="tp-select" id="w-system"><option value="drip">หยด</option><option value="sprinkler">สปริงเกลอร์</option><option value="flood">ปล่อยท่วม</option></select></div>
+      <button class="tp-btn" onclick="calcWater()">คำนวณ</button>
+      <div class="tp-result" id="w-result"></div>
+      <button class="back-btn" onclick="showTool(null)">← กลับ</button>
+    </div>
+    <div id="tool-chem" class="tool-panel" style="display:none">
+      <h3>🔬 คำนวณผสมสารเคมี</h3>
+      <div class="tp-row"><div class="tp-label">ความเข้มข้น</div><input class="tp-input" type="number" id="c-conc" value="20" min="0.1"></div>
+      <div class="tp-row"><div class="tp-label">หน่วย</div><select class="tp-select" id="c-unit"><option value="g_per_20">ก./น้ำ 20 ล.</option><option value="ml_per_20">ซีซี/น้ำ 20 ล.</option><option value="g_per_l">ก./ล.</option><option value="ml_per_l">ซีซี/ล.</option></select></div>
+      <div class="tp-row"><div class="tp-label">ปริมาณน้ำ (ล.)</div><input class="tp-input" type="number" id="c-water" value="200" min="1"></div>
+      <button class="tp-btn" onclick="calcChem()">คำนวณ</button>
+      <div class="tp-result" id="c-result"></div>
+      <button class="back-btn" onclick="showTool(null)">← กลับ</button>
+    </div>
+    <div id="tool-growth" class="tool-panel" style="display:none">
+      <h3>📅 คำนวณระยะเจริญเติบโต</h3>
+      <div class="tp-row"><div class="tp-label">ชนิดพืช</div><select class="tp-select" id="g-crop"><option value="citrus">ส้มเขียวหวาน</option><option value="longan">ลำไย</option><option value="durian">ทุเรียน</option><option value="pomelo">ส้มโอ</option></select></div>
+      <div class="tp-row"><div class="tp-label">วันที่ปลูก</div><input class="tp-input" type="date" id="g-planted"></div>
+      <button class="tp-btn" onclick="calcGrowth()">คำนวณ</button>
+      <div class="tp-result" id="g-result"></div>
+      <button class="back-btn" onclick="showTool(null)">← กลับ</button>
+    </div>
+    <div id="tool-risk" class="tool-panel" style="display:none">
+      <h3>⚠️ ประเมินความเสี่ยงโรค-แมลง</h3>
+      <div class="tp-row"><div class="tp-label">อุณหภูมิ (°C)</div><input class="tp-input" type="number" id="r-temp" value="30" min="15" max="45"></div>
+      <div class="tp-row"><div class="tp-label">ความชื้น (%)</div><input class="tp-input" type="number" id="r-humid" value="70" min="30" max="100"></div>
+      <div class="tp-row"><div class="tp-label">ฝนล่าสุด (มม.)</div><input class="tp-input" type="number" id="r-rain" value="0" min="0" max="200"></div>
+      <button class="tp-btn" onclick="calcRisk()">ประเมิน</button>
+      <div class="tp-result" id="r-result"></div>
+      <button class="back-btn" onclick="showTool(null)">← กลับ</button>
+    </div>
+  </div>
+
+  <!-- DIAGNOSIS SCREEN -->
+  <div id="screen-diag" class="screen">
+    <div class="screen-header"><div class="sh-title">📷 วินิจฉัยพืช AI</div><div class="sh-sub">ถ่ายรูปใบ/ผล → AI วิเคราะห์โรค-แมลงทันที</div></div>
+    <div class="diag-section">
+      <div class="diag-upload" onclick="document.getElementById('diagFileInput').click()">
+        <div class="du-icon">📷</div>
+        <div class="du-text">ถ่ายรูปหรือเลือกภาพใบ/ผลที่มีอาการผิดปกติ</div>
+        <div class="du-btn">เลือกภาพ / ถ่าย</div>
+        <input type="file" id="diagFileInput" accept="image/*" capture="environment" style="display:none" onchange="handleDiagImage(event)">
+      </div>
+      <img id="diag-img-preview" alt="พืชที่วินิจฉัย">
+      <div style="margin-top:10px">
+        <div class="tp-row"><div class="tp-label">พืชที่ถ่าย</div><select class="tp-select" id="diag-crop-sel"><option value="ส้มเขียวหวาน">ส้มเขียวหวาน</option><option value="ลำไย">ลำไย</option><option value="ทุเรียน">ทุเรียน</option><option value="ส้มโอ">ส้มโอ</option></select></div>
+        <div class="tp-row"><div class="tp-label">คำถาม</div><input class="tp-input" id="diag-q" placeholder="เช่น ใบเหลือง มีจุดดำ"></div>
+        <button class="tp-btn" id="diag-submit-btn" onclick="submitDiag()" style="display:none">🔍 วิเคราะห์ด้วย AI</button>
+      </div>
+      <div id="diag-result-box"></div>
+      <div id="diag-history" style="margin-top:14px"></div>
+    </div>
+  </div>
+
+  <!-- LOG SCREEN -->
+  <div id="screen-log" class="screen">
+    <div class="screen-header"><div class="sh-title">📓 บันทึกสวน</div><div class="sh-sub">บันทึกกิจกรรม ค่าใช้จ่าย ปัญหา</div></div>
+    <div class="log-section">
+      <div class="log-input-card">
+        <textarea id="log-text" placeholder="บันทึกวันนี้... เช่น พ่นยา ราคา ปัญหาที่พบ"></textarea>
+        <div class="log-meta">
+          <select id="log-crop"><option value="ส้มเขียวหวาน">🍊 ส้มเขียวหวาน</option><option value="ลำไย">🍇 ลำไย</option><option value="ทุเรียน">🌵 ทุเรียน</option><option value="ส้มโอ">🫧 ส้มโอ</option></select>
+          <select id="log-type"><option value="งาน">งานสวน</option><option value="ปัญหา">ปัญหา</option><option value="ราคา">ราคาตลาด</option><option value="ค่าใช้จ่าย">ค่าใช้จ่าย</option></select>
+        </div>
+        <button class="log-save-btn" onclick="saveLog()">💾 บันทึก</button>
+      </div>
+      <div id="log-list"></div>
+    </div>
+  </div>
+
+  <!-- MARKET SCREEN -->
+  <div id="screen-market" class="screen">
+    <div class="screen-header"><div class="sh-title">📊 ราคาตลาด</div><div class="sh-sub">ราคาอ้างอิง · AI วางแผนขาย</div></div>
+    <div class="market-section">
+      <button class="market-ai-btn" onclick="getMarketAdvice()">🤖 AI แนะนำกลยุทธ์ขาย</button>
+      <div id="market-ai-result" style="background:var(--glass);border:1px solid var(--border);border-radius:14px;padding:14px;font-size:.83rem;color:var(--text);line-height:1.7;margin-bottom:12px;white-space:pre-wrap;display:none"></div>
+      <div class="price-card"><div class="pc-header"><div class="pc-crop">🍊 ส้มเขียวหวาน</div><div class="pc-updated">อ้างอิง 2568</div></div><div class="pc-prices"><div class="pcp-item"><div class="pcp-grade">เกรด A</div><div class="pcp-val">35</div><div class="pcp-unit">บ./กก.</div></div><div class="pcp-item"><div class="pcp-grade">เกรด B</div><div class="pcp-val">22</div><div class="pcp-unit">บ./กก.</div></div><div class="pcp-item"><div class="pcp-grade">เกรด C</div><div class="pcp-val">12</div><div class="pcp-unit">บ./กก.</div></div></div></div>
+      <div class="price-card"><div class="pc-header"><div class="pc-crop">🍇 ลำไย</div><div class="pc-updated">อ้างอิง 2568</div></div><div class="pc-prices"><div class="pcp-item"><div class="pcp-grade">AA</div><div class="pcp-val">55</div><div class="pcp-unit">บ./กก.</div></div><div class="pcp-item"><div class="pcp-grade">A</div><div class="pcp-val">38</div><div class="pcp-unit">บ./กก.</div></div><div class="pcp-item"><div class="pcp-grade">B</div><div class="pcp-val">20</div><div class="pcp-unit">บ./กก.</div></div></div></div>
+      <div class="price-card"><div class="pc-header"><div class="pc-crop">🌵 ทุเรียน</div><div class="pc-updated">อ้างอิง 2568</div></div><div class="pc-prices"><div class="pcp-item"><div class="pcp-grade">พวง</div><div class="pcp-val">120</div><div class="pcp-unit">บ./กก.</div></div><div class="pcp-item"><div class="pcp-grade">หลุด</div><div class="pcp-val">90</div><div class="pcp-unit">บ./กก.</div></div><div class="pcp-item"><div class="pcp-grade">แปรรูป</div><div class="pcp-val">60</div><div class="pcp-unit">บ./กก.</div></div></div></div>
+      <div class="price-card"><div class="pc-header"><div class="pc-crop">🫧 ส้มโอ</div><div class="pc-updated">อ้างอิง 2568</div></div><div class="pc-prices"><div class="pcp-item"><div class="pcp-grade">A</div><div class="pcp-val">30</div><div class="pcp-unit">บ./กก.</div></div><div class="pcp-item"><div class="pcp-grade">B</div><div class="pcp-val">18</div><div class="pcp-unit">บ./กก.</div></div><div class="pcp-item"><div class="pcp-grade">C</div><div class="pcp-val">10</div><div class="pcp-unit">บ./กก.</div></div></div></div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav">
+    <div class="nav-inner">
+      <button class="nav-item active" onclick="switchTab('week',this)"><div class="nav-icon">📅</div><div class="nav-label">สัปดาห์</div><div class="nav-dot"></div></button>
+      <button class="nav-item" onclick="switchTab('tools',this)"><div class="nav-icon">🧪</div><div class="nav-label">เครื่องมือ</div><div class="nav-dot"></div></button>
+      <button class="nav-item" onclick="switchTab('diag',this)"><div class="nav-icon">📷</div><div class="nav-label">วินิจฉัย</div><div class="nav-dot"></div></button>
+      <button class="nav-item" onclick="switchTab('log',this)"><div class="nav-icon">📓</div><div class="nav-label">บันทึก</div><div class="nav-dot"></div></button>
+      <button class="nav-item" onclick="switchTab('market',this)"><div class="nav-icon">📊</div><div class="nav-label">ตลาด</div><div class="nav-dot"></div></button>
+    </div>
+  </div>
+</div>
+
+<!-- FAB -->
+<button id="ai-fab" class="pulse" onclick="openDrawer(null)" style="display:none">🤖</button>
+
+<!-- AI DRAWER -->
+<div id="ai-drawer">
+  <div class="drawer-overlay" onclick="closeDrawer()"></div>
+  <div class="drawer-panel">
+    <div class="drawer-handle"></div>
+    <div class="drawer-header">
+      <div><div class="drawer-title">🤖 AI ที่ปรึกษาสวน</div><div class="drawer-ctx" id="drawer-ctx">ถามได้ทุกเรื่องเกี่ยวกับสวน</div></div>
+      <button class="drawer-close" onclick="closeDrawer()">✕</button>
+    </div>
+    <div class="quick-asks" id="quickAsks">
+      <button class="qa-chip" onclick="askQuick('สัปดาห์นี้ต้องพ่นอะไรบ้าง?')">พ่นอะไรสัปดาห์นี้?</button>
+      <button class="qa-chip" onclick="askQuick('ใบเหลืองเกิดจากอะไร แก้ยังไง?')">ใบเหลือง?</button>
+      <button class="qa-chip" onclick="askQuick('ราคาดีช่วงไหน วางแผนขายยังไง?')">ราคาดีเมื่อไหร่?</button>
+      <button class="qa-chip" onclick="askQuick('วิธีชักนำดอกที่ดีที่สุด?')">ชักนำดอก</button>
+    </div>
+    <div class="drawer-msgs" id="drawerMsgs">
+      <div class="dmsg ai">สวัสดีครับ 🌾 ผมคือ AI ที่ปรึกษาสวน G2G<br>ถามได้ทุกเรื่อง ปุ๋ย ยา โรค แมลง ราคา และกลยุทธ์ขายครับ</div>
+    </div>
+    <div class="drawer-input-row">
+      <button class="drawer-voice-btn" id="voiceBtn" onclick="toggleVoice()">🎤</button>
+      <textarea class="drawer-input" id="drawerInput" placeholder="พิมพ์หรือพูดถามได้เลย..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendDrawer()}"></textarea>
+      <button class="drawer-send" id="drawerSendBtn" onclick="sendDrawer()">▶</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const CROPS={
+  citrus:{key:'citrus',name:'ส้มเขียวหวาน',emoji:'🍊',color:'#f97316',soft:'#fdba74',dark:'#9a3412',glass:'rgba(249,115,22,0.15)'},
+  longan:{key:'longan',name:'ลำไย',emoji:'🍇',color:'#9333ea',soft:'#c084fc',dark:'#581c87',glass:'rgba(147,51,234,0.15)'},
+  durian:{key:'durian',name:'ทุเรียน',emoji:'🌵',color:'#84cc16',soft:'#bef264',dark:'#365314',glass:'rgba(132,204,22,0.15)'},
+  pomelo:{key:'pomelo',name:'ส้มโอ',emoji:'🫧',color:'#ec4899',soft:'#f9a8d4',dark:'#831843',glass:'rgba(236,72,153,0.15)'}
+};
+let activeCrop='citrus';
+
+const FARM_PERIODS={
+  citrus:[
+    {w:[1,4],season:'🌞 หน้าแล้ง',stage:'ปรับปรุงดินหลังเก็บเกี่ยว',period:'หลังเก็บเกี่ยว',tasks:[
+      {t:'ตัดแต่งกิ่งที่เสียหาย เตรียมทรงพุ่มใหม่',d:''},
+      {t:'ใส่ปุ๋ยอินทรีย์/ปุ๋ยหมัก บำรุงดิน',d:'20–30 กก./ต้น'},
+      {t:'ปรับ pH ดิน ใส่ปูนขาวถ้า pH < 6',d:'ปูนขาว 80–120 กก./ไร่'},
+      {t:'พ่นสารป้องกันโรคราสเตม โพรพิเนบ',d:'20 ก./น้ำ 20 ล.'},
+      {t:'กำจัดวัชพืชรอบโคนต้น รัศมี 1 เมตร',d:''}
+    ]},
+    {w:[5,9],season:'🌞 หน้าแล้ง',stage:'ชักนำการออกดอก',period:'ก่อนออกดอก',tasks:[
+      {t:'หยุดให้น้ำ 3–4 สัปดาห์ กระตุ้นการออกดอก',d:''},
+      {t:'ใส่ปุ๋ยสูตรเพิ่มฟอสฟอรัส ชักนำดอก',d:'8-24-24 อัตรา 0.5–1 กก./ต้น'},
+      {t:'พ่นโพแทสเซียมคลอเรต (ถ้าจำเป็น)',d:'150 ก./น้ำ 20 ล.'},
+      {t:'ตรวจสอบยอดใหม่ ถ้าแตกใบให้หยุดน้ำต่อ',d:''},
+      {t:'พ่นแมกนีเซียมซัลเฟต บำรุงใบก่อนดอก',d:'30 ก./น้ำ 20 ล.'}
+    ]},
+    {w:[10,13],season:'🌼 ออกดอก',stage:'ออกดอกและผสมเกสร',period:'ระยะดอก',tasks:[
+      {t:'เริ่มให้น้ำสม่ำเสมอ หลังดอกบาน',d:''},
+      {t:'พ่นปุ๋ยทางใบ บำรุงดอก 13-0-46',d:'20 ก./น้ำ 20 ล.'},
+      {t:'ตรวจและกำจัดเพลี้ยไฟ อิมิดาโคลพริด',d:'10 ซีซี/น้ำ 20 ล.'},
+      {t:'ป้องกันโรคดอกร่วง คาร์เบนดาซิม',d:'20 ก./น้ำ 20 ล.'},
+      {t:'ไม่พ่นยาฆ่าแมลงรุนแรงช่วงดอกบาน',d:''}
+    ]},
+    {w:[14,17],season:'🌱 ติดผล',stage:'ผลอ่อน 1–3.5 ซม.',period:'ระยะผลอ่อน',tasks:[
+      {t:'พ่นแคลเซียม+โบรอน ป้องกันผลร่วง',d:'Ca-B 10 ก. + Mg 5 ก./น้ำ 20 ล.'},
+      {t:'พ่นปุ๋ยทางใบสูตร 13-0-46 สะสมอาหาร',d:'20 ก./น้ำ 20 ล.'},
+      {t:'กำจัดไรแดง โพรพาร์ไกต์/อะมิทราซ',d:'30 ก./น้ำ 20 ล.'},
+      {t:'ป้องกันโรคสแคป โพรพิเนบ/คลอโรทาโลนิล',d:'20 ก./น้ำ 20 ล.'},
+      {t:'ปล่อยน้ำสม่ำเสมอ ป้องกันผลแตก',d:''}
+    ]},
+    {w:[18,26],season:'🌧️ ต้นฝน',stage:'ผลพัฒนา 4–8 ซม.',period:'ขยายผล',tasks:[
+      {t:'เพิ่มโพแทสเซียม เสริมขนาดผล 13-5-30',d:'1 กก./ต้น'},
+      {t:'พ่นแคลเซียม ป้องกันผลแตก ทุก 2 สัปดาห์',d:'Ca-B 20 ก./20 ล.'},
+      {t:'กำจัดแมลงวันทอง เหยื่อล่อเมทิลยูจีนอล',d:''},
+      {t:'ตรวจโรคราน้ำค้าง เมื่อฝนตกต่อเนื่อง',d:'ไดเมโธมอร์ฟ 30 ก./20 ล.'},
+      {t:'ระวังรากเน่า ระบายน้ำในสวน',d:''}
+    ]},
+    {w:[27,35],season:'☔ กลางฝน',stage:'ผลขยายตัว 8–12 ซม.',period:'สะสมน้ำตาล',tasks:[
+      {t:'ลดไนโตรเจน เพิ่มโพแทสเซียม 0-0-60',d:'25 ก./น้ำ 20 ล.'},
+      {t:'พ่นจิบเบอเรลลิน กระตุ้นผลโต',d:'10 ซีซี/น้ำ 20 ล. สัปดาห์เว้นสัปดาห์'},
+      {t:'กำจัดหอยทากและแมลงเจาะผล',d:''},
+      {t:'ตรวจโรคราสนิม ทุกสัปดาห์',d:'เฮกซะโคนาโซล 10 ซีซี/20 ล.'},
+      {t:'บันทึกน้ำหนักผล สุ่มวัดรายสัปดาห์',d:''}
+    ]},
+    {w:[36,43],season:'🌤️ ปลายฝน',stage:'ผลแก่-ใกล้เก็บ',period:'เพิ่มหวาน',tasks:[
+      {t:'หยุดให้ปุ๋ยไนโตรเจน 6 สัปดาห์ก่อนเก็บ',d:''},
+      {t:'เพิ่มโพแทสเซียม เพิ่มความหวาน KCl',d:'0.5 กก./ต้น'},
+      {t:'ลดน้ำ ก่อนเก็บ 2 สัปดาห์ เพิ่มน้ำตาล',d:''},
+      {t:'ป้องกันแมลงวันทองก่อนเก็บ ห่อผล',d:''},
+      {t:'วัด Brix ตรวจความหวาน เป้า > 10 %Brix',d:''}
+    ]},
+    {w:[44,48],season:'🍂 ฤดูเก็บ',stage:'เก็บเกี่ยว',period:'เก็บเกี่ยว',tasks:[
+      {t:'เก็บผลในช่วงเช้าอากาศเย็น ป้องกันช้ำ',d:''},
+      {t:'คัดเกรดทันที A/B/C ตามขนาด-ตำหนิ',d:''},
+      {t:'เก็บใส่ลัง ไม่กอง ป้องกันผลช้ำ',d:''},
+      {t:'บันทึกผลผลิตรวม กก./ต้น/ไร่',d:''},
+      {t:'ตั้งราคาตามตลาด ติดต่อล้ง',d:''}
+    ]},
+    {w:[49,52],season:'❄️ หน้าหนาว',stage:'พักต้น-บำรุงหลังเก็บ',period:'หลังเก็บ',tasks:[
+      {t:'ตัดแต่งกิ่งป่วย กิ่งแห้ง กิ่งในทรงพุ่ม',d:''},
+      {t:'ใส่ปุ๋ยฟื้นฟูต้น ปุ๋ยหมักอินทรีย์',d:'20 กก./ต้น'},
+      {t:'พ่นยาป้องกันราบนกิ่ง โพรพิเนบ',d:'20 ก./น้ำ 20 ล.'},
+      {t:'ทาปูนขาวโคนต้น กำจัดแมลงในดิน',d:''},
+      {t:'บำรุงดิน เตรียมพร้อมปีหน้า',d:''}
+    ]}
+  ],
+  longan:[
+    {w:[1,5],season:'❄️ หน้าหนาว',stage:'พักต้น-ชักนำดอก',period:'ก่อนออกดอก',tasks:[
+      {t:'เตรียมชักนำดอก ด้วยความเย็น/ความแห้ง',d:''},
+      {t:'พ่นโพแทสเซียมคลอเรต (ถ้าใช้)',d:'150–200 ก./ต้น ทางดิน'},
+      {t:'ตัดแต่งกิ่งเปิดทรงพุ่ม',d:''},
+      {t:'ใส่ปุ๋ยสูตรชักนำดอก',d:'8-24-24 อัตรา 1–2 กก./ต้น'},
+      {t:'ไม่ให้น้ำมาก กระตุ้นดอก',d:''}
+    ]},
+    {w:[6,10],season:'🌸 ออกดอก',stage:'ออกช่อดอก',period:'ระยะดอก',tasks:[
+      {t:'ให้น้ำสม่ำเสมอ หลังดอกบาน',d:''},
+      {t:'พ่นปุ๋ยเสริมดอก 0-52-34',d:'20 ก./น้ำ 20 ล.'},
+      {t:'กำจัดเพลี้ยหอย/เพลี้ยไฟ',d:'อิมิดาโคลพริด 10 ซีซี/20 ล.'},
+      {t:'ป้องกันโรคไหม้ดอก',d:'คาร์เบนดาซิม 15 ก./20 ล.'},
+      {t:'ไม่ใช้ยาแรงช่วงดอกบาน',d:''}
+    ]},
+    {w:[11,20],season:'🌧️ ต้นฝน',stage:'ผลพัฒนา',period:'ขยายผล',tasks:[
+      {t:'เพิ่มโพแทสเซียม ขยายผล 13-5-30',d:'1 กก./ต้น'},
+      {t:'พ่นแคลเซียม ป้องกันผลแตก',d:'Ca-B 20 ก./20 ล.'},
+      {t:'กำจัดแมลงเจาะผล มะคำดีควาย',d:''},
+      {t:'ตรวจโรคใบจุด เมื่อฝนตกหนัก',d:'โพรพิเนบ 20 ก./20 ล.'},
+      {t:'บันทึกการเจริญเติบโตผลรายสัปดาห์',d:''}
+    ]},
+    {w:[21,30],season:'☔ กลางฝน',stage:'ผลแก่ ใกล้เก็บ',period:'ใกล้เก็บ',tasks:[
+      {t:'หยุดให้ปุ๋ยไนโตรเจน',d:''},
+      {t:'เพิ่มหวาน โพแทสเซียมซัลเฟต',d:'0.5 กก./ต้น'},
+      {t:'ลดน้ำก่อนเก็บ 2 สัปดาห์',d:''},
+      {t:'ป้องกันแมลงวันทอง ก่อนเก็บ',d:''},
+      {t:'วัดความหวาน Brix เป้า 18–20%',d:''}
+    ]},
+    {w:[31,40],season:'🍂 เก็บเกี่ยว',stage:'เก็บเกี่ยว-ส่งตลาด',period:'เก็บเกี่ยว',tasks:[
+      {t:'เก็บช่วงเช้า ป้องกันความร้อน',d:''},
+      {t:'คัดเกรด บรรจุถุงตาข่าย',d:''},
+      {t:'เก็บรักษาความเย็น 10–12°C',d:''},
+      {t:'บันทึกผลผลิต ต้น/ไร่',d:''},
+      {t:'ติดต่อล้งก่อนเก็บ 1–2 สัปดาห์',d:''}
+    ]},
+    {w:[41,52],season:'❄️ หลังเก็บ',stage:'บำรุงต้น-เตรียมปีใหม่',period:'ฟื้นฟูต้น',tasks:[
+      {t:'ตัดแต่งกิ่ง ทรงพุ่มโปร่ง',d:''},
+      {t:'ใส่ปุ๋ยอินทรีย์ฟื้นฟู',d:'20–30 กก./ต้น'},
+      {t:'ปรับ pH ดิน ใส่ปูนขาว',d:''},
+      {t:'พ่นยาป้องกันโรคราบนกิ่ง',d:'โพรพิเนบ 20 ก./20 ล.'},
+      {t:'วางแผนรอบการชักนำดอกปีใหม่',d:''}
+    ]}
+  ],
+  durian:[
+    {w:[1,8],season:'🌞 หน้าแล้ง',stage:'ชักนำดอก',period:'ก่อนออกดอก',tasks:[
+      {t:'หยุดให้น้ำ 2–3 สัปดาห์ กระตุ้นการออกดอก',d:''},
+      {t:'ใส่ปุ๋ยเพิ่มฟอสฟอรัส',d:'0-52-34 อัตรา 0.5 กก./ต้น'},
+      {t:'พ่นสารโพแทสเซียมคลอเรต',d:'150 ก./ต้น ทางดิน'},
+      {t:'ตรวจดูตากลิ่นดอก บนกิ่งแก่',d:''},
+      {t:'ตัดแต่งกิ่งล้างทรงพุ่ม ก่อนดอก',d:''}
+    ]},
+    {w:[9,15],season:'🌼 ออกดอก',stage:'ดอก-ติดผล',period:'ระยะดอก',tasks:[
+      {t:'ให้น้ำสม่ำเสมอ หลังดอกบาน',d:''},
+      {t:'พ่นโบรอน+สังกะสี เพิ่มการผสมเกสร',d:'โบรอน 10 ก. + Zn 5 ก./20 ล.'},
+      {t:'ระวังแมลงเจาะดอก ตรวจสอบทุกเช้า',d:''},
+      {t:'ป้องกันดอกร่วง เมื่อมีลมแรง',d:''},
+      {t:'ไม่พ่นยาช่วงดอกบาน',d:''}
+    ]},
+    {w:[16,28],season:'🌧️ ฝน',stage:'ผลพัฒนา',period:'ขยายผล',tasks:[
+      {t:'พ่นแคลเซียม+โบรอน ป้องกันผลแตก',d:'Ca-B 20 ก./น้ำ 20 ล.'},
+      {t:'ใส่ปุ๋ยโพแทสเซียมสูง ขยายผล',d:'13-5-30 อัตรา 1–2 กก./ต้น'},
+      {t:'ป้องกันโรคผลเน่า ไฟทอปธอรา',d:'เมตาแลกซิล 30 ก./20 ล.'},
+      {t:'ระวังน้ำขังรากเน่า ระบายน้ำ',d:''},
+      {t:'บันทึกน้ำหนัก วัดผลรายสัปดาห์',d:''}
+    ]},
+    {w:[29,40],season:'🍂 เก็บเกี่ยว',stage:'เก็บเกี่ยว',period:'เก็บ-ขาย',tasks:[
+      {t:'สังเกตก้านผลแห้ง ใบเปลี่ยนสี ก่อนร่วง',d:''},
+      {t:'เก็บพวงไม่ตัดก้าน',d:''},
+      {t:'บ่มทุเรียน 3–5 วันหลังเก็บ',d:''},
+      {t:'คัดพวง/หลุดคุณภาพดี',d:''},
+      {t:'ติดต่อล้ง-ตลาด ล่วงหน้า 2 สัปดาห์',d:''}
+    ]},
+    {w:[41,52],season:'❄️ หลังเก็บ',stage:'บำรุงต้น',period:'ฟื้นฟู',tasks:[
+      {t:'ตัดแต่งกิ่งเปิดทรงพุ่ม',d:''},
+      {t:'ใส่ปุ๋ยอินทรีย์',d:'30–50 กก./ต้น'},
+      {t:'พ่นยาป้องกันราบนเปลือก',d:'โพรพิเนบ 20 ก./20 ล.'},
+      {t:'ระบายน้ำ ปรับดิน',d:''},
+      {t:'วางแผนชักนำดอกรอบหน้า',d:''}
+    ]}
+  ],
+  pomelo:[
+    {w:[1,4],season:'🌞 หน้าแล้ง',stage:'บำรุงต้นหลังเก็บ',period:'หลังเก็บ',tasks:[
+      {t:'ตัดแต่งกิ่งในทรงพุ่ม เปิดแสง',d:''},
+      {t:'ใส่ปุ๋ยอินทรีย์ ปรับดิน',d:'20–30 กก./ต้น'},
+      {t:'ปรับ pH ดิน เป้า 6–6.5',d:'ปูนขาว 80 กก./ไร่ ถ้า pH < 5.5'},
+      {t:'พ่นยาป้องกันโรคราบนกิ่ง',d:'โพรพิเนบ 20 ก./20 ล.'},
+      {t:'กำจัดวัชพืชรอบโคนต้น',d:''}
+    ]},
+    {w:[5,9],season:'🌼 ชักนำดอก',stage:'ชักนำออกดอก',period:'ก่อนดอก',tasks:[
+      {t:'ลดน้ำ 3 สัปดาห์ กระตุ้นดอก',d:''},
+      {t:'ใส่ปุ๋ยฟอสฟอรัสสูง',d:'8-24-24 อัตรา 0.5 กก./ต้น'},
+      {t:'พ่นโพแทสเซียมคลอเรต (ถ้าจำเป็น)',d:'120 ก./ต้น ทางดิน'},
+      {t:'ตรวจดูตาดอก บนกิ่งแก่',d:''},
+      {t:'พ่นแมกนีเซียม ป้องกันใบร่วง',d:'30 ก./20 ล.'}
+    ]},
+    {w:[10,22],season:'🌱 ติดผล',stage:'ดอก-ผลพัฒนา',period:'ติดผล-ขยาย',tasks:[
+      {t:'ให้น้ำสม่ำเสมอ ดินชื้น 60–70%',d:''},
+      {t:'พ่นแคลเซียม+โบรอน ป้องกันผลร่วง',d:'Ca-B 15 ก./น้ำ 20 ล.'},
+      {t:'กำจัดเพลี้ยหอยและไรแดง',d:'โพรพาร์ไกต์ 30 ก./20 ล.'},
+      {t:'ป้องกันโรคสแคป คลอโรทาโลนิล',d:'20 ก./20 ล.'},
+      {t:'ห่อผลด้วยถุงกระดาษ ป้องกันแมลง',d:'ขนาดผล 5–7 ซม.'}
+    ]},
+    {w:[23,38],season:'☔ ฝน',stage:'ผลโตแก่',period:'ผลขยาย',tasks:[
+      {t:'เพิ่มโพแทสเซียม ขยายผลและเพิ่มหวาน',d:'0-0-60 อัตรา 25 ก./20 ล.'},
+      {t:'พ่นแคลเซียมทุก 2 สัปดาห์',d:'แคลเซียม 20 ก./20 ล.'},
+      {t:'ระวังโรคราน้ำค้าง ฝนตกต่อเนื่อง',d:'ไดเมโธมอร์ฟ 30 ก./20 ล.'},
+      {t:'ตรวจผลร่วง บันทึกปัญหา',d:''},
+      {t:'วัดความหวาน เป้า 8–10 %Brix',d:''}
+    ]},
+    {w:[39,48],season:'🍂 เก็บเกี่ยว',stage:'เก็บเกี่ยว',period:'เก็บ-จำหน่าย',tasks:[
+      {t:'สังเกตสี ผลสุก เปลือกเหลืองอ่อน',d:''},
+      {t:'เก็บตอนเช้า ตัดก้านยาว 5 ซม.',d:''},
+      {t:'คัดขนาดเกรด A/B',d:''},
+      {t:'จำหน่ายตรง ตลาดสด ออนไลน์',d:''},
+      {t:'บันทึกรายได้-ต้นทุน คำนวณกำไร',d:''}
+    ]},
+    {w:[49,52],season:'❄️ หลังเก็บ',stage:'พักต้น',period:'ฟื้นฟู',tasks:[
+      {t:'ตัดแต่งกิ่ง เตรียมทรงพุ่มปีหน้า',d:''},
+      {t:'ใส่ปุ๋ยอินทรีย์ฟื้นฟูดิน',d:'20 กก./ต้น'},
+      {t:'ทาปูนขาวโคนต้น ป้องกันแมลง',d:''},
+      {t:'บำรุงราก ไตรโคเดอร์มา',d:'50 ก./ต้น ผสมน้ำรด'},
+      {t:'วางแผนการผลิตปีหน้า',d:''}
+    ]}
+  ]
+};
+
+const NPK_DATA={
+  citrus:{veg:'16-16-16',flower:'8-24-24',fruit_set:'13-0-46',fruit_dev:'13-5-30',ripen:'0-0-60',after:'15-15-15'},
+  longan:{veg:'15-15-15',flower:'8-24-24',fruit_set:'12-12-17',fruit_dev:'13-5-30',ripen:'0-0-50',after:'15-15-15'},
+  durian:{veg:'16-16-16',flower:'0-52-34',fruit_set:'12-12-17',fruit_dev:'13-5-30',ripen:'13-0-46',after:'15-15-15'},
+  pomelo:{veg:'16-16-16',flower:'8-24-24',fruit_set:'13-0-46',fruit_dev:'13-5-30',ripen:'0-0-60',after:'15-15-15'}
+};
+
+let currentWeek=1,taskDone={},aiCtx='',mediaRecognition=null,isRecording=false;
+
+function startApp(){
+  localStorage.setItem('g2g_returning','1');
+  document.getElementById('splash').classList.add('out');
+  setTimeout(()=>{
+    document.getElementById('app').style.display='flex';
+    document.getElementById('ai-fab').style.display='flex';
+    init();
+  },800);
+}
+window.addEventListener('load',()=>{if(localStorage.getItem('g2g_returning'))startApp();});
+
+function init(){
+  const now=new Date();
+  const start=new Date(now.getFullYear(),0,1);
+  currentWeek=Math.min(52,Math.max(1,Math.ceil(((now-start)/86400000+start.getDay()+1)/7)));
+  document.getElementById('hdr-date').textContent=now.toLocaleDateString('th-TH',{weekday:'short',month:'short',day:'numeric'});
+  try{taskDone=JSON.parse(localStorage.getItem('g2g_tasks')||'{}');}catch(e){}
+  buildCropTabs();selectCrop(activeCrop);
+  const gp=document.getElementById('g-planted');
+  if(gp){const d=new Date();d.setFullYear(d.getFullYear()-5);gp.value=d.toISOString().split('T')[0];}
+  renderLog();renderDiagHistory();
+}
+
+function buildCropTabs(){
+  document.getElementById('cropScroll').innerHTML=Object.values(CROPS).map(c=>
+    `<button class="crop-tab${c.key===activeCrop?' active':''}" onclick="selectCrop('${c.key}')" data-crop="${c.key}"><span>${c.emoji}</span>${c.name}</button>`
+  ).join('');
+}
+
+function selectCrop(key){
+  activeCrop=key;const c=CROPS[key];
+  ['--cr-color','--cr-soft','--cr-dark','--cr-glass'].forEach((v,i)=>
+    document.documentElement.style.setProperty(v,[c.color,c.soft,c.dark,c.glass][i]));
+  document.getElementById('hdr-crop-name').textContent=c.name;
+  document.querySelectorAll('.crop-tab').forEach(t=>t.classList.toggle('active',t.dataset.crop===key));
+  renderWeekRing();renderWeeks();
+  document.getElementById('hdr-week-badge').textContent=`⭐ สัปดาห์ที่ ${currentWeek}`;
+}
+
+function getPeriodForWeek(crop,week){
+  const ps=FARM_PERIODS[crop]||[];
+  return ps.find(p=>week>=p.w[0]&&week<=p.w[1])||ps[0];
+}
+
+function renderWeekRing(){
+  const arc=document.getElementById('ringArc');
+  arc.style.strokeDashoffset=276.5-(276.5*currentWeek/52);
+  arc.style.stroke=CROPS[activeCrop].color;
+  document.getElementById('ringWeekNum').textContent=currentWeek;
+  const p=getPeriodForWeek(activeCrop,currentWeek);
+  if(p){document.getElementById('ringStage').textContent=p.stage;document.getElementById('ringSeason').textContent=p.season;document.getElementById('ringPeriod').textContent=p.period;}
+}
+
+function renderWeeks(){
+  const s=Math.max(1,currentWeek-1),e=Math.min(52,currentWeek+4);
+  document.getElementById('weekRangeLabel').textContent=`สัปดาห์ที่ ${s}–${e}`;
+  let html='';
+  for(let w=s;w<=e;w++){
+    const p=getPeriodForWeek(activeCrop,w);if(!p)continue;
+    const isCur=w===currentWeek,dk=`${activeCrop}_w${w}`,done=taskDone[dk]||[];
+    html+=`<div class="week-card${isCur?' current':''}" id="wcard${w}">
+      <div class="wc-header" onclick="toggleCard(${w})">
+        <div class="wc-num">${w}</div>
+        <div class="wc-info"><div class="wc-title">${p.season} · ${p.stage}</div><div class="wc-subtitle">${p.period}${isCur?' · 📍 สัปดาห์นี้':''}</div></div>
+        <div class="wc-toggle">⌄</div>
+      </div>
+      <div class="wc-body"><div class="wc-tasks">
+        ${p.tasks.map((t,i)=>{const d=done.includes(i);return`<div class="task-item${d?' done':''}" onclick="toggleTask('${dk}',${i})">
+          <div class="ti-check">${d?'✓':''}</div>
+          <div class="ti-content"><div class="ti-text">${t.t}</div>${t.d?`<div class="ti-dose">📦 ${t.d}</div>`:''}</div>
+        </div>`;}).join('')}
+      </div>
+      <div class="wc-ai-row"><button class="wc-ai-btn" onclick="openDrawer('สัปดาห์ที่ ${w} ${p.stage} ${CROPS[activeCrop].name}')">🤖 ถาม AI สัปดาห์ ${w}</button></div>
+      </div></div>`;
+  }
+  document.getElementById('weeksSection').innerHTML=html;
+  setTimeout(()=>toggleCard(currentWeek,true),100);
+}
+
+function toggleCard(w,forceOpen=false){
+  const c=document.getElementById('wcard'+w);if(!c)return;
+  if(forceOpen)c.classList.add('open');else c.classList.toggle('open');
+}
+
+function toggleTask(dk,idx){
+  if(!taskDone[dk])taskDone[dk]=[];
+  const i=taskDone[dk].indexOf(idx);
+  if(i>-1)taskDone[dk].splice(i,1);else taskDone[dk].push(idx);
+  localStorage.setItem('g2g_tasks',JSON.stringify(taskDone));renderWeeks();
+}
+
+function switchTab(name,btn){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  if(name==='week')renderWeeks();
+}
+
+function showTool(id){
+  document.getElementById('toolsHome').style.display=id?'none':'block';
+  ['ph','npk','water','chem','growth','risk'].forEach(t=>{
+    const el=document.getElementById('tool-'+t);if(el)el.style.display=id===t?'block':'none';
+  });
+}
+
+function calcPH(){
+  const cur=parseFloat(document.getElementById('ph-current').value)||5.5;
+  const tgt=parseFloat(document.getElementById('ph-target').value)||6.5;
+  const area=parseFloat(document.getElementById('ph-area').value)||1;
+  const sf={sandy:0.8,loam:1.2,clay:1.8}[document.getElementById('ph-soil').value]||1;
+  const diff=tgt-cur;let msg='';
+  if(diff>0){const lime=Math.round(diff*sf*80*area);msg=`✅ pH ต้องเพิ่ม ${diff.toFixed(1)} หน่วย\n📦 ใส่ปูนขาว (CaCO₃): ${lime} กก./ไร่\n⏱️ ใส่ก่อนไถ 2–4 สัปดาห์\n💡 ใส่ 2 ครั้ง ห่างกัน 2 สัปดาห์`;}
+  else if(diff<0){const s=Math.round(Math.abs(diff)*sf*40*area);msg=`✅ pH ต้องลด ${Math.abs(diff).toFixed(1)} หน่วย\n📦 ใส่กำมะถัน (S): ${s} กก./ไร่\n⏱️ ใส่ก่อนปลูก 4–6 สัปดาห์`;}
+  else{msg=`✅ pH ดินอยู่ในระดับที่ต้องการ (${cur})\n💡 ตรวจ pH ทุก 3–6 เดือน`;}
+  const r=document.getElementById('ph-result');r.textContent=msg;r.classList.add('show');
+}
+
+function calcNPK(){
+  const crop=document.getElementById('npk-crop').value;
+  const stage=document.getElementById('npk-stage').value;
+  const trees=parseInt(document.getElementById('npk-trees').value)||80;
+  const age=parseInt(document.getElementById('npk-age').value)||5;
+  const formula=(NPK_DATA[crop]&&NPK_DATA[crop][stage])||'16-16-16';
+  const kpt=Math.min(age*0.3,3).toFixed(1);
+  const r=document.getElementById('npk-result');
+  r.textContent=`🌿 สูตรปุ๋ย: ${formula}\n📦 อัตรา: ${kpt} กก./ต้น\n🌳 รวม ${trees} ต้น: ${(kpt*trees).toFixed(1)} กก.\n⏱️ แบ่งใส่ 2–3 ครั้ง ห่างกัน 2 สัปดาห์\n💡 ใส่รอบทรงพุ่ม ห่างโคน 50 ซม. แล้วรดน้ำ`;
+  r.classList.add('show');
+}
+
+function calcWater(){
+  const trees=parseInt(document.getElementById('w-trees').value)||80;
+  const age=parseInt(document.getElementById('w-age').value)||5;
+  const sys=document.getElementById('w-system').value;
+  const eff={drip:0.9,sprinkler:0.75,flood:0.5}[sys]||0.75;
+  const pt=Math.round(Math.min(age*5,60)/eff);
+  const r=document.getElementById('w-result');
+  r.textContent=`💧 ต้องการ: ${pt} ล./ต้น/วัน\n🌳 รวม ${trees} ต้น: ${(pt*trees).toLocaleString()} ล./วัน\n⏱️ ระบบ${sys==='drip'?'หยด (ประหยัดสุด)':sys==='sprinkler'?'สปริงเกลอร์':'ปล่อยท่วม'}\n💡 ฤดูร้อนเพิ่ม 30% · ฤดูฝนลด 40%`;
+  r.classList.add('show');
+}
+
+function calcChem(){
+  const conc=parseFloat(document.getElementById('c-conc').value)||20;
+  const unit=document.getElementById('c-unit').value;
+  const water=parseFloat(document.getElementById('c-water').value)||200;
+  const ratio=(unit==='g_per_20'||unit==='ml_per_20')?water/20:water;
+  const amount=Math.round(conc*ratio);
+  const u=(unit==='g_per_20'||unit==='g_per_l')?'กรัม':'ซีซี';
+  const r=document.getElementById('c-result');
+  r.textContent=`🔬 ปริมาณสาร: ${amount} ${u}\n💧 น้ำ: ${water} ลิตร\n⚠️ ใส่สารลงน้ำ ไม่ใช่น้ำลงสาร\n💡 พ่นตอนเช้า อุณหภูมิต่ำ ลมเบา`;
+  r.classList.add('show');
+}
+
+function calcGrowth(){
+  const crop=document.getElementById('g-crop').value;
+  const planted=document.getElementById('g-planted').value;
+  if(!planted){alert('กรุณาใส่วันที่ปลูก');return;}
+  const days=Math.floor((new Date()-new Date(planted))/86400000);
+  const years=(days/365).toFixed(1);
+  const c=CROPS[crop];
+  const stage=days<365?'บำรุงต้นกล้า ยังไม่ออกดอก':days<730?'เริ่มออกดอกได้ปีแรก':days<1460?'ออกดอกสม่ำเสมอ ผลผลิตดี':days<2920?'ให้ผลดี ผลผลิตสูงสุด':'ต้นแก่ ต้องบำรุงพิเศษ';
+  const r=document.getElementById('g-result');
+  r.textContent=`${c.emoji} ${c.name}\n📅 ปลูกมาแล้ว: ${days} วัน (${years} ปี)\n🌱 ระยะ: ${stage}\n💡 ดูแลตามช่วงอายุ ปุ๋ยเพิ่มตามขนาดต้น`;
+  r.classList.add('show');
+}
+
+function calcRisk(){
+  const temp=parseFloat(document.getElementById('r-temp').value)||30;
+  const humid=parseFloat(document.getElementById('r-humid').value)||70;
+  const rain=parseFloat(document.getElementById('r-rain').value)||0;
+  const aph=(temp>35?3:temp>32?2:1)+(humid<50?2:humid<60?1:0);
+  const fun=(humid>80?3:humid>70?2:1)+(rain>20?2:rain>5?1:0);
+  const root=(rain>50?3:rain>30?2:rain>10?1:0)+(humid>85?1:0);
+  const lbl=['ต่ำ','กลาง','กลาง','สูง'];const emo=['🟢','🟡','🟡','🔴'];
+  const ri=Math.min(root,3);
+  const r=document.getElementById('r-result');
+  r.textContent=`⚠️ ประเมินความเสี่ยง\n${emo[aph-1]} เพลี้ยไฟ/เพลี้ยแป้ง: ${lbl[aph-1]}\n${emo[fun-1]} โรคราน้ำค้าง/สแคป: ${lbl[fun-1]}\n${emo[ri]} รากเน่าโคนเน่า: ${lbl[ri]||'ต่ำ'}\n\n💊 ${aph>=3?'พ่นยาเพลี้ยด่วน อิมิดาโคลพริด 10ซีซี/20ล.':'เฝ้าระวังเพลี้ย'}\n🍄 ${fun>=3?'พ่นยาราด่วน โพรพิเนบ 20ก./20ล.':'เฝ้าระวังโรครา'}\n💧 ${root>=2?'ระบายน้ำออก ป้องกันรากเน่า':'ระบบระบายน้ำดี'}`;
+  r.classList.add('show');
+}
+
+let diagImageBase64='',diagMimeType='image/jpeg';
+function handleDiagImage(e){
+  const file=e.target.files[0];if(!file)return;
+  diagMimeType=file.type||'image/jpeg';
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    diagImageBase64=ev.target.result.split(',')[1];
+    const img=document.getElementById('diag-img-preview');
+    img.src=ev.target.result;img.style.display='block';
+    document.getElementById('diag-submit-btn').style.display='block';
+  };reader.readAsDataURL(file);
+}
+
+async function submitDiag(){
+  const btn=document.getElementById('diag-submit-btn');
+  const box=document.getElementById('diag-result-box');
+  const crop=document.getElementById('diag-crop-sel').value;
+  const q=document.getElementById('diag-q').value||'วิเคราะห์สุขภาพพืชในภาพนี้';
+  btn.disabled=true;btn.textContent='🔍 กำลังวิเคราะห์...';
+  box.className='show';box.textContent='⏳ AI กำลังวิเคราะห์ภาพ...';
+  try{
+    const r=await fetch('/api/career/analyze-image',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({imageBase64:diagImageBase64,mimeType:diagMimeType,question:q,crop})});
+    const d=await r.json();
+    box.textContent=d.analysis||'วิเคราะห์ไม่ได้';
+    let hist=[];try{hist=JSON.parse(localStorage.getItem('g2g_diag_hist')||'[]')}catch(e){}
+    hist.unshift({date:new Date().toLocaleDateString('th-TH'),crop,result:(d.analysis||'').substring(0,100)+'...'});
+    localStorage.setItem('g2g_diag_hist',JSON.stringify(hist.slice(0,5)));renderDiagHistory();
+  }catch(e){box.textContent='ขออภัย ระบบขัดข้อง: '+e.message;}
+  btn.disabled=false;btn.textContent='🔍 วิเคราะห์ด้วย AI';
+}
+
+function renderDiagHistory(){
+  let hist=[];try{hist=JSON.parse(localStorage.getItem('g2g_diag_hist')||'[]')}catch(e){}
+  const el=document.getElementById('diag-history');if(!hist.length){el.innerHTML='';return;}
+  el.innerHTML='<div style="font-size:.72rem;color:var(--text3);margin-bottom:6px;letter-spacing:1px">ประวัติวินิจฉัย</div>'+
+    hist.map(h=>`<div style="background:var(--glass);border:1px solid var(--border);border-radius:12px;padding:10px;margin-bottom:6px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:.72rem;color:var(--cr-color)">${h.crop}</span><span style="font-size:.7rem;color:var(--text3)">${h.date}</span></div>
+      <div style="font-size:.8rem;color:var(--text2)">${h.result}</div></div>`).join('');
+}
+
+function saveLog(){
+  const text=document.getElementById('log-text').value.trim();if(!text)return;
+  const crop=document.getElementById('log-crop').value;
+  const type=document.getElementById('log-type').value;
+  let logs=[];try{logs=JSON.parse(localStorage.getItem('g2g_logs')||'[]')}catch(e){}
+  logs.unshift({date:new Date().toLocaleDateString('th-TH'),crop,type,text});
+  localStorage.setItem('g2g_logs',JSON.stringify(logs.slice(0,50)));
+  document.getElementById('log-text').value='';renderLog();
+}
+
+function renderLog(){
+  let logs=[];try{logs=JSON.parse(localStorage.getItem('g2g_logs')||'[]')}catch(e){}
+  const el=document.getElementById('log-list');
+  if(!logs.length){el.innerHTML='<div style="text-align:center;padding:30px;color:var(--text3);font-size:.85rem">ยังไม่มีบันทึก<br>เริ่มบันทึกกิจกรรมสวนของคุณ</div>';return;}
+  el.innerHTML=logs.map(l=>`<div class="log-entry">
+    <div class="le-header"><span class="le-crop">${l.crop}</span><span class="le-date">${l.date} · ${l.type}</span></div>
+    <div class="le-text">${l.text}</div></div>`).join('');
+}
+
+async function getMarketAdvice(){
+  const btn=document.querySelector('.market-ai-btn');
+  const res=document.getElementById('market-ai-result');
+  btn.disabled=true;btn.textContent='⏳ AI กำลังวิเคราะห์...';
+  res.style.display='block';res.textContent='กำลังวิเคราะห์...';
+  const c=CROPS[activeCrop];
+  try{
+    const r=await fetch('/api/career/ai-advice',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({question:`วางแผนกลยุทธ์ขาย${c.name} ช่วงนี้ราคาเท่าไหร่ดี ควรขายแบบไหน ล้งหรือออนไลน์ ให้คำแนะนำกระชับ`})});
+    const d=await r.json();res.textContent=d.reply||'ขออภัย ไม่สามารถตอบได้';
+  }catch(e){res.textContent='ขออภัย ระบบขัดข้อง';}
+  btn.disabled=false;btn.textContent='🤖 AI แนะนำกลยุทธ์ขาย';
+}
+
+function openDrawer(ctx){
+  if(ctx){aiCtx=ctx;document.getElementById('drawer-ctx').textContent='บริบท: '+ctx;}
+  document.getElementById('ai-drawer').classList.add('open');
+  setTimeout(()=>document.getElementById('drawerInput').focus(),400);
+}
+function closeDrawer(){document.getElementById('ai-drawer').classList.remove('open');}
+function askQuick(q){document.getElementById('drawerInput').value=q;sendDrawer();}
+
+async function sendDrawer(){
+  const input=document.getElementById('drawerInput');
+  const q=input.value.trim();if(!q)return;
+  const msgs=document.getElementById('drawerMsgs');
+  const btn=document.getElementById('drawerSendBtn');
+  msgs.innerHTML+=`<div class="dmsg user">${q}</div>`;
+  input.value='';btn.disabled=true;
+  msgs.innerHTML+=`<div class="dmsg ai" id="typing-msg" style="font-style:italic;opacity:.6">⏳ กำลังคิด...</div>`;
+  msgs.scrollTop=msgs.scrollHeight;
+  const c=CROPS[activeCrop];
+  const context=aiCtx?`[สัปดาห์ที่ ${currentWeek}/${c.name}] ${aiCtx}`:`[สัปดาห์ที่ ${currentWeek}/${c.name}]`;
+  try{
+    const r=await fetch('/api/career/ai-advice',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({question:q,crop:c.name,context})});
+    const d=await r.json();
+    document.getElementById('typing-msg').remove();
+    msgs.innerHTML+=`<div class="dmsg ai">${(d.reply||'ขออภัย ไม่สามารถตอบได้').replace(/\n/g,'<br>')}</div>`;
+    if(isRecording&&window.speechSynthesis){
+      const u=new SpeechSynthesisUtterance(d.reply||'');u.lang='th-TH';u.rate=1.1;
+      window.speechSynthesis.speak(u);
+    }
+  }catch(e){
+    document.getElementById('typing-msg').remove();
+    msgs.innerHTML+=`<div class="dmsg ai">ขออภัย ระบบขัดข้อง กรุณาลองใหม่</div>`;
+  }
+  btn.disabled=false;msgs.scrollTop=msgs.scrollHeight;
+}
+
+function toggleVoice(){
+  const btn=document.getElementById('voiceBtn');
+  if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){alert('เบราว์เซอร์ไม่รองรับการพูด');return;}
+  if(isRecording){if(mediaRecognition)mediaRecognition.stop();btn.classList.remove('recording');btn.textContent='🎤';isRecording=false;return;}
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  mediaRecognition=new SR();mediaRecognition.lang='th-TH';mediaRecognition.interimResults=false;
+  mediaRecognition.onresult=e=>{document.getElementById('drawerInput').value=e.results[0][0].transcript;isRecording=false;btn.classList.remove('recording');btn.textContent='🎤';sendDrawer();};
+  mediaRecognition.onerror=mediaRecognition.onend=()=>{isRecording=false;btn.classList.remove('recording');btn.textContent='🎤';};
+  mediaRecognition.start();isRecording=true;btn.classList.add('recording');btn.textContent='🔴';
+}
+</script>
+</body>
+</html>

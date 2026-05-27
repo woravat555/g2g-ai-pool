@@ -1,0 +1,25 @@
+{
+  "agency_id": "KST-54-003",
+  "agency_name": "สำนักงานประมงจังหวัดแพร่",
+  "dept_name": "กรมประมง",
+  "ministry": "กระทรวงเกษตรและสหกรณ์",
+  "personnel": [
+    { "id": "rec9fd11IpvaN4RCg", "full_name": "นายวิชาชาญ กานันท์ธัญ", "agency_id": "KST-54-003", "agency_name": "สำนักงานประมงจังหวัดแพร่", "dept_name": "กรมประมง", "employee_type": "ข้าราชการ", "position_title": "ประมงจังหวัด", "position_level": "ชำนาญการ (ชก.)", "position_id": "DOF-54-HEAD", "district": "อ.เมืองแพร่", "phone": "054-511890", "status": "ปฏิบัติงาน" },
+    { "id": "rec003per002", "full_name": "นางวรรณา สร้อยทอง", "agency_id": "KST-54-003", "agency_name": "สำนักงานประมงจังหวัดแพร่", "dept_name": "กรมประมง", "employee_type": "ข้าราชการ", "position_title": "นักวิชาการประมง", "position_level": "ชำนาญการ", "district": "อ.เมืองแพร่", "phone": "054-511891", "status": "ปฏิบัติงาน" },
+    { "id": "rec003per003", "full_name": "นายสรายุทธ ดวงมณี", "agency_id": "KST-54-003", "agency_name": "สำนักงานประมงจังหวัดแพร่", "dept_name": "กรมประมง", "employee_type": "พนักงานราชการ", "position_title": "เจ้าพนักงานประมง", "position_level": "พนักงานราชการ", "district": "อ.สอง", "phone": "054-511892", "status": "ปฏิบัติงาน" }
+  ],
+  "budget": [
+    { "id": "recJiza1574smKT7f", "agency_id": "KST-54-003", "agency_name": "สำนักงานประมงจังหวัดแพร่", "dept_name": "กรมประมง", "personnel_budget": 4500000, "operating_budget": 3100000, "capital_budget": 800000, "subsidy_budget": 2100000, "other_budget": 0, "budget_total": 10500000, "disbursed_total": 7200000, "disbursed_pct": 69, "fiscal_year": "2568" }
+  ],
+  "projects": [
+    { "id": "rec5fCw7EbXTvz051", "project_code": "P2568-KST003-001", "project_name": "โครงการส่งเสริมการเพาะเลี้ยงปลาในกระชัง แม่น้ำยม", "agency_id": "KST-54-003", "agency_name": "สำนักงานประมงจังหวัดแพร่", "budget_total": 1800000, "kpi_target": "เกษตรกร 150 ราย เพาะเลี้ยงปลา 300 กระชัง", "progress_pct": 60, "status": "กำลังดำเนินการ", "start_date": "2024-10-01", "end_date": "2025-09-30", "strategy_level": "แผนพัฒนาเกษตรกรรม", "fiscal_year": "2568", "description": "ส่งเสริมการเลี้ยงปลานิล ปลาดุก ในกระชังตามแม่น้ำยม" },
+    { "id": "rec003prj002", "project_code": "P2568-KST003-002", "project_name": "โครงการปล่อยพันธุ์สัตว์น้ำเพื่อฟื้นฟูทรัพยากรประมง", "agency_id": "KST-54-003", "agency_name": "สำนักงานประมงจังหวัดแพร่", "budget_total": 900000, "kpi_target": "ปล่อยปลา 500,000 ตัว คืนสู่แหล่งน้ำธรรมชาติ", "progress_pct": 85, "status": "กำลังดำเนินการ", "start_date": "2024-10-01", "end_date": "2025-09-30", "strategy_level": "แผนพัฒนาเกษตรกรรม", "fiscal_year": "2568", "description": "ปล่อยพันธุ์ปลาน้ำจืดพื้นถิ่นในแม่น้ำยมและลำน้ำสาขา" }
+  ],
+  "contracts": [
+    { "id": "recfRzCOo7x6BT5rJ", "contractor_name": "นายสมชาย ทองดี", "agency_id": "KST-54-003", "agency_name": "สำนักงานประมงจังหวัดแพร่", "dept_name": "กรมประมง", "contract_type": "รายเดือน", "work_description": "ผู้ช่วยปฏิบัติงานประมง ดูแลบ่อเพาะพันธุ์ปลา สถานีประมงน้ำจืดแพร่", "monthly_rate": 15000, "duration_months": 12, "total_amount": 180000, "procurement_method": "เฉพาะเจาะจง", "egp_number": "67049000030", "fiscal_year": "2568", "status": "มีผลบังคับ" },
+    { "id": "rec003ctr002", "contractor_name": "นายกิตติ แสงทอง", "agency_id": "KST-54-003", "agency_name": "สำนักงานประมงจังหวัดแพร่", "dept_name": "กรมประมง", "contract_type": "รายเดือน", "work_description": "ผู้ช่วยเจ้าพนักงานประมง ตรวจสอบคุณภาพน้ำและสุขภาพสัตว์น้ำในแม่น้ำยม", "monthly_rate": 11680, "duration_months": 12, "total_amount": 140160, "procurement_method": "เฉพาะเจาะจง", "egp_number": "67049000031", "fiscal_year": "2568", "status": "มีผลบังคับ" }
+  ],
+  "integration": [
+    { "id": "reclUIGLYeLnsQD9f_003", "plan_id": "INTG-2568-004", "plan_name": "แผนบูรณาการจัดการน้ำเพื่อการเกษตรลุ่มน้ำยม จ.แพร่", "host_agency": "สำนักงานเกษตรจังหวัดแพร่", "partner_agencies": "สำนักงานปศุสัตว์จังหวัดแพร่, สำนักงานประมงจังหวัดแพร่, ส.ป.ก.แพร่", "objective": "บริหารจัดการน้ำในลุ่มน้ำยมให้เพียงพอสำหรับการเกษตรตลอดปี ลดความเสียหายจากภัยแล้งและน้ำท่วม", "budget": 8500000, "kpi": "พื้นที่เกษตรชลประทาน 15,000 ไร่ ได้น้ำเพียงพอ", "progress_pct": 25, "status": "กำลังดำเนินการ", "fiscal_year": "2568", "district": "อ.เมือง อ.สูงเม่น อ.ร้องกวาง", "target_group": "เกษตรกรในพื้นที่ชลประทาน", "role": "หน่วยงานร่วม" }
+  ]
+}

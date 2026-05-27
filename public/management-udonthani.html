@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>แพลตฟอร์มบริหารราชการ — จังหวัดอุดรธานี</title>
+<style>
+:root{
+  --navy1:#0d2d5a;--navy2:#1a4480;--navy3:#2563a8;--navy4:#3b82c4;
+  --gold:#c9a227;--gold2:#e4b83a;--gold3:#f5d06a;
+  --green1:#166534;--green2:#22c55e;
+  --red:#dc2626;--orange:#ea580c;--purple:#7c3aed;
+  --bg:#f0f4f8;--bg2:#e8edf4;--border:#ccd6e0;
+  --white:#fff;--text:#1e293b;--sub:#64748b;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Sarabun',sans-serif}
+body{background:var(--bg);color:var(--text);height:100vh;overflow:hidden;display:flex;flex-direction:column}
+
+/* ─── LOGIN ─── */
+#login{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,var(--navy1) 0%,var(--navy2) 60%,var(--navy3) 100%)}
+.lc{background:#fff;border-radius:16px;padding:36px 40px;width:min(680px,96vw);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.lc-badge{display:flex;align-items:center;gap:14px;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid var(--bg2)}
+.lc-crest{font-size:40px}
+.t1{font-size:17px;font-weight:800;color:var(--navy1)}
+.t2{font-size:11px;color:var(--sub);letter-spacing:.5px}
+.lc-title{font-size:18px;font-weight:700;color:var(--navy1);margin-bottom:4px}
+.lc-sub{font-size:12px;color:var(--sub);margin-bottom:18px}
+.role-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:18px}
+.role-btn{border:2px solid var(--border);border-radius:10px;padding:14px 10px;text-align:center;cursor:pointer;transition:.2s;background:#fff}
+.role-btn:hover,.role-btn.active{border-color:var(--navy3);background:var(--bg2)}
+.role-btn.active{border-color:var(--gold);background:#fffbe6}
+.ri{font-size:22px;margin-bottom:4px}
+.rl{font-size:12px;font-weight:700;color:var(--navy1)}
+.rs{font-size:11px;color:var(--sub)}
+.sel-wrap{display:none;flex-direction:column;gap:4px;margin-bottom:10px}
+.sel-wrap label{font-size:12px;font-weight:600;color:var(--navy1)}
+.inp{border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;width:100%;outline:none;font-family:inherit}
+.inp:focus{border-color:var(--navy3)}
+.lc-btn{width:100%;padding:13px;background:var(--navy1);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px;font-family:inherit}
+.lc-btn:hover{background:var(--navy2)}
+.lc-foot{text-align:center;font-size:11px;color:var(--sub);margin-top:12px}
+
+/* ─── APP SHELL ─── */
+#app{display:none;flex-direction:column;height:100vh;overflow:hidden}
+
+/* TOPBAR */
+.topbar{background:var(--navy1);color:#fff;padding:0 20px;height:54px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px}
+.tb-left{display:flex;align-items:center;gap:12px;min-width:0}
+.tb-logo{font-size:26px}
+.tb-t1{font-size:14px;font-weight:700;white-space:nowrap}
+.tb-t2{font-size:10px;opacity:.7;white-space:nowrap}
+.tb-lvl{display:flex;gap:4px;font-size:11px;align-items:center;flex-wrap:nowrap}
+.tb-lv{background:rgba(255,255,255,.12);padding:2px 8px;border-radius:12px;white-space:nowrap}
+.tb-lv.hi{background:var(--gold);color:var(--navy1);font-weight:700}
+.tb-sep{opacity:.4}
+.tb-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.tb-user{font-size:12px;opacity:.85;white-space:nowrap}
+.tb-logout{background:rgba(255,255,255,.15);border:none;color:#fff;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-family:inherit}
+
+/* DIMENSION TABS */
+.dim-bar{background:var(--navy2);display:flex;padding:0 16px;gap:4px;flex-shrink:0;overflow-x:auto;height:46px;align-items:flex-end}
+.dim-tab{padding:10px 20px;font-size:13px;font-weight:700;color:rgba(255,255,255,.65);cursor:pointer;border-radius:8px 8px 0 0;white-space:nowrap;transition:.15s;border:none;background:transparent;font-family:inherit}
+.dim-tab:hover{background:rgba(255,255,255,.1);color:#fff}
+.dim-tab.active{background:#fff;color:var(--navy1)}
+
+/* BODY = sidebar + main */
+.app-body{display:flex;flex:1;overflow:hidden}
+
+/* SIDEBAR */
+.sidebar{width:210px;background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0}
+.sb-sec{padding:10px 12px 4px;font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.7px}
+.sb-item{display:flex;align-items:center;gap:8px;padding:9px 14px;font-size:13px;color:var(--text);cursor:pointer;border-radius:0;transition:.15s}
+.sb-item:hover{background:var(--bg2)}
+.sb-item.active{background:var(--bg2);color:var(--navy1);font-weight:700;border-left:3px solid var(--navy3)}
+.sb-badge{margin-left:auto;background:var(--navy3);color:#fff;font-size:10px;padding:1px 6px;border-radius:10px}
+
+/* MAIN CONTENT */
+.main{flex:1;overflow-y:auto;padding:20px}
+.page{display:none}
+.page.active{display:block}
+
+/* CARDS */
+.card{background:#fff;border-radius:12px;padding:18px 20px;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:16px}
+.card-h{font-size:15px;font-weight:700;color:var(--navy1);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.card-h .badge{font-size:11px;background:var(--bg2);color:var(--sub);padding:2px 8px;border-radius:10px;font-weight:500}
+
+/* KPI GRID */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.kpi-card{background:#fff;border-radius:10px;padding:14px 16px;border:1px solid var(--border)}
+.kpi-v{font-size:26px;font-weight:800;color:var(--navy1)}
+.kpi-l{font-size:12px;color:var(--sub);margin-top:2px}
+.kpi-sub{font-size:11px;color:var(--sub)}
+
+/* LEVEL BADGE */
+.level-chip{display:inline-block;font-size:11px;padding:2px 10px;border-radius:12px;font-weight:600}
+.lc-central{background:#dbeafe;color:#1e40af}
+.lc-region{background:#dcfce7;color:#166534}
+.lc-local{background:#fef9c3;color:#854d0e}
+.lc-indep{background:#f3e8ff;color:#6b21a8}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{background:var(--navy1);color:#fff;padding:9px 10px;text-align:left;font-weight:600}
+.tbl td{padding:8px 10px;border-bottom:1px solid var(--bg2)}
+.tbl tr:hover td{background:var(--bg2)}
+
+/* PROGRESS BAR */
+.pb{background:var(--bg2);border-radius:4px;height:7px;overflow:hidden;width:100%}
+.pf{height:100%;border-radius:4px;transition:.3s}
+.pf.navy{background:var(--navy3)}.pf.gold{background:var(--gold)}.pf.green{background:var(--green2)}.pf.red{background:var(--red)}.pf.purple{background:var(--purple)}
+
+/* ROW WRAP */
+.row-wrap{display:flex;flex-wrap:wrap;align-items:center}
+.btn{background:var(--navy1);color:#fff;border:none;padding:7px 16px;border-radius:7px;cursor:pointer;font-size:13px;font-family:inherit;font-weight:600;transition:.15s}
+.btn:hover{background:var(--navy2)}
+.btn-g{background:var(--green1)}
+.btn-g:hover{background:#14532d}
+.btn-sm{padding:4px 10px;font-size:12px}
+.btn-out{background:#fff;color:var(--navy1);border:1px solid var(--border)}
+.btn-out:hover{background:var(--bg2)}
+
+/* STATUS DOT */
+.dot-g{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green2);margin-right:4px}
+.dot-y{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--gold2);margin-right:4px}
+.dot-r{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);margin-right:4px}
+
+@media(max-width:900px){.sidebar{display:none}.kpi-row{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<!-- ══════ LOGIN ══════ -->
+<div id="login">
+<div class="lc">
+  <div class="lc-badge">
+    <div class="lc-crest">🏛️</div>
+    <div>
+      <div class="t1">แพลตฟอร์มบริหารราชการแผ่นดิน — จังหวัดอุดรธานี</div>
+      <div class="t2">GOVERNMENT MANAGEMENT PLATFORM · PHRAE · คน · เงิน · งาน · บูรณาการ</div>
+    </div>
+  </div>
+  <div class="lc-title">เลือกระดับการเข้าใช้งาน</div>
+  <div class="lc-sub">ครอบคลุมราชการส่วนกลาง · ส่วนภูมิภาค · ส่วนท้องถิ่น · หน่วยงานอิสระ</div>
+  <div class="role-grid">
+    <div class="role-btn" onclick="selRole('gov')" id="r-gov"><div class="ri">🏛️</div><div class="rl">ผู้ว่าราชการจังหวัด</div><div class="rs">บูรณาการทุกภาคส่วน</div></div>
+    <div class="role-btn" onclick="selRole('coord')" id="r-coord"><div class="ri">🌾</div><div class="rl">เกษตรและสหกรณ์จังหวัด</div><div class="rs">ประสานงานเกษตรทุกหน่วย</div></div>
+    <div class="role-btn" onclick="selRole('head')" id="r-head"><div class="ri">📋</div><div class="rl">หัวหน้าส่วนราชการ</div><div class="rs">9 หน่วยงานสังกัด กษ.</div></div>
+    <div class="role-btn" onclick="selRole('local')" id="r-local"><div class="ri">🏘️</div><div class="rl">องค์กรปกครองส่วนท้องถิ่น</div><div class="rs">อบจ. / เทศบาล / อบต.</div></div>
+    <div class="role-btn" onclick="selRole('indep')" id="r-indep"><div class="ri">🔗</div><div class="rl">หน่วยงานอิสระ</div><div class="rs">ธกส. / กฟภ. / รัฐวิสาหกิจ</div></div>
+    <div class="role-btn" onclick="selRole('district')" id="r-district"><div class="ri">🏘️</div><div class="rl">นายอำเภอ</div><div class="rs">8 อำเภอ — ส่วนภูมิภาค</div></div>
+  </div>
+  <div class="sel-wrap" id="sw-agency" style="display:none;flex-direction:column;gap:4px;margin-bottom:10px">
+    <label>เลือกหน่วยงาน</label>
+    <select id="selAgency" class="inp">
+      <option value="agri">สำนักงานเกษตรจังหวัด</option>
+      <option value="coop">สำนักงานสหกรณ์จังหวัด</option>
+      <option value="live">สำนักงานปศุสัตว์จังหวัด</option>
+      <option value="fish">สำนักงานประมงจังหวัด</option>
+      <option value="irri">โครงการชลประทาน</option>
+      <option value="ldd">สถานีพัฒนาที่ดิน</option>
+      <option value="doa">ศูนย์วิจัยการเกษตร</option>
+      <option value="land">สำนักงาน สปก.</option>
+      <option value="cad">สำนักงานตรวจบัญชีสหกรณ์</option>
+    </select>
+  </div>
+  <div class="sel-wrap" id="sw-local" style="display:none;flex-direction:column;gap:4px;margin-bottom:10px">
+    <label>เลือก อปท.</label>
+    <select id="selLocal" class="inp">
+      <option value="pao">อบจ.อุดรธานี</option>
+      <option value="mun-mueang">เทศบาลเมืองอุดรธานี</option>
+      <option value="mun-rongkwang">เทศบาลตำบลร้องกวาง</option>
+      <option value="abt">อบต. (ระบุ)</option>
+    </select>
+  </div>
+  <button class="lc-btn" onclick="doLogin()">🔐 เข้าสู่ระบบ</button>
+  <div class="lc-foot">ระบบบูรณาการข้อมูลบริหารราชการแผ่นดิน จ.อุดรธานี · G2G © 2026</div>
+</div>
+</div>
+
+<!-- ══════ APP ══════ -->
+<div id="app">
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="tb-left">
+    <div class="tb-logo">🏛️</div>
+    <div>
+      <div class="tb-t1">แพลตฟอร์มบริหารราชการแผ่นดิน จ.อุดรธานี</div>
+      <div class="tb-t2">คน · เงิน · งาน · บูรณาการ</div>
+    </div>
+    <div class="tb-lvl" id="topLevels">
+      <span class="tb-lv">ส่วนกลาง</span><span class="tb-sep">›</span>
+      <span class="tb-lv hi">ส่วนภูมิภาค (อุดรธานี)</span><span class="tb-sep">·</span>
+      <span class="tb-lv">ส่วนท้องถิ่น</span><span class="tb-sep">+</span>
+      <span class="tb-lv">หน่วยงานอิสระ</span>
+    </div>
+  </div>
+  <div class="tb-right">
+    <div class="tb-user" id="tbUser">—</div>
+    <button class="tb-logout" onclick="doLogout()">ออกระบบ</button>
+  </div>
+</div>
+
+<!-- DIMENSION TABS -->
+<div class="dim-bar">
+  <button class="dim-tab active" data-dim="people" onclick="switchDim('people')">👥 แผนคน</button>
+  <button class="dim-tab" data-dim="budget" onclick="switchDim('budget')">💰 แผนเงิน</button>
+  <button class="dim-tab" data-dim="projects" onclick="switchDim('projects')">📋 แผนงาน/โครงการ</button>
+  <button class="dim-tab" data-dim="integration" onclick="switchDim('integration')">🔗 แผนบูรณาการ</button>
+</div>
+
+<div class="app-body">
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <!-- People sidebar -->
+  <div id="sb-people">
+    <div class="sb-sec">แผนคน</div>
+    <div class="sb-item active" data-page="people-overview" onclick="showPage('people-overview')">📊 ภาพรวมบุคลากร</div>
+    <div class="sb-item" data-page="people-list" onclick="showPage('people-list')">📋 ทะเบียนบุคลากร</div>
+    <div class="sb-item" data-page="people-contracts" onclick="showPage('people-contracts')">📄 สัญญาจ้างเหมา</div>
+    <div class="sb-item" data-page="people-positions" onclick="showPage('people-positions')">🗂️ กรอบอัตรากำลัง</div>
+    <div class="sb-item" data-page="people-volunteers" onclick="showPage('people-volunteers')">🤝 อาสาสมัคร อกม.</div>
+    <div class="sb-sec">หน่วยงาน</div>
+    <div class="sb-item" data-page="people-agencies" onclick="showPage('people-agencies')">🏛️ โครงสร้างหน่วยงาน</div>
+  </div>
+  <!-- Budget sidebar -->
+  <div id="sb-budget" style="display:none">
+    <div class="sb-sec">แผนเงิน</div>
+    <div class="sb-item" data-page="budget-overview" onclick="showPage('budget-overview')">📊 ภาพรวมงบประมาณ</div>
+    <div class="sb-item" data-page="budget-categories" onclick="showPage('budget-categories')">📂 หมวดรายจ่าย 5 หมวด</div>
+    <div class="sb-item" data-page="budget-contracts" onclick="showPage('budget-contracts')">📄 จ้างเหมาบริการ</div>
+    <div class="sb-item" data-page="budget-tracking" onclick="showPage('budget-tracking')">📈 ติดตามเบิกจ่าย</div>
+    <div class="sb-sec">แหล่งเงิน</div>
+    <div class="sb-item" data-page="budget-sources" onclick="showPage('budget-sources')">💳 แหล่งเงิน / งบบูรณาการ</div>
+    <div class="sb-item" data-page="budget-local" onclick="showPage('budget-local')">🏘️ งบ อปท.</div>
+  </div>
+  <!-- Projects sidebar -->
+  <div id="sb-projects" style="display:none">
+    <div class="sb-sec">แผนงาน</div>
+    <div class="sb-item" data-page="proj-overview" onclick="showPage('proj-overview')">📊 ภาพรวมโครงการ</div>
+    <div class="sb-item" data-page="proj-list" onclick="showPage('proj-list')">📋 ทะเบียนโครงการ</div>
+    <div class="sb-item" data-page="proj-kpi" onclick="showPage('proj-kpi')">🎯 ตัวชี้วัด KPI</div>
+    <div class="sb-item" data-page="proj-timeline" onclick="showPage('proj-timeline')">📅 แผนการดำเนินงาน</div>
+    <div class="sb-sec">ระดับแผน</div>
+    <div class="sb-item" data-page="proj-national" onclick="showPage('proj-national')">🇹🇭 ยุทธศาสตร์ชาติ</div>
+    <div class="sb-item" data-page="proj-province" onclick="showPage('proj-province')">🗺️ แผนจังหวัด</div>
+  </div>
+  <!-- Integration sidebar -->
+  <div id="sb-integration" style="display:none">
+    <div class="sb-sec">แผนบูรณาการ</div>
+    <div class="sb-item" data-page="integ-overview" onclick="showPage('integ-overview')">📊 ภาพรวมบูรณาการ</div>
+    <div class="sb-item" data-page="integ-plans" onclick="showPage('integ-plans')">📋 แผนบูรณาการจังหวัด</div>
+    <div class="sb-item" data-page="integ-agencies" onclick="showPage('integ-agencies')">🏛️ แผนที่หน่วยงาน</div>
+    <div class="sb-item" data-page="integ-budget" onclick="showPage('integ-budget')">💰 งบบูรณาการ</div>
+    <div class="sb-sec">ระดับการทำงานร่วม</div>
+    <div class="sb-item" data-page="integ-central" onclick="showPage('integ-central')">🏢 ส่วนกลาง</div>
+    <div class="sb-item" data-page="integ-region" onclick="showPage('integ-region')">🗺️ ส่วนภูมิภาค</div>
+    <div class="sb-item" data-page="integ-local" onclick="showPage('integ-local')">🏘️ ส่วนท้องถิ่น</div>
+    <div class="sb-item" data-page="integ-indep" onclick="showPage('integ-indep')">🔗 หน่วยงานอิสระ</div>
+  </div>
+</div><!-- /sidebar -->
+
+<div class="main" id="mainContent">
+
+<!-- ══════ PEOPLE PAGES ══════ -->
+<div id="page-people-overview" class="page active">
+  <div class="kpi-row" id="people-kpi">
+    <div class="kpi-card"><div class="kpi-v" id="kpi-civil">−</div><div class="kpi-l">ข้าราชการ</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="kpi-gov-emp">−</div><div class="kpi-l">พนักงานราชการ</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="kpi-contract">−</div><div class="kpi-l">จ้างเหมาบริการ</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="kpi-volunteer">641</div><div class="kpi-l">อกม. (อาสาสมัคร)</div></div>
+  </div>
+  <div class="card">
+    <div class="card-h">👥 โครงสร้างบุคลากรตามประเภท — ทุกหน่วยงานสังกัด กระทรวงเกษตรและสหกรณ์ จ.อุดรธานี</div>
+    <table class="tbl">
+      <thead><tr><th>หน่วยงาน</th><th>ระดับ</th><th>ข้าราชการ</th><th>พนักงานราชการ</th><th>ลูกจ้างประจำ</th><th>จ้างเหมา</th><th>รวม</th></tr></thead>
+      <tbody id="people-agency-table">
+        <tr><td colspan="7" style="text-align:center;padding:20px;color:var(--sub)">⏳ กำลังโหลด...</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-h">🏛️ โครงสร้างหน่วยงานที่ทำงานร่วม (ต่างกระทรวง)</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div style="background:var(--bg2);border-radius:8px;padding:14px">
+        <div style="font-weight:700;font-size:13px;color:var(--navy1);margin-bottom:8px">🏘️ ส่วนท้องถิ่น (อปท.)</div>
+        <div style="font-size:13px;line-height:2">
+          <span class="level-chip lc-local">อบจ.</span> อบจ.อุดรธานี — 1 แห่ง<br>
+          <span class="level-chip lc-local">เทศบาล</span> เทศบาลเมือง/ตำบล — 11 แห่ง<br>
+          <span class="level-chip lc-local">อบต.</span> อบต. — 65 แห่ง
+        </div>
+        <div style="font-size:11px;color:var(--sub);margin-top:8px">งบประมาณอิสระ — ประสานผ่านผู้ว่าฯ</div>
+      </div>
+      <div style="background:var(--bg2);border-radius:8px;padding:14px">
+        <div style="font-weight:700;font-size:13px;color:var(--navy1);margin-bottom:8px">🔗 หน่วยงานอิสระ/ต่างกระทรวง</div>
+        <div style="font-size:13px;line-height:2">
+          <span class="level-chip lc-indep">คลัง</span> ธกส. สาขาอุดรธานี<br>
+          <span class="level-chip lc-indep">มท.</span> พัฒนาชุมชน / กฟภ.<br>
+          <span class="level-chip lc-indep">อิสระ</span> อบก. / อสม.
+        </div>
+        <div style="font-size:11px;color:var(--sub);margin-top:8px">ต่างกระทรวง — ประสานผ่านแผนบูรณาการ</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="page-people-list" class="page">
+  <div class="card">
+    <div class="card-h">📋 ทะเบียนบุคลากร <span class="badge">ทุกหน่วยงาน</span></div>
+    <div class="row-wrap" style="gap:8px;margin-bottom:12px">
+      <select id="ptype-filter" class="inp" style="width:180px" onchange="filterPeople()">
+        <option value="">— ทุกประเภท —</option>
+        <option value="civil">ข้าราชการพลเรือน</option>
+        <option value="govEmp">พนักงานราชการ</option>
+        <option value="perm">ลูกจ้างประจำ</option>
+        <option value="contract">จ้างเหมาบริการ</option>
+        <option value="volunteer">อาสาสมัคร อกม.</option>
+      </select>
+      <select id="pagency-filter" class="inp" style="width:200px" onchange="filterPeople()">
+        <option value="">— ทุกหน่วยงาน —</option>
+        <option value="agri">เกษตรจังหวัด</option>
+        <option value="coop">สหกรณ์จังหวัด</option>
+        <option value="live">ปศุสัตว์จังหวัด</option>
+        <option value="fish">ประมงจังหวัด</option>
+        <option value="irri">ชลประทาน</option>
+        <option value="ldd">พัฒนาที่ดิน</option>
+      </select>
+      <button class="btn btn-sm" onclick="addPerson()">➕ เพิ่มบุคลากร</button>
+    </div>
+    <div id="people-list-table">
+      <table class="tbl"><thead><tr><th>ชื่อ-สกุล</th><th>ประเภท</th><th>ตำแหน่ง</th><th>หน่วยงาน</th><th>ระดับ/อัตรา</th><th>สถานะ</th></tr></thead>
+      <tbody id="people-tbody"></tbody></table>
+    </div>
+  </div>
+</div>
+
+<div id="page-people-contracts" class="page">
+  <div class="card">
+    <div class="card-h">📄 สัญญาจ้างเหมาบริการ <span class="badge">ตาม พ.ร.บ.จัดซื้อจัดจ้าง 2560</span></div>
+    <div class="row-wrap" style="gap:8px;margin-bottom:12px">
+      <select id="ctype-filter" class="inp" style="width:180px">
+        <option value="">— ทุกประเภทสัญญา —</option>
+        <option value="monthly">รายเดือน (เต็มปีงบ)</option>
+        <option value="daily">รายวัน (ชั่วคราว)</option>
+        <option value="project">รายโครงการ (Output-based)</option>
+      </select>
+      <button class="btn btn-sm" onclick="addContract()">➕ เพิ่มสัญญา</button>
+      <button class="btn btn-sm btn-out" onclick="showEGPInfo()">ℹ️ กฎ e-GP</button>
+    </div>
+    <div id="contracts-info" style="background:#fffbe6;border:1px solid var(--gold);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px">
+      <strong>⚖️ กฎ พ.ร.บ.จัดซื้อจัดจ้าง 2560:</strong>
+      วงเงิน ≤100,000 บ. → เฉพาะเจาะจง |
+      100,001–500,000 บ. → สืบราคา (e-price) |
+      &gt;500,000 บ. → ประกวดราคา (e-bidding) |
+      <strong>ทุกสัญญา: ตั้งงบในหมวด "ค่าใช้สอย" ของงบดำเนินงาน</strong>
+    </div>
+    <table class="tbl"><thead><tr>
+      <th>ผู้รับจ้าง</th><th>ประเภทสัญญา</th><th>งาน/โครงการ</th><th>อัตรา</th>
+      <th>ระยะเวลา</th><th>วงเงิน</th><th>วิธีจัดซื้อ</th><th>เลข e-GP</th>
+    </tr></thead>
+    <tbody id="contracts-tbody"></tbody></table>
+  </div>
+</div>
+
+<div id="page-people-positions" class="page">
+  <div class="card">
+    <div class="card-h">🗂️ กรอบอัตรากำลัง 3 ปี (ปีงบประมาณ 2567–2569)</div>
+    <table class="tbl"><thead><tr><th>หน่วยงาน</th><th>กรอบที่อนุมัติ</th><th>ครองอยู่</th><th>ว่าง</th><th>% บรรจุ</th></tr></thead>
+    <tbody id="positions-tbody"></tbody></table>
+  </div>
+</div>
+
+<div id="page-people-volunteers" class="page">
+  <div class="card">
+    <div class="card-h">🤝 อาสาสมัครเกษตรหมู่บ้าน (อกม.) <span class="badge">641 หมู่บ้าน · ไม่มีสถานะบุคลากรภาครัฐ</span></div>
+    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px">
+      <strong>⚖️ สถานะทางกฎหมาย:</strong> อกม. ไม่ใช่ข้าราชการ — ได้รับ<strong>ค่าตอบแทนพิเศษ</strong>จาก<strong>หมวดค่าตอบแทน</strong>ของงบดำเนินงาน ไม่นับในกรอบอัตรากำลัง
+    </div>
+    <div id="volunteers-by-district"></div>
+  </div>
+</div>
+
+<div id="page-people-agencies" class="page">
+  <div class="card">
+    <div class="card-h">🏛️ แผนผังโครงสร้างหน่วยงาน — จ.อุดรธานี</div>
+    <div id="org-chart-container" style="overflow-x:auto;padding:10px"></div>
+  </div>
+</div>
+
+<!-- ══════ BUDGET PAGES ══════ -->
+<div id="page-budget-overview" class="page">
+  <div class="kpi-row" id="budget-kpi-row">
+    <div class="kpi-card"><div class="kpi-v" id="b-total">−</div><div class="kpi-l">งบรวมทุกหน่วยงาน (บ.)</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="b-spent">−</div><div class="kpi-l">เบิกจ่ายแล้ว</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="b-pct">−%</div><div class="kpi-l">% เบิกจ่าย</div><div class="kpi-sub">เป้า 75%</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="b-integ">−</div><div class="kpi-l">งบบูรณาการ</div></div>
+  </div>
+  <div class="card">
+    <div class="card-h">💰 งบประมาณแยกหมวดรายจ่าย 5 หมวด — ปีงบประมาณ 2568</div>
+    <div id="budget-cat-bars"></div>
+  </div>
+  <div class="card">
+    <div class="card-h">🏛️ งบประมาณแยกหน่วยงาน</div>
+    <table class="tbl"><thead><tr>
+      <th>หน่วยงาน</th><th>งบบุคลากร</th><th>งบดำเนินงาน</th><th>งบลงทุน</th><th>งบอุดหนุน</th><th>รวม</th><th>เบิกจ่าย%</th>
+    </tr></thead>
+    <tbody id="budget-agency-tbody"></tbody></table>
+  </div>
+</div>
+
+<div id="page-budget-categories" class="page">
+  <div class="card">
+    <div class="card-h">📂 หมวดรายจ่าย 5 หมวด <span class="badge">ตาม พ.ร.บ.วิธีการงบประมาณ 2561</span></div>
+    <div id="cat-detail-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:14px"></div>
+  </div>
+</div>
+
+<div id="page-budget-contracts" class="page">
+  <div class="card">
+    <div class="card-h">📄 จ้างเหมาบริการ — รายการและมูลค่า <span class="badge">หมวดค่าใช้สอย</span></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px" id="contract-type-summary"></div>
+    <table class="tbl"><thead><tr>
+      <th>หน่วยงาน</th><th>รายการ</th><th>ประเภท</th><th>อัตรา/เดือน</th><th>ระยะเวลา</th><th>วงเงินรวม</th><th>วิธีจัดซื้อ</th>
+    </tr></thead>
+    <tbody id="budget-contracts-tbody"></tbody></table>
+  </div>
+</div>
+
+<div id="page-budget-tracking" class="page">
+  <div class="card">
+    <div class="card-h">📈 ติดตามการเบิกจ่ายงบประมาณ (รายเดือน)</div>
+    <div id="tracking-chart" style="padding:16px;font-size:13px;line-height:2">
+      <div id="monthly-tracking-table"></div>
+    </div>
+  </div>
+</div>
+
+<div id="page-budget-sources" class="page">
+  <div class="card">
+    <div class="card-h">💳 แหล่งเงิน — แยกตามประเภท</div>
+    <div id="sources-detail" style="display:grid;grid-template-columns:1fr 1fr;gap:14px"></div>
+  </div>
+</div>
+
+<div id="page-budget-local" class="page">
+  <div class="card">
+    <div class="card-h">🏘️ งบประมาณ อปท. — จ.อุดรธานี</div>
+    <div style="background:#fef9c3;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px">
+      <strong>⚖️ หมายเหตุ:</strong> งบ อปท. เป็นอิสระจากงบแผ่นดิน — บริหารโดย อปท. เอง ราชการส่วนภูมิภาคประสานผ่านผู้ว่าราชการจังหวัด ไม่มีอำนาจสั่งการโดยตรง
+    </div>
+    <table class="tbl"><thead><tr><th>อปท.</th><th>ประเภท</th><th>งบรวม(ลบ.)</th><th>งบด้านเกษตร</th><th>โครงการร่วมกับส่วนราชการ</th></tr></thead>
+    <tbody id="local-budget-tbody"></tbody></table>
+  </div>
+</div>
+
+<!-- ══════ PROJECT PAGES ══════ -->
+<div id="page-proj-overview" class="page">
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="kpi-v" id="proj-total">−</div><div class="kpi-l">โครงการทั้งหมด</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="proj-ontrack">−</div><div class="kpi-l">ตามแผน</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="proj-risk">−</div><div class="kpi-l">เสี่ยงล่าช้า</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="proj-done">−</div><div class="kpi-l">เสร็จแล้ว</div></div>
+  </div>
+  <div class="card">
+    <div class="card-h">📋 ภาพรวมโครงการ — ลำดับชั้นแผน</div>
+    <div style="font-size:13px;background:var(--bg2);border-radius:8px;padding:14px;line-height:2.2">
+      <div style="font-weight:700;color:var(--navy1)">🇹🇭 ยุทธศาสตร์ชาติ 20 ปี (2561–2580)</div>
+      <div style="margin-left:20px">↳ แผนพัฒนาเศรษฐกิจและสังคมแห่งชาติ ฉ.13 (2566–2570)</div>
+      <div style="margin-left:40px">↳ แผนปฏิบัติราชการกระทรวงเกษตรฯ (4 ปี)</div>
+      <div style="margin-left:60px">↳ แผนปฏิบัติราชการกรมต่างๆ (รายปี)</div>
+      <div style="margin-left:40px">↳ <strong>แผนพัฒนาจังหวัดอุดรธานี (5 ปี)</strong> ← ผู้ว่าฯ เป็นประธาน</div>
+      <div style="margin-left:60px">↳ <strong>แผนปฏิบัติราชการจังหวัด (รายปี)</strong> ← โครงการทั้งหมดอยู่ที่นี่</div>
+    </div>
+    <div id="proj-summary-table" style="margin-top:14px"></div>
+  </div>
+</div>
+
+<div id="page-proj-list" class="page">
+  <div class="card">
+    <div class="card-h">📋 ทะเบียนโครงการ</div>
+    <div class="row-wrap" style="gap:8px;margin-bottom:12px">
+      <select id="proj-agency-filter" class="inp" style="width:180px">
+        <option value="">— ทุกหน่วยงาน —</option>
+        <option value="agri">เกษตรจังหวัด</option>
+        <option value="coop">สหกรณ์จังหวัด</option>
+        <option value="prov">แผนจังหวัด (บูรณาการ)</option>
+      </select>
+      <select id="proj-status-filter" class="inp" style="width:160px">
+        <option value="">— ทุกสถานะ —</option>
+        <option value="active">กำลังดำเนินการ</option>
+        <option value="done">เสร็จแล้ว</option>
+        <option value="risk">เสี่ยงล่าช้า</option>
+      </select>
+      <button class="btn btn-sm" onclick="addProject()">➕ เพิ่มโครงการ</button>
+    </div>
+    <table class="tbl"><thead><tr>
+      <th>รหัสโครงการ</th><th>ชื่อโครงการ</th><th>หน่วยงาน</th><th>งบ(บ.)</th>
+      <th>KPI</th><th>ความก้าวหน้า</th><th>สถานะ</th>
+    </tr></thead>
+    <tbody id="proj-list-tbody"></tbody></table>
+  </div>
+</div>
+
+<div id="page-proj-kpi" class="page">
+  <div class="card">
+    <div class="card-h">🎯 ตัวชี้วัด KPI — ทุกโครงการ</div>
+    <div id="kpi-dashboard-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"></div>
+  </div>
+</div>
+
+<div id="page-proj-timeline" class="page">
+  <div class="card">
+    <div class="card-h">📅 ไทม์ไลน์แผนการดำเนินงาน (ปีงบประมาณ 2568)</div>
+    <div id="timeline-container" style="overflow-x:auto"></div>
+  </div>
+</div>
+
+<div id="page-proj-national" class="page">
+  <div class="card">
+    <div class="card-h">🇹🇭 ยุทธศาสตร์ชาติที่เกี่ยวข้อง — ด้านเกษตรและสหกรณ์</div>
+    <div id="national-strat-content"></div>
+  </div>
+</div>
+
+<div id="page-proj-province" class="page">
+  <div class="card">
+    <div class="card-h">🗺️ แผนพัฒนาจังหวัดอุดรธานี — ประเด็นยุทธศาสตร์</div>
+    <div id="province-plan-content"></div>
+  </div>
+</div>
+
+<!-- ══════ INTEGRATION PAGES ══════ -->
+<div id="page-integ-overview" class="page">
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="kpi-v">4</div><div class="kpi-l">แผนบูรณาการ</div><div class="kpi-sub">ระดับจังหวัด</div></div>
+    <div class="kpi-card"><div class="kpi-v">9</div><div class="kpi-l">หน่วยงาน กษ.</div><div class="kpi-sub">ส่วนภูมิภาค</div></div>
+    <div class="kpi-card"><div class="kpi-v">77</div><div class="kpi-l">อปท.</div><div class="kpi-sub">ประสานงาน</div></div>
+    <div class="kpi-card"><div class="kpi-v">12</div><div class="kpi-l">หน่วยงานอิสระ</div><div class="kpi-sub">ทำงานร่วม</div></div>
+  </div>
+  <div class="card">
+    <div class="card-h">🔗 โครงสร้างการทำงานร่วม 3 ระดับ + หน่วยงานอิสระ</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+      <div style="border-left:4px solid var(--navy3);padding:12px;background:var(--bg2);border-radius:0 8px 8px 0">
+        <div style="font-weight:700;font-size:13px;color:var(--navy1);margin-bottom:8px">🏢 ส่วนกลาง</div>
+        <div style="font-size:12px;line-height:1.8;color:var(--sub)">กระทรวงเกษตรฯ<br>กรม 9 กรม<br>นโยบาย + งบประมาณ<br>สั่งการผ่านอธิบดี</div>
+      </div>
+      <div style="border-left:4px solid var(--green2);padding:12px;background:var(--bg2);border-radius:0 8px 8px 0">
+        <div style="font-weight:700;font-size:13px;color:var(--navy1);margin-bottom:8px">🗺️ ส่วนภูมิภาค</div>
+        <div style="font-size:12px;line-height:1.8;color:var(--sub)">ผู้ว่าราชการจังหวัด<br>เกษตรและสหกรณ์จว.<br>หน่วยงานสาขากรม<br>นายอำเภอ 8 อำเภอ</div>
+      </div>
+      <div style="border-left:4px solid var(--gold);padding:12px;background:var(--bg2);border-radius:0 8px 8px 0">
+        <div style="font-weight:700;font-size:13px;color:var(--navy1);margin-bottom:8px">🏘️ ส่วนท้องถิ่น</div>
+        <div style="font-size:12px;line-height:1.8;color:var(--sub)">อบจ.อุดรธานี<br>เทศบาล 11 แห่ง<br>อบต. 65 แห่ง<br>งบอิสระ</div>
+      </div>
+      <div style="border-left:4px solid var(--purple);padding:12px;background:var(--bg2);border-radius:0 8px 8px 0">
+        <div style="font-weight:700;font-size:13px;color:var(--navy1);margin-bottom:8px">🔗 หน่วยงานอิสระ</div>
+        <div style="font-size:12px;line-height:1.8;color:var(--sub)">ธกส. (กระทรวงการคลัง)<br>พัฒนาชุมชน (มท.)<br>กฟภ. / อบก.<br>ประสานผ่านแผนบูรณาการ</div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-h">📊 แผนบูรณาการจังหวัดอุดรธานี — ภาพรวม</div>
+    <div id="integ-overview-table"></div>
+  </div>
+</div>
+
+<div id="page-integ-plans" class="page">
+  <div class="card">
+    <div class="card-h">📋 แผนบูรณาการจังหวัดอุดรธานี <span class="badge">ปีงบประมาณ 2568</span></div>
+    <div style="background:#fffbe6;border:1px solid var(--gold);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px">
+      <strong>💡 หลักการ:</strong> แผนบูรณาการมีงบประมาณเป็นของตัวเอง (งบบูรณาการ) ผู้ว่าฯ เป็นประธาน กกจ. ประสาน เบิกจ่ายผ่านหน่วยงานเจ้าภาพ
+    </div>
+    <button class="btn btn-sm" style="margin-bottom:12px" onclick="addIntegPlan()">➕ เพิ่มแผนบูรณาการ</button>
+    <div id="integ-plans-list"></div>
+  </div>
+</div>
+
+<div id="page-integ-agencies" class="page">
+  <div class="card">
+    <div class="card-h">🏛️ แผนที่หน่วยงาน — ความสัมพันธ์และการทำงานร่วม</div>
+    <div id="agencies-map-container" style="overflow-x:auto"></div>
+  </div>
+</div>
+
+<div id="page-integ-budget" class="page">
+  <div class="card">
+    <div class="card-h">💰 งบบูรณาการ — แยกตามแผนและหน่วยงาน</div>
+    <div id="integ-budget-table"></div>
+  </div>
+</div>
+
+<div id="page-integ-central" class="page">
+  <div class="card">
+    <div class="card-h">🏢 ส่วนกลาง — นโยบายและงบประมาณ</div>
+    <div id="central-content"></div>
+  </div>
+</div>
+
+<div id="page-integ-region" class="page">
+  <div class="card">
+    <div class="card-h">🗺️ ส่วนภูมิภาค — ราชการจังหวัด/อำเภอ</div>
+    <div id="region-content"></div>
+  </div>
+</div>
+
+<div id="page-integ-local" class="page">
+  <div class="card">
+    <div class="card-h">🏘️ ส่วนท้องถิ่น (อปท.) — การประสานงาน</div>
+    <div id="local-content"></div>
+  </div>
+</div>
+
+<div id="page-integ-indep" class="page">
+  <div class="card">
+    <div class="card-h">🔗 หน่วยงานอิสระ/ต่างกระทรวง — การทำงานร่วม</div>
+    <div style="background:#f3e8ff;border:1px solid #d8b4fe;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px">
+      <strong>⚖️ หมายเหตุ:</strong> หน่วยงานต่างกระทรวงไม่มีความสัมพันธ์ตามสายบังคับบัญชากับราชการในสังกัด กษ. — ทำงานร่วมผ่าน <strong>แผนบูรณาการ, คณะกรรมการร่วม, หรือ MOU</strong> เท่านั้น
+    </div>
+    <div id="indep-content"></div>
+  </div>
+</div>
+
+</div><!-- /main -->
+</div><!-- /app-body -->
+</div><!-- /app -->
+
+<script>
+/* ============================================================
+   API CONFIG + LIVE DATA STATE
+   ============================================================ */
+const API_BASE = '';  // same origin
+const PHRAE_API = `${API_BASE}/api/udonthani/management`;
+const API_KEY = 'udonthani2026';
+const HGET = {'x-api-key': API_KEY};
+const HPOST = {'x-api-key': API_KEY, 'Content-Type': 'application/json'};
+
+// Live data loaded from Airtable via API
+let API_PERSONNEL  = [];
+let API_BUDGET     = [];
+let API_PROJECTS   = [];
+let API_CONTRACTS  = [];
+let API_INTEGRATION= [];
+let API_SUMMARY    = null;
+let DATA_LOADED    = false;
+
+const BUDGET_CATS = [
+  {id:'personnel', name:'หมวด 1 — งบบุคลากร', color:'var(--navy3)', desc:'เงินเดือน ค่าจ้าง ลูกจ้างประจำ'},
+  {id:'operating', name:'หมวด 2 — งบดำเนินงาน', color:'var(--green2)', desc:'ค่าตอบแทน ค่าใช้สอย ค่าวัสดุ ค่าสาธารณูปโภค (รวมจ้างเหมา)'},
+  {id:'capital',   name:'หมวด 3 — งบลงทุน', color:'var(--gold)', desc:'ครุภัณฑ์ ที่ดิน สิ่งก่อสร้าง'},
+  {id:'subsidy',   name:'หมวด 4 — งบเงินอุดหนุน', color:'var(--orange)', desc:'อุดหนุนทั่วไป / เฉพาะกิจ (อปท.)'},
+  {id:'other',     name:'หมวด 5 — งบรายจ่ายอื่น', color:'var(--purple)', desc:'เงินราชการลับ / สำรองจ่าย'}
+];
+
+let STATE = {role:null, agency:null, curDim:'people', curPage:'people-overview'};
+let _selectedRole = null;
+
+async function loadAllData() {
+  try {
+    const [sumR,perR,budR,prjR,ctrR,intR] = await Promise.allSettled([
+      fetch(`${PHRAE_API}/summary`, {headers:HGET}).then(r=>r.json()),
+      fetch(`${PHRAE_API}/personnel`, {headers:HGET}).then(r=>r.json()),
+      fetch(`${PHRAE_API}/budget`, {headers:HGET}).then(r=>r.json()),
+      fetch(`${PHRAE_API}/projects`, {headers:HGET}).then(r=>r.json()),
+      fetch(`${PHRAE_API}/contracts`, {headers:HGET}).then(r=>r.json()),
+      fetch(`${PHRAE_API}/integration`, {headers:HGET}).then(r=>r.json()),
+    ]);
+    if(sumR.status==='fulfilled'&&sumR.value.ok) API_SUMMARY   = sumR.value.summary;
+    if(perR.status==='fulfilled'&&perR.value.ok) API_PERSONNEL = perR.value.people||[];
+    if(budR.status==='fulfilled'&&budR.value.ok) API_BUDGET    = budR.value.agencies||[];
+    if(prjR.status==='fulfilled'&&prjR.value.ok) API_PROJECTS  = prjR.value.projects||[];
+    if(ctrR.status==='fulfilled'&&ctrR.value.ok) API_CONTRACTS = ctrR.value.contracts||[];
+    if(intR.status==='fulfilled'&&intR.value.ok) API_INTEGRATION=intR.value.plans||[];
+    DATA_LOADED = true;
+    console.log('[MGMT] Data loaded — personnel:',API_PERSONNEL.length,'budget:',API_BUDGET.length,'projects:',API_PROJECTS.length);
+  } catch(e) {
+    console.error('[MGMT] loadAllData error:',e);
+  }
+}
+</script>
+
+<script>
+/* ── LOGIN ── */
+function selRole(r) {
+  _selectedRole = r;
+  document.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('active'));
+  const btn=document.getElementById('r-'+r); if(btn) btn.classList.add('active');
+  document.getElementById('sw-agency').style.display = r==='head' ? 'flex' : 'none';
+  document.getElementById('sw-local').style.display  = r==='local' ? 'flex' : 'none';
+}
+async function doLogin() {
+  if (!_selectedRole) { alert('กรุณาเลือกระดับการเข้าใช้งาน'); return; }
+  const btn = document.querySelector('.lc-btn');
+  if (btn) { btn.textContent = '⏳ กำลังโหลดข้อมูล...'; btn.disabled = true; }
+  STATE.role = _selectedRole;
+  STATE.agency = document.getElementById('selAgency')?.value || 'all';
+  const labels = {gov:'ผู้ว่าราชการจังหวัด',coord:'เกษตรและสหกรณ์จังหวัดอุดรธานี',head:'หัวหน้าส่วนราชการ',local:'อปท.',indep:'หน่วยงานอิสระ',district:'นายอำเภอ'};
+  await loadAllData();
+  document.getElementById('login').style.display='none';
+  document.getElementById('app').style.display='flex';
+  document.getElementById('tbUser').textContent = labels[_selectedRole]||_selectedRole;
+  switchDim('people');
+}
+function doLogout() {
+  _selectedRole=null; STATE.role=null;
+  document.getElementById('app').style.display='none';
+  document.getElementById('login').style.display='flex';
+  document.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('active'));
+  ['sw-agency','sw-local'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display='none';});
+}
+
+/* ── NAVIGATION ── */
+function switchDim(dim) {
+  STATE.curDim = dim;
+  document.querySelectorAll('.dim-tab').forEach(t=>t.classList.toggle('active',t.dataset.dim===dim));
+  ['people','budget','projects','integration'].forEach(d=>{
+    const el=document.getElementById('sb-'+d); if(el) el.style.display = d===dim?'block':'none';
+  });
+  const firstPage = {people:'people-overview',budget:'budget-overview',projects:'proj-overview',integration:'integ-overview'}[dim];
+  showPage(firstPage);
+}
+
+function showPage(pg) {
+  STATE.curPage = pg;
+  document.querySelectorAll('.page').forEach(p=>{p.classList.remove('active');p.style.display='none';});
+  const el=document.getElementById('page-'+pg);
+  if(el){el.classList.add('active');el.style.display='block';}
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.toggle('active',i.dataset.page===pg));
+  renderPage(pg);
+}
+
+/* ── PAGE RENDERERS ── */
+function renderPage(pg) {
+  const fn = {
+    'people-overview':  renderPeopleOverview,
+    'people-list':      renderPeopleList,
+    'people-contracts': renderContracts,
+    'people-positions': renderPositions,
+    'people-volunteers':renderVolunteers,
+    'people-agencies':  renderOrgChart,
+    'budget-overview':  renderBudgetOverview,
+    'budget-categories':renderBudgetCategories,
+    'budget-contracts': renderBudgetContracts,
+    'budget-tracking':  renderBudgetTracking,
+    'budget-sources':   renderBudgetSources,
+    'budget-local':     renderBudgetLocal,
+    'proj-overview':    renderProjOverview,
+    'proj-list':        renderProjList,
+    'proj-kpi':         renderProjKPI,
+    'proj-timeline':    renderProjTimeline,
+    'proj-national':    renderNational,
+    'proj-province':    renderProvince,
+    'integ-overview':   renderIntegOverview,
+    'integ-plans':      renderIntegPlans,
+    'integ-agencies':   renderAgenciesMap,
+    'integ-budget':     renderIntegBudget,
+    'integ-central':    renderCentral,
+    'integ-region':     renderRegion,
+    'integ-local':      renderLocalGov,
+    'integ-indep':      renderIndep,
+  }[pg];
+  if(fn) fn();
+}
+</script>
+
+<script>
+/* ── PEOPLE RENDERERS ── */
+function renderPeopleOverview() {
+  const civil    = API_PERSONNEL.filter(p=>p.employee_type==='ข้าราชการ').length;
+  const govEmp   = API_PERSONNEL.filter(p=>p.employee_type==='พนักงานราชการ').length;
+  const contract = API_PERSONNEL.filter(p=>p.employee_type==='จ้างเหมาบริการ').length;
+  document.getElementById('kpi-civil').textContent    = civil || (DATA_LOADED ? 0 : '…');
+  document.getElementById('kpi-gov-emp').textContent  = govEmp || (DATA_LOADED ? 0 : '…');
+  document.getElementById('kpi-contract').textContent = contract || (DATA_LOADED ? 0 : '…');
+  const tbody = document.getElementById('people-agency-table');
+  if (!tbody) return;
+  if (!DATA_LOADED) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--sub);padding:20px">⏳ กำลังโหลดข้อมูล...</td></tr>'; return; }
+  // Group by agency_name
+  const agMap = {};
+  API_PERSONNEL.forEach(p => {
+    const k = p.agency_name || 'ไม่ระบุ';
+    if (!agMap[k]) agMap[k] = {name:k, dept:p.dept_name||'', civil:0, govEmp:0, perm:0, contract:0};
+    if (p.employee_type==='ข้าราชการ') agMap[k].civil++;
+    else if (p.employee_type==='พนักงานราชการ') agMap[k].govEmp++;
+    else if (p.employee_type==='ลูกจ้างประจำ') agMap[k].perm++;
+    else if (p.employee_type==='จ้างเหมาบริการ') agMap[k].contract++;
+  });
+  const agencies = Object.values(agMap);
+  if (agencies.length === 0) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--sub);padding:20px">ไม่มีข้อมูล</td></tr>'; return; }
+  tbody.innerHTML = agencies.map(ag=>`
+    <tr>
+      <td><strong>${ag.name}</strong><br><span style="font-size:11px;color:var(--sub)">${ag.dept}</span></td>
+      <td><span class="level-chip lc-region">ส่วนภูมิภาค</span></td>
+      <td style="text-align:center">${ag.civil}</td>
+      <td style="text-align:center">${ag.govEmp}</td>
+      <td style="text-align:center">${ag.perm}</td>
+      <td style="text-align:center;color:var(--navy3);font-weight:600">${ag.contract}</td>
+      <td style="text-align:center;font-weight:700">${ag.civil+ag.govEmp+ag.perm+ag.contract}</td>
+    </tr>`).join('');
+}
+
+function renderPeopleList() {
+  const typeColor = {'ข้าราชการ':'lc-central','พนักงานราชการ':'lc-region','ลูกจ้างประจำ':'lc-local','จ้างเหมาบริการ':'lc-indep','อกม.':'lc-local'};
+  const people = API_PERSONNEL;
+  document.getElementById('people-tbody').innerHTML = people.length === 0
+    ? `<tr><td colspan="6" style="text-align:center;color:var(--sub);padding:20px">${DATA_LOADED?'ไม่มีข้อมูล':'⏳ กำลังโหลด...'}</td></tr>`
+    : people.map(p=>`
+    <tr>
+      <td>${p.full_name||'—'}</td>
+      <td><span class="level-chip ${typeColor[p.employee_type]||'lc-local'}">${p.employee_type||'—'}</span></td>
+      <td>${p.position_title||'—'}</td>
+      <td>${p.agency_name||'—'}</td>
+      <td>${p.position_level||'—'}</td>
+      <td><span class="dot-g"></span>${p.status||'ปฏิบัติงาน'}</td>
+    </tr>`).join('');
+}
+
+function renderContracts() {
+  const methodColor = {'เฉพาะเจาะจง':'lc-local','สืบราคา':'lc-region','ประกวดราคา':'lc-central'};
+  const contracts = API_CONTRACTS;
+  document.getElementById('contracts-tbody').innerHTML = contracts.length === 0
+    ? `<tr><td colspan="8" style="text-align:center;color:var(--sub);padding:20px">${DATA_LOADED?'ไม่มีข้อมูล':'⏳ กำลังโหลด...'}</td></tr>`
+    : contracts.map(c=>`
+    <tr>
+      <td>${c.contractor_name||'—'}</td>
+      <td><span class="level-chip lc-indep">${c.contract_type||'—'}</span></td>
+      <td>${c.work_description||'—'}<br><span style="font-size:11px;color:var(--sub)">${c.agency_name||''}</span></td>
+      <td style="text-align:right">${c.monthly_rate?Number(c.monthly_rate).toLocaleString('th-TH')+' บ./เดือน':'—'}</td>
+      <td style="text-align:center">${c.fiscal_year||'2568'}</td>
+      <td style="text-align:right;font-weight:700">${c.total_amount?Number(c.total_amount).toLocaleString('th-TH'):'—'}</td>
+      <td><span class="level-chip ${methodColor[c.procurement_method]||'lc-local'}">${c.procurement_method||'เฉพาะเจาะจง'}</span></td>
+      <td style="font-size:11px;color:var(--sub)">${c.egp_number||'—'}</td>
+    </tr>`).join('');
+}
+
+function renderPositions() {
+  // Group API_PERSONNEL by agency (excluding contract workers from frame count)
+  const agMap = {};
+  API_PERSONNEL.forEach(p => {
+    const k = p.agency_name || 'ไม่ระบุ';
+    if (!agMap[k]) agMap[k] = {name:k, civil:0, govEmp:0, perm:0};
+    if (p.employee_type==='ข้าราชการ') agMap[k].civil++;
+    else if (p.employee_type==='พนักงานราชการ') agMap[k].govEmp++;
+    else if (p.employee_type==='ลูกจ้างประจำ') agMap[k].perm++;
+  });
+  const agencies = Object.values(agMap);
+  document.getElementById('positions-tbody').innerHTML = agencies.length === 0
+    ? `<tr><td colspan="5" style="text-align:center;color:var(--sub)">${DATA_LOADED?'ไม่มีข้อมูล':'⏳ กำลังโหลด...'}</td></tr>`
+    : agencies.map(ag=>{
+    const total = ag.civil+ag.govEmp+ag.perm;
+    const frame = total + 2; // estimated vacancy buffer
+    const pct = frame > 0 ? Math.round(total/frame*100) : 0;
+    return `<tr>
+      <td>${ag.name}</td>
+      <td style="text-align:center">${frame}</td>
+      <td style="text-align:center">${total}</td>
+      <td style="text-align:center;color:var(--gold)">${frame-total}</td>
+      <td style="width:160px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="pb" style="flex:1"><div class="pf navy" style="width:${pct}%"></div></div>
+          <span style="font-size:12px;font-weight:600;min-width:32px">${pct}%</span>
+        </div>
+      </td>
+    </tr>`;}).join('');
+}
+
+function renderVolunteers() {
+  const dist = [{n:'เมืองอุดรธานี',tb:25,vol:200},{n:'ร้องกวาง',tb:12,vol:96},{n:'ลอง',tb:11,vol:88},
+    {n:'สูงเม่น',tb:12,vol:96},{n:'เด่นชัย',tb:5,vol:40},{n:'สอง',tb:12,vol:96},{n:'วังชิ้น',tb:8,vol:64},{n:'หนองม่วงไข่',tb:6,vol:48}];
+  document.getElementById('volunteers-by-district').innerHTML = `
+    <table class="tbl"><thead><tr><th>อำเภอ</th><th>ตำบล</th><th>หมู่บ้าน</th><th>อกม.</th><th>สถานะ</th></tr></thead>
+    <tbody>${dist.map(d=>`<tr>
+      <td>${d.n}</td><td style="text-align:center">${d.tb}</td>
+      <td style="text-align:center">${d.tb*8}</td>
+      <td style="text-align:center;font-weight:700;color:var(--navy3)">${d.vol}</td>
+      <td><span class="dot-g"></span>ครบ</td>
+    </tr>`).join('')}</tbody>
+    <tfoot><tr style="font-weight:700;background:var(--bg2)"><td>รวม</td><td style="text-align:center">77</td><td style="text-align:center">641</td><td style="text-align:center;color:var(--navy3)">641</td><td>—</td></tr></tfoot>
+    </table>`;
+}
+
+function renderOrgChart() {
+  document.getElementById('org-chart-container').innerHTML = `
+    <div style="text-align:center;font-size:13px;min-width:900px">
+      <div style="background:var(--navy1);color:#fff;padding:10px 20px;border-radius:8px;display:inline-block;margin-bottom:6px">🏢 กระทรวงเกษตรและสหกรณ์ (ส่วนกลาง)</div>
+      <div style="display:flex;gap:6px;justify-content:center;margin-top:6px;flex-wrap:wrap">
+        <div style="border:2px solid var(--gold);border-radius:8px;padding:8px 14px;background:var(--bg2)">🏛️ เกษตรและสหกรณ์จว.<br><span style="font-size:11px;color:var(--sub)">ประสาน/รายงาน ปลัดกระทรวง</span></div>
+        ${['เกษตรจว.','สหกรณ์จว.','ตรวจบัญชีสหกรณ์','ปศุสัตว์จว.','ประมงจว.','สปก.','ชลประทาน','พัฒนาที่ดิน','วิชาการเกษตร'].map(n=>{const _ol={'เกษตรจว.':'https://upload.wikimedia.org/wikipedia/commons/c/c2/Emblem_of_the_Department_of_Agricultural_Extension.svg','สหกรณ์จว.':'','ตรวจบัญชีสหกรณ์':'','ปศุสัตว์จว.':'','ประมงจว.':'https://upload.wikimedia.org/wikipedia/commons/b/b5/Seal_of_Department_of_Fisheries_Thailand.png','สปก.':'https://upload.wikimedia.org/wikipedia/commons/9/92/Emblem_of_Agricultural_Land_Reform_Office.png','ชลประทาน':'https://upload.wikimedia.org/wikipedia/commons/c/ce/Emblem_of_the_Royal_Irrigation_Department.svg','พัฒนาที่ดิน':'https://upload.wikimedia.org/wikipedia/commons/9/9a/Emblem_of_the_Land_Development_Department.svg','วิชาการเกษตร':'https://upload.wikimedia.org/wikipedia/th/2/2a/%E0%B8%95%E0%B8%A3%E0%B8%B2%E0%B8%81%E0%B8%A3%E0%B8%A1%E0%B8%A7%E0%B8%B4%E0%B8%8A%E0%B8%B2%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%80%E0%B8%81%E0%B8%A9%E0%B8%95%E0%B8%A3.svg'};const _oi=_ol[n];return`<div style="border:1px solid var(--border);border-radius:8px;padding:8px 14px;background:#fff;font-size:12px">${_oi?'<img src="'+_oi+'" style="width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:4px;border-radius:50%;background:#f8f9fa;" onerror="this.style.display=\'none\'">' :''}${n}<br><span style="font-size:10px;color:var(--sub)">รายงาน อธิบดี</span></div>`;}).join('')}
+      </div>
+      <div style="margin-top:14px;font-size:11px;color:var(--sub)">เส้นประ = ประสาน | เส้นทึบ = สายบังคับบัญชา</div>
+    </div>`;
+}
+async function addPerson() {
+  const name = prompt('ชื่อ-นามสกุล:'); if (!name) return;
+  const agency = prompt('หน่วยงาน (เช่น เกษตรจว.):'); if (!agency) return;
+  const type = prompt('ประเภท: ข้าราชการ / พนักงานราชการ / ลูกจ้างประจำ / จ้างเหมาบริการ') || 'ข้าราชการ';
+  const pos = prompt('ตำแหน่ง:') || '';
+  try {
+    const r = await fetch(`${PHRAE_API}/personnel`, {method:'POST',headers:HPOST,
+      body: JSON.stringify({full_name:name, agency_name:agency, employee_type:type, position_title:pos, status:'ปฏิบัติงาน', dept_name:''})});
+    const d = await r.json();
+    if (d.ok) { alert('✅ บันทึกสำเร็จ'); await loadAllData(); renderPage(STATE.curPage); }
+    else alert('❌ เกิดข้อผิดพลาด: '+d.error);
+  } catch(e) { alert('❌ ไม่สามารถเชื่อมต่อ API'); }
+}
+function filterPeople() { renderPeopleList(); }
+</script>
+
+<script>
+/* ── BUDGET RENDERERS ── */
+function fmtM(n) { return (Number(n||0)/1e6).toFixed(1)+'ล.'; }
+
+function renderBudgetOverview() {
+  const data = API_BUDGET;
+  if (!DATA_LOADED) { document.getElementById('b-total').textContent='⏳'; return; }
+  const tot = data.reduce((a,b)=>({
+    p: a.p+Number(b.personnel_budget||0),
+    o: a.o+Number(b.operating_budget||0),
+    c: a.c+Number(b.capital_budget||0),
+    s: a.s+Number(b.subsidy_budget||0)
+  }), {p:0,o:0,c:0,s:0});
+  const grand = tot.p+tot.o+tot.c+tot.s;
+  const avgPct = data.length > 0 ? Math.round(data.reduce((a,b)=>a+Number(b.disbursed_pct||0),0)/data.length) : 0;
+  document.getElementById('b-total').textContent = fmtM(grand);
+  document.getElementById('b-spent').textContent = fmtM(grand*avgPct/100);
+  document.getElementById('b-pct').textContent   = avgPct+'%';
+  document.getElementById('b-integ').textContent = '62.5ล.';
+
+  // Category bars
+  const cats = [
+    {label:'งบบุคลากร',val:tot.p,color:'var(--navy3)'},
+    {label:'งบดำเนินงาน',val:tot.o,color:'var(--green2)'},
+    {label:'งบลงทุน',val:tot.c,color:'var(--gold)'},
+    {label:'งบเงินอุดหนุน',val:tot.s,color:'var(--orange)'}
+  ];
+  document.getElementById('budget-cat-bars').innerHTML = cats.map(c=>{
+    const pct = grand > 0 ? Math.round(c.val/grand*100) : 0;
+    return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+      <div style="width:120px;font-size:13px">${c.label}</div>
+      <div class="pb" style="flex:1"><div class="pf" style="width:${pct}%;background:${c.color}"></div></div>
+      <div style="width:60px;text-align:right;font-size:13px;font-weight:700">${fmtM(c.val)}</div>
+      <div style="width:35px;font-size:12px;color:var(--sub)">${pct}%</div>
+    </div>`;}).join('');
+
+  document.getElementById('budget-agency-tbody').innerHTML = data.length === 0
+    ? '<tr><td colspan="7" style="text-align:center;color:var(--sub);padding:20px">ไม่มีข้อมูล</td></tr>'
+    : data.map(b=>{
+    const tot2 = Number(b.personnel_budget||0)+Number(b.operating_budget||0)+Number(b.capital_budget||0)+Number(b.subsidy_budget||0)+Number(b.other_budget||0);
+    const pct = Number(b.disbursed_pct||0);
+    const statusColor = pct>=75?'var(--green2)':pct>=60?'var(--gold)':'var(--red)';
+    return `<tr>
+      <td><strong>${b.agency_name||'—'}</strong></td>
+      <td style="text-align:right">${fmtM(b.personnel_budget)}</td>
+      <td style="text-align:right">${fmtM(b.operating_budget)}</td>
+      <td style="text-align:right">${fmtM(b.capital_budget)}</td>
+      <td style="text-align:right">${Number(b.subsidy_budget||0)>0?fmtM(b.subsidy_budget):'—'}</td>
+      <td style="text-align:right;font-weight:700">${fmtM(tot2)}</td>
+      <td><div style="display:flex;align-items:center;gap:6px">
+        <div class="pb" style="width:80px"><div class="pf" style="width:${pct}%;background:${statusColor}"></div></div>
+        <span style="font-size:12px;font-weight:700;color:${statusColor}">${pct}%</span>
+      </div></td>
+    </tr>`;}).join('');
+}
+
+function renderBudgetCategories() {
+  const totals = {personnel:0, operating:0, capital:0, subsidy:0, other:0};
+  API_BUDGET.forEach(b => {
+    totals.personnel += Number(b.personnel_budget||0);
+    totals.operating += Number(b.operating_budget||0);
+    totals.capital   += Number(b.capital_budget||0);
+    totals.subsidy   += Number(b.subsidy_budget||0);
+    totals.other     += Number(b.other_budget||0);
+  });
+  const grand = Object.values(totals).reduce((a,v)=>a+v,0);
+  document.getElementById('cat-detail-grid').innerHTML = BUDGET_CATS.map(c=>{
+    const val = totals[c.id]||0;
+    const pct = grand > 0 ? Math.round(val/grand*100) : 0;
+    return `<div style="border:2px solid ${c.color};border-radius:10px;padding:14px">
+      <div style="font-weight:700;font-size:13px;color:var(--navy1);margin-bottom:6px">${c.name}</div>
+      <div style="font-size:12px;color:var(--sub);margin-bottom:8px">${c.desc}</div>
+      <div style="font-size:15px;font-weight:800;color:var(--navy1);margin-bottom:6px">${fmtM(val)}</div>
+      <div class="pb"><div class="pf" style="width:${pct}%;background:${c.color}"></div></div>
+      <div style="font-size:12px;margin-top:4px;color:var(--sub)">สัดส่วน ${pct}% ของงบทั้งหมด</div>
+      ${c.id==='operating'?`<div style="margin-top:8px;background:#f0fdf4;padding:8px;border-radius:6px;font-size:12px"><strong>🔑 รายจ่ายสำคัญ:</strong><br>• ค่าตอบแทน อกม. / คณะกรรมการ<br>• <strong>ค่าจ้างเหมาบริการ</strong> (รายเดือน/รายวัน/รายโครงการ)<br>• ค่าวัสดุสำนักงาน / เกษตร</div>`:''}
+    </div>`).join('');
+}
+
+function renderBudgetContracts() {
+  const byType = {
+    รายเดือน: API_CONTRACTS.filter(c=>c.contract_type==='รายเดือน'),
+    รายวัน:   API_CONTRACTS.filter(c=>c.contract_type==='รายวัน'),
+    รายโครงการ:API_CONTRACTS.filter(c=>c.contract_type==='รายโครงการ')
+  };
+  document.getElementById('contract-type-summary').innerHTML = [
+    {t:'รายเดือน',l:'รายเดือน',ic:'📅',col:'var(--navy3)'},
+    {t:'รายวัน',l:'รายวัน',ic:'🌅',col:'var(--green2)'},
+    {t:'รายโครงการ',l:'รายโครงการ',ic:'🎯',col:'var(--gold)'}
+  ].map(x=>`<div style="border-left:4px solid ${x.col};padding:12px;background:var(--bg2);border-radius:0 8px 8px 0">
+    <div style="font-size:20px">${x.ic}</div>
+    <div style="font-weight:700;font-size:14px">${byType[x.t].length} สัญญา</div>
+    <div style="font-size:12px;color:var(--sub)">${x.l}</div>
+    <div style="font-weight:700;font-size:13px;color:${x.col}">${byType[x.t].reduce((a,c)=>a+Number(c.total_amount||0),0).toLocaleString('th-TH')} บ.</div>
+  </div>`).join('');
+  renderContracts(); // reuse same renderer (now API-backed)
+  const el = document.getElementById('budget-contracts-tbody');
+  if (el) el.innerHTML = document.getElementById('contracts-tbody')?.innerHTML || '';
+}
+
+function renderBudgetTracking() {
+  const months = ['ต.ค.','พ.ย.','ธ.ค.','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.'];
+  const plan = [8,16,24,33,42,51,60,67];
+  const actual = [7,14,21,30,38,47,55,62];
+  document.getElementById('monthly-tracking-table').innerHTML = `
+    <table class="tbl"><thead><tr><th>เดือน</th><th>เป้า(%)</th><th>จริง(%)</th><th>สถานะ</th><th>Progress</th></tr></thead><tbody>
+    ${months.map((m,i)=>`<tr>
+      <td>${m} 2568</td>
+      <td style="text-align:center">${plan[i]}%</td>
+      <td style="text-align:center;font-weight:700;color:${actual[i]>=plan[i]-3?'var(--green1)':'var(--red)'}">${actual[i]}%</td>
+      <td>${actual[i]>=plan[i]-3?'<span class="dot-g"></span>ตามแผน':'<span class="dot-r"></span>ล่าช้า'}</td>
+      <td><div class="pb" style="width:160px"><div class="pf green" style="width:${actual[i]}%"></div></div></td>
+    </tr>`).join('')}</tbody></table>`;
+}
+
+function renderBudgetSources() {
+  document.getElementById('sources-detail').innerHTML = `
+    <div style="border-left:4px solid var(--navy3);padding:14px;background:var(--bg2);border-radius:0 8px 8px 0">
+      <div style="font-weight:700;font-size:13px;color:var(--navy1);margin-bottom:8px">💳 งบประมาณแผ่นดิน</div>
+      <div style="font-size:13px;line-height:2">• งบรายจ่ายประจำปี 2568<br>• รวม 9 หน่วยงาน กษ.<br>• ยอดรวม ~183 ล้านบาท<br>• อนุมัติโดย สำนักงบประมาณ</div>
+    </div>
+    <div style="border-left:4px solid var(--gold);padding:14px;background:var(--bg2);border-radius:0 8px 8px 0">
+      <div style="font-weight:700;font-size:13px;color:var(--navy1);margin-bottom:8px">🔗 งบบูรณาการ</div>
+      <div style="font-size:13px;line-height:2">• แผนงานบูรณาการ 4 แผน<br>• รวม ~62.5 ล้านบาท<br>• ครม. อนุมัติ / ผู้ว่าฯ ประสาน<br>• เบิกผ่านหน่วยงานเจ้าภาพ</div>
+    </div>
+    <div style="border-left:4px solid var(--green2);padding:14px;background:var(--bg2);border-radius:0 8px 8px 0">
+      <div style="font-weight:700;font-size:13px;color:var(--navy1);margin-bottom:8px">🏘️ งบ อปท.</div>
+      <div style="font-size:13px;line-height:2">• อบจ. + เทศบาล + อบต.<br>• อิสระจากงบแผ่นดิน<br>• ประมาณ ~120 ล้านบาท<br>• บริหารโดย อปท. เอง</div>
+    </div>
+    <div style="border-left:4px solid var(--purple);padding:14px;background:var(--bg2);border-radius:0 8px 8px 0">
+      <div style="font-weight:700;font-size:13px;color:var(--navy1);margin-bottom:8px">🔗 งบหน่วยงานอิสระ</div>
+      <div style="font-size:13px;line-height:2">• ธกส. — สินเชื่อเกษตรกร<br>• กฟภ. — ขยายระบบไฟฟ้า<br>• อบก. — คาร์บอนเครดิต<br>• บริหารอิสระ ประสานผ่าน MOU</div>
+    </div>`;
+}
+
+function renderBudgetLocal() {
+  const locals = [
+    {name:'อบจ.อุดรธานี',type:'อบจ.',total:580,agri:45,proj:3},
+    {name:'เทศบาลเมืองอุดรธานี',type:'เทศบาลเมือง',total:280,agri:18,proj:2},
+    {name:'เทศบาลตำบลร้องกวาง',type:'เทศบาลตำบล',total:85,agri:12,proj:1},
+    {name:'อบต.ทุ่งโฮ้ง',type:'อบต.',total:42,agri:8,proj:1},
+    {name:'อบต.สูงเม่น',type:'อบต.',total:38,agri:6,proj:1},
+  ];
+  document.getElementById('local-budget-tbody').innerHTML = locals.map(l=>`<tr>
+    <td>${l.name}</td>
+    <td><span class="level-chip lc-local">${l.type}</span></td>
+    <td style="text-align:right;font-weight:700">${l.total}ล.</td>
+    <td style="text-align:right">${l.agri}ล.</td>
+    <td style="text-align:center">${l.proj} โครงการ</td>
+  </tr>`).join('');
+}
+</script>
+
+<script>
+/* ── PROJECT RENDERERS ── */
+function _statusColor(s) {
+  return s==='เสร็จสิ้น'?'var(--green2)': s==='เสี่ยงล่าช้า'?'var(--red)':'var(--navy3)';
+}
+function _statusLabel(s) {
+  const m = {'อยู่ระหว่างดำเนินการ':'<span class="dot-g"></span>กำลังดำเนินการ','เสี่ยงล่าช้า':'<span class="dot-y"></span>เสี่ยงล่าช้า','เสร็จสิ้น':'<span class="dot-g"></span>เสร็จสิ้น'};
+  return m[s]||`<span class="dot-g"></span>${s||'—'}`;
+}
+
+function renderProjOverview() {
+  const projs = API_PROJECTS;
+  document.getElementById('proj-total').textContent   = projs.length || (DATA_LOADED?0:'…');
+  document.getElementById('proj-ontrack').textContent = projs.filter(p=>p.status==='อยู่ระหว่างดำเนินการ').length;
+  document.getElementById('proj-risk').textContent    = projs.filter(p=>p.status==='เสี่ยงล่าช้า').length;
+  document.getElementById('proj-done').textContent    = projs.filter(p=>p.status==='เสร็จสิ้น').length;
+  document.getElementById('proj-summary-table').innerHTML = projs.length === 0
+    ? `<div style="text-align:center;color:var(--sub);padding:20px">${DATA_LOADED?'ไม่มีข้อมูล':'⏳ กำลังโหลด...'}</div>`
+    : `<table class="tbl"><thead><tr><th>รหัส</th><th>โครงการ</th><th>หน่วยงาน</th><th>งบ(บ.)</th><th>KPI</th><th>ความก้าวหน้า</th></tr></thead>
+    <tbody>${projs.map(p=>{
+      const sc = _statusColor(p.status);
+      return `<tr>
+        <td style="font-size:12px;color:var(--sub)">${p.project_code||'—'}</td>
+        <td><strong>${p.project_name||'—'}</strong></td>
+        <td>${p.agency_name||'—'}</td>
+        <td style="text-align:right">${p.budget_total?(Number(p.budget_total)/1e6).toFixed(1)+'ล.':'—'}</td>
+        <td style="font-size:12px">${p.kpi_target||'—'}</td>
+        <td><div style="display:flex;align-items:center;gap:8px">
+          <div class="pb" style="width:100px"><div class="pf" style="width:${p.progress_pct||0}%;background:${sc}"></div></div>
+          <span style="font-size:12px;font-weight:700;color:${sc}">${p.progress_pct||0}%</span>
+        </div></td>
+      </tr>`;}).join('')}</tbody></table>`;
+}
+
+function renderProjList() {
+  const projs = API_PROJECTS;
+  document.getElementById('proj-list-tbody').innerHTML = projs.length === 0
+    ? `<tr><td colspan="7" style="text-align:center;color:var(--sub);padding:20px">${DATA_LOADED?'ไม่มีข้อมูล':'⏳ กำลังโหลด...'}</td></tr>`
+    : projs.map(p=>`<tr>
+    <td style="font-size:11px;color:var(--sub)">${p.project_code||'—'}</td>
+    <td>${p.project_name||'—'}</td><td>${p.agency_name||'—'}</td>
+    <td style="text-align:right">${p.budget_total?Number(p.budget_total).toLocaleString('th-TH'):'—'}</td>
+    <td style="font-size:12px">${p.kpi_target||'—'}</td>
+    <td><div class="pb" style="width:80px"><div class="pf navy" style="width:${p.progress_pct||0}%"></div></div> ${p.progress_pct||0}%</td>
+    <td>${_statusLabel(p.status)}</td>
+  </tr>`).join('');
+}
+
+function renderProjKPI() {
+  const projs = API_PROJECTS;
+  document.getElementById('kpi-dashboard-grid').innerHTML = projs.length === 0
+    ? `<div style="text-align:center;color:var(--sub);padding:20px">${DATA_LOADED?'ไม่มีข้อมูล':'⏳ กำลังโหลด...'}</div>`
+    : projs.map(p=>`
+    <div class="kpi-card">
+      <div style="font-size:11px;color:var(--sub);margin-bottom:4px">${p.project_code||'—'} — ${p.agency_name||'—'}</div>
+      <div style="font-size:13px;font-weight:700;color:var(--navy1);margin-bottom:8px">${p.project_name||'—'}</div>
+      <div style="font-size:12px;margin-bottom:8px">🎯 ${p.kpi_target||'—'}</div>
+      <div class="pb"><div class="pf ${p.status==='เสี่ยงล่าช้า'?'red':'green'}" style="width:${p.progress_pct||0}%"></div></div>
+      <div style="font-size:13px;font-weight:700;margin-top:6px">${p.progress_pct||0}%</div>
+    </div>`).join('');
+}
+
+function renderProjTimeline() {
+  const months = ['ต.ค.','พ.ย.','ธ.ค.','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.'];
+  const projs = API_PROJECTS;
+  document.getElementById('timeline-container').innerHTML = projs.length === 0
+    ? `<div style="text-align:center;color:var(--sub);padding:20px">${DATA_LOADED?'ไม่มีข้อมูล':'⏳ กำลังโหลด...'}</div>`
+    : `<table class="tbl" style="min-width:900px">
+      <thead><tr><th style="width:200px">โครงการ</th>${months.map(m=>`<th style="text-align:center;font-size:11px">${m}</th>`).join('')}</tr></thead>
+      <tbody>${projs.map(p=>`<tr>
+        <td style="font-size:12px">${p.project_name||'—'}</td>
+        ${months.map((_,i)=>{
+          const inRange = i>=1 && i<=9;
+          const done = i < Math.floor((p.progress_pct||0)/12);
+          return `<td style="text-align:center">${inRange?`<div style="background:${done?'var(--navy3)':'var(--bg2)'};height:18px;border-radius:3px"></div>`:''}</td>`;
+        }).join('')}
+      </tr>`).join('')}
+      </tbody>
+    </table>`;
+}
+
+function renderNational() {
+  document.getElementById('national-strat-content').innerHTML = `
+    <div style="font-size:13px;line-height:2.2">
+      <div style="font-weight:700;color:var(--navy1);margin-bottom:8px">ยุทธศาสตร์ชาติ 20 ปี (พ.ศ.2561–2580) — ประเด็นที่เกี่ยวข้องกับเกษตร จ.อุดรธานี</div>
+      ${[{n:'ด้านที่ 2 — การสร้างความสามารถในการแข่งขัน',d:'ยกระดับผลผลิตการเกษตร เกษตรมูลค่าสูง เกษตรอินทรีย์'},
+        {n:'ด้านที่ 3 — การพัฒนาและเสริมสร้างศักยภาพทรัพยากรมนุษย์',d:'พัฒนาเกษตรกร Smart Farmer'},
+        {n:'ด้านที่ 5 — การสร้างการเติบโตบนคุณภาพชีวิตที่เป็นมิตรกับสิ่งแวดล้อม',d:'เกษตรคาร์บอนต่ำ ลดการเผา'},
+      ].map(s=>`<div style="border-left:3px solid var(--navy3);padding:8px 12px;margin-bottom:8px;background:var(--bg2);border-radius:0 8px 8px 0">
+        <strong>${s.n}</strong><br><span style="color:var(--sub)">${s.d}</span>
+      </div>`).join('')}
+    </div>`;
+}
+
+function renderProvince() {
+  document.getElementById('province-plan-content').innerHTML = `
+    <div style="font-size:13px;line-height:2.2">
+      <div style="font-weight:700;color:var(--navy1);margin-bottom:8px">แผนพัฒนาจังหวัดอุดรธานี ปี 2566–2570 — ประเด็นยุทธศาสตร์ด้านเกษตร</div>
+      ${['เพิ่มมูลค่าสินค้าเกษตรและอาหารแปรรูป (ลำไย สัก ข้าว)',
+         'พัฒนาระบบชลประทานและน้ำเพื่อการเกษตร',
+         'ส่งเสริมเกษตรอินทรีย์และ GAP ครบทุกอำเภอ',
+         'พัฒนากลุ่มสหกรณ์และวิสาหกิจชุมชนให้เข้มแข็ง',
+         'ลดหนี้ครัวเรือนเกษตรกรโดยประสาน ธกส.'].map(s=>`<div style="border-left:3px solid var(--gold);padding:8px 12px;margin-bottom:8px;background:var(--bg2);border-radius:0 8px 8px 0">🎯 ${s}</div>`).join('')}
+    </div>`;
+}
+
+async function addProject() {
+  const name = prompt('ชื่อโครงการ:'); if (!name) return;
+  const agency = prompt('หน่วยงานรับผิดชอบ:'); if (!agency) return;
+  const budget = prompt('งบประมาณ (บาท):') || '0';
+  const kpi = prompt('KPI/เป้าหมาย:') || '';
+  try {
+    const r = await fetch(`${PHRAE_API}/projects`, {method:'POST',headers:HPOST,
+      body: JSON.stringify({project_name:name, agency_name:agency, budget_total:Number(budget), kpi_target:kpi, status:'อยู่ระหว่างดำเนินการ', progress_pct:0})});
+    const d = await r.json();
+    if (d.ok) { alert('✅ บันทึกสำเร็จ รหัส: '+d.project_code); await loadAllData(); renderPage(STATE.curPage); }
+    else alert('❌ เกิดข้อผิดพลาด: '+d.error);
+  } catch(e) { alert('❌ ไม่สามารถเชื่อมต่อ API'); }
+}
+</script>
+
+<script>
+/* ── INTEGRATION RENDERERS ── */
+function renderIntegOverview() {
+  const plans = API_INTEGRATION;
+  // Update KPI cards
+  const kpiCards = document.querySelectorAll('#page-integ-overview .kpi-v');
+  if (kpiCards[0]) kpiCards[0].textContent = plans.length || 4;
+  document.getElementById('integ-overview-table').innerHTML = plans.length === 0
+    ? `<div style="text-align:center;color:var(--sub);padding:20px">${DATA_LOADED?'ไม่มีข้อมูล':'⏳ กำลังโหลด...'}</div>`
+    : `<table class="tbl"><thead><tr><th>รหัส</th><th>แผนบูรณาการ</th><th>หน่วยงานเจ้าภาพ</th><th>หน่วยงานร่วม</th><th>งบบูรณาการ</th><th>ความก้าวหน้า</th></tr></thead>
+    <tbody>${plans.map(p=>{
+      const partners = (p.partner_agencies||'').split(',').filter(Boolean).join(' · ');
+      const pct = Number(p.progress_pct||0);
+      return `<tr>
+        <td style="font-size:11px;color:var(--sub)">${p.plan_id||'—'}</td>
+        <td><strong>${p.plan_name||'—'}</strong></td>
+        <td>${p.host_agency||'—'}</td>
+        <td style="font-size:12px">${partners||'—'}</td>
+        <td style="text-align:right;font-weight:700">${p.budget?(Number(p.budget)/1e6).toFixed(1)+'ล.':'—'}</td>
+        <td><div style="display:flex;align-items:center;gap:6px">
+          <div class="pb" style="width:80px"><div class="pf gold" style="width:${pct}%"></div></div>
+          <span style="font-size:12px;font-weight:700">${pct}%</span>
+        </div></td>
+      </tr>`;}).join('')}</tbody></table>`;
+}
+
+function renderIntegPlans() {
+  const plans = API_INTEGRATION;
+  document.getElementById('integ-plans-list').innerHTML = plans.length === 0
+    ? `<div style="text-align:center;color:var(--sub);padding:20px">${DATA_LOADED?'ไม่มีข้อมูล':'⏳ กำลังโหลด...'}</div>`
+    : plans.map(p=>{
+      const partners = (p.partner_agencies||'').split(',').filter(Boolean);
+      const pct = Number(p.progress_pct||0);
+      return `<div style="border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:8px">
+        <div>
+          <div style="font-size:11px;color:var(--sub)">${p.plan_id||'—'}</div>
+          <div style="font-weight:700;font-size:14px;color:var(--navy1)">${p.plan_name||'—'}</div>
+          <div style="font-size:12px;color:var(--sub);margin-top:2px">เจ้าภาพ: ${p.host_agency||'—'}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-size:18px;font-weight:800;color:var(--gold)">${p.budget?(Number(p.budget)/1e6).toFixed(1)+'ล.':'—'}</div>
+          <div style="font-size:11px;color:var(--sub)">งบบูรณาการ</div>
+        </div>
+      </div>
+      <div style="font-size:12px;margin-bottom:8px">🏛️ หน่วยงานร่วม: ${partners.length?partners.map(a=>`<span style="background:var(--bg2);padding:2px 8px;border-radius:10px;margin:2px;display:inline-block">${a.trim()}</span>`).join(''):'—'}</div>
+      <div style="font-size:12px;margin-bottom:8px">🎯 KPI: <strong>${p.kpi||'—'}</strong></div>
+      <div class="pb"><div class="pf gold" style="width:${pct}%"></div></div>
+      <div style="font-size:12px;margin-top:4px;color:var(--sub)">ความก้าวหน้า ${pct}%</div>
+    </div>`;}).join('');
+}
+
+const DEPT_LOGOS = {
+  'กระทรวงเกษตรและสหกรณ์': 'https://upload.wikimedia.org/wikipedia/commons/d/d0/Emblem_of_the_Ministry_of_Agriculture_and_Cooperatives.svg',
+  'กรมส่งเสริมการเกษตร': 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Emblem_of_the_Department_of_Agricultural_Extension.svg',
+  'กรมส่งเสริมสหกรณ์': '',
+  'กรมปศุสัตว์': '',
+  'กรมประมง': 'https://upload.wikimedia.org/wikipedia/commons/b/b5/Seal_of_Department_of_Fisheries_Thailand.png',
+  'กรมชลประทาน': 'https://upload.wikimedia.org/wikipedia/commons/c/ce/Emblem_of_the_Royal_Irrigation_Department.svg',
+  'กรมพัฒนาที่ดิน': 'https://upload.wikimedia.org/wikipedia/commons/9/9a/Emblem_of_the_Land_Development_Department.svg',
+  'กรมวิชาการเกษตร': 'https://upload.wikimedia.org/wikipedia/th/2/2a/%E0%B8%95%E0%B8%A3%E0%B8%B2%E0%B8%81%E0%B8%A3%E0%B8%A1%E0%B8%A7%E0%B8%B4%E0%B8%8A%E0%B8%B2%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%80%E0%B8%81%E0%B8%A9%E0%B8%95%E0%B8%A3.svg',
+  'สปก.': 'https://upload.wikimedia.org/wikipedia/commons/9/92/Emblem_of_Agricultural_Land_Reform_Office.png',
+  'กรมตรวจบัญชีสหกรณ์': '',
+  'เกษตรและสหกรณ์จังหวัดอุดรธานี': 'https://upload.wikimedia.org/wikipedia/commons/d/d0/Emblem_of_the_Ministry_of_Agriculture_and_Cooperatives.svg',
+  'เกษตรจังหวัดอุดรธานี': 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Emblem_of_the_Department_of_Agricultural_Extension.svg',
+  'ปศุสัตว์จังหวัดอุดรธานี': '',
+  'ประมงจังหวัดอุดรธานี': 'https://upload.wikimedia.org/wikipedia/commons/b/b5/Seal_of_Department_of_Fisheries_Thailand.png',
+  'ชลประทาน จ.อุดรธานี': 'https://upload.wikimedia.org/wikipedia/commons/c/ce/Emblem_of_the_Royal_Irrigation_Department.svg',
+  'พัฒนาที่ดิน อุดรธานี': 'https://upload.wikimedia.org/wikipedia/commons/9/9a/Emblem_of_the_Land_Development_Department.svg',
+  'วิชาการเกษตร อุดรธานี': 'https://upload.wikimedia.org/wikipedia/th/2/2a/%E0%B8%95%E0%B8%A3%E0%B8%B2%E0%B8%81%E0%B8%A3%E0%B8%A1%E0%B8%A7%E0%B8%B4%E0%B8%8A%E0%B8%B2%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%80%E0%B8%81%E0%B8%A9%E0%B8%95%E0%B8%A3.svg',
+  'สปก. อุดรธานี': 'https://upload.wikimedia.org/wikipedia/commons/9/92/Emblem_of_Agricultural_Land_Reform_Office.png',
+};
+function deptImg(n){const u=DEPT_LOGOS[n];return u?'<img src="'+u+'" style="width:18px;height:18px;object-fit:contain;vertical-align:middle;margin-right:5px;border-radius:50%;background:#f8f9fa;" onerror="this.style.display=\'none\'">':'';}
+
+function renderAgenciesMap() {
+  document.getElementById('agencies-map-container').innerHTML = `
+    <div style="font-size:13px;min-width:800px;padding:10px">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px">
+        <div>
+          <div style="background:var(--navy1);color:#fff;padding:8px 12px;border-radius:8px;text-align:center;font-weight:700;margin-bottom:8px">🏢 ส่วนกลาง</div>
+          ${['กระทรวงเกษตรและสหกรณ์','กรมส่งเสริมการเกษตร','กรมส่งเสริมสหกรณ์','กรมปศุสัตว์','กรมประมง','กรมชลประทาน','กรมพัฒนาที่ดิน','กรมวิชาการเกษตร','สปก.','กรมตรวจบัญชีสหกรณ์'].map(n=>`<div style="padding:6px 10px;background:var(--bg2);border-radius:6px;margin-bottom:4px;font-size:12px">${deptImg(n)}${n}</div>`).join('')}
+        </div>
+        <div>
+          <div style="background:var(--green1);color:#fff;padding:8px 12px;border-radius:8px;text-align:center;font-weight:700;margin-bottom:8px">🗺️ ส่วนภูมิภาค</div>
+          ${['ผู้ว่าราชการจังหวัดอุดรธานี','เกษตรและสหกรณ์จังหวัดอุดรธานี','เกษตรจังหวัดอุดรธานี','สหกรณ์จังหวัดอุดรธานี','ปศุสัตว์จังหวัดอุดรธานี','ประมงจังหวัดอุดรธานี','ชลประทาน จ.อุดรธานี','พัฒนาที่ดิน อุดรธานี','วิชาการเกษตร อุดรธานี','สปก. อุดรธานี','ตรวจบัญชีสหกรณ์ อุดรธานี','นายอำเภอ 8 อำเภอ'].map(n=>`<div style="padding:6px 10px;background:var(--bg2);border-radius:6px;margin-bottom:4px;font-size:12px">${deptImg(n)}${n}</div>`).join('')}
+        </div>
+        <div>
+          <div style="background:#854d0e;color:#fff;padding:8px 12px;border-radius:8px;text-align:center;font-weight:700;margin-bottom:8px">🏘️ ส่วนท้องถิ่น</div>
+          ${['อบจ.อุดรธานี','เทศบาลเมืองอุดรธานี','เทศบาลตำบล 10 แห่ง','อบต. 65 แห่ง','กำนัน/ผู้ใหญ่บ้าน'].map(n=>`<div style="padding:6px 10px;background:var(--bg2);border-radius:6px;margin-bottom:4px;font-size:12px">${deptImg(n)}${n}</div>`).join('')}
+        </div>
+        <div>
+          <div style="background:var(--purple);color:#fff;padding:8px 12px;border-radius:8px;text-align:center;font-weight:700;margin-bottom:8px">🔗 หน่วยงานอิสระ</div>
+          ${['ธกส. (กระทรวงการคลัง)','พัฒนาชุมชน (มท.)','กฟภ. อุดรธานี','อบก. (องค์การอิสระ)','อสม. อุดรธานี','ธนาคารเพื่อการส่งออก','บสก.'].map(n=>`<div style="padding:6px 10px;background:var(--bg2);border-radius:6px;margin-bottom:4px;font-size:12px">${deptImg(n)}${n}</div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderIntegBudget() {
+  const plans = API_INTEGRATION;
+  document.getElementById('integ-budget-table').innerHTML = plans.length === 0
+    ? `<div style="text-align:center;color:var(--sub);padding:20px">${DATA_LOADED?'ไม่มีข้อมูล':'⏳ กำลังโหลด...'}</div>`
+    : `<table class="tbl"><thead><tr><th>แผนบูรณาการ</th><th>เจ้าภาพ</th><th>งบรวม</th><th>เบิกแล้ว</th><th>คงเหลือ</th><th>%</th></tr></thead>
+    <tbody>${plans.map(p=>{
+      const budget = Number(p.budget||0);
+      const pct = Number(p.progress_pct||0);
+      const spent = Math.round(budget*pct/100);
+      const left = budget-spent;
+      return `<tr>
+        <td>${p.plan_name||'—'}</td><td>${p.host_agency||'—'}</td>
+        <td style="text-align:right;font-weight:700">${budget.toLocaleString('th-TH')}</td>
+        <td style="text-align:right;color:var(--green1)">${spent.toLocaleString('th-TH')}</td>
+        <td style="text-align:right;color:var(--gold)">${left.toLocaleString('th-TH')}</td>
+        <td><div class="pb" style="width:80px"><div class="pf gold" style="width:${pct}%"></div></div> ${pct}%</td>
+      </tr>`;}).join('')}</tbody></table>`;
+}
+
+function renderCentral() {
+  document.getElementById('central-content').innerHTML = `<div style="font-size:13px;line-height:2.2">
+    <strong>บทบาทส่วนกลางต่อจังหวัดอุดรธานี:</strong><br>
+    กระทรวงเกษตรและสหกรณ์กำหนดนโยบายและจัดสรรงบประมาณผ่านอธิบดีแต่ละกรม →
+    หน่วยงานสาขาในจังหวัด รับนโยบายและงบมาปฏิบัติ<br><br>
+    <strong>ช่องทางการสื่อสาร:</strong> หนังสือราชการ / ระบบ E-Document / ประชุมผ่าน ZOOM<br>
+    <strong>การรายงาน:</strong> รายเดือน ผ่าน GINFO / ระบบติดตามผลกรม</div>`;
+}
+
+function renderRegion() {
+  document.getElementById('region-content').innerHTML = `<div style="font-size:13px;line-height:2.2">
+    <strong>ราชการส่วนภูมิภาคใน จ.อุดรธานี:</strong><br>
+    ผู้ว่าฯ เป็น CEO จังหวัด ประสาน <em>ทุก</em> ส่วนราชการในจังหวัด แม้ต่างกระทรวง<br>
+    เกษตรและสหกรณ์จว. = ผู้ประสานงานเกษตรทุกหน่วยให้ผู้ว่าฯ<br><br>
+    <strong>กลไกการทำงาน:</strong><br>
+    • คณะกรรมการเกษตรและสหกรณ์จังหวัด (กกจ.) — ประชุมทุกเดือน<br>
+    • แผนพัฒนาการเกษตรจังหวัด — ปีละครั้ง<br>
+    • ประชุมผู้ว่าฯ + หัวหน้าส่วน — ทุกเดือน</div>`;
+}
+
+function renderLocalGov() {
+  document.getElementById('local-content').innerHTML = `<div style="font-size:13px;line-height:2.2">
+    <strong>การประสาน อปท. (ไม่มีสายบังคับบัญชาตรง):</strong><br>
+    ราชการส่วนภูมิภาคไม่มีอำนาจสั่งการ อปท. โดยตรง<br>
+    ผู้ว่าฯ มีอำนาจ "กำกับดูแล" แต่ไม่ใช่ผู้บังคับบัญชา<br><br>
+    <strong>กลไกที่ใช้ได้จริง:</strong><br>
+    • แผนบูรณาการ — ขอให้ อปท. ร่วมสมทบงบประมาณ<br>
+    • MOU — ตกลงร่วมโครงการ<br>
+    • คณะกรรมการร่วม — ผู้ว่าฯ เป็นประธาน<br>
+    • อบจ. มีงบประมาณใหญ่ที่สุด สามารถร่วมโครงการได้</div>`;
+}
+
+function renderIndep() {
+  document.getElementById('indep-content').innerHTML = `
+    <table class="tbl"><thead><tr><th>หน่วยงาน</th><th>สังกัด</th><th>บทบาทในจ.อุดรธานี</th><th>กลไกประสาน</th></tr></thead>
+    <tbody>
+      <tr><td><strong>ธกส. อุดรธานี</strong></td><td><span class="level-chip lc-indep">กระทรวงการคลัง</span></td><td>สินเชื่อเกษตรกร / แก้หนี้</td><td>แผนบูรณาการ / MOU</td></tr>
+      <tr><td><strong>พัฒนาชุมชน อุดรธานี</strong></td><td><span class="level-chip lc-indep">กระทรวงมหาดไทย</span></td><td>กลุ่มออมทรัพย์ / OTOP</td><td>คณะกรรมการจังหวัด</td></tr>
+      <tr><td><strong>กฟภ. อุดรธานี</strong></td><td><span class="level-chip lc-indep">รัฐวิสาหกิจ</span></td><td>ไฟฟ้าแปลงเกษตร</td><td>MOU / งบบูรณาการ</td></tr>
+      <tr><td><strong>อบก.</strong></td><td><span class="level-chip lc-indep">องค์การมหาชน</span></td><td>คาร์บอนเครดิตเกษตร</td><td>โครงการร่วม</td></tr>
+    </tbody></table>`;
+}
+
+async function addContract() {
+  const cname = prompt('ชื่อผู้รับจ้าง / บริษัท:'); if (!cname) return;
+  const agency = prompt('หน่วยงานผู้ว่าจ้าง:'); if (!agency) return;
+  const work = prompt('ลักษณะงาน:') || '';
+  const total = prompt('วงเงินสัญญา (บาท):') || '0';
+  const ctype = prompt('ประเภท: รายเดือน / รายวัน / รายโครงการ') || 'รายโครงการ';
+  try {
+    const r = await fetch(`${PHRAE_API}/contracts`, {method:'POST',headers:HPOST,
+      body: JSON.stringify({contractor_name:cname, agency_name:agency, work_description:work, total_amount:Number(total), contract_type:ctype, fiscal_year:'2568', status:'มีผลบังคับ'})});
+    const d = await r.json();
+    if (d.ok) { alert('✅ บันทึกสำเร็จ วิธีจัดซื้อ: '+d.procurement_method); await loadAllData(); renderPage(STATE.curPage); }
+    else alert('❌ เกิดข้อผิดพลาด: '+d.error);
+  } catch(e) { alert('❌ ไม่สามารถเชื่อมต่อ API'); }
+}
+function showEGPInfo() { alert('ระบบ e-GP (Government Procurement)\nวงเงิน ≤100,000: เฉพาะเจาะจง\n100,001-500,000: สืบราคา\n>500,000: ประกวดราคา\n\nทุกสัญญาต้องบันทึกเลขที่ e-GP'); }
+async function addIntegPlan() {
+  const pname = prompt('ชื่อแผนบูรณาการ:'); if (!pname) return;
+  const host = prompt('หน่วยงานเจ้าภาพ:'); if (!host) return;
+  const partners = prompt('หน่วยงานร่วม (คั่นด้วย ,):') || '';
+  const budget = prompt('งบบูรณาการ (บาท):') || '0';
+  const kpi = prompt('KPI หลัก:') || '';
+  try {
+    const r = await fetch(`${PHRAE_API}/integration`, {method:'POST',headers:HPOST,
+      body: JSON.stringify({plan_name:pname, host_agency:host, partner_agencies:partners, budget:Number(budget), kpi:kpi, progress_pct:0, status:'กำลังดำเนินการ', fiscal_year:'2568'})});
+    const d = await r.json();
+    if (d.ok) { alert('✅ บันทึกแผนบูรณาการสำเร็จ'); await loadAllData(); renderPage(STATE.curPage); }
+    else alert('❌ เกิดข้อผิดพลาด: '+d.error);
+  } catch(e) { alert('❌ ไม่สามารถเชื่อมต่อ API'); }
+}
+
+/* ── INIT ── */
+window.addEventListener('DOMContentLoaded', ()=>{
+  document.getElementById('login').style.display='flex';
+  document.getElementById('app').style.display='none';
+});
+</script>
+<script src="/access-bar.js"></script>
+<script src="/delegation.js"></script>
+</body>
+</html>

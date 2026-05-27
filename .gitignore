@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Environment secrets (ไม่ commit เด็ดขาด)
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# macOS
+.DS_Store
+.AppleDouble
+
+# Fly.io internal
+.fly/
+
+# Temp
+tmp/
+*.tmp

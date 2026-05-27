@@ -1,0 +1,225 @@
+<!DOCTYPE html><html lang="th"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>แพลตฟอร์ม รมช.กษ.</title>
+<script>
+  // Role bootstrap — read by /moac-app.js
+  window.MOAC_ROLE_HINTS = window.MOAC_ROLE_HINTS || {};
+  window.MOAC_ROLE_HINTS.bootedAt = Date.now();
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--p1:#0b3d2e;--p2:#1b4332;--p3:#2d6a4f;--p4:#b7e4c7;--p5:#e6f4ea;--gold:#c9a227;--gray:#f6f8f6;--border:#cfe3d4;--sub:#56707a}
+body{font-family:'Sarabun',sans-serif;height:100vh;overflow:hidden;display:flex;flex-direction:column}
+#login{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#062a20 0%,var(--p3) 55%,#7bc0a0 100%)}
+.lc{background:#fff;border-radius:20px;padding:36px;width:min(500px,96vw);box-shadow:0 20px 60px rgba(0,0,0,.3);text-align:center;border-top:5px solid var(--gold)}
+.lb{width:72px;height:72px;background:linear-gradient(135deg,var(--p1),var(--p3));border-radius:14px;display:inline-flex;align-items:center;justify-content:center;font-size:30px;color:#fff;margin-bottom:10px;border:2px solid var(--gold)}
+.lc h1{font-size:19px;font-weight:700;color:var(--p1)}
+.lc p{font-size:12px;color:var(--sub);margin-top:3px}
+.role-display{margin:18px 0;padding:16px;background:var(--p5);border-radius:14px;border:2px solid var(--p4)}
+.rd-e{font-size:36px;margin-bottom:6px}.rd-n{font-size:16px;font-weight:700;color:var(--p1)}
+.rd-s{font-size:11px;color:var(--sub);margin-top:3px}
+.lb-btn{width:100%;padding:13px;background:linear-gradient(135deg,var(--p1),var(--p3));color:#fff;border:2px solid var(--gold);border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Sarabun',sans-serif}
+#app{display:none;flex-direction:column;height:100vh}
+.topbar{background:linear-gradient(90deg,var(--p1),var(--p3));color:#fff;padding:0 18px;height:54px;display:flex;align-items:center;gap:12px;flex-shrink:0;border-bottom:2px solid var(--gold)}
+.tb-b{width:36px;height:36px;background:rgba(255,255,255,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px}
+.tb-t{font-size:14px;font-weight:700;flex:1}
+.tb-st{display:flex;gap:8px;font-size:11px}
+.tb-s{background:rgba(255,255,255,.18);padding:3px 9px;border-radius:11px;border:1px solid rgba(201,162,39,.4)}
+.tb-lo{background:rgba(255,255,255,.15);border:none;color:#fff;padding:5px 12px;border-radius:7px;cursor:pointer;font-size:11px;font-family:'Sarabun',sans-serif}
+.main{display:flex;flex:1;overflow:hidden}
+.sidebar{width:210px;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sb-sec{padding:8px 14px;font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;margin-top:6px}
+.nav-item{padding:10px 16px;cursor:pointer;border-left:3px solid transparent;font-size:12px;color:var(--sub);transition:.15s}
+.nav-item:hover,.nav-item.active{background:var(--p5);color:var(--p1)}
+.nav-item.active{border-left-color:var(--gold);font-weight:600}
+.content{flex:1;overflow-y:auto;padding:18px;background:var(--gray)}
+.tab-pane{display:none}.tab-pane.active{display:block}
+.pt{font-size:19px;font-weight:700;color:var(--p1);margin-bottom:4px}.ps{font-size:12px;color:var(--sub);margin-bottom:14px}
+.kr{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.kpi{background:#fff;border-radius:10px;padding:13px;border-top:3px solid var(--gold);text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.kv{font-size:20px;font-weight:700;color:var(--p1)}.kl{font-size:11px;color:var(--sub);margin-top:1px}
+.card{background:#fff;border-radius:10px;padding:15px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.ct{font-size:14px;font-weight:700;color:var(--p1);margin-bottom:9px;padding-bottom:7px;border-bottom:2px solid var(--gold)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:var(--p1);color:#fff;padding:8px 9px;text-align:left}
+td{padding:7px 9px;border-bottom:1px solid var(--border)}tr:hover td{background:var(--p5)}
+.b{display:inline-block;padding:2px 7px;border-radius:9px;font-size:11px;font-weight:600}
+.bg{background:#dcfce7;color:#166534}.by{background:#fef9c3;color:#854d0e}
+.bb{background:#dbeafe;color:#1e40af}.br{background:#fee2e2;color:#991b1b}.bgo{background:#fff8db;color:#8a6d1f}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.alert-box{background:#fff7ed;border:1px solid #fed7aa;border-left:4px solid #f97316;border-radius:8px;padding:11px 14px;margin-bottom:9px}
+.alert-t{font-size:13px;font-weight:700;color:#c2410c}.alert-s{font-size:11px;color:#9a3412;margin-top:2px}
+.policy-card{background:#fff;border-radius:10px;padding:13px;margin-bottom:9px;border-left:4px solid var(--gold);box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.pct{font-size:13px;font-weight:700;color:var(--p1)}.pcs{font-size:11px;color:var(--sub);margin-top:3px}
+.progress{background:#e6f4ea;border-radius:8px;height:7px;margin-top:8px}
+.pb{height:7px;border-radius:8px;background:linear-gradient(90deg,var(--p1),var(--gold))}
+</style></head><body data-role="moac-dep-minister" data-level="dep-minister">
+<div id="login"><div class="lc">
+  <div><div class="lb">🤝</div>
+  <h1>รัฐมนตรีช่วยว่าการ กษ.</h1><p>Deputy Minister of Agriculture and Cooperatives</p></div>
+  <div class="role-display">
+    <div class="rd-e">🤝</div>
+    <div class="rd-n">รมช.กษ. (คนที่ 1) — นายวัชระพล ขาวขำ</div>
+    <div class="rd-s">กำกับ 6 หน่วยงาน: กรมประมง · กรมหม่อนไหม · ส.ป.ก. · อตก. · อสค. · สวก.<br>รับนโยบาย รมว. · 52,000M งบในกำกับ</div>
+  </div>
+  <button class="lb-btn" onclick="doLogin()">🔐 เข้าสู่ระบบ รมช.</button>
+  <div style="margin-top:12px;font-size:11px;color:var(--sub)">
+    <a href="/moac-minister.html" style="color:var(--p1)">← รมว.</a> &nbsp;|&nbsp;
+    <a href="/moac-hub.html" style="color:var(--p1)">Hub กษ.</a>
+  </div>
+</div></div>
+<div id="app">
+<div class="topbar">
+  <div class="tb-b">🤝</div>
+  <div class="tb-t">รัฐมนตรีช่วยว่าการ กษ.</div>
+  <div class="tb-st">
+    <span class="tb-s">💰 52,000M ในกำกับ</span>
+    <span class="tb-s">🏛️ 6 กรม</span>
+    <span class="tb-s">🌾 3.2M เกษตรกร</span>
+  </div>
+  <button class="tb-lo" onclick="doLogout()">ออกระบบ</button>
+</div>
+<div class="main">
+<div class="sidebar">
+  <div class="sb-sec">ภาพรวมงานในกำกับ</div>
+  <div class="nav-item active" onclick="show(0,this)">🗺️ สถานะกรมในกำกับ</div>
+  <div class="nav-item" onclick="show(1,this)">⚠️ วาระเร่งด่วน</div>
+  <div class="sb-sec">นโยบาย</div>
+  <div class="nav-item" onclick="show(2,this)">📋 นโยบายในกำกับ</div>
+  <div class="nav-item" onclick="show(3,this)">💰 งบประมาณในกำกับ</div>
+  <div style="flex:1"></div>
+  <div style="padding:10px 14px;font-size:11px;color:var(--sub);border-top:1px solid var(--border)">
+    <a href="/moac-minister.html" style="color:var(--p1);text-decoration:none">← รมว.</a> ·
+    <a href="/moac-hub.html" style="color:var(--p1);text-decoration:none">Hub</a>
+  </div>
+</div>
+<div class="content">
+
+<div class="tab-pane active" id="t0">
+<div class="pt">🗺️ สถานะกรมในกำกับ — รมช.กษ.</div>
+<div class="ps">กำกับ 6 กรม ตามคำสั่งมอบหมายของ รมว. · งบรวม 52,000M · บุคลากร 13,800 คน</div>
+<div class="kr">
+  <div class="kpi"><div class="kv">52,000M</div><div class="kl">งบในกำกับ</div></div>
+  <div class="kpi"><div class="kv">6</div><div class="kl">กรมในกำกับ</div></div>
+  <div class="kpi"><div class="kv">13,800</div><div class="kl">บุคลากร</div></div>
+  <div class="kpi"><div class="kv">76%</div><div class="kl">%เบิกจ่าย</div></div>
+</div>
+<div class="card"><div class="ct">📊 กรมในกำกับ (สายงาน: พืช + ปศุสัตว์)</div>
+<table>
+<tr><th>กรม</th><th>หัวหน้า</th><th>งบ (M)</th><th>คน</th><th>KPI หลัก</th><th>%</th><th>สถานะ</th></tr>
+<tr><td>DOAE / กสก.</td><td>อธิบดี</td><td>22,400</td><td>8,200</td><td>Smart Farmer 220K</td><td>88%</td><td><span class="b bg">ดี</span></td></tr>
+<tr><td>DLD / ปศ.</td><td>อธิบดี</td><td>8,200</td><td>4,800</td><td>ASF Control + e-NID</td><td>75%</td><td><span class="b by">ติดตาม</span></td></tr>
+<tr><td>DOA / กวก.</td><td>อธิบดี</td><td>4,800</td><td>3,200</td><td>GAP 165K ฟาร์ม</td><td>92%</td><td><span class="b bg">ดี</span></td></tr>
+<tr><td>RD / กข.</td><td>อธิบดี</td><td>6,200</td><td>2,100</td><td>นาแปลงใหญ่ GAP</td><td>78%</td><td><span class="b by">ติดตาม</span></td></tr>
+<tr><td>QSDS / มม.</td><td>อธิบดี</td><td>680</td><td>420</td><td>หม่อนไหม 24 ศูนย์</td><td>90%</td><td><span class="b bg">ดี</span></td></tr>
+<tr><td>RAOT / กยท.</td><td>ผู้ว่าการ</td><td>5,800</td><td>1,900</td><td>ราคายาง ≥65 บ./กก.</td><td>95%</td><td><span class="b by">ติดตาม</span></td></tr>
+<tr style="font-weight:700;background:var(--p5)"><td>รวม</td><td>—</td><td>48,080</td><td>20,620</td><td>—</td><td>86%</td><td>—</td></tr>
+</table></div>
+</div>
+
+<div class="tab-pane" id="t1">
+<div class="pt">⚠️ วาระเร่งด่วนในกำกับ</div>
+<div class="alert-box">
+  <div class="alert-t">🔴 ราคายางต่ำกว่าเป้า · 1.5M ครัวเรือนกระทบ</div>
+  <div class="alert-s">62 บ./กก. ต่ำกว่า 65 · กยท. เสนอ 3,500M แทรกแซง · ขอ รมว. อนุมัติ</div>
+</div>
+<div class="alert-box">
+  <div class="alert-t">🟠 ASF ระบาด 4 จังหวัด · สุกร 12,400 ตัว</div>
+  <div class="alert-s">ปศ. ขอสั่งทำลาย + ชดเชย 800M · พื้นที่: ราชบุรี/นครปฐม/ฉะเชิงเทรา/ปราจีนบุรี</div>
+</div>
+<div class="alert-box">
+  <div class="alert-t">🟡 ข้าวเปลือกตกราคาในภาคอีสาน</div>
+  <div class="alert-s">ข้าวเปลือกหอมมะลิตกจาก 13.5 → 11.8 บ./กก. · กข. ขอมาตรการเสริม</div>
+</div>
+<div class="card"><div class="ct">📋 วาระที่จะเสนอ รมว.</div>
+<table><tr><th>วาระ</th><th>กรม</th><th>กำหนด</th><th>ระดับ</th></tr>
+<tr><td>แผนแทรกแซงราคายาง 3,500M</td><td>กยท.</td><td>30 พ.ค.</td><td><span class="b br">รมช. รับรอง → รมว. อนุมัติ</span></td></tr>
+<tr><td>ชดเชย ASF 800M</td><td>ปศ.</td><td>10 มิ.ย.</td><td><span class="b br">รมช. รับรอง</span></td></tr>
+<tr><td>กรอบ Smart Farmer 2570</td><td>กสก.</td><td>20 มิ.ย.</td><td><span class="b by">รมช. กลั่นกรอง</span></td></tr>
+</table></div>
+</div>
+
+<div class="tab-pane" id="t2">
+<div class="pt">📋 นโยบายในกำกับ — รมช.</div>
+<div class="policy-card"><div class="pct">1️⃣ Smart Farmer / Young Smart Farmer</div>
+<div class="pcs">กสก. Lead · เป้า 220K Smart + 18.5K YSF · ปี 2570 250K</div>
+<div class="progress"><div class="pb" style="width:78%"></div></div>
+<div style="font-size:11px;color:var(--sub);margin-top:4px">78% · ตามเป้า</div></div>
+<div class="policy-card"><div class="pct">2️⃣ ลดต้นทุนเพิ่มผลผลิต</div>
+<div class="pcs">DOAE Lead · ลด 10-20% · เป้า 2M เกษตรกร · ปัจจุบัน 1.16M</div>
+<div class="progress"><div class="pb" style="width:58%"></div></div>
+<div style="font-size:11px;color:var(--sub);margin-top:4px">58%</div></div>
+<div class="policy-card"><div class="pct">3️⃣ พลิกโฉมข้าวไทย (Rice Transformation)</div>
+<div class="pcs">RD Lead · นาแปลงใหญ่ GAP 5M ไร่ · ปัจจุบัน 2.4M ไร่</div>
+<div class="progress"><div class="pb" style="width:48%"></div></div>
+<div style="font-size:11px;color:var(--sub);margin-top:4px">48%</div></div>
+<div class="policy-card"><div class="pct">4️⃣ ราคายางมั่นคง</div>
+<div class="pcs">กยท. Lead · เป้า ≥65 บ./กก. · ปัจจุบัน 62 · 1.5M ครัวเรือน</div>
+<div class="progress"><div class="pb" style="width:95%"></div></div>
+<div style="font-size:11px;color:var(--sub);margin-top:4px">95% · ใกล้เป้า</div></div>
+<div class="policy-card"><div class="pct">5️⃣ GAP / Organic ส่งออก</div>
+<div class="pcs">DOA + ACFS · GAP 165K · Organic 850K ไร่ · เป้า 1.5M</div>
+<div class="progress"><div class="pb" style="width:57%"></div></div>
+<div style="font-size:11px;color:var(--sub);margin-top:4px">57%</div></div>
+</div>
+
+<div class="tab-pane" id="t3">
+<div class="pt">💰 งบประมาณในกำกับ — 52,000M</div>
+<div class="kr">
+  <div class="kpi"><div class="kv">52,000M</div><div class="kl">งบในกำกับ</div></div>
+  <div class="kpi"><div class="kv">39,520M</div><div class="kl">เบิกจ่ายแล้ว</div></div>
+  <div class="kpi"><div class="kv">76%</div><div class="kl">%เบิกจ่าย</div></div>
+  <div class="kpi"><div class="kv">12,480M</div><div class="kl">คงเหลือ</div></div>
+</div>
+<div class="card"><div class="ct">📊 รายกรม</div>
+<table><tr><th>กรม</th><th>งบ (M)</th><th>เบิก (M)</th><th>%</th><th>สถานะ</th></tr>
+<tr><td>DOAE</td><td>22,400</td><td>17,920</td><td>80%</td><td><span class="b bg">ดี</span></td></tr>
+<tr><td>DLD</td><td>8,200</td><td>6,150</td><td>75%</td><td><span class="b by">ติดตาม</span></td></tr>
+<tr><td>RD</td><td>6,200</td><td>4,836</td><td>78%</td><td><span class="b by">ติดตาม</span></td></tr>
+<tr><td>RAOT</td><td>5,800</td><td>5,510</td><td>95%</td><td><span class="b bg">ดีมาก</span></td></tr>
+<tr><td>DOA</td><td>4,800</td><td>4,416</td><td>92%</td><td><span class="b bg">ดี</span></td></tr>
+<tr><td>QSDS</td><td>680</td><td>612</td><td>90%</td><td><span class="b bg">ดี</span></td></tr>
+<tr style="font-weight:700;background:var(--p5)"><td>รวม</td><td>48,080</td><td>39,444</td><td>82%</td><td>—</td></tr>
+</table></div>
+</div>
+
+</div></div></div>
+
+<script>
+function doLogin(){document.getElementById('login').style.display='none';document.getElementById('app').style.display='flex';}
+function doLogout(){document.getElementById('login').style.display='flex';document.getElementById('app').style.display='none';}
+function show(i,el){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('t'+i).classList.add('active');
+  el.classList.add('active');
+}
+</script>
+<script src="/moac-delegate.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  var orig = doLogin;
+  doLogin = function(){
+    orig();
+    MoacDelegate.init({
+      myId: 'dep-minister',
+      roleName: 'รัฐมนตรีช่วยว่าการ กษ.',
+      level: 'dep-minister',
+      reportsTo: 'minister',
+      canAssignTo: [
+        {id:'doae', name:'อธิบดี กสก.'},
+        {id:'dld', name:'อธิบดี ปศ.'},
+        {id:'doa', name:'อธิบดี กวก.'},
+        {id:'rd', name:'อธิบดี กข.'},
+        {id:'raot', name:'ผู้ว่าการ กยท.'},
+        {id:'qsds', name:'อธิบดี มม.'}
+      ]
+    });
+  };
+});
+</script>
+<script src="/moac-delegate.js"></script>
+<script src="/moac-app.js?v=20260526"></script>
+</body></html>

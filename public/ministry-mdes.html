@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>กระทรวงดิจิทัลเพื่อเศรษฐกิจและสังคม — PLAT Ministry Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0b1f3a;--navy2:#152d4f;--navy3:#1e3d68;--navy4:#2a5298;
+  --gold:#c9a227;--gold2:#e8c55a;
+  --teal:#00695c;--teal2:#00897b;--accent:#00e5ff;
+  --red:#c0392b;--orange:#d35400;--blue:#2980b9;--purple:#7d3c98;--green:#1a7a3a;
+  --bg:#eef2f7;--surface:#fff;--border:#dde3ec;
+  --text:#1a202c;--text2:#4a5568;--text3:#718096;
+}
+body{font-family:'Sarabun','Inter',sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.55}
+a{text-decoration:none;color:inherit}
+.topbar{background:linear-gradient(135deg,var(--navy) 0%,var(--navy3) 100%);color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,.3);position:sticky;top:0;z-index:100}
+.tb-l{display:flex;align-items:center;gap:14px}
+.tb-logo{font-size:34px}
+.tb-titles .t1{font-size:16px;font-weight:800}
+.tb-titles .t2{font-size:11px;color:#94a8c0;margin-top:3px;letter-spacing:.04em}
+.tb-r{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.tb-link{font-size:11px;color:#cfd6e0;padding:6px 12px;border-radius:7px;border:1px solid rgba(255,255,255,.15)}
+.tb-link:hover{background:rgba(255,255,255,.1);color:#fff}
+.tb-link.active{background:rgba(0,105,92,.3);border-color:var(--teal2);color:#80cbc4;font-weight:700}
+.tb-link.gold{background:rgba(201,162,39,.15);border-color:var(--gold);color:var(--gold2);font-weight:700}
+.hero{background:linear-gradient(135deg,#003d35 0%,#00695c 50%,#00897b 100%);color:#fff;padding:40px 28px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 30%,rgba(0,229,255,.12) 0%,transparent 50%)}
+.hero-inner{max-width:1320px;margin:0 auto;position:relative;z-index:2;display:grid;grid-template-columns:2fr 1fr;gap:30px}
+@media(max-width:900px){.hero-inner{grid-template-columns:1fr}}
+.hero-eyebrow{font-size:11px;letter-spacing:.2em;color:var(--accent);font-weight:700;margin-bottom:10px;text-transform:uppercase}
+.hero-title{font-size:34px;font-weight:800;line-height:1.2;margin-bottom:10px}
+.hero-sub{font-size:14px;color:#b2dfdb;line-height:1.7;max-width:680px}
+.hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hero-stat{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:12px 14px}
+.hs-lab{font-size:10px;color:#80cbc4;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.hs-val{font-size:20px;font-weight:800;color:var(--accent);font-family:'Inter','Sarabun',sans-serif}
+.hs-sub{font-size:10px;color:#80cbc4;margin-top:2px}
+.main{max-width:1320px;margin:0 auto;padding:24px}
+.section{margin-top:24px}
+.sec-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:14px;gap:14px;flex-wrap:wrap}
+.sec-title{font-size:20px;font-weight:800;color:var(--navy)}
+.sec-sub{font-size:11px;color:var(--text3);max-width:600px}
+.card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.dept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:12px}
+.dept-card{background:#fff;border:1px solid var(--border);border-radius:11px;padding:14px;border-left:4px solid var(--teal)}
+.dept-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.dept-icon{font-size:26px}
+.dept-code{font-size:9px;font-weight:700;color:var(--teal2);letter-spacing:.06em;text-transform:uppercase}
+.dept-name{font-size:14px;font-weight:800;color:var(--navy);line-height:1.3;margin-top:2px}
+.dept-fn{font-size:11px;color:var(--text2);line-height:1.55;margin:6px 0}
+.dept-budget{font-size:10px;color:var(--text3);background:#e0f2f1;padding:6px 8px;border-radius:6px;margin-top:6px}
+.policy-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:11px}
+.policy-card{background:linear-gradient(135deg,#e0f2f1 0%,#f1f8e9 100%);border:1px solid #80cbc4;border-left:5px solid var(--teal);border-radius:11px;padding:14px}
+.pol-name{font-size:13px;font-weight:800;color:var(--navy);margin-bottom:5px}
+.pol-desc{font-size:11px;color:var(--text2);margin-bottom:8px;line-height:1.55}
+.pol-status{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;background:rgba(0,105,92,.1);color:var(--teal)}
+.pol-bar-wrap{background:#b2dfdb;border-radius:99px;height:8px;margin:8px 0}
+.pol-bar{background:var(--teal);height:100%;border-radius:99px;transition:.4s}
+.pol-pct{font-size:11px;color:var(--teal);font-weight:700}
+.pol-budget{font-size:10px;color:var(--text3);margin-top:4px}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:11px}
+.kpi-card{background:linear-gradient(135deg,#fff 0%,#e0f2f1 100%);border:1px solid #80cbc4;border-radius:11px;padding:14px 16px;text-align:center}
+.kpi-lab{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;font-weight:700;margin-bottom:8px}
+.kpi-val{font-size:26px;font-weight:800;color:var(--teal);font-family:'Inter','Sarabun',sans-serif}
+.kpi-unit{font-size:11px;color:var(--text3);margin-top:2px}
+.rollout-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:11px;margin-top:14px}
+.rollout-card{background:#fff;border:1px solid var(--border);border-radius:11px;padding:16px;border-top:4px solid var(--teal)}
+.rc-province{font-size:15px;font-weight:800;color:var(--navy);margin-bottom:4px}
+.rc-focus{font-size:11px;color:var(--text2);margin-bottom:8px}
+.rc-pct{font-size:28px;font-weight:800;color:var(--teal);font-family:'Inter','Sarabun',sans-serif}
+.rc-bar{background:#e0f2f1;border-radius:99px;height:8px;margin:6px 0}
+.rc-phase{display:inline-block;padding:2px 9px;border-radius:4px;font-size:9px;font-weight:700;background:rgba(0,105,92,.1);color:var(--teal)}
+footer{margin-top:36px;padding:24px;text-align:center;font-size:11px;color:var(--text3);border-top:1px solid var(--border)}
+.loader{padding:80px 20px;text-align:center;color:var(--text3)}
+.loader .sp{display:inline-block;width:40px;height:40px;border:3px solid #cbd5e0;border-top-color:var(--teal);border-radius:50%;animation:sp .9s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<script>
+window.MINISTRY_INLINE_DATA = {
+  "ministry": {
+    "name_th": "กระทรวงดิจิทัลเพื่อเศรษฐกิจและสังคม",
+    "name_en": "Ministry of Digital Economy and Society",
+    "acronym": "ดศ.",
+    "code": "mdes",
+    "minister": "รมว.ดิจิทัลฯ",
+    "established": 2559,
+    "budget_2568": 35000,
+    "icon": "💻"
+  },
+  "departments": [
+    {"code": "ETDA", "name": "สำนักงานพัฒนาธุรกรรมทางอิเล็กทรอนิกส์", "name_en": "ETDA", "budget": 2800, "staff": 800, "focus": "e-Commerce/e-Transaction"},
+    {"code": "DEPA", "name": "สำนักงานส่งเสริมเศรษฐกิจดิจิทัล", "name_en": "DEPA", "budget": 4500, "staff": 600, "focus": "Digital Startup/SME"},
+    {"code": "DGA", "name": "สำนักงานพัฒนารัฐบาลดิจิทัล", "name_en": "DGA", "budget": 3200, "staff": 500, "focus": "รัฐบาลดิจิทัล"},
+    {"code": "NBTC", "name": "คณะกรรมการกิจการกระจายเสียง", "name_en": "NBTC", "budget": 5000, "staff": 1200, "focus": "โทรคมนาคม/5G"},
+    {"code": "NT", "name": "บริษัท โทรคมนาคมแห่งชาติ", "name_en": "NT", "budget": 8000, "staff": 15000, "focus": "โครงข่าย/อินเทอร์เน็ต"},
+    {"code": "PDPC", "name": "สำนักงานคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล", "name_en": "PDPC", "budget": 800, "staff": 200, "focus": "PDPA/ข้อมูลส่วนบุคคล"}
+  ],
+  "policies": [
+    {"id": 1, "title": "Thailand Digital Valley", "description": "สร้างเมืองดิจิทัลศูนย์กลางอาเซียน", "status": "กำลังดำเนินการ", "progress": 55, "budget": 12000},
+    {"id": 2, "title": "5G ทั่วไทย", "description": "ขยายโครงข่าย 5G ครอบคลุม 77 จังหวัด", "status": "กำลังดำเนินการ", "progress": 68, "budget": 25000},
+    {"id": 3, "title": "Digital ID แห่งชาติ", "description": "ระบบยืนยันตัวตนดิจิทัลแห่งชาติ", "status": "กำลังดำเนินการ", "progress": 80, "budget": 4500},
+    {"id": 4, "title": "Cloud Government", "description": "ย้ายระบบราชการขึ้น Cloud", "status": "กำลังดำเนินการ", "progress": 60, "budget": 8000},
+    {"id": 5, "title": "AI สำหรับเกษตร", "description": "ประยุกต์ AI ช่วยเกษตรกรทำนายผลผลิต", "status": "เริ่มดำเนินการ", "progress": 35, "budget": 2000},
+    {"id": 6, "title": "Cybersecurity แห่งชาติ", "description": "ป้องกันภัยไซเบอร์ระดับชาติ", "status": "กำลังดำเนินการ", "progress": 72, "budget": 6000}
+  ],
+  "key_kpis": {
+    "internet_coverage_pct": 92,
+    "digital_govt_services": 1250,
+    "digital_economy_gdp_pct": 30,
+    "startup_unicorn": 3,
+    "broadband_household_pct": 85,
+    "data_center_count": 45
+  },
+  "province_rollout": [
+    {"province": "เชียงราย", "province_code": "chiangrai", "completion_pct": 82, "phase": 1, "focus": "5G+ดิจิทัลเกษตร"},
+    {"province": "อุดรธานี", "province_code": "udonthani", "completion_pct": 75, "phase": 1, "focus": "Cloud อปท."},
+    {"province": "เชียงใหม่", "province_code": "chiangmai", "completion_pct": 88, "phase": 1, "focus": "Digital Hub"},
+    {"province": "ขอนแก่น", "province_code": "khonkaen", "completion_pct": 70, "phase": 2, "focus": "Smart City"},
+    {"province": "สงขลา", "province_code": "songkhla", "completion_pct": 65, "phase": 2, "focus": "5G ชายแดน"}
+  ]
+};
+</script>
+
+<div class="topbar">
+  <div class="tb-l">
+    <div class="tb-logo"><img class="ministry-logo-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Emblem_of_the_Ministry_of_Digital_Economy_and_Society_of_Thailand.svg/250px-Emblem_of_the_Ministry_of_Digital_Economy_and_Society_of_Thailand.svg.png" style="width:60px;height:60px;object-fit:contain;vertical-align:middle;margin-right:8px;" onerror="this.style.display='none'" alt="ตรากระทรวง ดศ.">💻</div>
+    <div class="tb-titles">
+      <div class="t1">กระทรวงดิจิทัลเพื่อเศรษฐกิจและสังคม</div>
+      <div class="t2">MINISTRY OF DIGITAL ECONOMY AND SOCIETY · PLAT Thailand</div>
+    </div>
+  </div>
+  <div class="tb-r">
+    <a href="/ministry-agriculture.html" class="tb-link">🌾 กษ.</a>
+    <a href="/ministry-mhesi.html" class="tb-link">🔬 อว.</a>
+    <a href="/ministry-mdes.html" class="tb-link active">💻 ดศ.</a>
+    <a href="/management.html" class="tb-link gold">📊 Management</a>
+  </div>
+</div>
+
+<div id="content">
+  <div class="loader"><div class="sp"></div><p style="margin-top:14px">กำลังโหลดข้อมูลกระทรวงดิจิทัลฯ…</p></div>
+</div>
+
+<footer>
+  ⚙️ <b>ministry-mdes.html</b> · ข้อมูลจาก <code>/ministry-data/mdes.json</code> ·
+  <a href="/management.html" style="color:var(--teal);font-weight:700">Management Dashboard</a> ·
+  <a href="https://g2g-ai-pool.fly.dev" style="color:var(--teal);font-weight:700">PLAT Thailand</a>
+</footer>
+
+<script>
+const d = window.MINISTRY_INLINE_DATA;
+
+function render(data) {
+  document.getElementById('content').innerHTML =
+    renderHero(data) +
+    '<div id="mdes-live-panel"><div style="padding:16px;text-align:center;color:#888;font-size:13px">📡 กำลังโหลดข้อมูล Live จาก MDES API…</div></div>' +
+    '<div class="main">' +
+      renderKPIs(data) +
+      renderPolicies(data) +
+      renderDepartments(data) +
+      renderRollout(data) +
+    '</div>';
+}
+
+function renderHero(data) {
+  const m = data.ministry || {};
+  return '<div class="hero"><div class="hero-inner">' +
+    '<div>' +
+      '<div class="hero-eyebrow">PLAT · กระทรวงดิจิทัลเพื่อเศรษฐกิจและสังคม (ดศ.)</div>' +
+      '<div class="hero-title">💻 ' + m.name_th + '</div>' +
+      '<div class="hero-sub"><b>' + m.name_en + '</b> · ก่อตั้ง พ.ศ. ' + m.established + '</div>' +
+      '<div class="hero-sub" style="margin-top:8px">ขับเคลื่อนเศรษฐกิจดิจิทัล โครงสร้างพื้นฐาน 5G รัฐบาลดิจิทัล และความมั่นคงทางไซเบอร์ของประเทศไทย</div>' +
+    '</div>' +
+    '<div class="hero-stats">' +
+      '<div class="hero-stat"><div class="hs-lab">งบประมาณปี 2568</div><div class="hs-val">' + (m.budget_2568||0).toLocaleString() + '</div><div class="hs-sub">ล้านบาท</div></div>' +
+      '<div class="hero-stat"><div class="hs-lab">หน่วยงานในสังกัด</div><div class="hs-val">' + (data.departments||[]).length + '</div><div class="hs-sub">หน่วยงาน/องค์กร</div></div>' +
+      '<div class="hero-stat"><div class="hs-lab">นโยบายสำคัญ</div><div class="hs-val">' + (data.policies||[]).length + '</div><div class="hs-sub">โครงการดิจิทัล</div></div>' +
+      '<div class="hero-stat"><div class="hs-lab">อินเทอร์เน็ตครอบคลุม</div><div class="hs-val">' + (data.key_kpis||{}).internet_coverage_pct + '%</div><div class="hs-sub">ทั่วประเทศ</div></div>' +
+    '</div>' +
+  '</div></div>';
+}
+
+function renderKPIs(data) {
+  const k = data.key_kpis || {};
+  const items = [
+    {lab: 'อินเทอร์เน็ตครอบคลุม', val: k.internet_coverage_pct + '%', sub: 'เป้าหมาย 95%'},
+    {lab: 'บริการดิจิทัลภาครัฐ', val: (k.digital_govt_services||0).toLocaleString(), sub: 'บริการออนไลน์'},
+    {lab: 'GDP เศรษฐกิจดิจิทัล', val: k.digital_economy_gdp_pct + '%', sub: 'ของ GDP รวม'},
+    {lab: 'Broadband ครัวเรือน', val: k.broadband_household_pct + '%', sub: 'เป้า 90%'},
+    {lab: 'Data Center', val: k.data_center_count + ' แห่ง', sub: 'เป้า 50 แห่ง'},
+    {lab: 'Unicorn Startup', val: k.startup_unicorn + ' บริษัท', sub: 'เป้า 5 บริษัท'},
+  ];
+  return '<div class="section"><div class="sec-head">' +
+    '<div><div class="sec-title">📊 ตัวชี้วัดสำคัญ ปีงบประมาณ 2568</div>' +
+    '<div class="sec-sub">ข้อมูลเศรษฐกิจดิจิทัลและโครงสร้างพื้นฐานดิจิทัลของประเทศไทย</div></div></div>' +
+    '<div class="kpi-grid">' +
+      items.map(function(i) {
+        return '<div class="kpi-card">' +
+          '<div class="kpi-lab">' + i.lab + '</div>' +
+          '<div class="kpi-val">' + i.val + '</div>' +
+          '<div class="kpi-unit">' + i.sub + '</div>' +
+        '</div>';
+      }).join('') +
+    '</div></div>';
+}
+
+function renderPolicies(data) {
+  var pols = data.policies || [];
+  return '<div class="section"><div class="sec-head">' +
+    '<div><div class="sec-title">🎯 นโยบายสำคัญด้านดิจิทัล ปี 2568</div>' +
+    '<div class="sec-sub">' + pols.length + ' โครงการหลัก — ขับเคลื่อนเศรษฐกิจและสังคมดิจิทัล</div></div></div>' +
+    '<div class="policy-grid">' +
+      pols.map(function(p) {
+        var pct = p.progress || 0;
+        var bar = '<div class="pol-bar-wrap"><div class="pol-bar" style="width:' + pct + '%"></div></div>';
+        return '<div class="policy-card">' +
+          '<div class="pol-name">' + p.title + '</div>' +
+          '<div class="pol-desc">' + p.description + '</div>' +
+          '<span class="pol-status">' + p.status + '</span>' +
+          bar +
+          '<div class="pol-pct">' + pct + '% ความคืบหน้า</div>' +
+          '<div class="pol-budget">💰 งบประมาณ: ' + (p.budget||0).toLocaleString() + ' ล้านบาท</div>' +
+        '</div>';
+      }).join('') +
+    '</div></div>';
+}
+
+function renderDepartments(data) {
+  var deps = data.departments || [];
+  var icons = {ETDA:'💳', DEPA:'🚀', DGA:'🏛', NBTC:'📡', NT:'🔗', PDPC:'🔒'};
+  return '<div class="section"><div class="sec-head">' +
+    '<div><div class="sec-title">🏛️ หน่วยงานในสังกัด ดศ.</div>' +
+    '<div class="sec-sub">' + deps.length + ' หน่วยงานหลัก ครอบคลุมโครงสร้างพื้นฐานดิจิทัลแห่งชาติ</div></div></div>' +
+    '<div class="dept-grid">' +
+      deps.map(function(dep) {
+        var icon = icons[dep.code] || '💡';
+        return '<div class="dept-card">' +
+          '<div class="dept-head">' +
+            '<div class="dept-icon">' + icon + '</div>' +
+            '<div>' +
+              '<div class="dept-code">' + dep.code + ' · ' + dep.name_en + '</div>' +
+              '<div class="dept-name">' + dep.name + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="dept-fn">📌 ' + dep.focus + '</div>' +
+          '<div class="dept-budget">👥 บุคลากร: ' + (dep.staff||0).toLocaleString() + ' คน &nbsp;|&nbsp; 💰 งบ: ' + (dep.budget||0).toLocaleString() + ' ล้านบาท</div>' +
+        '</div>';
+      }).join('') +
+    '</div></div>';
+}
+
+function renderRollout(data) {
+  var provs = data.province_rollout || [];
+  return '<div class="section"><div class="sec-head">' +
+    '<div><div class="sec-title">🗺️ การขยาย MDES Digital Infrastructure รายจังหวัด</div>' +
+    '<div class="sec-sub">ความคืบหน้าการติดตั้งโครงสร้างพื้นฐานดิจิทัล 5G และบริการรัฐบาลดิจิทัลในจังหวัดนำร่อง</div></div></div>' +
+    '<div class="rollout-grid">' +
+      provs.map(function(p) {
+        var pct = p.completion_pct || 0;
+        var c = pct >= 80 ? '#00695c' : (pct >= 65 ? '#f57c00' : '#1565c0');
+        return '<div class="rollout-card" style="border-top-color:' + c + '">' +
+          '<div class="rc-province">' + p.province + '</div>' +
+          '<div class="rc-focus">🔧 ' + p.focus + '</div>' +
+          '<div class="rc-pct" style="color:' + c + '">' + pct + '%</div>' +
+          '<div class="rc-bar"><div style="background:' + c + ';width:' + pct + '%;height:100%;border-radius:99px"></div></div>' +
+          '<span class="rc-phase" style="background:rgba(0,105,92,.1);color:' + c + '">Phase ' + p.phase + '</span>' +
+        '</div>';
+      }).join('') +
+    '</div></div>';
+}
+
+async function loadMdesLive() {
+  var BASE = 'https://g2g-ai-pool.fly.dev';
+  var el = document.getElementById('mdes-live-panel');
+  if (!el) return;
+  var KEY = 'mdes2026';
+  var headers = {'x-api-key': KEY, 'Content-Type': 'application/json'};
+
+  try {
+    var results = await Promise.allSettled([
+      fetch(BASE + '/api/mdes/overview', {headers: headers}).then(function(r){return r.json();}),
+      fetch(BASE + '/api/mdes/province-rollout', {headers: headers}).then(function(r){return r.json();}),
+      fetch(BASE + '/api/mdes/kpis', {headers: headers}).then(function(r){return r.json();})
+    ]);
+
+    var ov  = results[0].status === 'fulfilled' ? results[0].value : null;
+    var pv  = results[1].status === 'fulfilled' ? results[1].value : null;
+    var kpi = results[2].status === 'fulfilled' ? results[2].value : null;
+
+    var h = '<div class="section">';
+    h += '<div class="sec-head"><div><div class="sec-title">📡 ข้อมูล Live จาก MDES API</div>';
+    h += '<div class="sec-sub">อัปเดตอัตโนมัติ · ' + new Date().toLocaleString('th-TH') + '</div></div>';
+    h += '<button onclick="loadMdesLive()" style="background:#00695c;color:#fff;border:none;border-radius:6px;padding:6px 14px;cursor:pointer;font-size:13px">🔄 รีเฟรช</button>';
+    h += '</div>';
+
+    if (pv && pv.provinces && pv.provinces.length) {
+      var pvs = pv.provinces;
+      h += '<div class="card"><b style="color:var(--teal)">🗺️ สถานะ Digital Infrastructure รายจังหวัด (Live)</b>';
+      h += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:12px">';
+      pvs.forEach(function(p) {
+        var pct = p.completion_pct || p.progress_pct || 0;
+        var statusColor = pct >= 80 ? '#00695c' : (pct >= 65 ? '#f57c00' : '#1565c0');
+        h += '<div style="background:#f0fdf9;border-radius:10px;padding:14px;border-top:4px solid ' + statusColor + '">';
+        h += '<div style="font-weight:700;font-size:14px">' + (p.province||p.name) + '</div>';
+        h += '<div style="font-size:11px;color:#555;margin:4px 0">Phase ' + (p.phase||1) + ' · ' + (p.focus||'') + '</div>';
+        h += '<div style="font-size:24px;font-weight:800;color:' + statusColor + ';font-family:Inter,Sarabun,sans-serif">' + pct + '%</div>';
+        h += '<div style="background:#e0e0e0;border-radius:99px;height:8px;margin-top:6px"><div style="background:' + statusColor + ';width:' + pct + '%;height:100%;border-radius:99px"></div></div>';
+        h += '</div>';
+      });
+      h += '</div></div>';
+    }
+
+    if (kpi && kpi.kpis && kpi.kpis.length) {
+      var kpis = kpi.kpis;
+      h += '<div class="card" style="margin-top:14px"><b style="color:var(--teal)">📊 KPI ดิจิทัลแห่งชาติ (Live)</b>';
+      h += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-top:12px">';
+      kpis.forEach(function(k) {
+        var pct = k.achievement_pct || 0;
+        var c = pct >= 100 ? '#00695c' : (pct >= 70 ? '#f57c00' : '#1565c0');
+        h += '<div style="background:#f0fdf9;border-radius:10px;padding:12px;border-left:4px solid ' + c + '">';
+        h += '<div style="font-size:12px;color:var(--text3)">' + (k.name||k.indicator||'') + '</div>';
+        h += '<div style="font-size:16px;font-weight:700;color:var(--navy);margin:4px 0">' + (k.value||'—') + '</div>';
+        if (k.target) h += '<div style="font-size:11px;color:#888">เป้า: ' + k.target + '</div>';
+        h += '<div style="background:#e0e0e0;border-radius:99px;height:6px;margin-top:6px"><div style="background:' + c + ';width:' + Math.min(pct,100) + '%;height:100%;border-radius:99px"></div></div>';
+        h += '<div style="font-size:11px;color:' + c + ';font-weight:700">' + pct + '%</div>';
+        h += '</div>';
+      });
+      h += '</div></div>';
+    }
+
+    if (ov) {
+      h += '<div class="card" style="margin-top:14px"><b style="color:var(--teal)">📋 ข้อมูลพื้นฐาน MDES (Live)</b>';
+      h += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-top:12px">';
+      var ovItems = [
+        {lab: 'หน่วยงานในสังกัด', val: (ov.departments_count||6) + ' หน่วยงาน'},
+        {lab: 'นโยบายสำคัญ', val: (ov.policies_count||6) + ' โครงการ'},
+        {lab: 'งบประมาณ 2568', val: ((ov.ministry||{}).budget_2568||35000).toLocaleString() + ' ล้านบาท'},
+        {lab: 'KPI ที่ติดตาม', val: (ov.key_kpis ? Object.keys(ov.key_kpis).length : 6) + ' ตัวชี้วัด'},
+      ];
+      ovItems.forEach(function(i) {
+        h += '<div style="background:#e0f2f1;border-radius:10px;padding:12px;text-align:center">';
+        h += '<div style="font-size:11px;color:#555;margin-bottom:4px">' + i.lab + '</div>';
+        h += '<div style="font-size:18px;font-weight:800;color:#00695c;font-family:Inter,Sarabun,sans-serif">' + i.val + '</div>';
+        h += '</div>';
+      });
+      h += '</div></div>';
+    }
+
+    h += '</div>';
+    el.innerHTML = h;
+  } catch(e) {
+    el.innerHTML = '<div style="padding:12px;color:var(--text3);font-size:13px">⚠️ ไม่สามารถโหลด Live data: ' + e.message + '</div>';
+  }
+}
+
+render(d);
+loadMdesLive();
+</script>
+<a href="/management-mdes.html" style="display:inline-block;margin-top:16px;background:#00e5ff;color:#004d40;padding:12px 24px;border-radius:8px;text-decoration:none;font-size:14px;font-weight:800">💻 เข้าระบบบริหาร ดศ. →</a>
+<script src="/access-bar.js"></script>
+</body>
+</html>

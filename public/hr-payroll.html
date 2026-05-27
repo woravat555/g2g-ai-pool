@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HR · เงินเดือน — G2G AgriTech</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy1:#0d2d5a;--navy2:#1a4480;--navy3:#2563a8;--navy4:#3b82c4;
+  --gold:#c9a227;--gold2:#e4b83a;--gold3:#f5d06a;
+  --green1:#166534;--green2:#22c55e;
+  --red:#dc2626;--orange:#ea580c;--purple:#7c3aed;
+  --bg:#f0f4f8;--bg2:#e8edf4;--border:#ccd6e0;
+  --white:#fff;--text:#1e293b;--sub:#64748b;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Sarabun',sans-serif}
+body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+
+.topbar{background:var(--navy1);color:#fff;padding:0 18px;height:54px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:10px;flex-wrap:wrap}
+.tb-left{display:flex;align-items:center;gap:10px;min-width:0}
+.tb-logo{font-size:26px}
+.tb-t1{font-size:14px;font-weight:700;white-space:nowrap}
+.tb-t2{font-size:10px;opacity:.7;white-space:nowrap}
+.tb-right{display:flex;align-items:center;gap:8px;flex-shrink:0;flex-wrap:wrap}
+.prov-pick{display:flex;gap:4px}
+.prov-btn{background:rgba(255,255,255,.12);color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
+.prov-btn:hover{background:rgba(255,255,255,.22)}
+.prov-btn.active{background:var(--gold);color:var(--navy1)}
+.tb-back{background:rgba(255,255,255,.15);border:none;color:#fff;padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;text-decoration:none}
+
+.tabbar{background:var(--navy2);display:flex;padding:0 12px;gap:4px;flex-shrink:0;overflow-x:auto;height:46px;align-items:flex-end}
+.tab{padding:10px 16px;font-size:13px;font-weight:700;color:rgba(255,255,255,.65);cursor:pointer;border-radius:8px 8px 0 0;white-space:nowrap;transition:.15s;border:none;background:transparent;font-family:inherit}
+.tab:hover{background:rgba(255,255,255,.1);color:#fff}
+.tab.active{background:#fff;color:var(--navy1)}
+
+.main{flex:1;padding:18px;max-width:1400px;width:100%;margin:0 auto}
+.page{display:none}
+.page.active{display:block}
+
+.card{background:#fff;border-radius:12px;padding:18px 20px;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:16px}
+.card-h{font-size:15px;font-weight:700;color:var(--navy1);margin-bottom:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card-h .badge{font-size:11px;background:var(--bg2);color:var(--sub);padding:2px 8px;border-radius:10px;font-weight:500}
+
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.kpi-card{background:#fff;border-radius:10px;padding:14px 16px;border:1px solid var(--border)}
+.kpi-v{font-size:24px;font-weight:800;color:var(--navy1)}
+.kpi-l{font-size:12px;color:var(--sub);margin-top:2px}
+.kpi-sub{font-size:11px;color:var(--sub)}
+
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{background:var(--navy1);color:#fff;padding:9px 10px;text-align:left;font-weight:600;position:sticky;top:0}
+.tbl td{padding:8px 10px;border-bottom:1px solid var(--bg2);vertical-align:top}
+.tbl tr:hover td{background:var(--bg2)}
+
+.row-wrap{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.btn{background:var(--navy1);color:#fff;border:none;padding:7px 16px;border-radius:7px;cursor:pointer;font-size:13px;font-family:inherit;font-weight:600;transition:.15s}
+.btn:hover{background:var(--navy2)}
+.btn-g{background:var(--green1)}
+.btn-g:hover{background:#14532d}
+.btn-gold{background:var(--gold);color:var(--navy1)}
+.btn-gold:hover{background:var(--gold2)}
+.btn-sm{padding:5px 11px;font-size:12px}
+.btn-out{background:#fff;color:var(--navy1);border:1px solid var(--border)}
+.btn-out:hover{background:var(--bg2)}
+.btn-danger{background:var(--red)}
+.btn-danger:hover{background:#b91c1c}
+
+.inp{border:1px solid var(--border);border-radius:8px;padding:7px 11px;font-size:13px;outline:none;font-family:inherit;background:#fff}
+.inp:focus{border-color:var(--navy3)}
+
+.chip{display:inline-block;font-size:11px;padding:2px 9px;border-radius:11px;font-weight:600}
+.chip-k{background:#dbeafe;color:#1e40af}
+.chip-s{background:#dcfce7;color:#166534}
+.chip-m{background:#fef9c3;color:#854d0e}
+.chip-paid{background:#dcfce7;color:#166534}
+.chip-draft{background:#fef9c3;color:#854d0e}
+.chip-pend{background:#fee2e2;color:#991b1b}
+
+.scale-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.scale-card{border:1px solid var(--border);border-radius:10px;padding:11px 14px;background:#fff}
+.scale-card .code{font-weight:800;color:var(--navy1);font-size:15px}
+.scale-card .lvl{font-size:12px;color:var(--text);font-weight:600}
+.scale-card .exp{font-size:11px;color:var(--sub);margin-top:2px}
+.scale-card .sal{font-size:13px;color:var(--navy3);margin-top:6px;font-weight:700}
+
+/* Modal */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:1000;padding:14px}
+.modal.show{display:flex}
+.modal-card{background:#fff;border-radius:12px;padding:20px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto}
+.modal-h{font-size:16px;font-weight:700;color:var(--navy1);margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--sub)}
+.field-row{display:grid;grid-template-columns:140px 1fr;gap:8px;margin-bottom:10px;align-items:center}
+.field-row label{font-size:13px;font-weight:600;color:var(--navy1)}
+
+/* Payslip */
+.slip{background:#fff;border:2px solid var(--navy1);border-radius:10px;padding:18px;max-width:480px;margin:0 auto;font-family:'Sarabun',sans-serif}
+.slip-h{text-align:center;border-bottom:2px solid var(--navy1);padding-bottom:8px;margin-bottom:10px}
+.slip-h h2{font-size:15px;color:var(--navy1)}
+.slip-h .sub{font-size:11px;color:var(--sub)}
+.slip-row{display:flex;justify-content:space-between;padding:4px 0;font-size:13px;border-bottom:1px dotted #e2e8f0}
+.slip-row.tot{font-weight:800;color:var(--navy1);border-top:2px solid var(--navy1);border-bottom:none;margin-top:6px;padding-top:6px;font-size:14px}
+.slip-section{margin-top:10px}
+.slip-section .lbl{font-size:11px;color:var(--sub);font-weight:600;text-transform:uppercase;margin-bottom:4px;letter-spacing:.5px}
+
+.toast{position:fixed;bottom:18px;right:18px;background:var(--navy1);color:#fff;padding:11px 17px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.25);font-size:13px;z-index:2000;display:none}
+.toast.show{display:block;animation:slideIn .25s}
+.toast.err{background:var(--red)}
+.toast.ok{background:var(--green1)}
+@keyframes slideIn{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+@media(max-width:768px){
+  .kpi-row{grid-template-columns:1fr 1fr}
+  .field-row{grid-template-columns:1fr}
+  .field-row label{margin-bottom:-4px}
+  .tabbar{padding:0 6px}
+  .tab{padding:9px 12px;font-size:12px}
+  .main{padding:12px}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="tb-left">
+    <div class="tb-logo">🏛️</div>
+    <div>
+      <div class="tb-t1">HR · เงินเดือน — แพลตฟอร์มบริหารราชการ</div>
+      <div class="tb-t2">PERSONNEL · PAYROLL · LEAVE · OT — ราชการพลเรือนสามัญ 2568</div>
+    </div>
+  </div>
+  <div class="tb-right">
+    <div class="prov-pick" id="provPick">
+      <button class="prov-btn active" data-prov="phrae" onclick="switchProv('phrae')">แพร่</button>
+      <button class="prov-btn" data-prov="chiangrai" onclick="switchProv('chiangrai')">เชียงราย</button>
+      <button class="prov-btn" data-prov="udonthani" onclick="switchProv('udonthani')">อุดรธานี</button>
+    </div>
+    <a class="tb-back" href="/management.html">← กลับหน้าบริหาร</a>
+  </div>
+</div>
+
+<div class="tabbar">
+  <button class="tab active" data-tab="personnel" onclick="switchTab('personnel')">👥 ทะเบียนบุคลากร</button>
+  <button class="tab" data-tab="salary"    onclick="switchTab('salary')">💵 เงินเดือน</button>
+  <button class="tab" data-tab="payslips"  onclick="switchTab('payslips')">📄 สลิปเงินเดือน</button>
+  <button class="tab" data-tab="positions" onclick="switchTab('positions')">🎖️ ตำแหน่ง-วิทยฐานะ</button>
+  <button class="tab" data-tab="leaves"    onclick="switchTab('leaves')">🌴 การลา</button>
+  <button class="tab" data-tab="ot"        onclick="switchTab('ot')">⏱️ OT</button>
+  <button class="tab" data-tab="reports"   onclick="switchTab('reports')">📊 รายงาน HR</button>
+</div>
+
+<div class="main">
+
+  <!-- ░░ PERSONNEL ░░ -->
+  <div id="page-personnel" class="page active">
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-v" id="k-civil">−</div><div class="kpi-l">ข้าราชการ</div></div>
+      <div class="kpi-card"><div class="kpi-v" id="k-emp">−</div><div class="kpi-l">พนักงานราชการ</div></div>
+      <div class="kpi-card"><div class="kpi-v" id="k-perm">−</div><div class="kpi-l">ลูกจ้างประจำ</div></div>
+      <div class="kpi-card"><div class="kpi-v" id="k-cont">−</div><div class="kpi-l">จ้างเหมา</div></div>
+    </div>
+    <div class="card">
+      <div class="card-h">
+        👥 ทะเบียนบุคลากร — <span id="lbl-prov">แพร่</span>
+        <span class="badge" id="cnt-personnel">0 คน</span>
+        <button class="btn btn-sm" style="margin-left:auto" onclick="openPersonModal()">➕ เพิ่มบุคลากร</button>
+        <button class="btn btn-sm btn-out" onclick="loadPersonnel()">↻ Refresh</button>
+      </div>
+      <div style="overflow-x:auto">
+      <table class="tbl">
+        <thead><tr><th>ชื่อ-สกุล</th><th>ประเภท</th><th>ตำแหน่ง</th><th>หน่วยงาน</th><th>ระดับ</th><th>สถานะ</th><th>การจัดการ</th></tr></thead>
+        <tbody id="tbl-personnel"><tr><td colspan="7" style="text-align:center;color:var(--sub);padding:18px">⏳ กำลังโหลด...</td></tr></tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ░░ SALARY SCALE ░░ -->
+  <div id="page-salary" class="page">
+    <div class="card">
+      <div class="card-h">💵 บัญชีเงินเดือนราชการพลเรือนสามัญ <span class="badge">ปีงบประมาณ 2568</span>
+        <button class="btn btn-sm btn-out" style="margin-left:auto" onclick="loadScale()">↻ Refresh</button>
+      </div>
+      <div style="background:#fffbe6;border:1px solid var(--gold);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:12px;color:var(--text)">
+        <strong>⚖️ อ้างอิง:</strong> พ.ร.บ.ระเบียบข้าราชการพลเรือน 2551 · บัญชีเงินเดือนขั้นต่ำ-ขั้นสูง · 3 แท่ง: วิชาการ (K) / ทั่วไป (S) / บริหาร (M)
+      </div>
+
+      <h3 style="font-size:14px;color:var(--navy1);margin:14px 0 8px">📘 แท่งวิชาการ (Knowledge — K1 ถึง K5)</h3>
+      <div id="scale-K" class="scale-grid"></div>
+
+      <h3 style="font-size:14px;color:var(--navy1);margin:16px 0 8px">📗 แท่งทั่วไป (Service — S1 ถึง S4)</h3>
+      <div id="scale-S" class="scale-grid"></div>
+
+      <h3 style="font-size:14px;color:var(--navy1);margin:16px 0 8px">📕 แท่งบริหาร (Manager — M1 ถึง M2)</h3>
+      <div id="scale-M" class="scale-grid"></div>
+
+      <div class="card-h" style="margin-top:20px">🧾 กฎการหักลดหย่อน (ใช้คำนวณภาษีอัตโนมัติ)</div>
+      <div id="ded-rules" style="font-size:13px;line-height:2"></div>
+    </div>
+  </div>
+
+  <!-- ░░ PAYSLIPS ░░ -->
+  <div id="page-payslips" class="page">
+    <div class="card">
+      <div class="card-h">📄 สลิปเงินเดือน — <span id="lbl-prov2">แพร่</span>
+        <span class="badge" id="cnt-pay">0 ฉบับ</span>
+        <button class="btn btn-sm btn-gold" style="margin-left:auto" onclick="openGenerateModal()">⚙️ Generate สลิป (auto-calc)</button>
+        <button class="btn btn-sm btn-out" onclick="loadPayslips()">↻ Refresh</button>
+      </div>
+      <div class="row-wrap" style="margin-bottom:12px">
+        <select id="filter-month" class="inp" onchange="renderPayslips()"><option value="">— ทุกเดือน —</option></select>
+        <input id="filter-name" class="inp" placeholder="ค้นหาชื่อ..." oninput="renderPayslips()" style="width:200px">
+      </div>
+      <div style="overflow-x:auto">
+      <table class="tbl">
+        <thead><tr><th>เดือน</th><th>ชื่อ</th><th>ระดับ</th><th>เงินเดือน</th><th>OT</th><th>เงินประจำตำแหน่ง</th><th>หัก ปกส.</th><th>หัก กบข.</th><th>หักภาษี</th><th>สุทธิ</th><th>สถานะ</th><th></th></tr></thead>
+        <tbody id="tbl-pay"><tr><td colspan="12" style="text-align:center;color:var(--sub);padding:18px">⏳ กำลังโหลด...</td></tr></tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ░░ POSITIONS ░░ -->
+  <div id="page-positions" class="page">
+    <div class="card">
+      <div class="card-h">🎖️ ตำแหน่ง / วิทยฐานะ <span class="badge">จัดกลุ่มตามระดับ</span></div>
+      <div id="positions-content"><div style="color:var(--sub);text-align:center;padding:18px">⏳ กำลังโหลด...</div></div>
+    </div>
+  </div>
+
+  <!-- ░░ LEAVES ░░ -->
+  <div id="page-leaves" class="page">
+    <div class="card">
+      <div class="card-h">🌴 บันทึกการลา
+        <span class="badge" id="cnt-leave">0 รายการ</span>
+        <button class="btn btn-sm" style="margin-left:auto" onclick="openLeaveModal()">➕ บันทึกลา</button>
+        <button class="btn btn-sm btn-out" onclick="loadLeaves()">↻ Refresh</button>
+      </div>
+      <div style="overflow-x:auto">
+      <table class="tbl">
+        <thead><tr><th>ชื่อ</th><th>ประเภทลา</th><th>จาก</th><th>ถึง</th><th>วัน</th><th>เหตุผล</th><th>สถานะ</th></tr></thead>
+        <tbody id="tbl-leave"><tr><td colspan="7" style="text-align:center;color:var(--sub);padding:18px">⏳ กำลังโหลด...</td></tr></tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ░░ OT ░░ -->
+  <div id="page-ot" class="page">
+    <div class="card">
+      <div class="card-h">⏱️ บันทึกการทำงานล่วงเวลา (OT)
+        <span class="badge" id="cnt-ot">0 รายการ</span>
+        <button class="btn btn-sm" style="margin-left:auto" onclick="openOTModal()">➕ บันทึก OT</button>
+        <button class="btn btn-sm btn-out" onclick="loadOT()">↻ Refresh</button>
+      </div>
+      <div style="overflow-x:auto">
+      <table class="tbl">
+        <thead><tr><th>วันที่</th><th>ชื่อ</th><th>ชั่วโมง</th><th>อัตรา/ชม.</th><th>จำนวนเงิน</th><th>เหตุผล</th><th>สถานะ</th></tr></thead>
+        <tbody id="tbl-ot"><tr><td colspan="7" style="text-align:center;color:var(--sub);padding:18px">⏳ กำลังโหลด...</td></tr></tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ░░ REPORTS ░░ -->
+  <div id="page-reports" class="page">
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-v" id="r-payroll">−</div><div class="kpi-l">ค่าจ้างเดือนนี้ (บ.)</div></div>
+      <div class="kpi-card"><div class="kpi-v" id="r-tax">−</div><div class="kpi-l">ภาษีหัก ณ ที่จ่าย (บ.)</div></div>
+      <div class="kpi-card"><div class="kpi-v" id="r-ot">−</div><div class="kpi-l">OT รวม (บ.)</div></div>
+      <div class="kpi-card"><div class="kpi-v" id="r-leave-days">−</div><div class="kpi-l">วันลา (รวม)</div></div>
+    </div>
+    <div class="card">
+      <div class="card-h">📊 ค่าใช้จ่ายบุคลากรรายเดือน</div>
+      <div id="r-month-bars" style="padding:6px"></div>
+    </div>
+    <div class="card">
+      <div class="card-h">🌴 สรุปวันลาแยกประเภท</div>
+      <div id="r-leave-table" style="overflow-x:auto"></div>
+    </div>
+    <div class="card">
+      <div class="card-h">⏱️ Top 5 OT</div>
+      <div id="r-ot-table" style="overflow-x:auto"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ░░ Modals ░░ -->
+<div class="modal" id="modal-person">
+  <div class="modal-card">
+    <div class="modal-h">➕ เพิ่มบุคลากร <button class="modal-close" onclick="closeModal('modal-person')">×</button></div>
+    <div class="field-row"><label>ชื่อ-สกุล*</label><input id="m-p-name" class="inp" placeholder="นาย/นาง... ชื่อ สกุล"></div>
+    <div class="field-row"><label>ประเภท</label>
+      <select id="m-p-type" class="inp">
+        <option>ข้าราชการ</option><option>พนักงานราชการ</option><option>ลูกจ้างประจำ</option><option>จ้างเหมาบริการ</option>
+      </select>
+    </div>
+    <div class="field-row"><label>ตำแหน่ง</label><input id="m-p-pos" class="inp" placeholder="เกษตรจังหวัด / ปศุสัตว์อำเภอ ..."></div>
+    <div class="field-row"><label>ระดับ</label>
+      <select id="m-p-lvl" class="inp">
+        <option>ปฏิบัติการ</option><option>ชำนาญการ (ชก.)</option><option>ชำนาญการพิเศษ (ชพ.)</option><option>เชี่ยวชาญ (ชช.)</option><option>ทรงคุณวุฒิ (ทว.)</option>
+        <option>ปฏิบัติงาน</option><option>ชำนาญงาน</option><option>อาวุโส</option><option>ทักษะพิเศษ</option>
+        <option>อำนวยการต้น</option><option>อำนวยการสูง</option>
+      </select>
+    </div>
+    <div class="field-row"><label>หน่วยงาน</label><input id="m-p-agency" class="inp" placeholder="สำนักงานเกษตรจังหวัด..."></div>
+    <div class="field-row"><label>อำเภอ</label><input id="m-p-dist" class="inp" placeholder="อ.เมือง..."></div>
+    <div class="field-row"><label>โทร</label><input id="m-p-phone" class="inp" placeholder="054-..."></div>
+    <div style="text-align:right;margin-top:14px">
+      <button class="btn btn-out" onclick="closeModal('modal-person')">ยกเลิก</button>
+      <button class="btn" onclick="submitPerson()">บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal-generate">
+  <div class="modal-card">
+    <div class="modal-h">⚙️ Generate สลิป (auto-calc tax + ปกส. + กบข.) <button class="modal-close" onclick="closeModal('modal-generate')">×</button></div>
+    <div class="field-row"><label>เลือกบุคลากร</label>
+      <select id="m-g-personnel" class="inp" onchange="autofillGen()"><option value="">— เลือกจากทะเบียน —</option></select>
+    </div>
+    <div class="field-row"><label>ชื่อ*</label><input id="m-g-name" class="inp"></div>
+    <div class="field-row"><label>หน่วยงาน</label><input id="m-g-agency" class="inp"></div>
+    <div class="field-row"><label>ระดับ</label>
+      <select id="m-g-level" class="inp" onchange="autoBase()"></select>
+    </div>
+    <div class="field-row"><label>เงินเดือน (บ.)*</label><input id="m-g-base" class="inp" type="number" value="33000"></div>
+    <div class="field-row"><label>OT (บ.)</label><input id="m-g-ot" class="inp" type="number" value="0"></div>
+    <div class="field-row"><label>เงินประจำตำแหน่ง</label><input id="m-g-allow" class="inp" type="number" value="0"></div>
+    <div class="field-row"><label>เดือน*</label><input id="m-g-month" class="inp" placeholder="YYYY-MM" value=""></div>
+    <div id="gen-preview" style="background:var(--bg2);border-radius:8px;padding:11px 14px;font-size:13px;line-height:1.8;margin-top:10px"></div>
+    <div style="text-align:right;margin-top:14px">
+      <button class="btn btn-out" onclick="closeModal('modal-generate')">ยกเลิก</button>
+      <button class="btn btn-out" onclick="previewGen()">ดูตัวอย่างคำนวณ</button>
+      <button class="btn btn-g" onclick="submitGenerate()">✅ Generate + บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal-slip">
+  <div class="modal-card">
+    <div class="modal-h">📄 สลิปเงินเดือน <button class="modal-close" onclick="closeModal('modal-slip')">×</button></div>
+    <div id="slip-body"></div>
+    <div style="text-align:right;margin-top:12px"><button class="btn" onclick="window.print()">🖨️ พิมพ์</button></div>
+  </div>
+</div>
+
+<div class="modal" id="modal-leave">
+  <div class="modal-card">
+    <div class="modal-h">🌴 บันทึกการลา <button class="modal-close" onclick="closeModal('modal-leave')">×</button></div>
+    <div class="field-row"><label>ชื่อ*</label><input id="m-l-name" class="inp"></div>
+    <div class="field-row"><label>ประเภท*</label>
+      <select id="m-l-type" class="inp">
+        <option>ลาพักผ่อน</option><option>ลาป่วย</option><option>ลากิจ</option><option>ลาคลอด</option><option>ลาอุปสมบท</option><option>ลาไปศึกษา</option>
+      </select>
+    </div>
+    <div class="field-row"><label>จาก</label><input id="m-l-from" class="inp" type="date"></div>
+    <div class="field-row"><label>ถึง</label><input id="m-l-to" class="inp" type="date"></div>
+    <div class="field-row"><label>จำนวนวัน</label><input id="m-l-days" class="inp" type="number" value="1"></div>
+    <div class="field-row"><label>เหตุผล</label><input id="m-l-reason" class="inp"></div>
+    <div style="text-align:right;margin-top:14px">
+      <button class="btn btn-out" onclick="closeModal('modal-leave')">ยกเลิก</button>
+      <button class="btn" onclick="submitLeave()">บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal-ot">
+  <div class="modal-card">
+    <div class="modal-h">⏱️ บันทึก OT <button class="modal-close" onclick="closeModal('modal-ot')">×</button></div>
+    <div class="field-row"><label>ชื่อ*</label><input id="m-o-name" class="inp"></div>
+    <div class="field-row"><label>วันที่*</label><input id="m-o-date" class="inp" type="date"></div>
+    <div class="field-row"><label>ชั่วโมง</label><input id="m-o-hours" class="inp" type="number" value="3"></div>
+    <div class="field-row"><label>อัตรา/ชม. (บ.)</label><input id="m-o-rate" class="inp" type="number" value="150"></div>
+    <div class="field-row"><label>เหตุผล</label><input id="m-o-reason" class="inp"></div>
+    <div style="text-align:right;margin-top:14px">
+      <button class="btn btn-out" onclick="closeModal('modal-ot')">ยกเลิก</button>
+      <button class="btn" onclick="submitOT()">บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ════ STATE ════ */
+const PROV_LABEL = { phrae:'แพร่', chiangrai:'เชียงราย', udonthani:'อุดรธานี' };
+const PROV_KEY   = { phrae:'phrae2026', chiangrai:'chiangrai2026', udonthani:'udonthani2026' };
+let STATE = { prov:'phrae', tab:'personnel' };
+let CACHE = { personnel:[], payslips:[], scale:null, leaves:[], ot:[] };
+
+const $ = id => document.getElementById(id);
+function toast(msg, type){ const t=$('toast'); t.textContent=msg; t.className='toast show '+(type||''); setTimeout(()=>t.classList.remove('show'),2400); }
+function thb(n){ return (Number(n)||0).toLocaleString('th-TH', {maximumFractionDigits:0}); }
+function thbDec(n){ return (Number(n)||0).toLocaleString('th-TH', {maximumFractionDigits:2}); }
+function openModal(id){ $(id).classList.add('show'); }
+function closeModal(id){ $(id).classList.remove('show'); }
+
+/* ════ API HELPERS ════ */
+function mgmtHeaders(){
+  // phrae routes don't require x-api-key for GET (open via phraeCors); chiangrai/udonthani DO require it.
+  return STATE.prov === 'phrae' ? {'Content-Type':'application/json'} : {'Content-Type':'application/json','x-api-key':PROV_KEY[STATE.prov]};
+}
+function hrHeaders(){ return {'Content-Type':'application/json'}; } // hrCors is open for all 3 provinces
+
+async function apiGet(path, opts){
+  const r = await fetch(path, { headers: opts?.headers || hrHeaders() });
+  if(!r.ok) throw new Error('HTTP '+r.status+' '+path);
+  return r.json();
+}
+async function apiPost(path, body, opts){
+  const r = await fetch(path, { method:'POST', headers: opts?.headers || hrHeaders(), body: JSON.stringify(body) });
+  if(!r.ok){ const t=await r.text().catch(()=>'error'); throw new Error('HTTP '+r.status+' '+t.slice(0,80)); }
+  return r.json();
+}
+async function apiPut(path, body, opts){
+  const r = await fetch(path, { method:'PUT', headers: opts?.headers || hrHeaders(), body: JSON.stringify(body) });
+  if(!r.ok) throw new Error('HTTP '+r.status);
+  return r.json();
+}
+
+/* ════ NAV ════ */
+function switchProv(p){
+  STATE.prov = p;
+  document.querySelectorAll('.prov-btn').forEach(b => b.classList.toggle('active', b.dataset.prov===p));
+  $('lbl-prov').textContent = PROV_LABEL[p];
+  $('lbl-prov2').textContent = PROV_LABEL[p];
+  loadAllForTab();
+}
+function switchTab(t){
+  STATE.tab = t;
+  document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b.dataset.tab===t));
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  $('page-'+t).classList.add('active');
+  loadAllForTab();
+}
+function loadAllForTab(){
+  if (STATE.tab === 'personnel') loadPersonnel();
+  else if (STATE.tab === 'salary') loadScale();
+  else if (STATE.tab === 'payslips') { loadPersonnel(); loadPayslips(); loadScale(); }
+  else if (STATE.tab === 'positions') loadPersonnel();
+  else if (STATE.tab === 'leaves') loadLeaves();
+  else if (STATE.tab === 'ot') loadOT();
+  else if (STATE.tab === 'reports') loadReports();
+}
+
+/* ════ PERSONNEL ════ */
+async function loadPersonnel(){
+  const url = `/api/${STATE.prov}/management/personnel`;
+  try{
+    const data = await apiGet(url, { headers: mgmtHeaders() });
+    CACHE.personnel = data.people || [];
+    renderPersonnel();
+  }catch(e){ toast('โหลดบุคลากรไม่สำเร็จ: '+e.message,'err'); $('tbl-personnel').innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--red);padding:18px">'+e.message+'</td></tr>'; }
+}
+function renderPersonnel(){
+  const arr = CACHE.personnel;
+  $('cnt-personnel').textContent = arr.length + ' คน';
+  const c={civil:0,emp:0,perm:0,cont:0};
+  arr.forEach(p=>{ const t=p.employee_type||''; if(t==='ข้าราชการ')c.civil++; else if(t==='พนักงานราชการ')c.emp++; else if(t==='ลูกจ้างประจำ')c.perm++; else if(t==='จ้างเหมาบริการ')c.cont++; });
+  $('k-civil').textContent=c.civil; $('k-emp').textContent=c.emp; $('k-perm').textContent=c.perm; $('k-cont').textContent=c.cont;
+  $('tbl-personnel').innerHTML = arr.length===0
+    ? '<tr><td colspan="7" style="text-align:center;color:var(--sub);padding:18px">ยังไม่มีข้อมูล</td></tr>'
+    : arr.map(p=>`<tr>
+      <td><strong>${p.full_name||'—'}</strong><br><span style="font-size:11px;color:var(--sub)">${p.phone||''}</span></td>
+      <td><span class="chip ${p.employee_type==='ข้าราชการ'?'chip-k':p.employee_type==='พนักงานราชการ'?'chip-s':'chip-m'}">${p.employee_type||'—'}</span></td>
+      <td>${p.position_title||'—'}</td>
+      <td>${p.agency_name||'—'}<br><span style="font-size:11px;color:var(--sub)">${p.dept_name||''}</span></td>
+      <td>${p.position_level||'—'}</td>
+      <td>${p.status||'ปฏิบัติงาน'}</td>
+      <td><button class="btn btn-sm btn-out" onclick='quickGenForPerson(${JSON.stringify(p).replace(/'/g,"&#39;")})'>📄 Gen สลิป</button></td>
+    </tr>`).join('');
+  // also populate position page
+  renderPositions();
+}
+function openPersonModal(){
+  ['m-p-name','m-p-pos','m-p-agency','m-p-dist','m-p-phone'].forEach(id=>$(id).value='');
+  openModal('modal-person');
+}
+async function submitPerson(){
+  const body = {
+    full_name: $('m-p-name').value.trim(),
+    employee_type: $('m-p-type').value,
+    position_title: $('m-p-pos').value.trim(),
+    position_level: $('m-p-lvl').value,
+    agency_name: $('m-p-agency').value.trim(),
+    district: $('m-p-dist').value.trim(),
+    phone: $('m-p-phone').value.trim(),
+    status: 'ปฏิบัติงาน'
+  };
+  if(!body.full_name){ toast('กรุณากรอกชื่อ-สกุล','err'); return; }
+  try{
+    await apiPost(`/api/${STATE.prov}/management/personnel`, body, { headers: mgmtHeaders() });
+    toast('✅ เพิ่มบุคลากรสำเร็จ','ok');
+    closeModal('modal-person');
+    loadPersonnel();
+  }catch(e){ toast('บันทึกไม่สำเร็จ: '+e.message,'err'); }
+}
+
+/* ════ SALARY SCALE ════ */
+async function loadScale(){
+  try{
+    const data = await apiGet(`/api/${STATE.prov}/hr/salary-scale`);
+    CACHE.scale = data.scale;
+    renderScale();
+    populateLevelSelect();
+  }catch(e){ toast('โหลด salary scale ไม่สำเร็จ','err'); }
+}
+function scaleCardHtml(item, chipClass){
+  return `<div class="scale-card">
+    <div class="code"><span class="chip ${chipClass}">${item.code}</span> ${item.level_name}</div>
+    <div class="exp">${item.experience_years||''}</div>
+    <div class="sal">${thb(item.min_salary)} – ${thb(item.max_salary)} บ.</div>
+    <div style="font-size:11px;color:var(--sub);margin-top:2px">ขั้นกลาง ≈ ${thb(item.mid_salary)} บ.</div>
+  </div>`;
+}
+function renderScale(){
+  if(!CACHE.scale) return;
+  $('scale-K').innerHTML = (CACHE.scale.academic||[]).map(s => scaleCardHtml(s,'chip-k')).join('');
+  $('scale-S').innerHTML = (CACHE.scale.general||[]).map(s => scaleCardHtml(s,'chip-s')).join('');
+  $('scale-M').innerHTML = (CACHE.scale.executive||[]).map(s => scaleCardHtml(s,'chip-m')).join('');
+  const d = CACHE.scale.deduction_rules || {};
+  $('ded-rules').innerHTML = `
+    <div>• <strong>ประกันสังคม (ปกส.):</strong> ${(d.social_security_rate*100||5)}% ของฐาน ≤ ${thb(d.social_security_cap_base||15000)} บ. → <strong>เพดาน ${thb(d.social_security_cap_amount||750)} บ./เดือน</strong></div>
+    <div>• <strong>กองทุน กบข.:</strong> ${(d.gpf_rate*100||3)}% ของเงินเดือน (เฉพาะข้าราชการ)</div>
+    <div>• <strong>ภาษีเงินได้บุคคลธรรมดา 2568:</strong> ขั้นบันได 7 ขั้น 0% → 35%</div>
+    <div style="font-size:11px;color:var(--sub);margin-top:6px">${d._tax_note||''}</div>`;
+}
+function populateLevelSelect(){
+  if(!CACHE.scale) return;
+  const sel = $('m-g-level');
+  if(!sel) return;
+  const opts = [];
+  (CACHE.scale.academic||[]).forEach(s=>opts.push({v:s.code,t:`${s.code} · ${s.level_name}`,mid:s.mid_salary}));
+  (CACHE.scale.general||[]).forEach(s=>opts.push({v:s.code,t:`${s.code} · ${s.level_name}`,mid:s.mid_salary}));
+  (CACHE.scale.executive||[]).forEach(s=>opts.push({v:s.code,t:`${s.code} · ${s.level_name}`,mid:s.mid_salary}));
+  sel.innerHTML = opts.map(o=>`<option value="${o.v}" data-mid="${o.mid}">${o.t}</option>`).join('');
+}
+function autoBase(){
+  const sel = $('m-g-level');
+  const mid = sel.selectedOptions[0]?.dataset?.mid;
+  if(mid) $('m-g-base').value = mid;
+}
+
+/* ════ PAYSLIPS ════ */
+async function loadPayslips(){
+  try{
+    const data = await apiGet(`/api/${STATE.prov}/hr/payslips`);
+    CACHE.payslips = data.payslips || [];
+    const months = [...new Set(CACHE.payslips.map(p=>p.month))].sort().reverse();
+    $('filter-month').innerHTML = '<option value="">— ทุกเดือน —</option>' + months.map(m=>`<option value="${m}">${m}</option>`).join('');
+    renderPayslips();
+  }catch(e){ toast('โหลดสลิปไม่สำเร็จ','err'); }
+}
+function renderPayslips(){
+  const m = $('filter-month').value;
+  const q = ($('filter-name').value||'').trim().toLowerCase();
+  let arr = CACHE.payslips;
+  if (m) arr = arr.filter(p=>p.month===m);
+  if (q) arr = arr.filter(p=>(p.full_name||'').toLowerCase().includes(q));
+  $('cnt-pay').textContent = arr.length + ' ฉบับ';
+  $('tbl-pay').innerHTML = arr.length===0
+    ? '<tr><td colspan="12" style="text-align:center;color:var(--sub);padding:18px">ยังไม่มีสลิป</td></tr>'
+    : arr.map(p=>`<tr>
+      <td>${p.month}</td>
+      <td><strong>${p.full_name}</strong><br><span style="font-size:11px;color:var(--sub)">${p.agency_name||''}</span></td>
+      <td><span class="chip ${p.level_code?.startsWith('K')?'chip-k':p.level_code?.startsWith('S')?'chip-s':'chip-m'}">${p.level_code||'—'}</span></td>
+      <td style="text-align:right">${thb(p.base_salary)}</td>
+      <td style="text-align:right">${thb(p.ot_amount)}</td>
+      <td style="text-align:right">${thb(p.allowance)}</td>
+      <td style="text-align:right;color:var(--red)">${thb(p.ssf)}</td>
+      <td style="text-align:right;color:var(--red)">${thb(p.gpf)}</td>
+      <td style="text-align:right;color:var(--red)">${thb(p.tax)}</td>
+      <td style="text-align:right;font-weight:700;color:var(--green1)">${thb(p.net)}</td>
+      <td><span class="chip ${p.status==='จ่ายแล้ว'?'chip-paid':p.status==='ฉบับร่าง'?'chip-draft':'chip-pend'}">${p.status||'—'}</span></td>
+      <td><button class="btn btn-sm btn-out" onclick='showSlip(${JSON.stringify(p).replace(/'/g,"&#39;")})'>ดู</button></td>
+    </tr>`).join('');
+}
+function showSlip(p){
+  $('slip-body').innerHTML = `
+    <div class="slip">
+      <div class="slip-h">
+        <h2>สลิปเงินเดือน — ${PROV_LABEL[STATE.prov]}</h2>
+        <div class="sub">${p.month} · เลขที่ ${p.id}</div>
+      </div>
+      <div class="slip-section">
+        <div class="lbl">ผู้รับเงิน</div>
+        <div><strong>${p.full_name}</strong></div>
+        <div style="font-size:12px;color:var(--sub)">${p.agency_name||''} · ${p.position_level||''} (${p.level_code||'—'})</div>
+      </div>
+      <div class="slip-section">
+        <div class="lbl">รายได้</div>
+        <div class="slip-row"><span>เงินเดือน</span><span>${thb(p.base_salary)} บ.</span></div>
+        <div class="slip-row"><span>OT</span><span>${thb(p.ot_amount)} บ.</span></div>
+        <div class="slip-row"><span>เงินประจำตำแหน่ง / ค่าตอบแทน</span><span>${thb(p.allowance)} บ.</span></div>
+        <div class="slip-row tot"><span>รวมรายได้</span><span>${thb((p.base_salary||0)+(p.ot_amount||0)+(p.allowance||0))} บ.</span></div>
+      </div>
+      <div class="slip-section">
+        <div class="lbl">รายการหัก</div>
+        <div class="slip-row"><span>ประกันสังคม (5% เพดาน 750)</span><span>−${thb(p.ssf)} บ.</span></div>
+        <div class="slip-row"><span>กบข. (3%)</span><span>−${thb(p.gpf)} บ.</span></div>
+        <div class="slip-row"><span>ภาษีหัก ณ ที่จ่าย</span><span>−${thb(p.tax)} บ.</span></div>
+        <div class="slip-row tot"><span>เงินเดือนสุทธิ</span><span style="color:var(--green1)">${thb(p.net)} บ.</span></div>
+      </div>
+      <div style="text-align:center;font-size:11px;color:var(--sub);margin-top:12px;border-top:1px dotted #ccc;padding-top:8px">
+        G2G AgriTech HR · สถานะ: ${p.status||'จ่ายแล้ว'}
+      </div>
+    </div>`;
+  openModal('modal-slip');
+}
+
+function openGenerateModal(){
+  // populate personnel dropdown
+  const sel = $('m-g-personnel');
+  sel.innerHTML = '<option value="">— กรอกเอง —</option>' + CACHE.personnel.map((p,i)=>`<option value="${i}">${p.full_name} (${p.position_level||''})</option>`).join('');
+  $('m-g-name').value=''; $('m-g-agency').value=''; $('m-g-base').value=33000; $('m-g-ot').value=0; $('m-g-allow').value=0;
+  const d = new Date(); $('m-g-month').value = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+  $('gen-preview').innerHTML='';
+  if (!CACHE.scale) loadScale(); else populateLevelSelect();
+  openModal('modal-generate');
+}
+function autofillGen(){
+  const i = $('m-g-personnel').value;
+  if (i==='') return;
+  const p = CACHE.personnel[i];
+  if(!p) return;
+  $('m-g-name').value = p.full_name||'';
+  $('m-g-agency').value = p.agency_name||'';
+}
+function previewGen(){
+  const b = +$('m-g-base').value||0, ot = +$('m-g-ot').value||0, al = +$('m-g-allow').value||0;
+  const gross = b+ot+al;
+  const ssf = Math.min(Math.round(Math.min(b,15000)*0.05), 750);
+  const gpf = Math.round(b*0.03);
+  // simplified preview formula matches server logic
+  const annualGross = gross*12;
+  const expense = Math.min(annualGross*0.4,100000);
+  const taxable = Math.max(0, annualGross - expense - 60000 - ssf*12 - gpf*12);
+  const brackets=[[0,150000,0],[150001,300000,.05],[300001,500000,.1],[500001,750000,.15],[750001,1000000,.2],[1000001,2000000,.25],[2000001,5000000,.3],[5000001,1e12,.35]];
+  let at=0; for(const [f,t,r] of brackets){ if(taxable<=f-1)break; const u=Math.min(taxable,t); at += Math.max(0,u-(f-1))*r; }
+  const tax = Math.round(at/12);
+  const net = gross - ssf - gpf - tax;
+  $('gen-preview').innerHTML = `<strong>📊 พรีวิว</strong><br>
+    รายได้รวม: <strong>${thb(gross)}</strong> · หัก ปกส. <strong>${thb(ssf)}</strong> · หัก กบข. <strong>${thb(gpf)}</strong> · หักภาษี <strong>${thb(tax)}</strong><br>
+    <span style="color:var(--green1);font-weight:800;font-size:15px">เงินสุทธิ: ${thb(net)} บ.</span>`;
+}
+async function submitGenerate(){
+  const body = {
+    personnel_id: '',
+    full_name: $('m-g-name').value.trim(),
+    agency_name: $('m-g-agency').value.trim(),
+    level_code: $('m-g-level').value,
+    position_level: $('m-g-level').selectedOptions[0]?.text?.split('·')[1]?.trim()||'',
+    base_salary: +$('m-g-base').value,
+    ot_amount: +$('m-g-ot').value,
+    allowance: +$('m-g-allow').value,
+    month: $('m-g-month').value,
+    status: 'จ่ายแล้ว'
+  };
+  if(!body.full_name||!body.month||!body.base_salary){ toast('กรอก ชื่อ + เดือน + เงินเดือน','err'); return; }
+  try{
+    const r = await apiPost(`/api/${STATE.prov}/hr/payslips/generate`, body);
+    toast('✅ Generate สลิปสำเร็จ — สุทธิ '+thb(r.breakdown.net)+' บ.','ok');
+    closeModal('modal-generate');
+    loadPayslips();
+  }catch(e){ toast('Generate ไม่สำเร็จ: '+e.message,'err'); }
+}
+function quickGenForPerson(p){
+  openGenerateModal();
+  setTimeout(()=>{
+    $('m-g-name').value = p.full_name||'';
+    $('m-g-agency').value = p.agency_name||'';
+    // try to map position_level → level_code
+    const lvl = (p.position_level||'').toLowerCase();
+    let code='K2';
+    if(lvl.includes('ปฏิบัติการ'))code='K1';
+    else if(lvl.includes('ชำนาญการพิเศษ'))code='K3';
+    else if(lvl.includes('เชี่ยวชาญ'))code='K4';
+    else if(lvl.includes('ทรงคุณวุฒิ')||lvl.includes('สูงสุด'))code='K5';
+    else if(lvl.includes('ปฏิบัติงาน'))code='S1';
+    else if(lvl.includes('ชำนาญงาน'))code='S2';
+    else if(lvl.includes('อาวุโส'))code='S3';
+    else if(lvl.includes('อำนวยการต้น'))code='M1';
+    else if(lvl.includes('อำนวยการสูง'))code='M2';
+    const sel=$('m-g-level'); for(const o of sel.options){ if(o.value===code){ o.selected=true; break; } }
+    autoBase();
+  },120);
+}
+
+/* ════ POSITIONS ════ */
+function renderPositions(){
+  const arr = CACHE.personnel;
+  if (arr.length === 0) { $('positions-content').innerHTML = '<div style="color:var(--sub);text-align:center;padding:18px">ยังไม่มีข้อมูล</div>'; return; }
+  const groups = {};
+  arr.forEach(p=>{
+    const k = p.position_level || 'ไม่ระบุ';
+    if(!groups[k]) groups[k]=[];
+    groups[k].push(p);
+  });
+  let html = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px">';
+  for(const [lvl,ps] of Object.entries(groups)){
+    html += `<div style="border:1px solid var(--border);border-radius:10px;padding:12px;background:#fff">
+      <div style="font-weight:700;color:var(--navy1);margin-bottom:6px">🎖️ ${lvl} <span class="badge" style="background:var(--bg2);padding:1px 7px;border-radius:8px;font-size:11px">${ps.length}</span></div>
+      ${ps.map(p=>`<div style="font-size:12px;padding:4px 0;border-bottom:1px dotted #eee"><strong>${p.full_name}</strong> · <span style="color:var(--sub)">${p.position_title||''}</span></div>`).join('')}
+    </div>`;
+  }
+  html += '</div>';
+  $('positions-content').innerHTML = html;
+}
+
+/* ════ LEAVES ════ */
+async function loadLeaves(){
+  try{
+    const data = await apiGet(`/api/${STATE.prov}/hr/leaves`);
+    CACHE.leaves = data.leaves || [];
+    $('cnt-leave').textContent = CACHE.leaves.length+' รายการ';
+    $('tbl-leave').innerHTML = CACHE.leaves.length===0
+      ? '<tr><td colspan="7" style="text-align:center;color:var(--sub);padding:18px">ยังไม่มีข้อมูล</td></tr>'
+      : CACHE.leaves.map(l=>`<tr>
+        <td>${l.full_name||'—'}</td>
+        <td>${l.leave_type||'—'}</td>
+        <td>${l.from||'—'}</td>
+        <td>${l.to||'—'}</td>
+        <td style="text-align:center">${l.days||0}</td>
+        <td>${l.reason||'—'}</td>
+        <td><span class="chip ${l.status==='อนุมัติ'?'chip-paid':'chip-pend'}">${l.status||'—'}</span></td>
+      </tr>`).join('');
+  }catch(e){ toast('โหลดข้อมูลลาไม่สำเร็จ','err'); }
+}
+function openLeaveModal(){
+  ['m-l-name','m-l-from','m-l-to','m-l-reason'].forEach(id=>$(id).value='');
+  $('m-l-days').value=1;
+  openModal('modal-leave');
+}
+async function submitLeave(){
+  const body = {
+    full_name: $('m-l-name').value.trim(),
+    leave_type: $('m-l-type').value,
+    days: +$('m-l-days').value||1,
+    from: $('m-l-from').value,
+    to: $('m-l-to').value,
+    reason: $('m-l-reason').value.trim(),
+    status: 'รออนุมัติ'
+  };
+  if(!body.full_name){ toast('กรุณากรอกชื่อ','err'); return; }
+  try{
+    await apiPost(`/api/${STATE.prov}/hr/leaves`, body);
+    toast('✅ บันทึกลาสำเร็จ','ok');
+    closeModal('modal-leave');
+    loadLeaves();
+  }catch(e){ toast('บันทึกไม่สำเร็จ','err'); }
+}
+
+/* ════ OT ════ */
+async function loadOT(){
+  try{
+    const data = await apiGet(`/api/${STATE.prov}/hr/ot`);
+    CACHE.ot = data.ot || [];
+    $('cnt-ot').textContent = CACHE.ot.length+' รายการ';
+    $('tbl-ot').innerHTML = CACHE.ot.length===0
+      ? '<tr><td colspan="7" style="text-align:center;color:var(--sub);padding:18px">ยังไม่มีข้อมูล</td></tr>'
+      : CACHE.ot.map(o=>`<tr>
+        <td>${o.date||'—'}</td>
+        <td>${o.full_name||'—'}</td>
+        <td style="text-align:center">${o.hours||0}</td>
+        <td style="text-align:right">${thb(o.rate)}</td>
+        <td style="text-align:right;font-weight:700">${thb(o.amount)}</td>
+        <td>${o.reason||'—'}</td>
+        <td><span class="chip ${o.status==='อนุมัติ'?'chip-paid':'chip-pend'}">${o.status||'—'}</span></td>
+      </tr>`).join('');
+  }catch(e){ toast('โหลด OT ไม่สำเร็จ','err'); }
+}
+function openOTModal(){
+  ['m-o-name','m-o-date','m-o-reason'].forEach(id=>$(id).value='');
+  $('m-o-hours').value=3; $('m-o-rate').value=150;
+  openModal('modal-ot');
+}
+async function submitOT(){
+  const body = {
+    full_name: $('m-o-name').value.trim(),
+    date: $('m-o-date').value,
+    hours: +$('m-o-hours').value||0,
+    rate:  +$('m-o-rate').value||150,
+    reason:$('m-o-reason').value.trim(),
+    status:'รออนุมัติ'
+  };
+  if(!body.full_name||!body.date){ toast('กรอก ชื่อ + วันที่','err'); return; }
+  try{
+    await apiPost(`/api/${STATE.prov}/hr/ot`, body);
+    toast('✅ บันทึก OT สำเร็จ','ok');
+    closeModal('modal-ot');
+    loadOT();
+  }catch(e){ toast('บันทึกไม่สำเร็จ','err'); }
+}
+
+/* ════ REPORTS ════ */
+async function loadReports(){
+  try{
+    const [ps,lv,ot] = await Promise.all([
+      apiGet(`/api/${STATE.prov}/hr/payslips`),
+      apiGet(`/api/${STATE.prov}/hr/leaves`),
+      apiGet(`/api/${STATE.prov}/hr/ot`),
+    ]);
+    const slips = ps.payslips || [], leaves = lv.leaves || [], otArr = ot.ot || [];
+    const months = [...new Set(slips.map(s=>s.month))].sort().reverse();
+    const latest = months[0];
+    const latestSlips = slips.filter(s=>s.month===latest);
+    const payrollTotal = latestSlips.reduce((s,p)=>s+((p.base_salary||0)+(p.ot_amount||0)+(p.allowance||0)),0);
+    const taxTotal = latestSlips.reduce((s,p)=>s+(p.tax||0),0);
+    const otTotal = otArr.reduce((s,o)=>s+(o.amount||0),0);
+    const leaveDays = leaves.reduce((s,l)=>s+(l.days||0),0);
+    $('r-payroll').textContent = thb(payrollTotal);
+    $('r-tax').textContent = thb(taxTotal);
+    $('r-ot').textContent = thb(otTotal);
+    $('r-leave-days').textContent = leaveDays;
+    // month bars
+    const byMonth = {};
+    slips.forEach(s=>{ byMonth[s.month] = (byMonth[s.month]||0) + (s.base_salary||0)+(s.ot_amount||0)+(s.allowance||0); });
+    const max = Math.max(1, ...Object.values(byMonth));
+    $('r-month-bars').innerHTML = Object.entries(byMonth).sort().map(([m,v])=>{
+      const pct = Math.round(v/max*100);
+      return `<div style="margin:6px 0"><div style="display:flex;justify-content:space-between;font-size:12px"><strong>${m}</strong><span>${thb(v)} บ.</span></div>
+        <div style="background:var(--bg2);border-radius:4px;height:8px;overflow:hidden"><div style="background:var(--navy3);height:100%;width:${pct}%"></div></div></div>`;
+    }).join('') || '<div style="color:var(--sub)">ยังไม่มีข้อมูล</div>';
+    // leave breakdown
+    const lvByType = {};
+    leaves.forEach(l=>{ lvByType[l.leave_type] = (lvByType[l.leave_type]||0) + (l.days||0); });
+    $('r-leave-table').innerHTML = `<table class="tbl"><thead><tr><th>ประเภท</th><th style="text-align:right">วัน</th></tr></thead><tbody>${
+      Object.entries(lvByType).map(([t,d])=>`<tr><td>${t}</td><td style="text-align:right">${d}</td></tr>`).join('') || '<tr><td colspan="2" style="text-align:center;color:var(--sub);padding:18px">ยังไม่มีข้อมูล</td></tr>'
+    }</tbody></table>`;
+    // top OT
+    const topOt = otArr.slice().sort((a,b)=>(b.amount||0)-(a.amount||0)).slice(0,5);
+    $('r-ot-table').innerHTML = `<table class="tbl"><thead><tr><th>วันที่</th><th>ชื่อ</th><th>ชั่วโมง</th><th>เงิน</th><th>เหตุผล</th></tr></thead><tbody>${
+      topOt.map(o=>`<tr><td>${o.date}</td><td>${o.full_name}</td><td style="text-align:center">${o.hours}</td><td style="text-align:right">${thb(o.amount)}</td><td>${o.reason||''}</td></tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--sub);padding:18px">ยังไม่มี OT</td></tr>'
+    }</tbody></table>`;
+  }catch(e){ toast('โหลดรายงานไม่สำเร็จ','err'); }
+}
+
+/* ════ INIT ════ */
+window.addEventListener('DOMContentLoaded', ()=>{
+  loadPersonnel();
+  loadScale();
+});
+</script>
+
+<script src="/access-bar.js"></script>
+</body>
+</html>

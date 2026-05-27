@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0f1f0f">
+<title>HERO Career — แอพฝึกอาชีพ AI ระดับโลก</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700;800&family=Sarabun:wght@400;600;700&display=swap">
+<style>
+:root{
+  --bg:#0f1f0f;--bg2:#162416;--surface:#1e321e;--surface2:#263826;
+  --gold:#c9a227;--gold-soft:#e8c84a;--gold-pale:#f5e7a8;
+  --green:#4caf50;--green-bright:#69f77a;--green-dark:#2e7d32;
+  --white:#f5f5f0;--gray:#9aab9a;--red:#ef5350;
+  --font:'Bai Jamjuree','Sarabun',sans-serif;
+  --fs:1rem;--ease:cubic-bezier(0.22,1,0.36,1);
+  --r:16px;--shadow:0 8px 32px rgba(0,0,0,.4)
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{font-size:var(--fs)}
+body{font-family:var(--font);background:var(--bg);color:var(--white);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;border:none;cursor:pointer;background:none;color:inherit}
+
+/* ACCESSIBILITY BAR */
+.a11y-bar{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(15,31,15,.95);backdrop-filter:blur(12px);padding:8px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(201,162,39,.2)}
+.a11y-left{display:flex;align-items:center;gap:8px}
+.a11y-brand{font-size:.9rem;font-weight:800;letter-spacing:2px;color:var(--gold)}
+.a11y-right{display:flex;align-items:center;gap:6px}
+.font-btn{padding:4px 10px;border-radius:8px;background:var(--surface);color:var(--white);font-size:.8rem;font-weight:700;transition:background .15s}
+.font-btn:hover{background:var(--surface2)}
+.voice-btn{width:32px;height:32px;border-radius:50%;background:var(--green-dark);display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .2s}
+.voice-btn.active{background:var(--red);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(239,83,80,.4)}50%{box-shadow:0 0 0 8px rgba(239,83,80,0)}}
+
+/* HERO BANNER */
+.hero{margin-top:48px;padding:32px 20px 24px;text-align:center;background:radial-gradient(ellipse at 50% 0%,rgba(201,162,39,.15) 0%,transparent 60%)}
+.hero-badge{display:inline-block;background:linear-gradient(135deg,var(--gold),var(--gold-soft));color:var(--bg);font-size:.75rem;font-weight:800;letter-spacing:3px;padding:5px 16px;border-radius:20px;margin-bottom:14px;text-transform:uppercase}
+.hero h1{font-size:clamp(1.6rem,5vw,2.4rem);font-weight:800;line-height:1.2;margin-bottom:8px;background:linear-gradient(180deg,var(--white) 0%,var(--gold-pale) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:.95rem;color:var(--gray);line-height:1.7;max-width:400px;margin:0 auto 20px}
+.hero-stats{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:8px}
+.stat{background:var(--surface);border-radius:12px;padding:8px 16px;font-size:.82rem;font-weight:600;color:var(--gold-soft)}
+
+/* SEARCH */
+.search-wrap{padding:0 16px 16px}
+.search-box{position:relative}
+.search-box input{width:100%;background:var(--surface);border:1px solid rgba(201,162,39,.2);border-radius:12px;padding:12px 14px 12px 40px;color:var(--white);font-family:var(--font);font-size:.95rem;outline:none;transition:border .2s}
+.search-box input:focus{border-color:var(--gold)}
+.search-box input::placeholder{color:var(--gray)}
+.search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;color:var(--gray);pointer-events:none}
+
+/* FILTER */
+.filter-row{display:flex;gap:8px;overflow-x:auto;padding:0 16px 12px;scrollbar-width:none}
+.filter-row::-webkit-scrollbar{display:none}
+.filter-chip{flex:0 0 auto;padding:7px 16px;border-radius:20px;font-size:.8rem;font-weight:600;background:var(--surface);color:var(--gray);transition:all .2s;border:1px solid transparent;cursor:pointer}
+.filter-chip.active{background:var(--green-dark);color:var(--white);border-color:var(--green)}
+
+/* SECTION */
+.section{padding:0 16px 8px}
+.section-title{font-size:.8rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;padding-left:2px}
+
+/* APP GRID */
+.app-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:24px}
+@media(min-width:500px){.app-grid{grid-template-columns:repeat(3,1fr)}}
+.app-card{background:var(--surface);border-radius:20px;overflow:hidden;position:relative;cursor:pointer;transition:transform .2s var(--ease),box-shadow .2s;border:1px solid rgba(255,255,255,.05);text-decoration:none;display:block}
+.app-card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.app-card:active{transform:scale(.97)}
+.app-card-thumb{height:100px;display:flex;align-items:center;justify-content:center;font-size:44px;position:relative;overflow:hidden}
+.app-card-thumb::after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,rgba(30,50,30,.8) 0%,transparent 60%)}
+.app-card-body{padding:10px 12px 12px}
+.app-card-name{font-size:.88rem;font-weight:700;color:var(--white);margin-bottom:2px;line-height:1.3}
+.app-card-desc{font-size:.72rem;color:var(--gray);margin-bottom:8px;line-height:1.4}
+.app-card-meta{display:flex;align-items:center;justify-content:space-between}
+.app-card-level{font-size:.68rem;background:rgba(201,162,39,.15);color:var(--gold-soft);padding:2px 8px;border-radius:8px;font-weight:600}
+.app-card-users{font-size:.68rem;color:var(--gray)}
+.app-card-badge{position:absolute;top:8px;right:8px;z-index:2;font-size:.62rem;font-weight:800;padding:3px 8px;border-radius:8px;letter-spacing:1px}
+.badge-new{background:var(--gold);color:var(--bg)}
+.badge-hot{background:var(--red);color:#fff}
+.badge-phrae{background:var(--green-dark);color:#fff}
+
+/* FEATURED CARD */
+.featured-card{background:linear-gradient(135deg,var(--surface) 0%,var(--bg2) 100%);border-radius:24px;padding:20px;margin:0 16px 20px;border:1px solid rgba(201,162,39,.2);position:relative;overflow:hidden;cursor:pointer;transition:transform .2s}
+.featured-card::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(201,162,39,.2),transparent 70%)}
+.featured-card:hover{transform:translateY(-2px)}
+.featured-tag{font-size:.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.featured-icon{font-size:48px;float:right;margin:-8px 0 0 12px}
+.featured-name{font-size:1.2rem;font-weight:800;margin-bottom:4px}
+.featured-desc{font-size:.83rem;color:var(--gray);line-height:1.5;margin-bottom:12px}
+.featured-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 20px;background:linear-gradient(135deg,var(--gold),var(--gold-soft));color:var(--bg);border-radius:12px;font-size:.85rem;font-weight:700;text-decoration:none;transition:opacity .2s}
+.featured-btn:hover{opacity:.9}
+.featured-meta{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
+.f-meta-item{font-size:.72rem;color:var(--gray);display:flex;align-items:center;gap:4px}
+
+/* HOW IT WORKS */
+.how-section{padding:16px;margin-bottom:8px}
+.how-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(min-width:500px){.how-grid{grid-template-columns:repeat(4,1fr)}}
+.how-card{background:var(--surface);border-radius:16px;padding:14px 12px;text-align:center}
+.how-icon{font-size:28px;margin-bottom:8px}
+.how-title{font-size:.8rem;font-weight:700;color:var(--gold-soft);margin-bottom:4px}
+.how-desc{font-size:.72rem;color:var(--gray);line-height:1.4}
+
+/* PROPOSAL CTA */
+.proposal-cta{margin:0 16px 24px;background:linear-gradient(135deg,#1a1f3a,#0a0e27);border:1px solid rgba(201,162,39,.3);border-radius:20px;padding:20px;text-align:center}
+.proposal-cta h3{font-size:1rem;font-weight:700;color:var(--gold-soft);margin-bottom:6px}
+.proposal-cta p{font-size:.8rem;color:var(--gray);margin-bottom:14px;line-height:1.6}
+.proposal-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 24px;background:linear-gradient(135deg,#4a148c,#1565c0);color:#fff;border-radius:12px;font-size:.85rem;font-weight:700;text-decoration:none;border:none;cursor:pointer;font-family:var(--font)}
+
+/* WORLD MODELS */
+.world-section{padding:0 16px 20px}
+.world-scroll{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none}
+.world-scroll::-webkit-scrollbar{display:none}
+.world-card{flex:0 0 140px;background:var(--surface2);border-radius:14px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,.05)}
+.world-logo{font-size:24px;margin-bottom:6px}
+.world-name{font-size:.75rem;font-weight:700;color:var(--white);margin-bottom:3px}
+.world-method{font-size:.65rem;color:var(--gold);font-weight:600;margin-bottom:4px}
+.world-desc{font-size:.65rem;color:var(--gray);line-height:1.4}
+
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(15,31,15,.97);backdrop-filter:blur(16px);border-top:1px solid rgba(255,255,255,.08);display:flex;padding:8px 0 max(8px,env(safe-area-inset-bottom));z-index:100}
+.bn-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px;color:var(--gray);font-size:.65rem;font-weight:600;transition:color .2s}
+.bn-btn.active{color:var(--green-bright)}
+.bn-icon{font-size:20px;line-height:1}
+
+/* AI CHAT FLOAT */
+.ai-fab{position:fixed;bottom:72px;right:16px;z-index:150}
+.ai-fab-btn{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--green-dark),#1b5e20);box-shadow:0 4px 20px rgba(0,0,0,.5),0 0 0 2px rgba(76,175,80,.3);display:flex;align-items:center;justify-content:center;font-size:22px;transition:transform .2s}
+.ai-fab-btn:hover{transform:scale(1.1)}
+
+/* AI DRAWER */
+.ai-drawer{position:fixed;bottom:0;left:0;right:0;height:60vh;background:var(--surface);border-radius:24px 24px 0 0;z-index:300;transform:translateY(100%);transition:transform .3s var(--ease);display:flex;flex-direction:column;padding-bottom:max(16px,env(safe-area-inset-bottom))}
+.ai-drawer.open{transform:translateY(0)}
+.ai-drawer-handle{width:40px;height:4px;background:rgba(255,255,255,.15);border-radius:2px;margin:12px auto 8px}
+.ai-drawer-header{display:flex;align-items:center;gap:10px;padding:0 16px 12px;border-bottom:1px solid rgba(255,255,255,.08)}
+.ai-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--green-dark),var(--gold));display:flex;align-items:center;justify-content:center;font-size:18px}
+.ai-name{font-weight:700;font-size:.9rem}
+.ai-status{font-size:.72rem;color:var(--green);font-weight:600}
+.ai-msgs{flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:10px}
+.ai-msg{max-width:80%;padding:10px 14px;border-radius:14px;font-size:.88rem;line-height:1.5;white-space:pre-line}
+.ai-msg.bot{background:var(--surface2);color:var(--white);align-self:flex-start;border-bottom-left-radius:4px}
+.ai-msg.user{background:var(--green-dark);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.ai-input-row{display:flex;gap:8px;padding:10px 16px 0;align-items:center}
+.ai-input{flex:1;background:var(--surface2);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px 14px;color:var(--white);font-family:var(--font);font-size:.88rem;outline:none}
+.ai-input:focus{border-color:var(--green)}
+.ai-send{width:38px;height:38px;border-radius:10px;background:var(--green-dark);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px}
+.ai-voice-btn{width:38px;height:38px;border-radius:10px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:16px;transition:background .2s}
+.ai-voice-btn.listening{background:var(--red)}
+
+/* LOADING DOTS */
+.dots::after{content:'';animation:d 1s steps(3) infinite}
+@keyframes d{0%{content:'.'}33%{content:'..'}66%{content:'...'}100%{content:''}}
+
+/* OVERLAY */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:250;opacity:0;pointer-events:none;transition:opacity .2s}
+.overlay.show{opacity:1;pointer-events:all}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:2px}
+
+/* RESPONSIVE */
+@media(min-width:600px){
+  .app-grid{grid-template-columns:repeat(3,1fr)}
+  .how-grid{grid-template-columns:repeat(4,1fr)}
+}
+.main-content{padding-bottom:80px}
+</style>
+</head>
+<body>
+
+<!-- ACCESSIBILITY BAR -->
+<div class="a11y-bar">
+  <div class="a11y-left">
+    <span class="a11y-brand">HERO</span>
+    <span style="font-size:.7rem;color:var(--gray)">Career AI</span>
+  </div>
+  <div class="a11y-right">
+    <button class="font-btn" onclick="setFont(-1)" aria-label="ลดขนาดตัวอักษร">A-</button>
+    <button class="font-btn" onclick="setFont(0)" aria-label="ขนาดปกติ">A</button>
+    <button class="font-btn" onclick="setFont(1)" aria-label="เพิ่มขนาดตัวอักษร">A+</button>
+    <button class="voice-btn" id="mainVoiceBtn" onclick="toggleVoice()" aria-label="เปิด/ปิดเสียง" title="พูดคุยกับ AI">🎤</button>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">🌟 HERO First — Thailand's AI Career Platform</div>
+    <h1>ฝึกอาชีพด้วย AI<br>สนุกกว่าเล่นเกม</h1>
+    <p>เรียนรู้อาชีพ 108 แบบ ผ่าน AI ที่จำคุณได้ทุกเรื่อง<br>เหมือนมีโค้ชส่วนตัว 24 ชั่วโมง ไม่ต้องจ่ายเงิน</p>
+    <div class="hero-stats">
+      <div class="stat">🏆 108 อาชีพ</div>
+      <div class="stat">🤖 AI Coach 24/7</div>
+      <div class="stat">🎮 Gamified</div>
+      <div class="stat">🆓 ฟรีทั้งหมด</div>
+    </div>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="search-wrap">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="ค้นหาอาชีพที่สนใจ..." oninput="filterApps(this.value)" autocomplete="off">
+    </div>
+  </div>
+
+  <!-- FILTER -->
+  <div class="filter-row">
+    <button class="filter-chip active" onclick="filterCat('all',this)">ทั้งหมด</button>
+    <button class="filter-chip" onclick="filterCat('agri',this)">🌾 เกษตร</button>
+    <button class="filter-chip" onclick="filterCat('gem',this)">💎 อัญมณี</button>
+    <button class="filter-chip" onclick="filterCat('craft',this)">🎨 หัตถกรรม</button>
+    <button class="filter-chip" onclick="filterCat('tech',this)">🔧 ช่าง</button>
+    <button class="filter-chip" onclick="filterCat('service',this)">🏨 บริการ</button>
+    <button class="filter-chip" onclick="filterCat('biz',this)">💼 ธุรกิจ</button>
+    <button class="filter-chip" onclick="filterCat('digital',this)">💻 ดิจิทัล</button>
+  </div>
+
+  <!-- FEATURED -->
+  <div class="featured-card" onclick="location.href='career-farmer.html'">
+    <div class="featured-tag">⭐ แนะนำ — เริ่มที่นี่</div>
+    <div class="featured-icon">🍈</div>
+    <div class="featured-name">ชาวสวนผลไม้ AI</div>
+    <div class="featured-desc">เรียนรู้ตั้งแต่ปลูกจนขาย ด้วย AI โค้ชส่วนตัว 10 ด่าน<br>ปลดล็อค "ปราชญ์เกษตร" ระดับสูงสุด</div>
+    <a href="career-farmer.html" class="featured-btn">🚀 เริ่มเรียนฟรี</a>
+    <div class="featured-meta">
+      <span class="f-meta-item">⭐ 4.9/5</span>
+      <span class="f-meta-item">👥 1,247 คน</span>
+      <span class="f-meta-item">⏱ 10 ด่าน</span>
+      <span class="f-meta-item">🏆 12 badge</span>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="how-section">
+    <div class="section-title">วิธีเรียนรู้</div>
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-icon">🎮</div>
+        <div class="how-title">เล่นเป็นด่าน</div>
+        <div class="how-desc">เรียนรู้แบบเกม มี XP และ Badge</div>
+      </div>
+      <div class="how-card">
+        <div class="how-icon">🤖</div>
+        <div class="how-title">AI สอนสด</div>
+        <div class="how-desc">ถามตอบกับ AI เชี่ยวชาญรายอาชีพ</div>
+      </div>
+      <div class="how-card">
+        <div class="how-icon">🎤</div>
+        <div class="how-title">คุยด้วยเสียง</div>
+        <div class="how-desc">พูดภาษาไทยได้เลย ไม่ต้องพิมพ์</div>
+      </div>
+      <div class="how-card">
+        <div class="how-icon">📲</div>
+        <div class="how-title">ใช้ได้ทุกที่</div>
+        <div class="how-desc">มือถือ คอมพิวเตอร์ ทุกยี่ห้อ</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APP STORE -->
+  <div class="section">
+    <div class="section-title">เลือกอาชีพที่สนใจ</div>
+    <div class="app-grid" id="appGrid"></div>
+  </div>
+
+  <!-- WORLD-CLASS MODELS -->
+  <div class="world-section">
+    <div class="section-title">ผสมแนวคิดจากแพลตฟอร์มระดับโลก</div>
+    <div class="world-scroll">
+      <div class="world-card">
+        <div class="world-logo">🦉</div>
+        <div class="world-name">Duolingo</div>
+        <div class="world-method">Gamification</div>
+        <div class="world-desc">Streak, XP, Level, Daily quest</div>
+      </div>
+      <div class="world-card">
+        <div class="world-logo">🎬</div>
+        <div class="world-name">MasterClass</div>
+        <div class="world-method">Expert-led</div>
+        <div class="world-desc">สอนโดยปราชญ์ชาวบ้านจริง</div>
+      </div>
+      <div class="world-card">
+        <div class="world-logo">📱</div>
+        <div class="world-name">TikTok</div>
+        <div class="world-method">Micro-learning</div>
+        <div class="world-desc">บทเรียน 60 วินาที swipe ไป</div>
+      </div>
+      <div class="world-card">
+        <div class="world-logo">🎯</div>
+        <div class="world-name">Khan Academy</div>
+        <div class="world-method">Mastery</div>
+        <div class="world-desc">ทำซ้ำจนเก่ง ฟรีตลอดกาล</div>
+      </div>
+      <div class="world-card">
+        <div class="world-logo">🏆</div>
+        <div class="world-name">Kahoot</div>
+        <div class="world-method">Social Quiz</div>
+        <div class="world-desc">แข่งกับชุมชน สนุกไม่หยุด</div>
+      </div>
+      <div class="world-card">
+        <div class="world-logo">🔮</div>
+        <div class="world-name">LePhaya</div>
+        <div class="world-method">Personal AI</div>
+        <div class="world-desc">AI จำคุณ ปรับเนื้อหาเฉพาะตัว</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROPOSAL CTA -->
+  <div class="proposal-cta">
+    <h3>🏛️ โครงการ HERO First — ระดับชาติ</h3>
+    <p>G2G เสนอโครงการพัฒนาทักษะแรงงานไทยด้วย AI ต่อกระทรวงแรงงาน กระทรวงศึกษา และ อว.<br>เป้าหมาย: คนไทย 10 ล้านคน ได้รับการพัฒนาอาชีพภายใน 3 ปี</p>
+    <button class="proposal-btn" onclick="showProposal()">📋 ดูโครงการข้อเสนอ</button>
+  </div>
+
+</main>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button class="bn-btn active"><div class="bn-icon">🏠</div>หน้าหลัก</button>
+  <button class="bn-btn" onclick="location.href='career.html'"><div class="bn-icon">🔍</div>ค้นหา</button>
+  <button class="bn-btn" onclick="location.href='career.html#tab-learn'"><div class="bn-icon">📚</div>คอร์ส</button>
+  <button class="bn-btn" onclick="openAI()"><div class="bn-icon">🤖</div>AI</button>
+  <button class="bn-btn" onclick="location.href='career.html#tab-profile'"><div class="bn-icon">👤</div>ฉัน</button>
+</div>
+
+<!-- AI FAB -->
+<button class="ai-fab-btn" id="aiFab" onclick="openAI()" style="position:fixed;bottom:72px;right:16px;z-index:150;border-radius:50%;width:52px;height:52px;background:linear-gradient(135deg,#2e7d32,#1b5e20);box-shadow:0 4px 20px rgba(0,0,0,.5);font-size:22px">🤖</button>
+
+<!-- OVERLAY -->
+<div class="overlay" id="overlay" onclick="closeAI()"></div>
+
+<!-- AI DRAWER -->
+<div class="ai-drawer" id="aiDrawer">
+  <div class="ai-drawer-handle"></div>
+  <div class="ai-drawer-header">
+    <div class="ai-avatar">🤖</div>
+    <div>
+      <div class="ai-name">AI อาชีพ — HERO</div>
+      <div class="ai-status">ออนไลน์ • พร้อมสอน</div>
+    </div>
+    <button onclick="closeAI()" style="margin-left:auto;font-size:20px;color:var(--gray)">✕</button>
+  </div>
+  <div class="ai-msgs" id="aiMsgs"></div>
+  <div class="ai-input-row">
+    <button class="ai-voice-btn" id="drawerVoiceBtn" onclick="toggleDrawerVoice()" title="พูด">🎤</button>
+    <input class="ai-input" id="aiInput" placeholder="ถามอะไรก็ได้เกี่ยวกับอาชีพ..." onkeydown="if(event.key==='Enter')sendAI()">
+    <button class="ai-send" onclick="sendAI()">➤</button>
+  </div>
+</div>
+
+<script>
+// ========== DATA: CAREER APPS ==========
+const APPS = [
+  {id:'farmer',name:'ชาวสวนผลไม้',desc:'ปลูก ดูแล เก็บเกี่ยว ขาย',icon:'🍈',bg:'linear-gradient(135deg,#1b5e20,#2e7d32)',cat:'agri',users:1247,levels:10,badge:'hot',url:'career-farmer.html'},
+  {id:'gem',name:'อัญมณีและเครื่องประดับ',desc:'เจียระไน ตรวจ ซื้อขาย',icon:'💎',bg:'linear-gradient(135deg,#4a148c,#7b1fa2)',cat:'gem',users:834,levels:8,badge:'phrae',url:'career-gem.html'},
+  {id:'wood',name:'ช่างไม้สักแพร่',desc:'แกะสลัก เฟอร์นิเจอร์ ส่งออก',icon:'🪵',bg:'linear-gradient(135deg,#4e342e,#6d4c41)',cat:'craft',users:612,levels:10,badge:'phrae',url:'career-wood.html'},
+  {id:'weave',name:'ผ้าทอและหัตถกรรม',desc:'ทอผ้า ย้อมสี สร้างแบรนด์',icon:'🧵',bg:'linear-gradient(135deg,#880e4f,#c2185b)',cat:'craft',users:445,levels:8,badge:'phrae',url:'#coming'},
+  {id:'food',name:'อาหารพื้นเมืองและขนม',desc:'สูตร Food Safety ขาย',icon:'🍱',bg:'linear-gradient(135deg,#e65100,#f57c00)',cat:'service',users:987,levels:10,badge:'hot',url:'#coming'},
+  {id:'elec',name:'ช่างไฟฟ้าและ Solar',desc:'มาตรฐาน กฟภ. + Solar Cell',icon:'⚡',bg:'linear-gradient(135deg,#1565c0,#1976d2)',cat:'tech',users:523,levels:12,badge:'hot',url:'#coming'},
+  {id:'mechanic',name:'ช่างยนต์และ EV',desc:'OBD2 EV ADAS ยุคใหม่',icon:'🚗',bg:'linear-gradient(135deg,#37474f,#546e7a)',cat:'tech',users:678,levels:10,badge:'new',url:'#coming'},
+  {id:'tour',name:'ไกด์ท่องเที่ยว',desc:'Story แพร่ ภาษา ทัวร์',icon:'🏔️',bg:'linear-gradient(135deg,#006064,#00838f)',cat:'service',users:234,levels:8,badge:'',url:'#coming'},
+  {id:'cafe',name:'ร้านกาแฟและเครื่องดื่ม',desc:'Latte Art สูตร บริหารร้าน',icon:'☕',bg:'linear-gradient(135deg,#3e2723,#4e342e)',cat:'service',users:892,levels:8,badge:'hot',url:'#coming'},
+  {id:'digital',name:'ดิจิทัลและ Content Creator',desc:'TikTok SEO AI Marketing',icon:'📱',bg:'linear-gradient(135deg,#1a237e,#283593)',cat:'digital',users:1534,levels:12,badge:'hot',url:'#coming'},
+  {id:'account',name:'บัญชีและการเงิน SME',desc:'FlowAccount ภาษี งบ',icon:'💰',bg:'linear-gradient(135deg,#33691e,#558b2f)',cat:'biz',users:356,levels:8,badge:'new',url:'#coming'},
+  {id:'care',name:'ดูแลผู้สูงอายุ',desc:'Caregiver มาตรฐาน Home Care',icon:'👴',bg:'linear-gradient(135deg,#c62828,#e53935)',cat:'service',users:445,levels:8,badge:'new',url:'#coming'},
+  {id:'organic',name:'เกษตรอินทรีย์',desc:'Organic Thai ปุ๋ยธรรมชาติ',icon:'🌿',bg:'linear-gradient(135deg,#2e7d32,#388e3c)',cat:'agri',users:678,levels:10,badge:'',url:'#coming'},
+  {id:'sme',name:'ผู้ประกอบการ SME',desc:'ธุรกิจ จดทะเบียน Marketing',icon:'🏢',bg:'linear-gradient(135deg,#1565c0,#0288d1)',cat:'biz',users:923,levels:12,badge:'hot',url:'#coming'},
+  {id:'rice',name:'ชาวนา',desc:'ปลูกข้าว GAP ขาย Premium',icon:'🌾',bg:'linear-gradient(135deg,#f57f17,#f9a825)',cat:'agri',users:3800,levels:10,badge:'',url:'#coming'},
+  {id:'massage',name:'นวดแผนไทยและสปา',desc:'150 ท่า Aroma Thai Spa',icon:'💆',bg:'linear-gradient(135deg,#00695c,#00897b)',cat:'service',users:567,levels:10,badge:'',url:'#coming'},
+];
+
+let currentCat = 'all';
+let currentSearch = '';
+
+function renderApps(){
+  const grid = document.getElementById('appGrid');
+  let apps = APPS;
+  if(currentCat !== 'all') apps = apps.filter(a => a.cat === currentCat);
+  if(currentSearch) apps = apps.filter(a => a.name.includes(currentSearch) || a.desc.includes(currentSearch));
+
+  if(!apps.length){
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--gray)">ไม่พบอาชีพที่ค้นหา</div>';
+    return;
+  }
+  grid.innerHTML = apps.map(a => `
+    <a href="${a.url}" class="app-card" onclick="${a.url==='#coming'?'event.preventDefault();showComing(\''+a.name+'\')':''}">
+      ${a.badge?`<div class="app-card-badge badge-${a.badge}">${a.badge==='hot'?'🔥 ยอดนิยม':a.badge==='new'?'✨ ใหม่':'🏔️ แพร่'}</div>`:''}
+      <div class="app-card-thumb" style="background:${a.bg}">
+        <span style="position:relative;z-index:1">${a.icon}</span>
+      </div>
+      <div class="app-card-body">
+        <div class="app-card-name">${a.name}</div>
+        <div class="app-card-desc">${a.desc}</div>
+        <div class="app-card-meta">
+          <span class="app-card-level">⚔️ ${a.levels} ด่าน</span>
+          <span class="app-card-users">👥 ${a.users.toLocaleString()}</span>
+        </div>
+      </div>
+    </a>`).join('');
+}
+
+function filterCat(cat, btn){
+  currentCat = cat;
+  document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderApps();
+}
+
+function filterApps(q){ currentSearch = q; renderApps(); }
+
+function showComing(name){
+  alert(`🚧 "${name}" กำลังพัฒนา\n\nจะเปิดให้ใช้เร็วๆ นี้!\nสมัครรับแจ้งเตือนผ่าน LINE @phrae555`);
+}
+
+function showProposal(){
+  alert('📋 โครงการ HERO First\n\nG2G กำลังจัดทำข้อเสนอโครงการ\nสำหรับกระทรวงแรงงาน, อว., ศธ.\n\nติดต่อทีม G2G:\nLINE: @930pchss\nEmail: g2g@gov2global.com\n\nเป้าหมาย: คนไทย 10 ล้านคนใน 3 ปี');
+}
+
+// ========== FONT SIZE ==========
+let fontLevel = 0;
+const fontSizes = [0.85, 1, 1.15, 1.3];
+function setFont(dir){
+  if(dir === 0) fontLevel = 1;
+  else fontLevel = Math.max(0, Math.min(3, fontLevel + dir));
+  document.documentElement.style.setProperty('--fs', fontSizes[fontLevel]+'rem');
+  localStorage.setItem('hero_font', fontLevel);
+}
+
+// ========== VOICE (Web Speech API) ==========
+let recognizing = false;
+let recognition = null;
+function initRecognition(){
+  if(!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) return null;
+  const R = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+  R.lang = 'th-TH'; R.continuous = false; R.interimResults = false;
+  R.onresult = e => {
+    const txt = e.results[0][0].transcript;
+    document.getElementById('aiInput').value = txt;
+    sendAI();
+  };
+  R.onend = () => { recognizing = false; updateVoiceBtns(); };
+  return R;
+}
+function toggleVoice(){ openAI(); setTimeout(toggleDrawerVoice, 400); }
+function toggleDrawerVoice(){
+  if(!recognition) recognition = initRecognition();
+  if(!recognition){ alert('เบราว์เซอร์นี้ไม่รองรับระบบเสียง กรุณาใช้ Chrome'); return; }
+  if(recognizing){ recognition.stop(); recognizing = false; }
+  else { recognition.start(); recognizing = true; }
+  updateVoiceBtns();
+}
+function updateVoiceBtns(){
+  const btn = document.getElementById('drawerVoiceBtn');
+  if(btn){ btn.classList.toggle('listening', recognizing); btn.textContent = recognizing ? '🔴' : '🎤'; }
+}
+function speak(text){
+  if(!window.speechSynthesis) return;
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'th-TH'; u.rate = 0.95;
+  window.speechSynthesis.speak(u);
+}
+
+// ========== AI DRAWER ==========
+let aiOpen = false;
+let aiHistory = [];
+function openAI(){
+  if(aiOpen) return;
+  aiOpen = true;
+  document.getElementById('aiDrawer').classList.add('open');
+  document.getElementById('overlay').classList.add('show');
+  if(!aiHistory.length) addBotMsg('สวัสดีครับ 👋 ผม AI อาชีพ HERO\n\nถามได้เลยเรื่อง:\n• เลือกอาชีพที่เหมาะกับตัวเอง\n• ทักษะที่ต้องเรียนเพิ่ม\n• หางานหรือรับงาน\n• ราคาตลาดและโอกาสธุรกิจ\n\nพูดหรือพิมพ์ได้เลยครับ!');
+}
+function closeAI(){
+  aiOpen = false;
+  document.getElementById('aiDrawer').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+  if(recognizing){ recognition.stop(); recognizing = false; updateVoiceBtns(); }
+}
+function addBotMsg(text){
+  const c = document.getElementById('aiMsgs');
+  const d = document.createElement('div');
+  d.className = 'ai-msg bot'; d.textContent = text;
+  c.appendChild(d); c.scrollTop = c.scrollHeight;
+  aiHistory.push({role:'assistant',content:text});
+  speak(text.slice(0,120));
+}
+function addUserMsg(text){
+  const c = document.getElementById('aiMsgs');
+  const d = document.createElement('div');
+  d.className = 'ai-msg user'; d.textContent = text;
+  c.appendChild(d); c.scrollTop = c.scrollHeight;
+  aiHistory.push({role:'user',content:text});
+}
+async function sendAI(){
+  const inp = document.getElementById('aiInput');
+  const text = inp.value.trim(); if(!text) return;
+  inp.value = ''; addUserMsg(text);
+  const c = document.getElementById('aiMsgs');
+  const ld = document.createElement('div');
+  ld.className='ai-msg bot'; ld.innerHTML='กำลังคิด<span class="dots"></span>';
+  c.appendChild(ld); c.scrollTop = c.scrollHeight;
+  try{
+    const r = await fetch('/api/career/ai-advice',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({question:text,user_context:'HERO Career Hub - ประชาชนทั่วไป'})
+    });
+    const d = await r.json();
+    ld.remove(); addBotMsg(d.reply || 'ขออภัย ลองใหม่อีกครั้ง');
+  } catch(e){
+    ld.remove(); addBotMsg(getFallback(text));
+  }
+}
+function getFallback(t){
+  if(t.includes('อาชีพ')||t.includes('เลือก')) return 'แนะนำเริ่มจากอาชีพที่คุณสนใจและมีทักษะใกล้เคียงที่สุด\n\nกด "เริ่มเรียนฟรี" ที่การ์ดอาชีพใดก็ได้ แล้ว AI จะช่วยออกแบบแผนการเรียนเฉพาะคุณ';
+  if(t.includes('เงิน')||t.includes('รายได้')) return 'อาชีพที่รายได้ดีในแพร่:\n💎 อัญมณี: 25,000-50,000 บ./เดือน\n🪵 ช่างไม้สักส่งออก: 20,000-35,000 บ./เดือน\n🍈 ชาวสวนผลไม้ (ดี): 15,000-40,000 บ./เดือน';
+  return 'ขอบคุณที่ถามครับ! เลือกอาชีพที่สนใจแล้วกด "เริ่มเรียน" เพื่อคุยกับ AI ที่เชี่ยวชาญเฉพาะอาชีพนั้นโดยตรงนะครับ 😊';
+}
+
+// ========== INIT ==========
+window.addEventListener('load', () => {
+  const saved = localStorage.getItem('hero_font');
+  if(saved){ fontLevel = parseInt(saved); setFont(0); fontLevel = parseInt(saved); document.documentElement.style.setProperty('--fs', fontSizes[fontLevel]+'rem'); }
+  renderApps();
+});
+</script>
+</body>
+</html>

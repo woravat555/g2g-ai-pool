@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2G Multi-Device Cowork Setup</title>
+<style>
+  body { font-family: -apple-system, sans-serif; background: #0f172a; color: #e2e8f0; margin: 0; padding: 20px; }
+  .container { max-width: 800px; margin: 0 auto; }
+  h1 { color: #38bdf8; font-size: 1.8em; }
+  h2 { color: #7dd3fc; margin-top: 2em; }
+  .card { background: #1e293b; border-radius: 12px; padding: 24px; margin: 16px 0; border: 1px solid #334155; }
+  .status { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.85em; font-weight: bold; }
+  .done { background: #065f46; color: #6ee7b7; }
+  .pending { background: #1e3a5f; color: #7dd3fc; }
+  code { background: #0f172a; color: #34d399; padding: 2px 8px; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+  pre { background: #0f172a; color: #34d399; padding: 16px; border-radius: 8px; overflow-x: auto; font-size: 0.9em; line-height: 1.6; }
+  .step { display: flex; gap: 16px; align-items: flex-start; margin: 12px 0; }
+  .step-num { background: #0369a1; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: bold; }
+  a { color: #38bdf8; }
+  .repo-url { background: #0f172a; border: 1px solid #334155; padding: 12px 16px; border-radius: 8px; font-family: monospace; color: #34d399; margin: 8px 0; }
+  .badge { display: flex; gap: 8px; align-items: center; margin: 8px 0; }
+  .tag { background: #1d4ed8; color: #bfdbfe; padding: 2px 10px; border-radius: 4px; font-size: 0.8em; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🖥️ G2G Multi-Device Cowork</h1>
+  <p>ระบบ sync งานระหว่าง 2 Mac โดยใช้ GitHub เป็น shared source of truth</p>
+
+  <div class="card">
+    <div class="badge">
+      <span class="tag">GitHub Repo</span>
+      <span class="status done">✅ LIVE</span>
+    </div>
+    <div class="repo-url">https://github.com/woravat555/g2g-ai-pool</div>
+    <div class="badge" style="margin-top:12px">
+      <span class="tag">Fly.io App</span>
+      <span class="status done">✅ DEPLOYED</span>
+    </div>
+    <div class="repo-url">https://g2g-ai-pool.fly.dev</div>
+  </div>
+
+  <h2>Machine A (เครื่องหลัก) <span class="status done">✅ Setup แล้ว</span></h2>
+  <div class="card">
+    <p>Git repo อยู่ที่ <code>~/Desktop/g2g-ai-pool</code> — commit + push ขึ้น GitHub แล้ว</p>
+    <p><strong>หลังแก้งาน รัน:</strong></p>
+    <pre>cd ~/Desktop/g2g-ai-pool
+git add -A
+git commit -m "แก้ไข: อธิบายสิ่งที่เปลี่ยน"
+git push</pre>
+    <p><strong>Deploy ขึ้น Fly.io:</strong></p>
+    <pre>fly deploy -a g2g-ai-pool</pre>
+  </div>
+
+  <h2>Machine B (เครื่องที่ 2) <span class="status pending">⏳ ต้องทำครั้งเดียว</span></h2>
+  <div class="card">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div><strong>ติดตั้ง Git, Node.js, Fly CLI</strong> (ถ้ายังไม่มี)<br>
+      <a href="https://nodejs.org" target="_blank">nodejs.org</a> | <code>brew install git flyctl</code></div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div><strong>Clone repo</strong> — เปิด Terminal แล้วรัน:
+      <pre>git clone https://github.com/woravat555/g2g-ai-pool.git ~/Desktop/g2g-ai-pool
+cd ~/Desktop/g2g-ai-pool
+npm install</pre></div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div><strong>เปิด Cowork</strong> → คลิก "Select Folder" → เลือก <code>~/Desktop/g2g-ai-pool</code></div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div><strong>Login Fly.io</strong> (ถ้ายังไม่ได้ login):
+      <pre>fly auth login</pre></div>
+    </div>
+  </div>
+
+  <h2>🔄 Workflow ประจำวัน</h2>
+  <div class="card">
+    <table style="width:100%; border-collapse:collapse">
+      <tr style="border-bottom:1px solid #334155">
+        <th style="text-align:left; padding:8px; color:#7dd3fc">สถานการณ์</th>
+        <th style="text-align:left; padding:8px; color:#7dd3fc">คำสั่ง</th>
+      </tr>
+      <tr style="border-bottom:1px solid #1e293b">
+        <td style="padding:8px">เริ่มงานวันใหม่บน Machine B</td>
+        <td style="padding:8px"><code>git pull</code></td>
+      </tr>
+      <tr style="border-bottom:1px solid #1e293b">
+        <td style="padding:8px">หลังแก้งาน (เครื่องไหนก็ได้)</td>
+        <td style="padding:8px"><code>git add -A && git commit -m "..." && git push</code></td>
+      </tr>
+      <tr style="border-bottom:1px solid #1e293b">
+        <td style="padding:8px">Deploy ขึ้น Fly.io</td>
+        <td style="padding:8px"><code>fly deploy -a g2g-ai-pool</code></td>
+      </tr>
+      <tr>
+        <td style="padding:8px">ดู log แบบ realtime</td>
+        <td style="padding:8px"><code>fly logs -a g2g-ai-pool</code></td>
+      </tr>
+    </table>
+  </div>
+
+  <h2>⚡ Quick Commands</h2>
+  <div class="card">
+    <p><strong>Script สำหรับ Machine B</strong> (ดาวน์โหลดแล้วรัน):</p>
+    <pre>curl -O https://g2g-ai-pool.fly.dev/SETUP-MACHINE-B.sh
+chmod +x SETUP-MACHINE-B.sh
+./SETUP-MACHINE-B.sh</pre>
+    <p style="color:#94a3b8; font-size:0.9em">Script จะ clone repo + npm install ให้อัตโนมัติ</p>
+  </div>
+
+  <div style="margin-top:2em; padding:16px; background:#0f172a; border-radius:8px; color:#64748b; font-size:0.85em; text-align:center">
+    G2G AI Pool · <a href="https://g2g-ai-pool.fly.dev">g2g-ai-pool.fly.dev</a> · 
+    <a href="https://github.com/woravat555/g2g-ai-pool">GitHub</a>
+  </div>
+</div>
+</body>
+</html>

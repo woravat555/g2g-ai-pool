@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>แดชบอร์ดองค์การมหาชน อว.</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --p1:#0d6e6e;--p2:#0f766e;--p3:#14b8a6;--p4:#5eead4;
+  --gold:#f9a825;--green1:#166534;--green2:#22c55e;
+  --red:#dc2626;--blue:#1e40af;--purple:#7c3aed;--orange:#ea580c;
+  --bg:#f0fdfc;--bg2:#ccfbf1;--border:#99f6e4;
+  --white:#fff;--text:#1e293b;--sub:#64748b;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Sarabun',sans-serif}
+body{background:var(--bg);color:var(--text);height:100vh;overflow:hidden;display:flex;flex-direction:column}
+
+/* TOPBAR */
+.topbar{background:var(--p1);color:#fff;padding:0 20px;height:54px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px}
+.tb-left{display:flex;align-items:center;gap:12px;min-width:0}
+.tb-logo{font-size:26px}
+.tb-titles{min-width:0}
+.tb-t1{font-size:14px;font-weight:800;white-space:nowrap}
+.tb-t2{font-size:10px;opacity:.7;white-space:nowrap}
+.tb-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.tb-back{background:rgba(255,255,255,.22);border:1.5px solid rgba(255,255,255,.5);color:#fff;padding:6px 14px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:5px}
+.tb-back:hover{background:rgba(255,255,255,.32)}
+.tb-logout{background:rgba(255,255,255,.15);border:none;color:#fff;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-family:inherit}
+
+/* ROLE SWITCHER */
+.role-switcher{background:rgba(0,0,0,.15);padding:0 20px;height:40px;display:flex;align-items:center;gap:8px;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.1)}
+.role-label{font-size:11px;color:rgba(255,255,255,.7);font-weight:600}
+.role-chip{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:rgba(255,255,255,.85);padding:4px 12px;border-radius:16px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s}
+.role-chip.active{background:var(--gold);color:var(--p1);border-color:var(--gold);font-weight:800}
+.role-chip:hover:not(.active){background:rgba(255,255,255,.25)}
+
+/* DIMENSION TABS */
+.dim-bar{background:var(--p2);display:flex;padding:0 16px;gap:4px;flex-shrink:0;overflow-x:auto;height:44px;align-items:flex-end}
+.dim-tab{padding:9px 16px;font-size:13px;font-weight:700;color:rgba(255,255,255,.65);cursor:pointer;border-radius:8px 8px 0 0;white-space:nowrap;transition:.15s;border:none;background:transparent;font-family:inherit}
+.dim-tab:hover{background:rgba(255,255,255,.1);color:#fff}
+.dim-tab.active{background:#fff;color:var(--p1)}
+
+/* BODY */
+.app-body{display:flex;flex:1;overflow:hidden}
+.sidebar{width:210px;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0}
+.sb-sec{padding:10px 12px 4px;font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.7px}
+.sb-item{display:flex;align-items:center;gap:8px;padding:9px 14px;font-size:13px;color:var(--text);cursor:pointer;transition:.15s}
+.sb-item:hover{background:var(--bg2)}
+.sb-item.active{background:var(--bg2);color:var(--p1);font-weight:700;border-left:3px solid var(--p3)}
+
+/* MAIN */
+.main{flex:1;overflow-y:auto;padding:20px}
+.page{display:none}
+.page.active{display:block}
+
+/* CARD */
+.card{background:#fff;border-radius:12px;padding:18px 20px;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:16px}
+.card-h{font-size:15px;font-weight:700;color:var(--p1);margin-bottom:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card-h .badge{font-size:11px;background:var(--bg2);color:var(--sub);padding:2px 8px;border-radius:10px;font-weight:500}
+
+/* KPI */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.kpi-card{background:#fff;border-radius:10px;padding:14px 16px;border:1px solid var(--border);position:relative;overflow:hidden}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--p3)}
+.kpi-v{font-size:24px;font-weight:800;color:var(--p1)}
+.kpi-l{font-size:12px;color:var(--sub);margin-top:2px}
+.kpi-sub{font-size:11px;color:var(--sub)}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{background:var(--p1);color:#fff;padding:9px 10px;text-align:left;font-weight:600}
+.tbl td{padding:8px 10px;border-bottom:1px solid var(--bg2)}
+.tbl tr:hover td{background:var(--bg2)}
+.tbl td.num{text-align:right}
+.tbl td.bold{font-weight:700}
+
+/* PROGRESS */
+.pb{background:var(--bg2);border-radius:4px;height:7px;overflow:hidden;width:100%}
+.pf{height:100%;border-radius:4px}
+.pf.teal{background:var(--p3)}.pf.gold{background:var(--gold)}.pf.green{background:var(--green2)}.pf.red{background:var(--red)}.pf.blue{background:#3b82f6}
+
+/* TAGS */
+.tag{display:inline-block;font-size:11px;padding:2px 9px;border-radius:10px;font-weight:600}
+.tag-ok{background:#dcfce7;color:#166534}.tag-warn{background:#fef9c3;color:#854d0e}
+.tag-err{background:#fee2e2;color:#991b1b}.tag-blue{background:#dbeafe;color:#1e40af}
+.tag-teal{background:#ccfbf1;color:#0f766e}.tag-purple{background:#ede7f6;color:#4a148c}
+
+/* DOTS */
+.dot-g{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green2);margin-right:4px}
+.dot-y{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--gold);margin-right:4px}
+.dot-r{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);margin-right:4px}
+
+/* BTN */
+.btn{background:var(--p1);color:#fff;border:none;padding:7px 16px;border-radius:7px;cursor:pointer;font-size:13px;font-family:inherit;font-weight:600}
+.btn-sm{padding:4px 10px;font-size:12px}
+.btn-out{background:#fff;color:var(--p1);border:1px solid var(--border)}
+.row-wrap{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.stat-box{background:var(--bg2);border-radius:8px;padding:14px}
+.stat-box-h{font-size:12px;font-weight:700;color:var(--p1);margin-bottom:8px}
+.info-box{font-size:11px;background:#fff8e1;border-left:3px solid #f57f17;padding:8px 12px;margin-bottom:12px;border-radius:0 6px 6px 0;line-height:1.7}
+
+@media(max-width:900px){.sidebar{display:none}.kpi-row{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="tb-left">
+    <div class="tb-logo" id="orgIcon">🔬</div>
+    <div class="tb-titles">
+      <div class="tb-t1" id="orgName">กำลังโหลด...</div>
+      <div class="tb-t2" id="orgSub">กระทรวง อว. · G2G Platform</div>
+    </div>
+  </div>
+  <div class="tb-right">
+    <a href="/mhesi-hub.html" class="tb-back">← กลับ Hub อว.</a>
+    <div id="tbUser" style="font-size:12px;opacity:.85;white-space:nowrap">—</div>
+    <button class="tb-logout" onclick="doLogout()">ออกระบบ</button>
+  </div>
+</div>
+
+<!-- ROLE SWITCHER -->
+<div class="role-switcher" id="login" style="display:none;background:var(--p1)">
+  <span class="role-label">เลือกบทบาท:</span>
+  <button class="role-chip active" id="roleBoard" onclick="switchRole('board')">🏛️ ประธานบอร์ด</button>
+  <button class="role-chip" id="roleDirector" onclick="switchRole('director')">⚙️ ผู้อำนวยการ</button>
+  <button class="role-chip" id="roleDeptHead" onclick="switchRole('dept')">📋 ผอ.ฝ่าย/รอง</button>
+  <button class="role-chip" id="roleAudit" onclick="switchRole('audit')">🔍 ตรวจสอบ</button>
+</div>
+
+<!-- DIM TABS (login screen acting as pre-login choice) -->
+<div id="loginScreen" style="display:flex;align-items:center;justify-content:center;flex:1;background:linear-gradient(135deg,var(--p1) 0%,var(--p2) 60%,var(--p3) 100%)">
+  <div style="background:#fff;border-radius:16px;padding:36px 40px;width:min(680px,96vw);box-shadow:0 20px 60px rgba(0,0,0,.35)">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid var(--bg2)">
+      <div id="loginIcon" style="font-size:40px">🔬</div>
+      <div>
+        <div style="font-size:18px;font-weight:800;color:var(--p1)" id="loginTitle">กำลังโหลด...</div>
+        <div style="font-size:11px;color:var(--sub)" id="loginSub">กระทรวง อว. · G2G AI Platform</div>
+      </div>
+    </div>
+    <div style="font-size:16px;font-weight:700;color:var(--p1);margin-bottom:6px">เลือกบทบาทผู้บริหาร</div>
+    <div style="font-size:12px;color:var(--sub);margin-bottom:16px" id="loginDesc">แดชบอร์ดแยกตามตำแหน่ง — ประธานบอร์ด / ผู้อำนวยการ / ผอ.ฝ่าย</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">
+      <div onclick="selectLoginRole('board')" id="lr-board" style="border:2px solid var(--border);border-radius:10px;padding:16px;text-align:center;cursor:pointer;transition:.2s">
+        <div style="font-size:24px;margin-bottom:5px">🏛️</div>
+        <div style="font-size:13px;font-weight:700;color:var(--p1)">ประธานคณะกรรมการ</div>
+        <div style="font-size:11px;color:var(--sub)">กำกับนโยบาย · ตัดสินใจสูงสุด</div>
+      </div>
+      <div onclick="selectLoginRole('director')" id="lr-director" style="border:2px solid var(--border);border-radius:10px;padding:16px;text-align:center;cursor:pointer;transition:.2s">
+        <div style="font-size:24px;margin-bottom:5px">⚙️</div>
+        <div style="font-size:13px;font-weight:700;color:var(--p1)">ผู้อำนวยการ</div>
+        <div style="font-size:11px;color:var(--sub)">บริหารงานประจำ · รายงานบอร์ด</div>
+      </div>
+      <div onclick="selectLoginRole('dept')" id="lr-dept" style="border:2px solid var(--border);border-radius:10px;padding:16px;text-align:center;cursor:pointer;transition:.2s">
+        <div style="font-size:24px;margin-bottom:5px">📋</div>
+        <div style="font-size:13px;font-weight:700;color:var(--p1)">ผอ.ฝ่าย / รองผู้อำนวยการ</div>
+        <div style="font-size:11px;color:var(--sub)">บริหารฝ่าย · รายงาน ผอ.</div>
+      </div>
+      <div onclick="selectLoginRole('audit')" id="lr-audit" style="border:2px solid var(--border);border-radius:10px;padding:16px;text-align:center;cursor:pointer;transition:.2s">
+        <div style="font-size:24px;margin-bottom:5px">🔍</div>
+        <div style="font-size:13px;font-weight:700;color:var(--p1)">ผู้ตรวจสอบภายใน</div>
+        <div style="font-size:11px;color:var(--sub)">ตรวจสอบ · ติดตาม · รายงาน</div>
+      </div>
+    </div>
+    <button onclick="doLogin()" style="width:100%;padding:13px;background:var(--p1);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit">🔐 เข้าสู่ระบบ</button>
+    <div style="text-align:center;font-size:11px;color:var(--sub);margin-top:10px">G2G AI Platform © 2026 · <a href="/mhesi-hub.html" style="color:var(--p3)">กลับ Hub อว.</a></div>
+  </div>
+</div>
+
+<!-- APP (hidden until login) -->
+<div id="appContent" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+
+  <div class="dim-bar" id="dimBar">
+    <button class="dim-tab active" data-dim="overview" onclick="switchDim('overview')">📊 ภาพรวม</button>
+    <button class="dim-tab" data-dim="people" onclick="switchDim('people')">👥 บุคลากร</button>
+    <button class="dim-tab" data-dim="budget" onclick="switchDim('budget')">💰 งบประมาณ</button>
+    <button class="dim-tab" data-dim="research" onclick="switchDim('research')">🔬 วิจัย</button>
+    <button class="dim-tab" data-dim="board" onclick="switchDim('board')">🏛️ บอร์ด/กรรมการ</button>
+    <button class="dim-tab" data-dim="performance" onclick="switchDim('performance')">📈 ผลการดำเนินงาน</button>
+  </div>
+
+  <div class="app-body">
+  <div class="sidebar">
+    <div id="sb-overview">
+      <div class="sb-sec">ภาพรวม</div>
+      <div class="sb-item active" data-page="ov-dashboard" onclick="showPage('ov-dashboard')">📊 แดชบอร์ดหลัก</div>
+      <div class="sb-item" data-page="ov-vision" onclick="showPage('ov-vision')">🎯 วิสัยทัศน์/พันธกิจ</div>
+      <div class="sb-item" data-page="ov-structure" onclick="showPage('ov-structure')">🗂️ โครงสร้างองค์กร</div>
+      <div class="sb-item" data-page="ov-kpi" onclick="showPage('ov-kpi')">📋 ตัวชี้วัดหลัก KPI</div>
+    </div>
+    <div id="sb-people" style="display:none">
+      <div class="sb-sec">บุคลากร</div>
+      <div class="sb-item active" data-page="per-overview" onclick="showPage('per-overview')">📊 ภาพรวมบุคลากร</div>
+      <div class="sb-item" data-page="per-researcher" onclick="showPage('per-researcher')">🔬 นักวิจัย</div>
+      <div class="sb-item" data-page="per-positions" onclick="showPage('per-positions')">🏅 โครงสร้างตำแหน่ง</div>
+    </div>
+    <div id="sb-budget" style="display:none">
+      <div class="sb-sec">งบประมาณ</div>
+      <div class="sb-item active" data-page="bud-overview" onclick="showPage('bud-overview')">📊 ภาพรวมงบ</div>
+      <div class="sb-item" data-page="bud-track" onclick="showPage('bud-track')">📈 ติดตามเบิกจ่าย</div>
+      <div class="sb-item" data-page="bud-projects" onclick="showPage('bud-projects')">📋 โครงการ/กิจกรรม</div>
+    </div>
+    <div id="sb-research" style="display:none">
+      <div class="sb-sec">วิจัยและนวัตกรรม</div>
+      <div class="sb-item active" data-page="res-overview" onclick="showPage('res-overview')">📊 ภาพรวมงานวิจัย</div>
+      <div class="sb-item" data-page="res-projects" onclick="showPage('res-projects')">📋 โครงการวิจัย</div>
+      <div class="sb-item" data-page="res-output" onclick="showPage('res-output')">📄 ผลผลิตวิจัย</div>
+    </div>
+    <div id="sb-board" style="display:none">
+      <div class="sb-sec">บอร์ด/กรรมการ</div>
+      <div class="sb-item active" data-page="board-members" onclick="showPage('board-members')">👥 รายชื่อกรรมการ</div>
+      <div class="sb-item" data-page="board-meetings" onclick="showPage('board-meetings')">📅 การประชุมบอร์ด</div>
+      <div class="sb-item" data-page="board-resolutions" onclick="showPage('board-resolutions')">📄 มติบอร์ด</div>
+    </div>
+    <div id="sb-performance" style="display:none">
+      <div class="sb-sec">ผลการดำเนินงาน</div>
+      <div class="sb-item active" data-page="perf-kpi" onclick="showPage('perf-kpi')">📊 KPI รายตัวชี้วัด</div>
+      <div class="sb-item" data-page="perf-annual" onclick="showPage('perf-annual')">📋 รายงานประจำปี</div>
+      <div class="sb-item" data-page="perf-eval" onclick="showPage('perf-eval')">🔍 ผลประเมินองค์กร</div>
+    </div>
+  </div>
+
+  <div class="main" id="mainContent">
+
+    <!-- ov-dashboard -->
+    <div id="page-ov-dashboard" class="page active">
+      <div class="kpi-row" id="kpiRow"></div>
+      <div class="g2">
+        <div class="card">
+          <div class="card-h" id="orgMissionH">📋 พันธกิจหลัก</div>
+          <div id="orgMissionBody" style="font-size:13px;line-height:2.2;color:var(--text)"></div>
+        </div>
+        <div class="card">
+          <div class="card-h">📊 สถานะงบประมาณ ปี 2568</div>
+          <div id="budgetStatus" style="font-size:13px"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-h">📈 ผลการดำเนินงาน Q3/2568 <span class="badge">เทียบกับเป้าหมาย</span></div>
+        <table class="tbl" id="perfTable">
+          <thead><tr><th>ตัวชี้วัด</th><th>เป้าหมาย</th><th>ทำได้</th><th>%</th><th>ระดับ</th></tr></thead>
+          <tbody id="perfBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ov-vision -->
+    <div id="page-ov-vision" class="page">
+      <div class="card">
+        <div class="card-h">🎯 วิสัยทัศน์และพันธกิจ</div>
+        <div id="visionBody" style="font-size:14px;line-height:2"></div>
+      </div>
+    </div>
+
+    <!-- ov-structure -->
+    <div id="page-ov-structure" class="page">
+      <div class="card">
+        <div class="card-h">🗂️ โครงสร้างองค์กร</div>
+        <div id="structureBody" style="font-size:13px;line-height:2.2"></div>
+      </div>
+    </div>
+
+    <!-- ov-kpi -->
+    <div id="page-ov-kpi" class="page">
+      <div class="card">
+        <div class="card-h">📋 ตัวชี้วัดหลัก (KPI) ปีงบประมาณ 2568</div>
+        <table class="tbl">
+          <thead><tr><th>KPI</th><th>หน่วย</th><th>เป้าหมาย</th><th>ทำได้ (Q3)</th><th>สถานะ</th></tr></thead>
+          <tbody id="kpiBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- per-overview -->
+    <div id="page-per-overview" class="page">
+      <div class="kpi-row" id="perKpiRow"></div>
+      <div class="card">
+        <div class="card-h">👥 บุคลากรแยกตามประเภท</div>
+        <table class="tbl"><thead><tr><th>ประเภท</th><th>จำนวน</th><th>สัดส่วน</th></tr></thead>
+        <tbody id="perTypeBody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- per-researcher -->
+    <div id="page-per-researcher" class="page">
+      <div class="card">
+        <div class="card-h">🔬 นักวิจัยและผู้เชี่ยวชาญ</div>
+        <table class="tbl"><thead><tr><th>หน่วย/กลุ่ม</th><th>นักวิจัย</th><th>ผู้เชี่ยวชาญ</th><th>ปริญญาเอก %</th></tr></thead>
+        <tbody id="researcherBody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- per-positions -->
+    <div id="page-per-positions" class="page">
+      <div class="card">
+        <div class="card-h">🏅 โครงสร้างตำแหน่ง</div>
+        <div id="positionsBody" style="font-size:13px;line-height:2.2"></div>
+      </div>
+    </div>
+
+    <!-- bud-overview -->
+    <div id="page-bud-overview" class="page">
+      <div class="kpi-row" id="budKpiRow"></div>
+      <div class="card">
+        <div class="card-h">💰 งบประมาณแยกหมวด ปี 2568</div>
+        <table class="tbl"><thead><tr><th>หมวด</th><th>งบที่ได้รับ (ล้าน)</th><th>เบิกจ่าย (ล้าน)</th><th>%</th><th>ความคืบหน้า</th></tr></thead>
+        <tbody id="budCatBody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- bud-track -->
+    <div id="page-bud-track" class="page">
+      <div class="card">
+        <div class="card-h">📈 ติดตามเบิกจ่าย รายไตรมาส</div>
+        <table class="tbl"><thead><tr><th>ไตรมาส</th><th>เป้าเบิกจ่าย (ล้าน)</th><th>เบิกได้จริง (ล้าน)</th><th>%</th><th>สถานะ</th></tr></thead>
+        <tbody id="budTrackBody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- bud-projects -->
+    <div id="page-bud-projects" class="page">
+      <div class="card">
+        <div class="card-h">📋 โครงการสำคัญ ปี 2568</div>
+        <table class="tbl"><thead><tr><th>โครงการ</th><th>งบ (ล้าน)</th><th>%ความคืบหน้า</th><th>สถานะ</th></tr></thead>
+        <tbody id="projBody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- res-overview -->
+    <div id="page-res-overview" class="page">
+      <div class="kpi-row" id="resKpiRow"></div>
+      <div class="card">
+        <div class="card-h">🔬 กลุ่มวิจัย / ศูนย์วิจัย</div>
+        <table class="tbl"><thead><tr><th>กลุ่ม/ศูนย์</th><th>นักวิจัย</th><th>งบวิจัย (ล้าน)</th><th>ตีพิมพ์</th><th>สิทธิบัตร</th></tr></thead>
+        <tbody id="resGroupBody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- res-projects -->
+    <div id="page-res-projects" class="page">
+      <div class="card">
+        <div class="card-h">📋 โครงการวิจัยที่ดำเนินการ</div>
+        <table class="tbl"><thead><tr><th>โครงการ</th><th>แหล่งทุน</th><th>งบ (ล้าน)</th><th>สถานะ</th></tr></thead>
+        <tbody id="resProjBody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- res-output -->
+    <div id="page-res-output" class="page">
+      <div class="kpi-row" id="resOutKpiRow"></div>
+    </div>
+
+    <!-- board-members -->
+    <div id="page-board-members" class="page">
+      <div class="card">
+        <div class="card-h">👥 คณะกรรมการ (บอร์ด)</div>
+        <table class="tbl"><thead><tr><th>#</th><th>ชื่อ-นามสกุล</th><th>ตำแหน่งในบอร์ด</th><th>ตำแหน่งภายนอก</th><th>วาระ</th></tr></thead>
+        <tbody id="boardBody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- board-meetings -->
+    <div id="page-board-meetings" class="page">
+      <div class="card">
+        <div class="card-h">📅 ตารางและประวัติการประชุมบอร์ด</div>
+        <table class="tbl"><thead><tr><th>ครั้งที่</th><th>วันที่</th><th>วาระสำคัญ</th><th>ผู้เข้าร่วม</th><th>มติสำคัญ</th></tr></thead>
+        <tbody id="meetingBody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- board-resolutions -->
+    <div id="page-board-resolutions" class="page">
+      <div class="card">
+        <div class="card-h">📄 มติบอร์ด ปี 2568</div>
+        <table class="tbl"><thead><tr><th>มติที่</th><th>วันที่</th><th>เรื่อง</th><th>ผลมติ</th><th>ติดตาม</th></tr></thead>
+        <tbody id="resolutionBody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- perf-kpi -->
+    <div id="page-perf-kpi" class="page">
+      <div class="card">
+        <div class="card-h">📊 ผลการดำเนินงาน KPI ประจำปี 2568</div>
+        <table class="tbl"><thead><tr><th>KPI</th><th>เป้า</th><th>Q1</th><th>Q2</th><th>Q3</th><th>สะสม%</th></tr></thead>
+        <tbody id="perfKpiBody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- perf-annual -->
+    <div id="page-perf-annual" class="page">
+      <div class="card">
+        <div class="card-h">📋 รายงานประจำปี</div>
+        <div id="annualBody" style="font-size:13px;line-height:2"></div>
+      </div>
+    </div>
+
+    <!-- perf-eval -->
+    <div id="page-perf-eval" class="page">
+      <div class="card">
+        <div class="card-h">🔍 ผลการประเมินองค์กร (พ.ร.บ.องค์การมหาชน)</div>
+        <div class="info-box">⚖️ อ้างอิง — พรบ.องค์การมหาชน 2542 ม.21 · ระเบียบ ก.พ.ร. ว่าด้วยการประเมินผล · กรอบ PMQA</div>
+        <table class="tbl"><thead><tr><th>หมวดการประเมิน</th><th>คะแนนเต็ม</th><th>ได้รับ</th><th>ระดับ</th></tr></thead>
+        <tbody id="evalBody"></tbody></table>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+  </div><!-- /app-body -->
+</div><!-- /appContent -->
+
+<script>
+// ─── ORG DATA ───
+var ORGS = {
+  nstda:{
+    name:'สำนักงานพัฒนาวิทยาศาสตร์และเทคโนโลยีแห่งชาติ (สวทช.)',
+    abbr:'NSTDA · สวทช.',
+    icon:'💻',
+    sub:'4 ศูนย์วิจัย: BIOTEC / MTEC / NECTEC / NANOTEC',
+    kpis:[
+      {v:'8,400M',l:'งบประมาณ',s:'ปี 2568'},
+      {v:'6,050',l:'บุคลากร',s:'นักวิจัย 3,850'},
+      {v:'3,850',l:'นักวิจัย',s:'ปริญญาเอก 68%'},
+      {v:'820',l:'สิทธิบัตร',s:'ปี 2568 สะสม'},
+    ],
+    missions:['🔬 วิจัยและพัฒนา 4 ศูนย์: BIOTEC / MTEC / NECTEC / NANOTEC','🏭 ถ่ายทอดเทคโนโลยีสู่ภาคเอกชน','🌐 เครือข่ายวิจัยนานาชาติ 40+ ประเทศ','👨‍🔬 พัฒนานักวิจัยไทยระดับโลก'],
+    perf:[
+      {kpi:'ตีพิมพ์ระดับนานาชาติ',target:'3,200',actual:'2,840',pct:'88.8',status:'ok'},
+      {kpi:'สิทธิบัตรใหม่',target:'900',actual:'820',pct:'91.1',status:'ok'},
+      {kpi:'Startup ที่บ่มเพาะ',target:'120',actual:'98',pct:'81.7',status:'warn'},
+      {kpi:'งบเบิกจ่าย',target:'90%',actual:'80%',pct:'80',status:'warn'},
+      {kpi:'ความพึงพอใจลูกค้า',target:'85%',actual:'89%',pct:'104.7',status:'ok'},
+    ],
+    budget:{total:8400,cats:[
+      {c:'บุคลากร',budget:3200,spent:2950,pct:92},
+      {c:'ดำเนินงาน',budget:2800,spent:2100,pct:75},
+      {c:'ลงทุน/ครุภัณฑ์',budget:1600,spent:980,pct:61},
+      {c:'ทุนวิจัยภายนอก',budget:800,spent:560,pct:70},
+    ]},
+    board:[
+      {name:'ศ.ดร.นักวิทย์ วิทยาศาสตร์',role:'ประธานกรรมการ',external:'อดีตรัฐมนตรี อว.',term:'2567-2570'},
+      {name:'รศ.ดร.สุมาลี ไทยวิจัย',role:'กรรมการผู้ทรงคุณวุฒิ',external:'จุฬาลงกรณ์มหาวิทยาลัย',term:'2566-2569'},
+      {name:'นายอุตสาหกรรม อุตสาห์',role:'กรรมการผู้ทรงคุณวุฒิ',external:'ผู้แทนภาคเอกชน',term:'2567-2570'},
+      {name:'นางสาวการเงิน บัญชี',role:'กรรมการผู้ทรงคุณวุฒิ',external:'ผู้เชี่ยวชาญการเงิน',term:'2567-2570'},
+    ],
+    resGroups:[
+      {g:'BIOTEC — ชีวเทคโนโลยี',r:980,b:2200,pub:820,pat:180},
+      {g:'MTEC — วัสดุศาสตร์',r:760,b:1800,pub:640,pat:210},
+      {g:'NECTEC — อิเล็กทรอนิกส์',r:1240,b:2800,pub:980,pat:280},
+      {g:'NANOTEC — นาโนเทคโนโลยี',r:580,b:1200,pub:400,pat:150},
+    ],
+    kpiItems:[
+      {kpi:'ผลงานตีพิมพ์ Q1',unit:'เรื่อง',target:800,actual:720},
+      {kpi:'สิทธิบัตรและอนุสิทธิบัตร',unit:'รายการ',target:900,actual:820},
+      {kpi:'Startup เกิดใหม่',unit:'บริษัท',target:120,actual:98},
+      {kpi:'นักวิจัยใหม่',unit:'คน',target:200,actual:185},
+      {kpi:'รายได้บริการวิชาการ',unit:'ล้านบาท',target:400,actual:368},
+    ]
+  },
+  nrct:{
+    name:'สำนักงานการวิจัยแห่งชาติ (วช.)',
+    abbr:'NRCT · วช.',
+    icon:'📄',
+    sub:'ทุนวิจัยแห่งชาติ · คลังข้อมูลวิจัยไทย NRMS',
+    kpis:[
+      {v:'3,200M',l:'งบประมาณ',s:'ปี 2568'},
+      {v:'800',l:'บุคลากร',s:'นักวิจัย 420'},
+      {v:'12,400',l:'โครงการวิจัยที่ให้ทุน',s:'ทุกสาขา'},
+      {v:'26,840',l:'ผลงานตีพิมพ์',s:'จาก NRMS 2568'},
+    ],
+    missions:['💰 บริหารทุนวิจัยแห่งชาติ','📊 NRMS — คลังข้อมูลงานวิจัยไทย','🏆 รางวัลนักวิจัยดีเด่น','🌍 ความร่วมมือวิจัยนานาชาติ'],
+    perf:[
+      {kpi:'จำนวนทุนอนุมัติ',target:'12,000',actual:'12,400',pct:'103.3',status:'ok'},
+      {kpi:'ผลงานใน NRMS',target:'25,000',actual:'26,840',pct:'107.4',status:'ok'},
+      {kpi:'งบเบิกจ่าย',target:'90%',actual:'74%',pct:'82.2',status:'warn'},
+      {kpi:'ความพึงพอใจนักวิจัย',target:'80%',actual:'83%',pct:'103.8',status:'ok'},
+    ],
+    budget:{total:3200,cats:[
+      {c:'บุคลากร',budget:650,spent:590,pct:90},
+      {c:'ทุนวิจัย/อุดหนุน',budget:2000,spent:1480,pct:74},
+      {c:'ดำเนินงาน',budget:380,spent:280,pct:74},
+      {c:'ลงทุน',budget:170,spent:90,pct:53},
+    ]},
+    board:[
+      {name:'ศ.ดร.วิจัย วิจิตร',role:'ประธานกรรมการ',external:'ราชบัณฑิต',term:'2566-2569'},
+      {name:'รศ.ดร.นักวิชา วิชาการ',role:'กรรมการ',external:'ม.มหิดล',term:'2567-2570'},
+    ],
+    resGroups:[
+      {g:'สาขาวิทยาศาสตร์และเทคโนโลยี',r:180,b:1200,pub:8400,pat:200},
+      {g:'สาขาสังคมศาสตร์และมนุษยศาสตร์',r:120,b:600,pub:5200,pat:20},
+      {g:'สาขาเกษตรและอาหาร',r:80,b:800,pub:4800,pat:180},
+      {g:'สาขาสุขภาพ',r:40,b:400,pub:8440,pat:0},
+    ],
+    kpiItems:[
+      {kpi:'โครงการวิจัยที่อนุมัติ',unit:'โครงการ',target:12000,actual:12400},
+      {kpi:'ผลงานใน NRMS',unit:'เรื่อง',target:25000,actual:26840},
+      {kpi:'รางวัลนักวิจัยดีเด่น',unit:'คน',target:30,actual:32},
+    ]
+  },
+  nia:{
+    name:'สำนักงานนวัตกรรมแห่งชาติ (สนช.)',
+    abbr:'NIA · สนช.',
+    icon:'💡',
+    sub:'Startup Ecosystem · นวัตกรรมเชิงพาณิชย์',
+    kpis:[
+      {v:'1,800M',l:'งบประมาณ',s:'ปี 2568'},
+      {v:'500',l:'บุคลากร',s:'Innovation Officer'},
+      {v:'8,200',l:'Startup ใน Ecosystem',s:'ทั่วประเทศ'},
+      {v:'820',l:'นวัตกรรมเชิงพาณิชย์',s:'ปี 2568'},
+    ],
+    missions:['🚀 พัฒนา Startup Ecosystem','💡 ส่งเสริมนวัตกรรมเชิงพาณิชย์','🏭 บ่มเพาะธุรกิจนวัตกรรม (Incubation)','🌐 เชื่อมโยงนวัตกรรมสู่ตลาดโลก'],
+    perf:[
+      {kpi:'Startup ใหม่',target:'800',actual:'820',pct:'102.5',status:'ok'},
+      {kpi:'มูลค่านวัตกรรม (ล้าน)',target:'3000',actual:'3600',pct:'120',status:'ok'},
+      {kpi:'งบเบิกจ่าย',target:'90%',actual:'78%',pct:'86.7',status:'warn'},
+    ],
+    budget:{total:1800,cats:[
+      {c:'บุคลากร',budget:480,spent:440,pct:91},
+      {c:'ทุนนวัตกรรม',budget:900,spent:700,pct:77},
+      {c:'ดำเนินงาน',budget:280,spent:210,pct:75},
+      {c:'ลงทุน',budget:140,spent:60,pct:43},
+    ]},
+    board:[
+      {name:'นายนวัตกรรม นวัตกร',role:'ประธานกรรมการ',external:'ผู้แทนภาคเอกชน',term:'2566-2569'},
+    ],
+    resGroups:[
+      {g:'Digital & AI Innovation',r:80,b:500,pub:200,pat:80},
+      {g:'Health & Biotech Innovation',r:60,b:400,pub:180,pat:120},
+      {g:'AgriTech Innovation',r:50,b:300,pub:160,pat:60},
+      {g:'Green Innovation',r:40,b:250,pub:140,pat:40},
+    ],
+    kpiItems:[
+      {kpi:'Startup ใหม่ที่บ่มเพาะ',unit:'บริษัท',target:800,actual:820},
+      {kpi:'มูลค่านวัตกรรมเชิงพาณิชย์',unit:'ล้านบาท',target:3000,actual:3600},
+      {kpi:'สิทธิบัตรเชิงพาณิชย์',unit:'รายการ',target:100,actual:80},
+    ]
+  }
+};
+
+// Default fallback org data
+function getDefaultOrg(orgId) {
+  return {
+    name:'หน่วยงาน ' + orgId.toUpperCase() + ' (อว.)',
+    abbr:orgId.toUpperCase() + ' · กระทรวง อว.',
+    icon:'🔬',
+    sub:'หน่วยงานในสังกัด กระทรวงการอุดมศึกษา วิทยาศาสตร์ วิจัยและนวัตกรรม',
+    kpis:[
+      {v:'N/A',l:'งบประมาณ',s:'ปี 2568'},
+      {v:'N/A',l:'บุคลากร',s:''},
+      {v:'N/A',l:'โครงการวิจัย',s:''},
+      {v:'N/A',l:'ผลงาน',s:''},
+    ],
+    missions:['🔬 ดำเนินภารกิจตามพระราชกฤษฎีกาจัดตั้ง','📊 รายงานผลต่อ อว. ประจำปี','🤝 บูรณาการกับหน่วยงานวิจัยอื่น'],
+    perf:[{kpi:'งบเบิกจ่าย',target:'90%',actual:'75%',pct:'83',status:'warn'}],
+    budget:{total:500,cats:[{c:'บุคลากร',budget:200,spent:180,pct:90},{c:'ดำเนินงาน',budget:200,spent:150,pct:75},{c:'ลงทุน',budget:100,spent:45,pct:45}]},
+    board:[{name:'ผู้ทรงคุณวุฒิ',role:'ประธานกรรมการ',external:'—',term:'—'}],
+    resGroups:[{g:'กลุ่มวิจัยหลัก',r:50,b:200,pub:80,pat:20}],
+    kpiItems:[{kpi:'งบเบิกจ่าย',unit:'%',target:90,actual:75}]
+  };
+}
+
+var currentOrg = null;
+var currentRole = 'board';
+var currentDim = 'overview';
+var currentPage = 'ov-dashboard';
+
+// Parse URL param
+function getUrlParam(name){
+  var u = new URLSearchParams(window.location.search);
+  return u.get(name) || 'nstda';
+}
+
+function init(){
+  var orgId = getUrlParam('org');
+  currentOrg = ORGS[orgId] || getDefaultOrg(orgId);
+
+  // Set titles
+  document.getElementById('orgName').textContent = currentOrg.name;
+  document.getElementById('orgSub').textContent = currentOrg.abbr + ' · กระทรวง อว.';
+  document.getElementById('orgIcon').textContent = currentOrg.icon;
+  document.getElementById('loginTitle').textContent = currentOrg.name;
+  document.getElementById('loginIcon').textContent = currentOrg.icon;
+  document.getElementById('loginDesc').textContent = currentOrg.abbr + ' — เลือกบทบาทผู้บริหาร';
+  document.getElementById('loginSub').textContent = currentOrg.abbr + ' · กระทรวง อว. · G2G Platform';
+  document.title = currentOrg.abbr + ' — แดชบอร์ด';
+
+  // Show login screen
+  document.getElementById('loginScreen').style.display = 'flex';
+}
+
+var selectedLoginRole = 'board';
+function selectLoginRole(r){
+  selectedLoginRole = r;
+  ['board','director','dept','audit'].forEach(function(id){
+    var el = document.getElementById('lr-'+id);
+    if(el){el.style.borderColor = (id===r) ? 'var(--p3)' : 'var(--border)'; el.style.background = (id===r) ? 'var(--bg2)' : '';}
+  });
+}
+
+function doLogin(){
+  currentRole = selectedLoginRole;
+  var roleNames = {board:'ประธานคณะกรรมการ',director:'ผู้อำนวยการ',dept:'ผอ.ฝ่าย/รองผอ.',audit:'ผู้ตรวจสอบภายใน'};
+  document.getElementById('tbUser').textContent = roleNames[currentRole] || currentRole;
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appContent').style.display = 'flex';
+  renderDashboard();
+}
+
+function doLogout(){
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('appContent').style.display = 'none';
+}
+
+function renderDashboard(){
+  var o = currentOrg;
+  // KPIs
+  var kpiHtml = o.kpis.map(function(k){
+    return '<div class="kpi-card"><div class="kpi-v">'+k.v+'</div><div class="kpi-l">'+k.l+'</div><div class="kpi-sub">'+k.s+'</div></div>';
+  }).join('');
+  document.getElementById('kpiRow').innerHTML = kpiHtml;
+  document.getElementById('perKpiRow').innerHTML = kpiHtml;
+
+  // Mission
+  document.getElementById('orgMissionBody').innerHTML = o.missions.map(function(m){return '<div style="padding:4px 0">'+m+'</div>';}).join('');
+
+  // Budget status
+  document.getElementById('budgetStatus').innerHTML =
+    '<div style="font-size:22px;font-weight:800;color:var(--p1);margin-bottom:6px">'+o.budget.total.toLocaleString()+' ล้านบาท</div>' +
+    o.budget.cats.map(function(c){return '<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>'+c.c+'</span><strong>'+c.pct+'%</strong></div><div class="pb"><div class="pf teal" style="width:'+c.pct+'%"></div></div></div>';}).join('');
+
+  // Performance table
+  document.getElementById('perfBody').innerHTML = o.perf.map(function(p){
+    var cls = p.status === 'ok' ? 'tag-ok' : 'tag-warn';
+    return '<tr><td>'+p.kpi+'</td><td class="num">'+p.target+'</td><td class="num bold">'+p.actual+'</td><td class="num">'+p.pct+'%</td><td><span class="tag '+cls+'">'+(p.status==='ok'?'✅ บรรลุ':'⚠️ ต่ำกว่าเป้า')+'</span></td></tr>';
+  }).join('');
+
+  // Vision
+  document.getElementById('visionBody').innerHTML = '<div style="background:var(--bg2);border-radius:8px;padding:16px;margin-bottom:12px"><strong style="color:var(--p1)">วิสัยทัศน์:</strong><br>'+o.name+' มุ่งเป็นองค์กรวิจัยชั้นนำระดับโลก ขับเคลื่อนด้วยวิทยาศาสตร์ เทคโนโลยีและนวัตกรรม เพื่อการพัฒนาที่ยั่งยืนของประเทศไทย</div>' +
+    '<div style="background:var(--bg2);border-radius:8px;padding:16px"><strong style="color:var(--p1)">พันธกิจ:</strong><br>' + o.missions.map(function(m){return '<div style="padding:3px 0">'+m+'</div>';}).join('') + '</div>';
+
+  // Budget categories
+  document.getElementById('budKpiRow').innerHTML =
+    '<div class="kpi-card"><div class="kpi-v">'+o.budget.total.toLocaleString()+'M</div><div class="kpi-l">งบรวม (ล้านบาท)</div></div>' +
+    '<div class="kpi-card"><div class="kpi-v">'+ Math.round(o.budget.cats.reduce(function(a,c){return a+c.spent;},0)/o.budget.total*100) +'%</div><div class="kpi-l">อัตราเบิกจ่ายรวม</div></div>' +
+    '<div class="kpi-card"><div class="kpi-v">'+o.budget.cats.length+'</div><div class="kpi-l">หมวดรายจ่าย</div></div>' +
+    '<div class="kpi-card"><div class="kpi-v">Q3/2568</div><div class="kpi-l">ข้อมูล ณ</div></div>';
+  document.getElementById('budCatBody').innerHTML = o.budget.cats.map(function(c){
+    return '<tr><td>'+c.c+'</td><td class="num">'+c.budget+'</td><td class="num bold">'+c.spent+'</td><td class="num">'+c.pct+'%</td><td><div class="pb"><div class="pf teal" style="width:'+c.pct+'%"></div></div></td></tr>';
+  }).join('');
+
+  // Quarterly tracking
+  document.getElementById('budTrackBody').innerHTML = [
+    {q:'Q1 (ต.ค.-ธ.ค. 67)',t:Math.round(o.budget.total*0.22),a:Math.round(o.budget.total*0.20),p:90},
+    {q:'Q2 (ม.ค.-มี.ค. 68)',t:Math.round(o.budget.total*0.24),a:Math.round(o.budget.total*0.22),p:92},
+    {q:'Q3 (เม.ย.-มิ.ย. 68)',t:Math.round(o.budget.total*0.26),a:Math.round(o.budget.total*0.20),p:77},
+    {q:'Q4 (ก.ค.-ก.ย. 68)',t:Math.round(o.budget.total*0.28),a:'—',p:null},
+  ].map(function(q){
+    var cls = q.p ? (q.p >= 85 ? 'tag-ok' : 'tag-warn') : 'tag-blue';
+    var lbl = q.p ? (q.p >= 85 ? '✅ ตามแผน' : '⚠️ ต่ำกว่าแผน') : '⏳ รอสิ้นปี';
+    return '<tr><td>'+q.q+'</td><td class="num">'+q.t+'</td><td class="num bold">'+(typeof q.a === 'number' ? q.a : q.a)+'</td><td class="num">'+(q.p ? q.p+'%' : '—')+'</td><td><span class="tag '+cls+'">'+lbl+'</span></td></tr>';
+  }).join('');
+
+  // Projects
+  document.getElementById('projBody').innerHTML = [
+    {n:'โครงการวิจัยหลักปีที่ 1',b:Math.round(o.budget.total*0.08),p:72,s:'ok'},
+    {n:'โครงการพัฒนาบุคลากรวิจัย',b:Math.round(o.budget.total*0.04),p:85,s:'ok'},
+    {n:'โครงการถ่ายทอดเทคโนโลยี',b:Math.round(o.budget.total*0.03),p:60,s:'warn'},
+    {n:'โครงการปรับปรุงโครงสร้างพื้นฐาน',b:Math.round(o.budget.total*0.05),p:45,s:'warn'},
+  ].map(function(p){
+    return '<tr><td>'+p.n+'</td><td class="num">'+p.b+'</td><td><div class="pb"><div class="pf '+(p.s==='ok'?'green':'gold')+'" style="width:'+p.p+'%"></div></div></td><td><span class="tag tag-'+(p.s==='ok'?'ok':'warn')+'">'+(p.s==='ok'?p.p+'% ตามแผน':p.p+'% ล่าช้า')+'</span></td></tr>';
+  }).join('');
+
+  // Personnel
+  document.getElementById('perTypeBody').innerHTML = [
+    {t:'พนักงานองค์กรมหาชน',n:Math.round(o.kpis[1].l === 'บุคลากร' ? parseInt((o.kpis[1].v||'0').replace(',','')) * 0.55 : 300)},
+    {t:'นักวิจัย',n:Math.round(parseInt((o.kpis[2]?.v||'0').replace(',','')))},
+    {t:'ลูกจ้างชั่วคราว',n:Math.round(parseInt((o.kpis[1].v||'0').replace(',','')) * 0.1)},
+  ].map(function(p){
+    return '<tr><td>'+p.t+'</td><td class="num bold">'+p.n.toLocaleString()+'</td><td><div class="pb"><div class="pf teal" style="width:'+(p.n/100)+'%"></div></div></td></tr>';
+  }).join('');
+
+  // Research groups
+  document.getElementById('resKpiRow').innerHTML =
+    '<div class="kpi-card"><div class="kpi-v">'+(o.resGroups.reduce(function(a,g){return a+g.r;},0).toLocaleString())+'</div><div class="kpi-l">นักวิจัยรวม</div></div>' +
+    '<div class="kpi-card"><div class="kpi-v">'+(o.resGroups.reduce(function(a,g){return a+g.pub;},0).toLocaleString())+'</div><div class="kpi-l">ตีพิมพ์รวม</div></div>' +
+    '<div class="kpi-card"><div class="kpi-v">'+(o.resGroups.reduce(function(a,g){return a+g.pat;},0).toLocaleString())+'</div><div class="kpi-l">สิทธิบัตรรวม</div></div>' +
+    '<div class="kpi-card"><div class="kpi-v">'+(o.resGroups.length)+'</div><div class="kpi-l">กลุ่ม/ศูนย์วิจัย</div></div>';
+  document.getElementById('resGroupBody').innerHTML = o.resGroups.map(function(g){
+    return '<tr><td><strong>'+g.g+'</strong></td><td class="num">'+g.r.toLocaleString()+'</td><td class="num">'+g.b.toLocaleString()+'</td><td class="num bold">'+g.pub.toLocaleString()+'</td><td class="num">'+g.pat+'</td></tr>';
+  }).join('');
+  document.getElementById('resProjBody').innerHTML = [
+    {n:'โครงการวิจัยเรือธง (Flagship)',src:'ทุน ววน.',b:Math.round(o.budget.total*0.1),s:'ok'},
+    {n:'โครงการวิจัยร่วมภาคเอกชน',src:'Industry',b:Math.round(o.budget.total*0.05),s:'ok'},
+    {n:'โครงการวิจัยต่างประเทศ',src:'International',b:Math.round(o.budget.total*0.03),s:'warn'},
+  ].map(function(p){
+    return '<tr><td>'+p.n+'</td><td>'+p.src+'</td><td class="num">'+p.b+'</td><td><span class="tag tag-'+(p.s==='ok'?'ok':'warn')+'">ดำเนินการ</span></td></tr>';
+  }).join('');
+  document.getElementById('resOutKpiRow').innerHTML =
+    '<div class="kpi-card"><div class="kpi-v">'+o.resGroups.reduce(function(a,g){return a+g.pub;},0).toLocaleString()+'</div><div class="kpi-l">ตีพิมพ์ระดับนานาชาติ</div></div>' +
+    '<div class="kpi-card"><div class="kpi-v">'+o.resGroups.reduce(function(a,g){return a+g.pat;},0).toLocaleString()+'</div><div class="kpi-l">สิทธิบัตร</div></div>' +
+    '<div class="kpi-card"><div class="kpi-v">'+Math.round(o.resGroups.reduce(function(a,g){return a+g.r;},0) * 0.08).toLocaleString()+'</div><div class="kpi-l">นวัตกรรมเชิงพาณิชย์</div></div>' +
+    '<div class="kpi-card"><div class="kpi-v">'+Math.round(o.resGroups.reduce(function(a,g){return a+g.b;},0) * 0.15).toLocaleString()+'M</div><div class="kpi-l">รายได้ถ่ายทอดเทคโนโลยี</div></div>';
+
+  // Board
+  document.getElementById('boardBody').innerHTML = o.board.map(function(b,i){
+    return '<tr><td>'+(i+1)+'</td><td><strong>'+b.name+'</strong></td><td><span class="tag tag-teal">'+b.role+'</span></td><td>'+b.external+'</td><td>'+b.term+'</td></tr>';
+  }).join('');
+
+  // Meetings
+  document.getElementById('meetingBody').innerHTML = [
+    {c:'1/2568',d:'15 พ.ย. 67',agenda:'อนุมัติแผนปี 2568 · งบประมาณ',members:o.board.length,resolution:'อนุมัติแผน'},
+    {c:'2/2568',d:'20 ก.พ. 68',agenda:'ติดตาม Q1 · ทบทวน KPI',members:o.board.length-1,resolution:'รับทราบ + แก้ไข KPI'},
+    {c:'3/2568',d:'15 พ.ค. 68',agenda:'ติดตาม Q2 · พิจารณาโครงการพิเศษ',members:o.board.length,resolution:'อนุมัติ 3 โครงการ'},
+  ].map(function(m){
+    return '<tr><td>'+m.c+'</td><td>'+m.d+'</td><td>'+m.agenda+'</td><td class="num">'+m.members+'</td><td><span class="tag tag-ok">'+m.resolution+'</span></td></tr>';
+  }).join('');
+
+  // Resolutions
+  document.getElementById('resolutionBody').innerHTML = [
+    {n:'2568-001',d:'15 พ.ย. 67',topic:'อนุมัติแผนปฏิบัติการปี 2568',result:'อนุมัติ',track:'ดำเนินการแล้ว'},
+    {n:'2568-002',d:'20 ก.พ. 68',topic:'ปรับตัวชี้วัด Q2',result:'อนุมัติ',track:'ดำเนินการแล้ว'},
+    {n:'2568-003',d:'15 พ.ค. 68',topic:'อนุมัติโครงการพิเศษ 3 รายการ',result:'อนุมัติ',track:'อยู่ระหว่างดำเนินการ'},
+  ].map(function(r){
+    return '<tr><td>'+r.n+'</td><td>'+r.d+'</td><td>'+r.topic+'</td><td><span class="tag tag-ok">'+r.result+'</span></td><td><span class="tag tag-blue">'+r.track+'</span></td></tr>';
+  }).join('');
+
+  // KPI detail
+  document.getElementById('kpiBody').innerHTML = o.kpiItems.map(function(k){
+    var pct = Math.round(k.actual/k.target*100);
+    return '<tr><td>'+k.kpi+'</td><td>'+k.unit+'</td><td class="num">'+k.target+'</td><td class="num bold">'+k.actual+'</td><td><span class="tag '+(pct>=90?'tag-ok':pct>=70?'tag-warn':'tag-err')+'">'+pct+'%</span></td></tr>';
+  }).join('');
+
+  // Perf KPI quarters
+  document.getElementById('perfKpiBody').innerHTML = o.kpiItems.map(function(k){
+    var q1 = Math.round(k.actual * 0.3);
+    var q2 = Math.round(k.actual * 0.35);
+    var q3 = k.actual - q1 - q2;
+    var pct = Math.round(k.actual/k.target*100);
+    return '<tr><td>'+k.kpi+' ('+k.unit+')</td><td class="num">'+k.target+'</td><td class="num">'+q1+'</td><td class="num">'+q2+'</td><td class="num bold">'+q3+'</td><td class="num"><span class="tag '+(pct>=90?'tag-ok':'tag-warn')+'">'+pct+'%</span></td></tr>';
+  }).join('');
+
+  // Annual report
+  document.getElementById('annualBody').innerHTML =
+    '<div style="background:var(--bg2);border-radius:8px;padding:16px;margin-bottom:12px"><strong>รายงานประจำปี 2567 (ล่าสุด)</strong><br><br>' +
+    '📊 ผลการดำเนินงานประจำปีเทียบเป้าหมาย: บรรลุ 8 จาก 12 ตัวชี้วัด (66.7%)<br>' +
+    '💰 งบประมาณเบิกจ่าย: 88% (ต่ำกว่าเป้า 90% เล็กน้อย)<br>' +
+    '🔬 ผลงานวิจัยสู่เชิงพาณิชย์: เกินเป้าหมาย 12%<br>' +
+    '👥 ความพึงพอใจบุคลากร: 82% (เพิ่มขึ้นจากปีก่อน 4%)<br>' +
+    '<br><a href="#" style="color:var(--p3);font-size:12px">📥 ดาวน์โหลดรายงานฉบับเต็ม</a></div>';
+
+  // Org evaluation
+  document.getElementById('evalBody').innerHTML = [
+    {cat:'ด้านการนำองค์กร',max:200,score:180},
+    {cat:'ด้านการวางแผนยุทธศาสตร์',max:200,score:170},
+    {cat:'ด้านการให้ความสำคัญกับลูกค้า',max:200,score:190},
+    {cat:'ด้านการวัด วิเคราะห์ จัดการความรู้',max:200,score:168},
+    {cat:'ด้านการมุ่งเน้นบุคลากร',max:150,score:130},
+    {cat:'ด้านการมุ่งเน้นระบบปฏิบัติการ',max:150,score:138},
+    {cat:'ด้านผลลัพธ์การดำเนินการ',max:450,score:396},
+  ].map(function(e){
+    var pct = Math.round(e.score/e.max*100);
+    var cls = pct>=90?'tag-ok':pct>=75?'tag-warn':'tag-err';
+    var lv = pct>=90?'ดีเลิศ':pct>=75?'ดี':'ต้องปรับปรุง';
+    return '<tr><td>'+e.cat+'</td><td class="num">'+e.max+'</td><td class="num bold">'+e.score+'</td><td><span class="tag '+cls+'">'+lv+' ('+pct+'%)</span></td></tr>';
+  }).join('');
+
+  // Structure
+  document.getElementById('structureBody').innerHTML =
+    '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">' +
+    o.resGroups.map(function(g){
+      return '<div style="background:var(--bg2);border-radius:8px;padding:12px"><div style="font-weight:700;font-size:12px;color:var(--p1);margin-bottom:6px">'+g.g+'</div>' +
+        '<div style="font-size:12px;color:var(--sub)">นักวิจัย '+g.r+' คน · งบ '+g.b+'M</div></div>';
+    }).join('') + '</div>';
+
+  // Researcher details
+  document.getElementById('researcherBody').innerHTML = o.resGroups.map(function(g){
+    return '<tr><td>'+g.g+'</td><td class="num">'+g.r+'</td><td class="num">'+Math.round(g.r*0.3)+'</td><td class="num">'+(60+Math.round(Math.random()*20))+'%</td></tr>';
+  }).join('');
+
+  // Positions
+  document.getElementById('positionsBody').innerHTML =
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">' +
+    '<div style="background:var(--bg2);border-radius:8px;padding:14px"><strong style="color:var(--p1)">ระดับบริหาร</strong><br><br>' +
+    '<div>🏛️ คณะกรรมการ (บอร์ด) — '+o.board.length+' คน</div>' +
+    '<div>⚙️ ผู้อำนวยการ — 1 คน</div>' +
+    '<div>🔄 รองผู้อำนวยการ — 3-4 คน</div>' +
+    '<div>📋 ผอ.ฝ่าย/ผอ.ศูนย์ — '+o.resGroups.length+' กลุ่ม</div></div>' +
+    '<div style="background:var(--bg2);border-radius:8px;padding:14px"><strong style="color:var(--p1)">ระดับปฏิบัติการ</strong><br><br>' +
+    '<div>🔬 นักวิจัยอาวุโส — ปริญญาเอก</div>' +
+    '<div>🔬 นักวิจัย — ปริญญาโท-เอก</div>' +
+    '<div>📋 เจ้าหน้าที่วิจัย — ปริญญาตรี</div>' +
+    '<div>🏭 ช่างเทคนิค/สนับสนุน</div></div></div>';
+}
+
+function switchDim(dim){
+  currentDim = dim;
+  document.querySelectorAll('.dim-tab').forEach(function(t){t.classList.remove('active');});
+  document.querySelector('.dim-tab[data-dim="'+dim+'"]').classList.add('active');
+  ['overview','people','budget','research','board','performance'].forEach(function(d){
+    var sb = document.getElementById('sb-'+d);
+    if(sb) sb.style.display = (d===dim)?'':'none';
+  });
+  var firstPages = {overview:'ov-dashboard',people:'per-overview',budget:'bud-overview',research:'res-overview',board:'board-members',performance:'perf-kpi'};
+  showPage(firstPages[dim] || dim+'-overview');
+}
+
+function showPage(p){
+  currentPage = p;
+  document.querySelectorAll('.page').forEach(function(pg){pg.classList.remove('active');});
+  var pg = document.getElementById('page-'+p);
+  if(pg) pg.classList.add('active');
+  document.querySelectorAll('.sb-item').forEach(function(i){i.classList.remove('active');});
+  var sbItem = document.querySelector('.sb-item[data-page="'+p+'"]');
+  if(sbItem) sbItem.classList.add('active');
+}
+
+window.addEventListener('load', init);
+</script>
+</body>
+</html>

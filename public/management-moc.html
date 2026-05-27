@@ -1,0 +1,1076 @@
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ระบบบริหารราชการ — กระทรวงพาณิชย์</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#b71c1c;--primary2:#c62828;--primary3:#d32f2f;--primary4:#ef5350;
+  --navy1:#b71c1c;--navy2:#c62828;--navy3:#d32f2f;--navy4:#ef5350;
+  --gold:#ffd54f;--gold2:#ffca28;--gold3:#fff176;
+  --green1:#166534;--green2:#22c55e;
+  --red:#dc2626;--orange:#ea580c;--purple:#7c3aed;
+  --bg:#fdf4f4;--bg2:#fce8e8;--border:#e8c8c8;
+  --white:#fff;--text:#1e293b;--sub:#64748b;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Sarabun',sans-serif}
+body{background:var(--bg);color:var(--text);height:100vh;overflow:hidden;display:flex;flex-direction:column}
+#login{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#7f0000 0%,var(--primary) 60%,var(--primary2) 100%)}
+.lc{background:#fff;border-radius:16px;padding:36px 40px;width:min(720px,96vw);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.lc-badge{display:flex;align-items:center;gap:14px;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid var(--bg2)}
+.lc-crest{font-size:40px}
+.t1{font-size:17px;font-weight:800;color:var(--primary)}
+.t2{font-size:11px;color:var(--sub);letter-spacing:.5px}
+.lc-title{font-size:18px;font-weight:700;color:var(--primary);margin-bottom:4px}
+.lc-sub{font-size:12px;color:var(--sub);margin-bottom:18px}
+.role-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:18px}
+.role-btn{border:2px solid var(--border);border-radius:10px;padding:14px 10px;text-align:center;cursor:pointer;transition:.2s;background:#fff}
+.role-btn:hover,.role-btn.active{border-color:var(--primary3);background:var(--bg2)}
+.role-btn.active{border-color:var(--gold);background:#fffbe6}
+.ri{font-size:22px;margin-bottom:4px}
+.rl{font-size:12px;font-weight:700;color:var(--primary)}
+.rs{font-size:11px;color:var(--sub)}
+.inp{border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;width:100%;outline:none;font-family:inherit}
+.inp:focus{border-color:var(--primary3)}
+.lc-btn{width:100%;padding:13px;background:var(--primary);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px;font-family:inherit}
+.lc-btn:hover{background:var(--primary2)}
+.lc-foot{text-align:center;font-size:11px;color:var(--sub);margin-top:12px}
+#app{display:none;flex-direction:column;height:100vh;overflow:hidden}
+.topbar{background:var(--primary);color:#fff;padding:0 20px;height:54px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px}
+.tb-left{display:flex;align-items:center;gap:12px;min-width:0}
+.tb-logo{font-size:26px}
+.tb-t1{font-size:14px;font-weight:700;white-space:nowrap}
+.tb-t2{font-size:10px;opacity:.7;white-space:nowrap}
+.tb-lvl{display:flex;gap:4px;font-size:11px;align-items:center;flex-wrap:nowrap}
+.tb-lv{background:rgba(255,255,255,.12);padding:2px 8px;border-radius:12px;white-space:nowrap}
+.tb-lv.hi{background:var(--gold);color:var(--primary);font-weight:700}
+.tb-sep{opacity:.4}
+.tb-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.tb-user{font-size:12px;opacity:.85;white-space:nowrap}
+.tb-logout{background:rgba(255,255,255,.15);border:none;color:#fff;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-family:inherit}
+.dim-bar{background:var(--primary2);display:flex;padding:0 16px;gap:4px;flex-shrink:0;overflow-x:auto;height:46px;align-items:flex-end}
+.dim-tab{padding:10px 20px;font-size:13px;font-weight:700;color:rgba(255,255,255,.65);cursor:pointer;border-radius:8px 8px 0 0;white-space:nowrap;transition:.15s;border:none;background:transparent;font-family:inherit}
+.dim-tab:hover{background:rgba(255,255,255,.1);color:#fff}
+.dim-tab.active{background:#fff;color:var(--primary)}
+.app-body{display:flex;flex:1;overflow:hidden}
+.sidebar{width:210px;background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0}
+.sb-sec{padding:10px 12px 4px;font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.7px}
+.sb-item{display:flex;align-items:center;gap:8px;padding:9px 14px;font-size:13px;color:var(--text);cursor:pointer;border-radius:0;transition:.15s}
+.sb-item:hover{background:var(--bg2)}
+.sb-item.active{background:var(--bg2);color:var(--primary);font-weight:700;border-left:3px solid var(--primary)}
+.sb-badge{margin-left:auto;background:var(--primary);color:#fff;font-size:10px;padding:1px 6px;border-radius:10px}
+.main{flex:1;overflow-y:auto;padding:20px}
+.page{display:none}
+.page.active{display:block}
+.card{background:#fff;border-radius:12px;padding:18px 20px;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:16px}
+.card-h{font-size:15px;font-weight:700;color:var(--primary);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.card-h .badge{font-size:11px;background:var(--bg2);color:var(--sub);padding:2px 8px;border-radius:10px;font-weight:500}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.kpi-card{background:#fff;border-radius:10px;padding:14px 16px;border:1px solid var(--border)}
+.kpi-v{font-size:26px;font-weight:800;color:var(--primary)}
+.kpi-l{font-size:12px;color:var(--sub);margin-top:2px}
+.kpi-sub{font-size:11px;color:var(--sub)}
+.level-chip{display:inline-block;font-size:11px;padding:2px 10px;border-radius:12px;font-weight:600}
+.lc-central{background:#fce8e8;color:#7f0000}
+.lc-region{background:#dcfce7;color:#166534}
+.lc-local{background:#fef9c3;color:#854d0e}
+.lc-indep{background:#f3e8ff;color:#6b21a8}
+.lc-trade{background:#dbeafe;color:#1e40af}
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{background:var(--primary);color:#fff;padding:9px 10px;text-align:left;font-weight:600}
+.tbl td{padding:8px 10px;border-bottom:1px solid var(--bg2)}
+.tbl tr:hover td{background:var(--bg2)}
+.pb{background:var(--bg2);border-radius:4px;height:7px;overflow:hidden;width:100%}
+.pf{height:100%;border-radius:4px;transition:.3s}
+.row-wrap{display:flex;flex-wrap:wrap;align-items:center}
+.btn{background:var(--primary);color:#fff;border:none;padding:7px 16px;border-radius:7px;cursor:pointer;font-size:13px;font-family:inherit;font-weight:600;transition:.15s}
+.btn:hover{background:var(--primary2)}
+.btn-g{background:var(--green1)}
+.btn-g:hover{background:#14532d}
+.btn-sm{padding:4px 10px;font-size:12px}
+.btn-out{background:#fff;color:var(--primary);border:1px solid var(--border)}
+.btn-out:hover{background:var(--bg2)}
+.dot-g{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green2);margin-right:4px}
+.dot-y{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--gold2);margin-right:4px}
+.dot-r{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);margin-right:4px}
+@media(max-width:900px){.sidebar{display:none}.kpi-row{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+<div class="lc">
+  <div class="lc-badge">
+    <div class="lc-crest">🏪</div>
+    <div>
+      <div class="t1">แพลตฟอร์มบริหารราชการ — กระทรวงพาณิชย์</div>
+      <div class="t2">MINISTRY OF COMMERCE · คน · เงิน · งาน · บูรณาการ · MOC 2568</div>
+    </div>
+  </div>
+  <div class="lc-title">เลือกระดับการเข้าใช้งาน</div>
+  <div class="lc-sub">ครอบคลุม 6 กรม · งบประมาณ 8,200 ล้านบาท · ส่งออก 9.2 ล้านล้านบาท · FTA 14 ฉบับ</div>
+  <div class="role-grid">
+    <div class="role-btn" onclick="selRole('perm')" id="r-perm"><div class="ri">🏛️</div><div class="rl">ปลัดกระทรวงพาณิชย์</div><div class="rs">บริหารทุกมิติ</div></div>
+    <div class="role-btn" onclick="selRole('dbd')" id="r-dbd"><div class="ri">📋</div><div class="rl">อธิบดี DBD</div><div class="rs">กรมพัฒนาธุรกิจการค้า</div></div>
+    <div class="role-btn" onclick="selRole('ditp')" id="r-ditp"><div class="ri">🌏</div><div class="rl">อธิบดี DITP</div><div class="rs">ส่งเสริมการค้าฯ</div></div>
+    <div class="role-btn" onclick="selRole('officer')" id="r-officer"><div class="ri">👤</div><div class="rl">เจ้าหน้าที่การค้า</div><div class="rs">ระดับปฏิบัติการ</div></div>
+    <div class="role-btn" onclick="selRole('dft')" id="r-dft"><div class="ri">🚢</div><div class="rl">อธิบดี DFT</div><div class="rs">กรมการค้าต่างประเทศ</div></div>
+    <div class="role-btn" onclick="selRole('dtn')" id="r-dtn"><div class="ri">🤝</div><div class="rl">อธิบดี DTN</div><div class="rs">กรมเจรจาการค้าฯ</div></div>
+  </div>
+  <button class="lc-btn" onclick="doLogin()">🔐 เข้าสู่ระบบ</button>
+  <div class="lc-foot">ระบบบูรณาการข้อมูลบริหารราชการกระทรวงพาณิชย์ · G2G © 2026 · v2.0 Live</div>
+</div>
+</div>
+
+<!-- APP -->
+<div id="app">
+<div class="topbar">
+  <div class="tb-left">
+    <div class="tb-logo">🏪</div>
+    <div>
+      <div class="tb-t1">กระทรวงพาณิชย์ (MOC) — ระบบบริหารราชการ</div>
+      <div class="tb-t2">คน · เงิน · งาน · บูรณาการ | FY2568</div>
+    </div>
+    <div class="tb-lvl">
+      <span class="tb-lv hi">กระทรวงพาณิชย์</span><span class="tb-sep">›</span>
+      <span class="tb-lv">6 กรม</span><span class="tb-sep">·</span>
+      <span class="tb-lv">9,500 ข้าราชการ</span><span class="tb-sep">·</span>
+      <span class="tb-lv">8,200 ล้านบาท</span>
+    </div>
+  </div>
+  <div class="tb-right">
+    <div class="tb-user" id="tbUser">—</div>
+    <button class="tb-logout" onclick="doLogout()">ออกระบบ</button>
+  </div>
+</div>
+
+<div style="display:flex;justify-content:flex-end;align-items:center;gap:8px;padding:6px 16px;background:linear-gradient(90deg,transparent,rgba(0,0,0,0.04));border-bottom:1px solid var(--border,#e0e0e0)">
+  <span style="font-size:11px;color:#666">รายงานขึ้นสู่ระบบกลาง:</span>
+  <button id="hub-report-btn" onclick="pushReportToHub()" style="background:#1565c0;color:#fff;border:none;padding:5px 14px;border-radius:20px;font-size:12px;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:4px">📤 ส่งรายงานขึ้นระบบ</button>
+  <a href="/minister-dashboard.html" target="_blank" style="font-size:11px;color:#1565c0;text-decoration:none;padding:5px 10px;border:1px solid #1565c0;border-radius:20px">🏛️ แดชบอร์ดรัฐมนตรี</a>
+  <a href="/ministry-hub.html?ministry=moc" target="_blank" style="font-size:11px;color:#666;text-decoration:none;padding:5px 10px;border:1px solid #ccc;border-radius:20px">📊 Hub กระทรวง</a>
+  <span id="hub-report-msg" style="display:none;font-size:11px;font-weight:600;padding:4px 10px;background:#e8f5e9;color:#2e7d32;border-radius:4px"></span>
+</div>
+<div class="dim-bar">
+  <button class="dim-tab active" data-dim="people" onclick="switchDim('people')">👥 แผนคน</button>
+  <button class="dim-tab" data-dim="budget" onclick="switchDim('budget')">💰 แผนเงิน</button>
+  <button class="dim-tab" data-dim="projects" onclick="switchDim('projects')">📋 แผนงาน/โครงการ</button>
+  <button class="dim-tab" data-dim="integration" onclick="switchDim('integration')">🔗 แผนบูรณาการ</button>
+</div>
+
+<div class="app-body">
+<div class="sidebar" id="sidebar">
+  <div id="sb-people">
+    <div class="sb-sec">แผนคน</div>
+    <div class="sb-item active" data-page="people-overview" onclick="showPage('people-overview')">📊 ภาพรวมบุคลากร</div>
+    <div class="sb-item" data-page="people-list" onclick="showPage('people-list')">📋 ทะเบียนบุคลากร</div>
+    <div class="sb-item" data-page="people-contracts" onclick="showPage('people-contracts')">📄 สัญญาจ้างเหมา</div>
+    <div class="sb-item" data-page="people-positions" onclick="showPage('people-positions')">🗂️ กรอบอัตรากำลัง</div>
+    <div class="sb-sec">หน่วยงาน</div>
+    <div class="sb-item" data-page="people-agencies" onclick="showPage('people-agencies')">🏛️ โครงสร้าง 6 กรม</div>
+  </div>
+  <div id="sb-budget" style="display:none">
+    <div class="sb-sec">แผนเงิน</div>
+    <div class="sb-item" data-page="budget-overview" onclick="showPage('budget-overview')">📊 ภาพรวมงบประมาณ</div>
+    <div class="sb-item" data-page="budget-categories" onclick="showPage('budget-categories')">📂 หมวดรายจ่าย 5 หมวด</div>
+    <div class="sb-item" data-page="budget-contracts" onclick="showPage('budget-contracts')">📄 สัญญาจ้างเหมา</div>
+    <div class="sb-item" data-page="budget-tracking" onclick="showPage('budget-tracking')">📈 ติดตามเบิกจ่าย</div>
+    <div class="sb-sec">แหล่งเงิน</div>
+    <div class="sb-item" data-page="budget-dept" onclick="showPage('budget-dept')">🏛️ งบแยกกรม</div>
+  </div>
+  <div id="sb-projects" style="display:none">
+    <div class="sb-sec">แผนงาน</div>
+    <div class="sb-item" data-page="proj-overview" onclick="showPage('proj-overview')">📊 ภาพรวมโครงการ</div>
+    <div class="sb-item" data-page="proj-list" onclick="showPage('proj-list')">📋 ทะเบียนโครงการ</div>
+    <div class="sb-item" data-page="proj-kpi" onclick="showPage('proj-kpi')">🎯 ตัวชี้วัด KPI</div>
+    <div class="sb-sec">โครงการสำคัญ</div>
+    <div class="sb-item" data-page="proj-fta" onclick="showPage('proj-fta')">🤝 FTA 14 ฉบับ</div>
+    <div class="sb-item" data-page="proj-ecom" onclick="showPage('proj-ecom')">🛒 e-Commerce เกษตร</div>
+    <div class="sb-item" data-page="proj-gi" onclick="showPage('proj-gi')">🌿 GI Products 130+</div>
+  </div>
+  <div id="sb-integration" style="display:none">
+    <div class="sb-sec">แผนบูรณาการ</div>
+    <div class="sb-item" data-page="integ-overview" onclick="showPage('integ-overview')">📊 ภาพรวมบูรณาการ</div>
+    <div class="sb-item" data-page="integ-plans" onclick="showPage('integ-plans')">📋 แผนบูรณาการ</div>
+    <div class="sb-item" data-page="integ-agencies" onclick="showPage('integ-agencies')">🏛️ หน่วยงานพันธมิตร</div>
+    <div class="sb-sec">ยุทธศาสตร์</div>
+    <div class="sb-item" data-page="integ-hub" onclick="showPage('integ-hub')">🌐 Thailand Trade Hub</div>
+    <div class="sb-item" data-page="integ-price" onclick="showPage('integ-price')">📊 เสถียรภาพราคา</div>
+  </div>
+</div><!-- /sidebar -->
+
+<div class="main" id="mainContent">
+
+<!-- PEOPLE PAGES -->
+<div id="page-people-overview" class="page active">
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="kpi-v" id="kpi-civil">…</div><div class="kpi-l">ข้าราชการ</div><div class="kpi-sub">จาก 9,500 คน</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="kpi-gov-emp">…</div><div class="kpi-l">พนักงานราชการ</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="kpi-contract">…</div><div class="kpi-l">จ้างเหมาบริการ</div></div>
+    <div class="kpi-card"><div class="kpi-v">6</div><div class="kpi-l">กรมในสังกัด</div><div class="kpi-sub">DFT DIT DIP DBD DITP DTN</div></div>
+  </div>
+  <div class="card">
+    <div class="card-h">👥 บุคลากรแยกกรม — กระทรวงพาณิชย์ ปี 2568</div>
+    <table class="tbl">
+      <thead><tr><th>กรม/หน่วยงาน</th><th>ระดับ</th><th>ข้าราชการ</th><th>พนักงานราชการ</th><th>จ้างเหมา</th><th>รวม</th></tr></thead>
+      <tbody id="people-agency-table"><tr><td colspan="6" style="text-align:center;padding:20px;color:var(--sub)">⏳ กำลังโหลด...</td></tr></tbody>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-h">🌏 บุคลากรประจำต่างประเทศ — Thailand Trade Centers</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+      <div style="border-left:4px solid var(--primary);padding:12px;background:var(--bg2);border-radius:0 8px 8px 0">
+        <div style="font-size:20px">🏢</div><div style="font-weight:700;font-size:14px">20+ แห่ง</div>
+        <div style="font-size:12px;color:var(--sub)">Thailand Trade Centers ทั่วโลก</div>
+      </div>
+      <div style="border-left:4px solid var(--gold);padding:12px;background:var(--bg2);border-radius:0 8px 8px 0">
+        <div style="font-size:20px">👔</div><div style="font-weight:700;font-size:14px">~200 คน</div>
+        <div style="font-size:12px;color:var(--sub)">ผู้แทนการค้าและเจ้าหน้าที่ประจำต่างประเทศ</div>
+      </div>
+      <div style="border-left:4px solid var(--green2);padding:12px;background:var(--bg2);border-radius:0 8px 8px 0">
+        <div style="font-size:20px">🌏</div><div style="font-weight:700;font-size:14px">18 ประเทศ</div>
+        <div style="font-size:12px;color:var(--sub)">ประเทศคู่ FTA ที่มีผลบังคับใช้</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="page-people-list" class="page">
+  <div class="card">
+    <div class="card-h">📋 ทะเบียนบุคลากรพาณิชย์ <span class="badge">ทุกกรม</span></div>
+    <div class="row-wrap" style="gap:8px;margin-bottom:12px">
+      <select id="ptype-filter" class="inp" style="width:180px" onchange="renderPeopleList()">
+        <option value="">— ทุกประเภท —</option>
+        <option value="ข้าราชการ">ข้าราชการ</option>
+        <option value="พนักงานราชการ">พนักงานราชการ</option>
+        <option value="จ้างเหมาบริการ">จ้างเหมาบริการ</option>
+      </select>
+      <select id="pdept-filter" class="inp" style="width:220px" onchange="renderPeopleList()">
+        <option value="">— ทุกกรม —</option>
+        <option value="DFT">กรมการค้าต่างประเทศ (DFT)</option>
+        <option value="DIT">กรมการค้าภายใน (DIT)</option>
+        <option value="DIP">กรมทรัพย์สินทางปัญญา (DIP)</option>
+        <option value="DBD">กรมพัฒนาธุรกิจการค้า (DBD)</option>
+        <option value="DITP">กรมส่งเสริมการค้าระหว่างประเทศ (DITP)</option>
+        <option value="DTN">กรมเจรจาการค้าระหว่างประเทศ (DTN)</option>
+      </select>
+      <button class="btn btn-sm" onclick="addPerson()">➕ เพิ่มบุคลากร</button>
+    </div>
+    <table class="tbl"><thead><tr><th>ชื่อ-สกุล</th><th>ประเภท</th><th>ตำแหน่ง</th><th>กรม/หน่วยงาน</th><th>ระดับ</th><th>สถานะ</th></tr></thead>
+    <tbody id="people-tbody"></tbody></table>
+  </div>
+</div>
+
+<div id="page-people-contracts" class="page">
+  <div class="card">
+    <div class="card-h">📄 สัญญาจ้างเหมาบริการ <span class="badge">ตาม พ.ร.บ.จัดซื้อจัดจ้าง 2560</span></div>
+    <div style="background:#fffbe6;border:1px solid var(--gold);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px">
+      <strong>⚖️ กฎจัดซื้อจัดจ้าง:</strong> ≤100K บ. → เฉพาะเจาะจง | 100K–500K บ. → สืบราคา | &gt;500K บ. → ประกวดราคา (e-bidding)
+    </div>
+    <button class="btn btn-sm" style="margin-bottom:12px" onclick="addContract()">➕ เพิ่มสัญญา</button>
+    <table class="tbl"><thead><tr><th>ผู้รับจ้าง</th><th>กรม</th><th>งาน/โครงการ</th><th>วงเงิน (บ.)</th><th>วิธีจัดซื้อ</th><th>เลข e-GP</th><th>สถานะ</th></tr></thead>
+    <tbody id="contracts-tbody"></tbody></table>
+  </div>
+</div>
+
+<div id="page-people-positions" class="page">
+  <div class="card">
+    <div class="card-h">🗂️ กรอบอัตรากำลัง — กระทรวงพาณิชย์ ปี 2568</div>
+    <table class="tbl"><thead><tr><th>กรม/หน่วยงาน</th><th>กรอบที่อนุมัติ</th><th>ครองอยู่</th><th>ว่าง</th><th>% บรรจุ</th></tr></thead>
+    <tbody id="positions-tbody"></tbody></table>
+  </div>
+</div>
+
+<div id="page-people-agencies" class="page">
+  <div class="card">
+    <div class="card-h">🏛️ โครงสร้างองค์กร — กระทรวงพาณิชย์ 6 กรม</div>
+    <div id="org-chart-container" style="overflow-x:auto;padding:10px"></div>
+  </div>
+</div>
+
+<!-- BUDGET PAGES -->
+<div id="page-budget-overview" class="page">
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="kpi-v" id="b-total">8,200</div><div class="kpi-l">งบรวม FY2568 (ล้านบาท)</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="b-spent">…</div><div class="kpi-l">เบิกจ่ายแล้ว (ล้านบาท)</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="b-pct">…%</div><div class="kpi-l">% เบิกจ่าย</div><div class="kpi-sub">เป้า 75%</div></div>
+    <div class="kpi-card"><div class="kpi-v">6</div><div class="kpi-l">กรมรับงบ</div></div>
+  </div>
+  <div class="card">
+    <div class="card-h">💰 งบประมาณแยกหมวดรายจ่าย — FY2568</div>
+    <div class="law-note" style="font-size:11px;background:#e3f2fd;border-left:3px solid #1565c0;padding:6px 10px;margin-bottom:10px;border-radius:0 4px 4px 0">
+      ⚖️ <strong>ขั้นตอนการอนุมัติงบประมาณ</strong> — พรบ.วิธีการงบประมาณ พ.ศ. 2561 มาตรา 24–25<br>
+      <span style="color:#555;font-size:10px">🏢 หน่วยงาน → 🏛️ กระทรวง → 📋 สำนักงบประมาณ → ⚖️ ครม.อนุมัติ → 🗳️ สภาผู้แทนราษฎร → 🏅 วุฒิสภา → 📰 ราชกิจจานุเบกษา</span>
+    </div>
+    <div class="law-note" style="font-size:11px;background:#e3f2fd;border-left:3px solid #1565c0;padding:4px 8px;margin-bottom:8px">⚖️ จำแนกงบรายจ่ายตาม พรบ.วิธีการงบประมาณ 2561 มาตรา 28 (5 ประเภท) และหลักการจำแนกประเภทรายจ่าย กรมบัญชีกลาง</div>
+    <div id="budget-cat-bars"></div>
+  </div>
+  <div class="card">
+    <div class="card-h">🏛️ งบประมาณแยกกรม</div>
+    <table class="tbl"><thead><tr><th>กรม/หน่วยงาน</th><th>01 งบบุคลากร(ลบ.)</th><th>02 งบดำเนินงาน(ลบ.)</th><th>03 งบลงทุน(ลบ.)</th><th>04 งบเงินอุดหนุน(ลบ.)</th><th>รวม(ลบ.)</th><th>เบิกจ่าย%</th></tr></thead>
+    <tbody id="budget-agency-tbody"></tbody></table>
+  </div>
+</div>
+
+<div id="page-budget-categories" class="page">
+  <div class="card">
+    <div class="card-h">📂 หมวดรายจ่าย 5 หมวด <span class="badge">ตาม พ.ร.บ.วิธีการงบประมาณ 2561</span></div>
+    <div id="cat-detail-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:14px"></div>
+  </div>
+</div>
+
+<div id="page-budget-contracts" class="page">
+  <div class="card">
+    <div class="card-h">📄 สัญญาจัดซื้อจัดจ้าง — หมวดค่าใช้สอย</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px" id="contract-type-summary"></div>
+    <table class="tbl"><thead><tr><th>ผู้รับจ้าง</th><th>กรม</th><th>งาน</th><th>วงเงิน(บ.)</th><th>วิธีจัดซื้อ</th><th>สถานะ</th></tr></thead>
+    <tbody id="budget-contracts-tbody"></tbody></table>
+  </div>
+</div>
+
+<div id="page-budget-tracking" class="page">
+  <div class="card">
+    <div class="card-h">📈 ติดตามการเบิกจ่ายงบประมาณ (รายเดือน FY2568)</div>
+    <div id="monthly-tracking-table"></div>
+  </div>
+</div>
+
+<div id="page-budget-dept" class="page">
+  <div class="card">
+    <div class="card-h">🏛️ งบประมาณแยกกรม — รายละเอียด</div>
+    <div id="dept-budget-detail"></div>
+  </div>
+</div>
+
+<!-- PROJECT PAGES -->
+<div id="page-proj-overview" class="page">
+  <div class="law-note" style="font-size:11px;background:#e3f2fd;border-left:3px solid #1565c0;padding:4px 8px;margin-bottom:8px">⚖️ แผนปฏิบัติราชการตาม พรบ.วิธีการงบประมาณ 2561 มาตรา 16 — สอดคล้องยุทธศาสตร์ชาติ 20 ปี → แผนพัฒนาฯ ฉ.13 → แผนปฏิบัติราชการ 5 ปี → ประจำปี</div>
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="kpi-v" id="proj-total">…</div><div class="kpi-l">โครงการทั้งหมด</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="proj-ontrack">…</div><div class="kpi-l">ตามแผน (≥60%)</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="proj-risk">…</div><div class="kpi-l">เสี่ยงล่าช้า</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="proj-done">…</div><div class="kpi-l">เสร็จสิ้น</div></div>
+  </div>
+  <div class="card">
+    <div class="card-h">📋 สถิติสำคัญพาณิชย์ปี 2567</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+      <div style="text-align:center;background:var(--bg2);padding:14px;border-radius:10px">
+        <div style="font-size:22px;font-weight:800;color:var(--primary)">9.2 ล้านล้าน</div>
+        <div style="font-size:12px;color:var(--sub)">มูลค่าส่งออก (บาท)</div>
+        <div style="font-size:11px;color:var(--green2)">+3.8% จากปีก่อน</div>
+      </div>
+      <div style="text-align:center;background:var(--bg2);padding:14px;border-radius:10px">
+        <div style="font-size:22px;font-weight:800;color:var(--primary)">14 ฉบับ</div>
+        <div style="font-size:12px;color:var(--sub)">FTA ที่มีผลบังคับใช้</div>
+        <div style="font-size:11px;color:var(--sub)">กับ 18 ประเทศ/กลุ่มประเทศ</div>
+      </div>
+      <div style="text-align:center;background:var(--bg2);padding:14px;border-radius:10px">
+        <div style="font-size:22px;font-weight:800;color:var(--primary)">1.8 ล้าน</div>
+        <div style="font-size:12px;color:var(--sub)">นิติบุคคลจดทะเบียน (DBD)</div>
+        <div style="font-size:11px;color:var(--sub)">ทั่วประเทศ</div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-h">📊 สถานะโครงการ — ภาพรวม</div>
+    <div class="law-note" style="font-size:11px;background:#e8f5e9;border-left:3px solid #2e7d32;padding:6px 10px;margin-bottom:10px;border-radius:0 4px 4px 0">
+      ⚖️ <strong>กระบวนการโครงการตามกฎหมาย</strong> — พรบ.การจัดซื้อจัดจ้างฯ 2560 + พรบ.วิธีการงบประมาณ 2561<br>
+      <span style="color:#555;font-size:10px">📋 จัดทำโครงการ → 💰 ขอจัดสรรงบ → 🏛️ กระทรวง → สำนักงบ → ครม. → สภาฯ → 📑 ได้รับจัดสรร → 🛒 จัดซื้อ (e-bidding/เฉพาะเจาะจง) → ✅ ตรวจรับ → 💳 เบิกจ่าย GFMIS → 📊 รายงาน eMENSCR</span>
+    </div>
+    <div id="proj-summary-table"></div>
+  </div>
+</div>
+
+<div id="page-proj-list" class="page">
+  <div class="card">
+    <div class="card-h">📋 ทะเบียนโครงการ</div>
+    <div class="row-wrap" style="gap:8px;margin-bottom:12px">
+      <select id="proj-dept-filter" class="inp" style="width:220px" onchange="renderProjList()">
+        <option value="">— ทุกกรม —</option>
+        <option value="DFT">DFT</option><option value="DIT">DIT</option>
+        <option value="DIP">DIP</option><option value="DBD">DBD</option>
+        <option value="DITP">DITP</option><option value="DTN">DTN</option>
+      </select>
+      <select id="proj-status-filter" class="inp" style="width:160px" onchange="renderProjList()">
+        <option value="">— ทุกสถานะ —</option>
+        <option value="อยู่ระหว่างดำเนินการ">กำลังดำเนินการ</option>
+        <option value="เสร็จสิ้น">เสร็จสิ้น</option>
+        <option value="เสี่ยงล่าช้า">เสี่ยงล่าช้า</option>
+      </select>
+      <button class="btn btn-sm" onclick="addProject()">➕ เพิ่มโครงการ</button>
+    </div>
+    <table class="tbl"><thead><tr><th>รหัส</th><th>ชื่อโครงการ</th><th>กรม</th><th>งบ (บ.)</th><th>KPI</th><th>ความก้าวหน้า</th><th>สถานะ</th></tr></thead>
+    <tbody id="proj-list-tbody"></tbody></table>
+  </div>
+</div>
+
+<div id="page-proj-kpi" class="page">
+  <div class="card">
+    <div class="card-h">🎯 ตัวชี้วัด KPI — กระทรวงพาณิชย์ 2568</div>
+    <div id="kpi-dashboard-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"></div>
+  </div>
+</div>
+
+<div id="page-proj-fta" class="page">
+  <div class="card">
+    <div class="card-h">🤝 FTA 14 ฉบับ — สถานะและผลประโยชน์</div>
+    <div id="fta-content"></div>
+  </div>
+</div>
+
+<div id="page-proj-ecom" class="page">
+  <div class="card">
+    <div class="card-h">🛒 โครงการ e-Commerce เพื่อเกษตรกร — 450K Users</div>
+    <div id="ecom-content"></div>
+  </div>
+</div>
+
+<div id="page-proj-gi" class="page">
+  <div class="card">
+    <div class="card-h">🌿 สินค้า GI (สิ่งบ่งชี้ทางภูมิศาสตร์) 130+ รายการ</div>
+    <div id="gi-content"></div>
+  </div>
+</div>
+
+<!-- INTEGRATION PAGES -->
+<div id="page-integ-overview" class="page">
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="kpi-v" id="integ-total">…</div><div class="kpi-l">แผนบูรณาการ</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="integ-inprog">…</div><div class="kpi-l">กำลังดำเนินการ</div></div>
+    <div class="kpi-card"><div class="kpi-v">8</div><div class="kpi-l">กระทรวงพันธมิตร</div><div class="kpi-sub">บูรณาการงานร่วม</div></div>
+    <div class="kpi-card"><div class="kpi-v">14</div><div class="kpi-l">FTA ที่บริหาร</div><div class="kpi-sub">18 ประเทศ</div></div>
+  </div>
+  <div class="card">
+    <div class="card-h">🔗 Thailand Trade Hub — โครงสร้างบูรณาการ</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+      <div style="border-left:4px solid var(--primary);padding:12px;background:var(--bg2);border-radius:0 8px 8px 0">
+        <div style="font-weight:700;font-size:13px;color:var(--primary);margin-bottom:8px">🏪 MOC</div>
+        <div style="font-size:12px;line-height:1.8;color:var(--sub)">กรมการค้าฯ ทั้ง 6<br>นโยบาย FTA<br>ราคาสินค้า<br>ทะเบียนธุรกิจ</div>
+      </div>
+      <div style="border-left:4px solid var(--green2);padding:12px;background:var(--bg2);border-radius:0 8px 8px 0">
+        <div style="font-weight:700;font-size:13px;color:var(--primary);margin-bottom:8px">🏦 BOI/EXIM</div>
+        <div style="font-size:12px;line-height:1.8;color:var(--sub)">ส่งเสริมการลงทุน<br>สินเชื่อส่งออก<br>ประกันการส่งออก</div>
+      </div>
+      <div style="border-left:4px solid var(--gold);padding:12px;background:var(--bg2);border-radius:0 8px 8px 0">
+        <div style="font-weight:700;font-size:13px;color:var(--primary);margin-bottom:8px">✈️ กระทรวงต่างประเทศ</div>
+        <div style="font-size:12px;line-height:1.8;color:var(--sub)">การทูตเศรษฐกิจ<br>เจรจา FTA ร่วม<br>สถานทูต/กงสุล</div>
+      </div>
+      <div style="border-left:4px solid var(--purple);padding:12px;background:var(--bg2);border-radius:0 8px 8px 0">
+        <div style="font-weight:700;font-size:13px;color:var(--primary);margin-bottom:8px">🌾 กระทรวงเกษตร</div>
+        <div style="font-size:12px;line-height:1.8;color:var(--sub)">e-Commerce เกษตร<br>GI สินค้าเกษตร<br>มาตรฐาน GAP/GMP</div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-h">📊 แผนบูรณาการ — ภาพรวม</div>
+    <div id="integ-overview-table"></div>
+  </div>
+</div>
+
+<div id="page-integ-plans" class="page">
+  <div class="card">
+    <div class="card-h">📋 แผนบูรณาการพาณิชย์ <span class="badge">ปีงบประมาณ 2568</span></div>
+    <div style="background:#fffbe6;border:1px solid var(--gold);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px">
+      <strong>💡 หลักการ:</strong> แผนบูรณาการมีงบประมาณเป็นของตัวเอง ดำเนินการร่วมกับกระทรวงพันธมิตร เบิกจ่ายผ่านหน่วยงานเจ้าภาพ
+    </div>
+    <button class="btn btn-sm" style="margin-bottom:12px" onclick="addIntegPlan()">➕ เพิ่มแผนบูรณาการ</button>
+    <div id="integ-plans-list"></div>
+  </div>
+</div>
+
+<div id="page-integ-agencies" class="page">
+  <div class="card">
+    <div class="card-h">🏛️ หน่วยงานพันธมิตร — การทำงานร่วม</div>
+    <div id="agencies-map-container"></div>
+  </div>
+</div>
+
+<div id="page-integ-hub" class="page">
+  <div class="card">
+    <div class="card-h">🌐 Thailand Trade Hub 2025 — แผนยุทธศาสตร์</div>
+    <div id="hub-content"></div>
+  </div>
+</div>
+
+<div id="page-integ-price" class="page">
+  <div class="card">
+    <div class="card-h">📊 เสถียรภาพราคา — 97 สินค้าจำเป็น</div>
+    <div id="price-content"></div>
+  </div>
+</div>
+
+</div><!-- /main -->
+</div><!-- /app-body -->
+</div><!-- /app -->
+
+<script>
+/* ── API CONFIG ── */
+const API_BASE = "";
+const MOC_API = API_BASE + "/api/moc/management";
+const API_KEY = "moc2026";
+const HGET  = {"x-api-key": API_KEY};
+const HPOST = {"x-api-key": API_KEY, "Content-Type": "application/json"};
+
+let API_PERSONNEL  = [];
+let API_BUDGET     = [];
+let API_PROJECTS   = [];
+let API_CONTRACTS  = [];
+let API_INTEGRATION= [];
+let API_SUMMARY    = null;
+let DATA_LOADED    = false;
+
+const BUDGET_CATS = [
+  {id:"personnel", name:"หมวด 1 — งบบุคลากร", color:"var(--primary)", desc:"เงินเดือน ค่าจ้าง ลูกจ้างประจำ"},
+  {id:"operating", name:"หมวด 2 — งบดำเนินงาน", color:"var(--green2)", desc:"ค่าตอบแทน ค่าใช้สอย ค่าวัสดุ ค่าสาธารณูปโภค"},
+  {id:"capital",   name:"หมวด 3 — งบลงทุน", color:"var(--gold)", desc:"ครุภัณฑ์ ที่ดิน สิ่งก่อสร้าง"},
+  {id:"subsidy",   name:"หมวด 4 — งบเงินอุดหนุน", color:"var(--orange)", desc:"อุดหนุนทั่วไป / เฉพาะกิจ"},
+  {id:"other",     name:"หมวด 5 — งบรายจ่ายอื่น", color:"var(--purple)", desc:"เงินราชการลับ / สำรองจ่าย"}
+];
+
+let STATE = {role:null, curDim:"people", curPage:"people-overview"};
+let _selectedRole = null;
+
+async function loadAllData() {
+  try {
+    const [sumR,perR,budR,prjR,ctrR,intR] = await Promise.allSettled([
+      fetch(MOC_API+"/summary",     {headers:HGET}).then(function(r){return r.json();}),
+      fetch(MOC_API+"/personnel",   {headers:HGET}).then(function(r){return r.json();}),
+      fetch(MOC_API+"/budget",      {headers:HGET}).then(function(r){return r.json();}),
+      fetch(MOC_API+"/projects",    {headers:HGET}).then(function(r){return r.json();}),
+      fetch(MOC_API+"/contracts",   {headers:HGET}).then(function(r){return r.json();}),
+      fetch(MOC_API+"/integration", {headers:HGET}).then(function(r){return r.json();}),
+    ]);
+    if(sumR.status==="fulfilled"&&sumR.value.ok) API_SUMMARY    = sumR.value.summary;
+    if(perR.status==="fulfilled"&&perR.value.ok) API_PERSONNEL  = perR.value.people||[];
+    if(budR.status==="fulfilled"&&budR.value.ok) API_BUDGET     = budR.value.agencies||[];
+    if(prjR.status==="fulfilled"&&prjR.value.ok) API_PROJECTS   = prjR.value.projects||[];
+    if(ctrR.status==="fulfilled"&&ctrR.value.ok) API_CONTRACTS  = ctrR.value.contracts||[];
+    if(intR.status==="fulfilled"&&intR.value.ok) API_INTEGRATION= intR.value.plans||[];
+    DATA_LOADED = true;
+    console.log("[MOC] Data loaded — personnel:"+API_PERSONNEL.length+" budget:"+API_BUDGET.length+" projects:"+API_PROJECTS.length);
+  } catch(e) {
+    console.error("[MOC] loadAllData error:",e);
+    DATA_LOADED = true;
+  }
+}
+
+/* ── LOGIN ── */
+function selRole(r) {
+  _selectedRole = r;
+  document.querySelectorAll(".role-btn").forEach(function(b){b.classList.remove("active");});
+  var btn = document.getElementById("r-"+r);
+  if(btn) btn.classList.add("active");
+}
+async function doLogin() {
+  if(!_selectedRole){ alert("กรุณาเลือกระดับการเข้าใช้งาน"); return; }
+  var btn = document.querySelector(".lc-btn");
+  if(btn){ btn.textContent="⏳ กำลังโหลดข้อมูล..."; btn.disabled=true; }
+  STATE.role = _selectedRole;
+  var labels = {perm:"ปลัดกระทรวงพาณิชย์",dbd:"อธิบดี DBD",ditp:"อธิบดี DITP",officer:"เจ้าหน้าที่การค้า",dft:"อธิบดี DFT",dtn:"อธิบดี DTN"};
+  await loadAllData();
+  document.getElementById("login").style.display="none";
+  document.getElementById("app").style.display="flex";
+  document.getElementById("tbUser").textContent = labels[_selectedRole]||_selectedRole;
+  if(btn){ btn.textContent="🔐 เข้าสู่ระบบ"; btn.disabled=false; }
+  switchDim("people");
+}
+function doLogout() {
+  _selectedRole=null; STATE.role=null;
+  document.getElementById("app").style.display="none";
+  document.getElementById("login").style.display="flex";
+  document.querySelectorAll(".role-btn").forEach(function(b){b.classList.remove("active");});
+}
+
+/* ── NAVIGATION ── */
+function switchDim(dim) {
+  STATE.curDim = dim;
+  document.querySelectorAll(".dim-tab").forEach(function(t){t.classList.toggle("active",t.dataset.dim===dim);});
+  ["people","budget","projects","integration"].forEach(function(d){
+    var el=document.getElementById("sb-"+d);
+    if(el) el.style.display = d===dim?"block":"none";
+  });
+  var firstPage = {people:"people-overview",budget:"budget-overview",projects:"proj-overview",integration:"integ-overview"}[dim];
+  showPage(firstPage);
+}
+function showPage(pg) {
+  STATE.curPage = pg;
+  document.querySelectorAll(".page").forEach(function(p){p.classList.remove("active");p.style.display="none";});
+  var el=document.getElementById("page-"+pg);
+  if(el){el.classList.add("active");el.style.display="block";}
+  document.querySelectorAll(".sb-item").forEach(function(i){i.classList.toggle("active",i.dataset.page===pg);});
+  renderPage(pg);
+}
+function renderPage(pg) {
+  var fns = {
+    "people-overview":  renderPeopleOverview,
+    "people-list":      renderPeopleList,
+    "people-contracts": renderContracts,
+    "people-positions": renderPositions,
+    "people-agencies":  renderOrgChart,
+    "budget-overview":  renderBudgetOverview,
+    "budget-categories":renderBudgetCategories,
+    "budget-contracts": renderBudgetContracts,
+    "budget-tracking":  renderBudgetTracking,
+    "budget-dept":      renderBudgetDept,
+    "proj-overview":    renderProjOverview,
+    "proj-list":        renderProjList,
+    "proj-kpi":         renderProjKPI,
+    "proj-fta":         renderFTA,
+    "proj-ecom":        renderEcom,
+    "proj-gi":          renderGI,
+    "integ-overview":   renderIntegOverview,
+    "integ-plans":      renderIntegPlans,
+    "integ-agencies":   renderAgenciesMap,
+    "integ-hub":        renderHub,
+    "integ-price":      renderPrice,
+  };
+  var fn = fns[pg];
+  if(fn) fn();
+}
+</script>
+
+<script>
+/* ── PEOPLE RENDERERS ── */
+function renderPeopleOverview() {
+  var civil    = API_PERSONNEL.filter(function(p){return p.employee_type==="ข้าราชการ";}).length;
+  var govEmp   = API_PERSONNEL.filter(function(p){return p.employee_type==="พนักงานราชการ";}).length;
+  var contract = API_PERSONNEL.filter(function(p){return p.employee_type==="จ้างเหมาบริการ";}).length;
+  document.getElementById("kpi-civil").textContent    = API_SUMMARY ? API_SUMMARY.personnel.civil.toLocaleString("th-TH") : (civil||"…");
+  document.getElementById("kpi-gov-emp").textContent  = API_SUMMARY ? API_SUMMARY.personnel.govEmp.toLocaleString("th-TH") : (govEmp||"…");
+  document.getElementById("kpi-contract").textContent = API_SUMMARY ? API_SUMMARY.personnel.contract.toLocaleString("th-TH") : (contract||"…");
+  var tbody = document.getElementById("people-agency-table");
+  if(!tbody) return;
+  if(!DATA_LOADED){ tbody.innerHTML="<tr><td colspan=\"6\" style=\"text-align:center;color:var(--sub);padding:20px\">⏳ กำลังโหลด...</td></tr>"; return; }
+  var deptMap = {};
+  var DEPT_CODES = ["สำนักงานปลัดกระทรวงพาณิชย์","กรมการค้าต่างประเทศ (DFT)","กรมการค้าภายใน (DIT)","กรมทรัพย์สินทางปัญญา (DIP)","กรมพัฒนาธุรกิจการค้า (DBD)","กรมส่งเสริมการค้าระหว่างประเทศ (DITP)","กรมเจรจาการค้าระหว่างประเทศ (DTN)"];
+  DEPT_CODES.forEach(function(d){ deptMap[d]={name:d,civil:0,govEmp:0,perm:0,contract:0}; });
+  API_PERSONNEL.forEach(function(p){
+    var k = p.dept||"อื่นๆ";
+    if(!deptMap[k]) deptMap[k]={name:k,civil:0,govEmp:0,perm:0,contract:0};
+    if(p.employee_type==="ข้าราชการ") deptMap[k].civil++;
+    else if(p.employee_type==="พนักงานราชการ") deptMap[k].govEmp++;
+    else if(p.employee_type==="ลูกจ้างประจำ") deptMap[k].perm++;
+    else if(p.employee_type==="จ้างเหมาบริการ") deptMap[k].contract++;
+  });
+  var agencies = Object.values(deptMap).filter(function(a){return a.civil+a.govEmp+a.perm+a.contract>0;});
+  if(agencies.length===0){ tbody.innerHTML="<tr><td colspan=\"6\" style=\"text-align:center;color:var(--sub);padding:20px\">ไม่มีข้อมูล</td></tr>"; return; }
+  tbody.innerHTML = agencies.map(function(ag){
+    return "<tr><td><strong>"+ag.name+"</strong></td><td><span class=\"level-chip lc-central\">ส่วนกลาง</span></td><td style=\"text-align:center\">"+ag.civil+"</td><td style=\"text-align:center\">"+ag.govEmp+"</td><td style=\"text-align:center;color:var(--primary);font-weight:600\">"+ag.contract+"</td><td style=\"text-align:center;font-weight:700\">"+(ag.civil+ag.govEmp+ag.perm+ag.contract)+"</td></tr>";
+  }).join("");
+}
+
+function renderPeopleList() {
+  var typeColor = {"ข้าราชการ":"lc-central","พนักงานราชการ":"lc-region","จ้างเหมาบริการ":"lc-indep"};
+  var typeF = document.getElementById("ptype-filter") ? document.getElementById("ptype-filter").value : "";
+  var deptF = document.getElementById("pdept-filter") ? document.getElementById("pdept-filter").value : "";
+  var people = API_PERSONNEL.filter(function(p){
+    if(typeF && p.employee_type!==typeF) return false;
+    if(deptF && (!p.dept || p.dept.indexOf(deptF)<0)) return false;
+    return true;
+  });
+  document.getElementById("people-tbody").innerHTML = people.length===0
+    ? "<tr><td colspan=\"6\" style=\"text-align:center;color:var(--sub);padding:20px\">"+(DATA_LOADED?"ไม่มีข้อมูล":"⏳ กำลังโหลด...")+"</td></tr>"
+    : people.map(function(p){
+      return "<tr><td>"+( p.name||"—")+"</td><td><span class=\"level-chip "+(typeColor[p.employee_type]||"lc-local")+"\">"+(p.employee_type||"—")+"</span></td><td>"+(p.position||"—")+"</td><td>"+(p.dept||"—")+"</td><td>"+(p.grade||"—")+"</td><td><span class=\"dot-"+(p.status==="ลาป่วย"?"y":"g")+"\"></span>"+(p.status||"ปฏิบัติงาน")+"</td></tr>";
+    }).join("");
+}
+
+function renderContracts() {
+  var methodColor = {"เฉพาะเจาะจง":"lc-local","สืบราคา":"lc-region","ประกวดราคา":"lc-central"};
+  var contracts = API_CONTRACTS;
+  document.getElementById("contracts-tbody").innerHTML = contracts.length===0
+    ? "<tr><td colspan=\"7\" style=\"text-align:center;color:var(--sub);padding:20px\">"+(DATA_LOADED?"ไม่มีข้อมูล":"⏳ กำลังโหลด...")+"</td></tr>"
+    : contracts.map(function(c){
+      return "<tr><td>"+(c.contractor||"—")+"</td><td><span class=\"level-chip lc-trade\">"+(c.agency||"—")+"</span></td><td>"+(c.work||"—")+"</td><td style=\"text-align:right;font-weight:700\">"+(c.total?Number(c.total).toLocaleString("th-TH"):"—")+"</td><td><span class=\"level-chip "+(methodColor[c.method]||"lc-local")+"\">"+(c.method||"—")+"</span></td><td style=\"font-size:11px;color:var(--sub)\">"+(c.egp||"—")+"</td><td><span class=\"dot-"+(c.status==="มีผลบังคับ"?"g":"y")+"\"></span>"+(c.status||"—")+"</td></tr>";
+    }).join("");
+}
+
+function renderPositions() {
+  var deptMap = {};
+  API_PERSONNEL.forEach(function(p){
+    var k = p.dept||"ไม่ระบุ";
+    if(!deptMap[k]) deptMap[k]={name:k,civil:0,govEmp:0,perm:0};
+    if(p.employee_type==="ข้าราชการ") deptMap[k].civil++;
+    else if(p.employee_type==="พนักงานราชการ") deptMap[k].govEmp++;
+    else if(p.employee_type==="ลูกจ้างประจำ") deptMap[k].perm++;
+  });
+  var agencies = Object.values(deptMap);
+  document.getElementById("positions-tbody").innerHTML = agencies.length===0
+    ? "<tr><td colspan=\"5\" style=\"text-align:center;color:var(--sub)\">"+(DATA_LOADED?"ไม่มีข้อมูล":"⏳ กำลังโหลด...")+"</td></tr>"
+    : agencies.map(function(ag){
+      var total = ag.civil+ag.govEmp+ag.perm;
+      var frame = total+3;
+      var pct = frame>0 ? Math.round(total/frame*100) : 0;
+      return "<tr><td>"+ag.name+"</td><td style=\"text-align:center\">"+frame+"</td><td style=\"text-align:center\">"+total+"</td><td style=\"text-align:center;color:var(--gold)\">"+( frame-total)+"</td><td style=\"width:160px\"><div style=\"display:flex;align-items:center;gap:8px\"><div class=\"pb\" style=\"flex:1\"><div class=\"pf\" style=\"width:"+pct+"%;background:var(--primary)\"></div></div><span style=\"font-size:12px;font-weight:600\">"+pct+"%</span></div></td></tr>";
+    }).join("");
+}
+
+function renderOrgChart() {
+  document.getElementById("org-chart-container").innerHTML = "<div style=\"text-align:center;font-size:13px;min-width:900px\"><div style=\"background:var(--primary);color:#fff;padding:10px 20px;border-radius:8px;display:inline-block;margin-bottom:10px\">🏪 กระทรวงพาณิชย์ — ปลัดกระทรวง</div><div style=\"display:flex;gap:8px;justify-content:center;margin-top:8px;flex-wrap:wrap\">"+["กรมการค้าต่างประเทศ<br>(DFT)","กรมการค้าภายใน<br>(DIT)","กรมทรัพย์สินทางปัญญา<br>(DIP)","กรมพัฒนาธุรกิจการค้า<br>(DBD)","กรมส่งเสริมการค้า<br>ระหว่างประเทศ (DITP)","กรมเจรจาการค้า<br>ระหว่างประเทศ (DTN)"].map(function(n){return "<div style=\"border:2px solid var(--border);border-radius:8px;padding:10px 14px;background:#fff;min-width:140px\">"+n+"</div>";}).join("")+"</div><div style=\"margin-top:14px;font-size:11px;color:var(--sub)\">ทุกกรมรายงานต่อปลัดกระทรวงพาณิชย์ | สำนักงานรัฐมนตรีอยู่นอกสายบังคับบัญชา</div></div>";
+}
+
+async function addPerson() {
+  var name = prompt("ชื่อ-นามสกุล:"); if(!name) return;
+  var dept = prompt("กรม/หน่วยงาน (เช่น กรมพัฒนาธุรกิจการค้า (DBD)):"); if(!dept) return;
+  var type = prompt("ประเภท: ข้าราชการ / พนักงานราชการ / จ้างเหมาบริการ")||"ข้าราชการ";
+  var pos  = prompt("ตำแหน่ง:")||"";
+  try {
+    var r = await fetch(MOC_API+"/personnel",{method:"POST",headers:HPOST,body:JSON.stringify({name:name,dept:dept,employee_type:type,position:pos,status:"ปฏิบัติงาน"})});
+    var d = await r.json();
+    if(d.ok){ alert("✅ บันทึกสำเร็จ"); await loadAllData(); renderPage(STATE.curPage); }
+    else alert("❌ เกิดข้อผิดพลาด: "+d.error);
+  } catch(e){ alert("❌ ไม่สามารถเชื่อมต่อ API"); }
+}
+
+async function addContract() {
+  var cname = prompt("ชื่อผู้รับจ้าง/บริษัท:"); if(!cname) return;
+  var agency = prompt("กรม/หน่วยงาน:")||"";
+  var work   = prompt("รายละเอียดงาน:")||"";
+  var total  = parseFloat(prompt("วงเงิน (บาท):")||"0")||0;
+  try {
+    var r = await fetch(MOC_API+"/contracts",{method:"POST",headers:HPOST,body:JSON.stringify({contractor_name:cname,agency_name:agency,work_description:work,total_amount:total})});
+    var d = await r.json();
+    if(d.ok){ alert("✅ บันทึกสำเร็จ ("+d.procurement_method+")"); await loadAllData(); renderPage(STATE.curPage); }
+    else alert("❌ "+d.error);
+  } catch(e){ alert("❌ ไม่สามารถเชื่อมต่อ API"); }
+}
+</script>
+
+<script>
+/* ── BUDGET RENDERERS ── */
+function fmtM(n){ return (Number(n||0)).toFixed(1)+"ลบ."; }
+function fmtLM(n){ return (Number(n||0)/1e6).toFixed(1)+"ล."; }
+
+function renderBudgetOverview() {
+  if(!DATA_LOADED){ document.getElementById("b-total").textContent="⏳"; return; }
+  var data = API_BUDGET;
+  var tot = data.reduce(function(a,b){return{p:a.p+Number(b.personnel_budget||0),o:a.o+Number(b.operating_budget||0),c:a.c+Number(b.capital_budget||0),s:a.s+Number(b.subsidy_budget||0),x:a.x+Number(b.other_budget||0)};},{p:0,o:0,c:0,s:0,x:0});
+  var grand = tot.p+tot.o+tot.c+tot.s+tot.x;
+  var avgPct = data.length>0 ? Math.round(data.reduce(function(a,b){return a+Number(b.disbursed_pct||0);},0)/data.length) : 0;
+  document.getElementById("b-spent").textContent = fmtM(grand*avgPct/100);
+  document.getElementById("b-pct").textContent   = avgPct+"%";
+  var cats = [
+    {label:"งบบุคลากร",val:tot.p,color:"var(--primary)"},
+    {label:"งบดำเนินงาน",val:tot.o,color:"var(--green2)"},
+    {label:"งบลงทุน",val:tot.c,color:"var(--gold)"},
+    {label:"งบอุดหนุน",val:tot.s||4200000000,color:"#7b1fa2"},
+    {label:"งบรายจ่ายอื่น",val:tot.x,color:"var(--purple)"}
+  ];
+  document.getElementById("budget-cat-bars").innerHTML = cats.map(function(c){
+    var pct = grand>0 ? Math.round(c.val/grand*100) : 0;
+    return "<div style=\"display:flex;align-items:center;gap:10px;margin-bottom:10px\"><div style=\"width:120px;font-size:13px\">"+c.label+"</div><div class=\"pb\" style=\"flex:1\"><div class=\"pf\" style=\"width:"+pct+"%;background:"+c.color+"\"></div></div><div style=\"width:70px;text-align:right;font-size:13px;font-weight:700\">"+fmtM(c.val)+"</div><div style=\"width:40px;font-size:12px;color:var(--sub)\">"+pct+"%</div></div>";
+  }).join("");
+  document.getElementById("budget-agency-tbody").innerHTML = data.length===0
+    ? "<tr><td colspan=\"7\" style=\"text-align:center;color:var(--sub);padding:20px\">ไม่มีข้อมูล</td></tr>"
+    : data.map(function(b){
+      var tot2 = Number(b.personnel_budget||0)+Number(b.operating_budget||0)+Number(b.capital_budget||0)+Number(b.subsidy_budget||0)+Number(b.other_budget||0);
+      var pct  = Number(b.disbursed_pct||0);
+      var sc   = pct>=75?"var(--green2)":pct>=60?"var(--gold)":"var(--red)";
+      return "<tr><td><strong>"+b.dept+"</strong></td><td style=\"text-align:right\">"+fmtM(b.personnel_budget)+"</td><td style=\"text-align:right\">"+fmtM(b.operating_budget)+"</td><td style=\"text-align:right\">"+fmtM(b.capital_budget)+"</td><td style=\"text-align:right\">"+(Number(b.subsidy_budget||0)>0?fmtM(b.subsidy_budget):"—")+"</td><td style=\"text-align:right;font-weight:700\">"+fmtM(tot2)+"</td><td><div style=\"display:flex;align-items:center;gap:6px\"><div class=\"pb\" style=\"width:80px\"><div class=\"pf\" style=\"width:"+pct+"%;background:"+sc+"\"></div></div><span style=\"font-size:12px;font-weight:700;color:"+sc+"\">"+pct+"%</span></div></td></tr>";
+    }).join("");
+}
+
+function renderBudgetCategories() {
+  var totals = {personnel:0,operating:0,capital:0,subsidy:0,other:0};
+  API_BUDGET.forEach(function(b){
+    totals.personnel += Number(b.personnel_budget||0);
+    totals.operating += Number(b.operating_budget||0);
+    totals.capital   += Number(b.capital_budget||0);
+    totals.subsidy   += Number(b.subsidy_budget||0);
+    totals.other     += Number(b.other_budget||0);
+  });
+  var grand = Object.values(totals).reduce(function(a,v){return a+v;},0);
+  document.getElementById("cat-detail-grid").innerHTML = BUDGET_CATS.map(function(c){
+    var val = totals[c.id]||0;
+    var pct = grand>0 ? Math.round(val/grand*100) : 0;
+    return "<div style=\"border:2px solid "+c.color+";border-radius:10px;padding:14px\"><div style=\"font-weight:700;font-size:13px;color:var(--primary);margin-bottom:6px\">"+c.name+"</div><div style=\"font-size:12px;color:var(--sub);margin-bottom:8px\">"+c.desc+"</div><div style=\"font-size:15px;font-weight:800;color:var(--primary);margin-bottom:6px\">"+fmtM(val)+"</div><div class=\"pb\"><div class=\"pf\" style=\"width:"+pct+"%;background:"+c.color+"\"></div></div><div style=\"font-size:12px;margin-top:4px;color:var(--sub)\">สัดส่วน "+pct+"% ของงบทั้งหมด</div></div>";
+  }).join("");
+}
+
+function renderBudgetContracts() {
+  var methodMap = {"เฉพาะเจาะจง":0,"สืบราคา":0,"ประกวดราคา":0};
+  API_CONTRACTS.forEach(function(c){ if(methodMap[c.method]!==undefined) methodMap[c.method]++; });
+  document.getElementById("contract-type-summary").innerHTML = [
+    {t:"เฉพาะเจาะจง",ic:"📝",col:"var(--gold)"},
+    {t:"สืบราคา",ic:"🔍",col:"var(--green2)"},
+    {t:"ประกวดราคา",ic:"📢",col:"var(--primary)"}
+  ].map(function(x){
+    var cnt = API_CONTRACTS.filter(function(c){return c.method===x.t;}).length;
+    var amt = API_CONTRACTS.filter(function(c){return c.method===x.t;}).reduce(function(a,c){return a+Number(c.total||0);},0);
+    return "<div style=\"border-left:4px solid "+x.col+";padding:12px;background:var(--bg2);border-radius:0 8px 8px 0\"><div style=\"font-size:20px\">"+x.ic+"</div><div style=\"font-weight:700;font-size:14px\">"+cnt+" สัญญา</div><div style=\"font-size:12px;color:var(--sub)\">"+x.t+"</div><div style=\"font-weight:700;font-size:13px;color:"+x.col+"\">"+amt.toLocaleString("th-TH")+" บ.</div></div>";
+  }).join("");
+  var tbody = document.getElementById("budget-contracts-tbody");
+  if(tbody) tbody.innerHTML = API_CONTRACTS.length===0
+    ? "<tr><td colspan=\"6\" style=\"text-align:center;color:var(--sub);padding:20px\">ไม่มีข้อมูล</td></tr>"
+    : API_CONTRACTS.map(function(c){
+      return "<tr><td>"+c.contractor+"</td><td style=\"font-size:11px\">"+c.agency+"</td><td>"+c.work+"</td><td style=\"text-align:right;font-weight:700\">"+Number(c.total||0).toLocaleString("th-TH")+"</td><td>"+c.method+"</td><td><span class=\"dot-"+(c.status==="มีผลบังคับ"?"g":"y")+"\"></span>"+c.status+"</td></tr>";
+    }).join("");
+}
+
+function renderBudgetTracking() {
+  var months = ["ต.ค.","พ.ย.","ธ.ค.","ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย."];
+  var targets= [8,17,25,34,42,50,58,66,75,83,92,100];
+  var actuals= [7,15,23,32,40,50,57,63,null,null,null,null];
+  var html="<table class=\"tbl\"><thead><tr><th>เดือน</th><th>เป้าสะสม%</th><th>จริงสะสม%</th><th>สถานะ</th></tr></thead><tbody>";
+  months.forEach(function(m,i){
+    var act=actuals[i];
+    var tgt=targets[i];
+    var dot = act===null?"<span class=\"dot-y\"></span>รอผล" : act>=tgt?"<span class=\"dot-g\"></span>ตามแผน":"<span class=\"dot-r\"></span>ต่ำกว่าเป้า";
+    html+="<tr><td>"+m+"</td><td style=\"text-align:center\">"+tgt+"%</td><td style=\"text-align:center\">"+(act!==null?act+"%":"—")+"</td><td>"+dot+"</td></tr>";
+  });
+  html+="</tbody></table>";
+  document.getElementById("monthly-tracking-table").innerHTML=html;
+}
+
+function renderBudgetDept() {
+  var html = "<div style=\"display:grid;grid-template-columns:1fr 1fr;gap:14px\">";
+  API_BUDGET.forEach(function(b){
+    var tot = Number(b.personnel_budget||0)+Number(b.operating_budget||0)+Number(b.capital_budget||0)+Number(b.subsidy_budget||0);
+    var pct = Number(b.disbursed_pct||0);
+    var sc  = pct>=75?"var(--green2)":pct>=60?"var(--gold)":"var(--red)";
+    html+="<div style=\"border:1px solid var(--border);border-radius:10px;padding:14px\"><div style=\"font-weight:700;color:var(--primary);margin-bottom:8px\">"+b.dept+"</div><div style=\"font-size:13px;margin-bottom:6px\">งบรวม: <strong>"+fmtM(tot)+"</strong></div><div class=\"pb\" style=\"margin-bottom:4px\"><div class=\"pf\" style=\"width:"+pct+"%;background:"+sc+"\"></div></div><div style=\"font-size:12px;color:"+sc+";font-weight:700\">เบิกจ่าย "+pct+"% | เป้า 75%</div></div>";
+  });
+  html+="</div>";
+  document.getElementById("dept-budget-detail").innerHTML = API_BUDGET.length===0 ? "<p style=\"color:var(--sub);text-align:center;padding:20px\">ไม่มีข้อมูล</p>" : html;
+}
+</script>
+
+<script>
+/* ── PROJECT RENDERERS ── */
+function renderProjOverview() {
+  var prj = API_PROJECTS;
+  document.getElementById("proj-total").textContent   = prj.length||"…";
+  document.getElementById("proj-ontrack").textContent = prj.filter(function(p){return Number(p.progress_pct||0)>=60;}).length;
+  document.getElementById("proj-risk").textContent    = prj.filter(function(p){return p.status==="เสี่ยงล่าช้า";}).length;
+  document.getElementById("proj-done").textContent    = prj.filter(function(p){return p.status==="เสร็จสิ้น";}).length;
+  var el = document.getElementById("proj-summary-table");
+  if(!el) return;
+  el.innerHTML = "<table class=\"tbl\"><thead><tr><th>โครงการ</th><th>กรม</th><th>งบ (บ.)</th><th>ความก้าวหน้า</th><th>สถานะ</th></tr></thead><tbody>"
+    + (prj.length===0?"<tr><td colspan=\"5\" style=\"text-align:center;color:var(--sub);padding:20px\">ไม่มีข้อมูล</td></tr>"
+    : prj.slice(0,8).map(function(p){
+      var pct=Number(p.progress_pct||0);
+      var sc=pct>=60?"var(--green2)":pct>=40?"var(--gold)":"var(--red)";
+      var dot=p.status==="เสร็จสิ้น"?"dot-g":p.status==="เสี่ยงล่าช้า"?"dot-r":"dot-g";
+      return "<tr><td>"+p.name+"</td><td style=\"font-size:11px\">"+p.dept+"</td><td style=\"text-align:right\">"+Number(p.budget||0).toLocaleString("th-TH")+"</td><td style=\"width:150px\"><div style=\"display:flex;align-items:center;gap:6px\"><div class=\"pb\" style=\"flex:1\"><div class=\"pf\" style=\"width:"+pct+"%;background:"+sc+"\"></div></div><span style=\"font-size:12px;font-weight:700\">"+pct+"%</span></div></td><td><span class=\"dot-"+dot.replace("dot-","")+"\"></span>"+p.status+"</td></tr>";
+    }).join(""))+"</tbody></table>";
+}
+
+function renderProjList() {
+  var deptF   = document.getElementById("proj-dept-filter") ? document.getElementById("proj-dept-filter").value : "";
+  var statusF = document.getElementById("proj-status-filter") ? document.getElementById("proj-status-filter").value : "";
+  var prj = API_PROJECTS.filter(function(p){
+    if(deptF && (!p.dept || p.dept.indexOf(deptF)<0)) return false;
+    if(statusF && p.status!==statusF) return false;
+    return true;
+  });
+  document.getElementById("proj-list-tbody").innerHTML = prj.length===0
+    ? "<tr><td colspan=\"7\" style=\"text-align:center;color:var(--sub);padding:20px\">"+(DATA_LOADED?"ไม่มีข้อมูล":"⏳ กำลังโหลด...")+"</td></tr>"
+    : prj.map(function(p){
+      var pct=Number(p.progress_pct||0);
+      var sc=pct>=60?"var(--green2)":pct>=40?"var(--gold)":"var(--red)";
+      var dot=p.status==="เสร็จสิ้น"?"dot-g":p.status==="เสี่ยงล่าช้า"?"dot-r":"dot-g";
+      return "<tr><td style=\"font-size:11px;color:var(--sub)\">"+p.code+"</td><td>"+p.name+"</td><td style=\"font-size:11px\">"+p.dept+"</td><td style=\"text-align:right\">"+Number(p.budget||0).toLocaleString("th-TH")+"</td><td style=\"font-size:12px\">"+p.kpi+"</td><td style=\"width:140px\"><div style=\"display:flex;align-items:center;gap:6px\"><div class=\"pb\" style=\"flex:1\"><div class=\"pf\" style=\"width:"+pct+"%;background:"+sc+"\"></div></div><span style=\"font-size:12px;font-weight:700\">"+pct+"%</span></div></td><td><span class=\"dot-"+dot.replace("dot-","")+"\"></span>"+p.status+"</td></tr>";
+    }).join("");
+}
+
+function renderProjKPI() {
+  var kpis = [
+    {label:"ส่งออก 2567",val:"9.2 ล้านล้าน บาท",sub:"+3.8% YoY",col:"var(--primary)"},
+    {label:"FTA ที่มีผลบังคับใช้",val:"14 ฉบับ",sub:"กับ 18 ประเทศ/กลุ่ม",col:"var(--green2)"},
+    {label:"IP คำขอจดทะเบียน",val:"35,000 คำขอ/ปี",sub:"DIP",col:"var(--gold)"},
+    {label:"นิติบุคคลจดทะเบียน",val:"1.8 ล้าน ราย",sub:"DBD ทั่วประเทศ",col:"var(--orange)"},
+    {label:"สินค้า GI",val:"130+ รายการ",sub:"สิ่งบ่งชี้ทางภูมิศาสตร์",col:"var(--green1)"},
+    {label:"ราคาสินค้าที่ติดตาม",val:"97 รายการ",sub:"DIT Price Monitoring",col:"var(--purple)"},
+    {label:"Thailand Trade Centers",val:"20+ แห่ง",sub:"ทั่วโลก",col:"var(--primary)"},
+    {label:"e-Commerce เกษตรกร",val:"450,000 ราย",sub:"บนแพลตฟอร์ม DBD",col:"var(--green2)"},
+    {label:"บุคลากรทั้งหมด",val:"9,500 คน",sub:"ทุกกรมในสังกัด MOC",col:"var(--gold)"},
+  ];
+  document.getElementById("kpi-dashboard-grid").innerHTML = kpis.map(function(k){
+    return "<div style=\"border:2px solid "+k.col+";border-radius:10px;padding:14px;text-align:center\"><div style=\"font-size:22px;font-weight:800;color:"+k.col+"\">"+k.val+"</div><div style=\"font-weight:700;font-size:13px;color:var(--text);margin:4px 0\">"+k.label+"</div><div style=\"font-size:11px;color:var(--sub)\">"+k.sub+"</div></div>";
+  }).join("");
+}
+
+function renderFTA() {
+  var ftas = [
+    {name:"AFTA (อาเซียน)",year:"2003",countries:"อาเซียน 10 ประเทศ",items:"สินค้า 98.6% ลดภาษี 0%"},
+    {name:"ASEAN-China FTA",year:"2005",countries:"จีน",items:"สินค้า > 7,000 รายการ"},
+    {name:"ASEAN-Korea FTA",year:"2007",countries:"เกาหลีใต้",items:"สินค้า 90%+ ลดภาษี"},
+    {name:"ASEAN-Japan FTA",year:"2008",countries:"ญี่ปุ่น",items:"AJCEP ครอบคลุม 96%"},
+    {name:"ASEAN-India FTA",year:"2010",countries:"อินเดีย",items:"สินค้า 74.7% ลดภาษี"},
+    {name:"ASEAN-Australia-NZ FTA",year:"2010",countries:"ออสเตรเลีย + NZ",items:"AANZFTA"},
+    {name:"RCEP",year:"2022",countries:"15 ประเทศ (ASEAN+5)",items:"FTA ใหญ่ที่สุดในโลก"},
+    {name:"ไทย-ออสเตรเลีย (TAFTA)",year:"2005",countries:"ออสเตรเลีย",items:"สินค้า 100% ลดภาษีแล้ว"},
+    {name:"ไทย-นิวซีแลนด์ (TNZCEP)",year:"2005",countries:"นิวซีแลนด์",items:"ลดภาษี 0% เต็มจำนวน"},
+    {name:"ไทย-ญี่ปุ่น (JTEPA)",year:"2007",countries:"ญี่ปุ่น",items:"FTA แบบ Bilateral"},
+    {name:"ไทย-เปรู",year:"2011",countries:"เปรู",items:"สินค้า 77% ลดภาษี"},
+    {name:"ไทย-ชิลี",year:"2015",countries:"ชิลี",items:"สินค้า 86.5% ลดภาษี"},
+    {name:"CPTPP (กำลังเจรจา)",year:"อยู่ระหว่างเจรจา",countries:"11 ประเทศ",items:"ไทยยังไม่ได้เป็นสมาชิก"},
+    {name:"ไทย-EU (กำลังเจรจา)",year:"เริ่มเจรจา 2023",countries:"สหภาพยุโรป 27 ประเทศ",items:"อยู่ระหว่างการเจรจา"},
+  ];
+  document.getElementById("fta-content").innerHTML = "<table class=\"tbl\"><thead><tr><th>ชื่อ FTA</th><th>มีผลบังคับ</th><th>ประเทศคู่ภาคี</th><th>สาระสำคัญ</th></tr></thead><tbody>"+ftas.map(function(f){
+    var dot = f.year.indexOf("เจรจา")>=0?"dot-y":"dot-g";
+    return "<tr><td><strong>"+f.name+"</strong></td><td><span class=\"dot-"+dot.replace("dot-","")+"\"></span>"+f.year+"</td><td>"+f.countries+"</td><td style=\"font-size:12px\">"+f.items+"</td></tr>";
+  }).join("")+"</tbody></table>";
+}
+
+function renderEcom() {
+  document.getElementById("ecom-content").innerHTML = "<div style=\"display:grid;grid-template-columns:1fr 1fr;gap:14px\"><div style=\"background:var(--bg2);border-radius:10px;padding:16px\"><div style=\"font-weight:700;color:var(--primary);margin-bottom:8px\">📊 สถานะโครงการ</div><div style=\"font-size:13px;line-height:2\">งบประมาณ: <strong>650 ล้านบาท</strong><br>ผู้ใช้งาน: <strong>450,000 ราย</strong> (เป้าหมาย)<br>ปัจจุบัน: <strong>324,000 ราย</strong> (72%)<br>กรมรับผิดชอบ: <strong>DBD</strong></div></div><div style=\"background:var(--bg2);border-radius:10px;padding:16px\"><div style=\"font-weight:700;color:var(--primary);margin-bottom:8px\">🤝 หน่วยงานพันธมิตร</div><div style=\"font-size:13px;line-height:2\">• กระทรวงเกษตรและสหกรณ์<br>• กระทรวงดิจิทัลเพื่อเศรษฐกิจ<br>• DITP (ส่งเสริมช่องทางส่งออก)<br>• ธนาคารเพื่อการส่งออก (EXIM)</div></div><div style=\"background:var(--bg2);border-radius:10px;padding:16px\"><div style=\"font-weight:700;color:var(--primary);margin-bottom:8px\">🛒 แพลตฟอร์มที่ร่วม</div><div style=\"font-size:13px;line-height:2\">• Shopee Thailand<br>• Lazada Thailand<br>• JD Central<br>• DBD e-Marketplace (ของรัฐ)</div></div><div style=\"background:var(--bg2);border-radius:10px;padding:16px\"><div style=\"font-weight:700;color:var(--primary);margin-bottom:8px\">📈 ผลสำเร็จสะสม</div><div style=\"font-size:13px;line-height:2\">มูลค่าขาย: <strong>18,500 ล้านบาท</strong><br>สินค้าเกษตร: <strong>1,200+ รายการ</strong><br>จังหวัด: <strong>76 จังหวัด</strong><br>การฝึกอบรม: <strong>95,000+ คน</strong></div></div></div>";
+}
+
+function renderGI() {
+  var giItems = [
+    {name:"ข้าวหอมมะลิทุ่งกุลาร้องไห้",region:"ร้อยเอ็ด สุรินทร์ ฯลฯ",type:"เกษตร"},
+    {name:"มะม่วงน้ำดอกไม้สิงห์บุรี",region:"สิงห์บุรี",type:"เกษตร"},
+    {name:"ผ้าไหมไทย",region:"ทั่วประเทศ",type:"หัตถกรรม"},
+    {name:"ลำไยอบแห้งลำพูน",region:"ลำพูน",type:"เกษตร"},
+    {name:"กาแฟดอยช้าง",region:"เชียงราย",type:"เกษตร"},
+    {name:"ส้มโอนครปฐม",region:"นครปฐม",type:"เกษตร"},
+    {name:"สับปะรดห้วยมุ่น",region:"อุตรดิตถ์",type:"เกษตร"},
+    {name:"ผ้าทอลายน้ำไหลแพร่",region:"แพร่",type:"หัตถกรรม"},
+  ];
+  document.getElementById("gi-content").innerHTML = "<div style=\"background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px\"><strong>🌿 สิ่งบ่งชี้ทางภูมิศาสตร์ (GI):</strong> คุ้มครองชื่อสินค้าที่มีแหล่งผลิตจำเพาะ ช่วยยกระดับราคาและป้องกันการปลอมแปลง | กรมรับผิดชอบ: <strong>DIP</strong></div><table class=\"tbl\"><thead><tr><th>ชื่อสินค้า GI</th><th>พื้นที่จำเพาะ</th><th>ประเภท</th><th>สถานะ</th></tr></thead><tbody>"+giItems.map(function(g){return "<tr><td><strong>"+g.name+"</strong></td><td>"+g.region+"</td><td><span class=\"level-chip lc-region\">"+g.type+"</span></td><td><span class=\"dot-g\"></span>จดทะเบียนแล้ว</td></tr>";}).join("")+"</tbody></table><div style=\"margin-top:12px;font-size:13px;color:var(--sub);text-align:center\">แสดงตัวอย่าง 8 รายการ จากทั้งหมด 130+ รายการ</div>";
+}
+
+async function addProject() {
+  var name = prompt("ชื่อโครงการ:"); if(!name) return;
+  var dept = prompt("กรมรับผิดชอบ (DFT/DIT/DIP/DBD/DITP/DTN):")||"";
+  var budget = parseFloat(prompt("งบประมาณ (บาท):")||"0")||0;
+  var kpi  = prompt("KPI เป้าหมาย:")||"";
+  try {
+    var r = await fetch(MOC_API+"/projects",{method:"POST",headers:HPOST,body:JSON.stringify({project_name:name,dept:dept,budget_total:budget,kpi_target:kpi})});
+    var d = await r.json();
+    if(d.ok){ alert("✅ บันทึกสำเร็จ รหัส: "+d.project_code); await loadAllData(); renderPage(STATE.curPage); }
+    else alert("❌ "+d.error);
+  } catch(e){ alert("❌ ไม่สามารถเชื่อมต่อ API"); }
+}
+</script>
+
+<script>
+/* ── INTEGRATION RENDERERS ── */
+function renderIntegOverview() {
+  document.getElementById("integ-total").textContent  = API_INTEGRATION.length||"…";
+  document.getElementById("integ-inprog").textContent = API_INTEGRATION.filter(function(p){return p.status==="กำลังดำเนินการ";}).length;
+  var el = document.getElementById("integ-overview-table");
+  if(!el) return;
+  el.innerHTML = "<table class=\"tbl\"><thead><tr><th>แผน</th><th>เจ้าภาพ</th><th>พันธมิตร</th><th>งบ (บ.)</th><th>KPI</th><th>ความก้าวหน้า</th></tr></thead><tbody>"
+    + (API_INTEGRATION.length===0?"<tr><td colspan=\"6\" style=\"text-align:center;color:var(--sub);padding:20px\">ไม่มีข้อมูล</td></tr>"
+    : API_INTEGRATION.map(function(p){
+      var pct=Number(p.progress_pct||0);
+      var sc=pct>=60?"var(--green2)":pct>=40?"var(--gold)":"var(--red)";
+      return "<tr><td><strong>"+p.plan_name+"</strong><br><span style=\"font-size:11px;color:var(--sub)\">"+p.plan_id+"</span></td><td style=\"font-size:12px\">"+p.host_agency+"</td><td style=\"font-size:11px;color:var(--sub)\">"+p.partner_agencies+"</td><td style=\"text-align:right\">"+Number(p.budget||0).toLocaleString("th-TH")+"</td><td style=\"font-size:12px\">"+p.kpi+"</td><td style=\"width:150px\"><div style=\"display:flex;align-items:center;gap:6px\"><div class=\"pb\" style=\"flex:1\"><div class=\"pf\" style=\"width:"+pct+"%;background:"+sc+"\"></div></div><span style=\"font-size:12px;font-weight:700\">"+pct+"%</span></div></td></tr>";
+    }).join(""))+"</tbody></table>";
+}
+
+function renderIntegPlans() {
+  var el = document.getElementById("integ-plans-list");
+  if(!el) return;
+  if(API_INTEGRATION.length===0){ el.innerHTML="<p style=\"color:var(--sub);text-align:center;padding:20px\">ไม่มีข้อมูล</p>"; return; }
+  el.innerHTML = API_INTEGRATION.map(function(p){
+    var pct=Number(p.progress_pct||0);
+    var sc=pct>=60?"var(--green2)":pct>=40?"var(--gold)":"var(--red)";
+    return "<div style=\"border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px\"><div style=\"display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px\"><div><strong style=\"color:var(--primary)\">"+p.plan_name+"</strong><br><span style=\"font-size:11px;color:var(--sub)\">"+p.plan_id+" | เจ้าภาพ: "+p.host_agency+"</span></div><span style=\"font-size:13px;font-weight:700;color:"+sc+"\">"+pct+"%</span></div><div class=\"pb\" style=\"margin-bottom:8px\"><div class=\"pf\" style=\"width:"+pct+"%;background:"+sc+"\"></div></div><div style=\"font-size:12px;color:var(--sub)\">พันธมิตร: "+p.partner_agencies+"</div><div style=\"font-size:12px;margin-top:4px\">KPI: <strong>"+p.kpi+"</strong> | งบ: "+Number(p.budget||0).toLocaleString("th-TH")+" บ.</div></div>";
+  }).join("");
+}
+
+function renderAgenciesMap() {
+  document.getElementById("agencies-map-container").innerHTML = "<div style=\"display:grid;grid-template-columns:repeat(3,1fr);gap:12px\">"
+    + [
+      {name:"BOI",role:"ส่งเสริมการลงทุน",link:"FTA Benefits"},
+      {name:"EXIM Bank",role:"สินเชื่อส่งออก",link:"ผู้ส่งออกไทย"},
+      {name:"กรมศุลกากร",role:"ตรวจสอบสินค้า",link:"Certificate of Origin"},
+      {name:"กระทรวงการต่างประเทศ",role:"การทูตเศรษฐกิจ",link:"เจรจา FTA ร่วม"},
+      {name:"กระทรวงเกษตรฯ",role:"มาตรฐานสินค้าเกษตร",link:"e-Commerce เกษตร"},
+      {name:"กระทรวงดิจิทัล",role:"โครงสร้างดิจิทัล",link:"Digital Trade"},
+      {name:"สภาหอการค้า",role:"ภาคเอกชน",link:"Export Community"},
+      {name:"สภาอุตสาหกรรม",role:"ผู้ผลิต",link:"Industry Standards"},
+      {name:"TAT",role:"Soft Power",link:"Thailand Made Brand"},
+    ].map(function(a){
+      return "<div style=\"border:1px solid var(--border);border-radius:10px;padding:12px\"><div style=\"font-weight:700;color:var(--primary);margin-bottom:4px\">"+a.name+"</div><div style=\"font-size:12px;color:var(--sub);margin-bottom:4px\">"+a.role+"</div><div style=\"font-size:11px;background:var(--bg2);padding:4px 8px;border-radius:6px\">🔗 "+a.link+"</div></div>";
+    }).join("") + "</div>";
+}
+
+function renderHub() {
+  document.getElementById("hub-content").innerHTML = "<div style=\"display:grid;grid-template-columns:1fr 1fr;gap:14px\"><div style=\"background:var(--bg2);border-radius:10px;padding:16px\"><div style=\"font-weight:700;color:var(--primary);margin-bottom:8px\">🎯 วิสัยทัศน์</div><div style=\"font-size:13px;line-height:2\">ยกระดับไทยสู่ <strong>Thailand Trade Hub</strong> ศูนย์กลางการค้าอาเซียน ภายในปี 2570<br>ขับเคลื่อนส่งออก <strong>10 ล้านล้านบาท/ปี</strong></div></div><div style=\"background:var(--bg2);border-radius:10px;padding:16px\"><div style=\"font-weight:700;color:var(--primary);margin-bottom:8px\">📋 เสาหลัก 4 ด้าน</div><div style=\"font-size:13px;line-height:2\">1. FTA Network — เจรจาต่อเนื่อง<br>2. Digital Trade — NSW + e-Docs<br>3. Brand Thailand — Soft Power<br>4. Market Access — อุปสรรคนำเข้า</div></div><div style=\"background:var(--bg2);border-radius:10px;padding:16px\"><div style=\"font-weight:700;color:var(--primary);margin-bottom:8px\">💰 งบประมาณรวม</div><div style=\"font-size:13px;line-height:2\">งบบูรณาการ: <strong>2,800 ล้านบาท</strong><br>BOI Budget: <strong>แยกต่างหาก</strong><br>EXIM Guarantee: <strong>150,000 ล้าน</strong></div></div><div style=\"background:var(--bg2);border-radius:10px;padding:16px\"><div style=\"font-weight:700;color:var(--primary);margin-bottom:8px\">📈 KPI 2568</div><div style=\"font-size:13px;line-height:2\">ส่งออก: <strong>9.5 ล้านล้านบาท</strong><br>FDI: <strong>500,000 ล้านบาท</strong><br>FTA ใหม่: <strong>2 ฉบับ</strong><br>Trade Center: <strong>25 แห่ง</strong></div></div></div>";
+}
+
+function renderPrice() {
+  var categories = [
+    {cat:"อาหารและเครื่องดื่ม",count:35,status:"มีเสถียรภาพ",dot:"g"},
+    {cat:"พลังงานและเชื้อเพลิง",count:12,status:"ติดตามใกล้ชิด",dot:"y"},
+    {cat:"ยาและเวชภัณฑ์",count:18,status:"มีเสถียรภาพ",dot:"g"},
+    {cat:"วัสดุก่อสร้าง",count:15,status:"ราคาสูงขึ้น",dot:"r"},
+    {cat:"สินค้าเกษตรจำเป็น",count:17,status:"มีเสถียรภาพ",dot:"g"},
+  ];
+  document.getElementById("price-content").innerHTML = "<div style=\"background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px\"><strong>📊 DIT Price Monitoring:</strong> กรมการค้าภายในติดตาม <strong>97 สินค้า</strong> ราคาจำเป็น ครอบคลุมทั่วประเทศ เพื่อปกป้องผู้บริโภค</div><table class=\"tbl\"><thead><tr><th>หมวดสินค้า</th><th>จำนวนรายการ</th><th>สถานะ</th></tr></thead><tbody>"+categories.map(function(c){return "<tr><td>"+c.cat+"</td><td style=\"text-align:center;font-weight:700\">"+c.count+"</td><td><span class=\"dot-"+c.dot+"\"></span>"+c.status+"</td></tr>";}).join("")+"<tr style=\"font-weight:700;background:var(--bg2)\"><td>รวม</td><td style=\"text-align:center\">97</td><td>—</td></tr></tbody></table>";
+}
+
+async function addIntegPlan() {
+  var name     = prompt("ชื่อแผนบูรณาการ:"); if(!name) return;
+  var host     = prompt("หน่วยงานเจ้าภาพ:")||"";
+  var partners = prompt("หน่วยงานพันธมิตร (คั่นด้วย , ):")||"";
+  var budget   = parseFloat(prompt("งบประมาณ (บาท):")||"0")||0;
+  var kpi      = prompt("KPI:")||"";
+  try {
+    var r = await fetch(MOC_API+"/integration",{method:"POST",headers:HPOST,body:JSON.stringify({plan_name:name,host_agency:host,partner_agencies:partners,budget:budget,kpi:kpi})});
+    var d = await r.json();
+    if(d.ok){ alert("✅ บันทึกสำเร็จ รหัส: "+d.plan_id); await loadAllData(); renderPage(STATE.curPage); }
+    else alert("❌ "+d.error);
+  } catch(e){ alert("❌ ไม่สามารถเชื่อมต่อ API"); }
+}
+
+async function pushReportToHub() {
+  const btn = document.getElementById('hub-report-btn');
+  if(btn) { btn.disabled=true; btn.textContent='⏳ กำลังส่ง...'; }
+  const report = {
+    agencyId: 'moc-central',
+    agencyName: 'กระทรวงพาณิชย์ (ส่วนกลาง)',
+    parentId: 'moc',
+    ministryId: 'moc',
+    level: 3,
+    reportedBy: 'system-auto',
+    kpis: [],
+    budget: { total: 0, spent: 0, remaining: 0, unit: 'ล้านบาท' },
+    personnel: { total: 0, present: 0, onLeave: 0, other: 0 },
+    projects: { total: 0, ontrack: 0, delayed: 0, completed: 0 },
+    alerts: [],
+    timestamp: new Date().toISOString()
+  };
+  // Try to pick up live values from the page
+  try {
+    const kv = (id) => { const el=document.getElementById(id); return el?(parseFloat(el.textContent.replace(/[^0-9.]/g,''))||0):0; };
+    report.budget.spent = kv('b-spent') || kv('pay-used-budget') || 0;
+    report.budget.total = kv('b-total') || 0;
+    report.personnel.total = kv('pay-total-ppl') || 0;
+  } catch(e) {}
+  try {
+    const resp = await fetch('/api/hub/report', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(report) });
+    const data = await resp.json();
+    const msg = document.getElementById('hub-report-msg');
+    if(msg) { msg.textContent = data.ok ? '✅ ส่งรายงานขึ้นระบบแล้ว — '+new Date().toLocaleTimeString('th-TH') : '❌ '+data.error; msg.style.display='block'; setTimeout(()=>{msg.style.display='none';},4000); }
+  } catch(e) {
+    const msg=document.getElementById('hub-report-msg');
+    if(msg){msg.textContent='❌ ไม่สามารถส่งได้: '+e.message;msg.style.display='block';setTimeout(()=>{msg.style.display='none';},4000);}
+  }
+  if(btn){btn.disabled=false;btn.textContent='📤 ส่งรายงานขึ้นระบบ';}
+}
+</script>
+<script>
+window.G2G_PAGE_CONFIG = {
+  pageName: 'ระบบบริหารกระทรวงพาณิชย์',
+  agencyId: 'moc-central', ministryId: 'moc',
+  manualText: 'ระบบบริหาร พณ. ครอบคลุม กรมการค้าต่างประเทศ กรมพัฒนาธุรกิจการค้า กรมทรัพย์สินทางปัญญา กรมการค้าภายใน สสว. — กำกับดูแลการค้าและพาณิชย์ของไทย',
+  manualSteps: [
+    '1. เลือกหมวด: คน เงิน งาน บูรณาการ จากแถบด้านบน',
+    '2. หมวด งาน: ดูสถิติการค้า การส่งออก นำเข้า ราคาสินค้า',
+    '3. หมวด เงิน: ติดตามงบ 5 ประเภท รายกรม การเบิกจ่าย',
+    '4. กด 📤 รายงาน เพื่อส่งข้อมูลการค้าขึ้น Hub กระทรวง',
+    '5. 🤖 AI ผู้ช่วย: วิเคราะห์ตัวเลขการค้าและพาณิชย์'
+  ]
+};
+</script>
+<script src="/access-bar.js"></script>
+<script src="/delegation.js"></script>
+</body>
+</html>

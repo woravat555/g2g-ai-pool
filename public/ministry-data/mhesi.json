@@ -1,0 +1,72 @@
+{
+  "ministry_code": "MHESI",
+  "ministry_code_th": "อว.",
+  "ministry_name_th": "กระทรวงการอุดมศึกษา วิทยาศาสตร์ วิจัยและนวัตกรรม",
+  "ministry_name_en": "Ministry of Higher Education, Science, Research and Innovation",
+  "ministry_abbr": "MHESI / อว.",
+  "established": "พ.ศ. 2562 (2 พฤษภาคม 2562)",
+  "mission": "ส่งเสริมการอุดมศึกษา วิทยาศาสตร์ การวิจัย และนวัตกรรมของประเทศ เพื่อสร้างความเข้มแข็งทางปัญญา และขีดความสามารถการแข่งขันของประเทศ",
+  "vision": "ประเทศไทยมีระบบอุดมศึกษาและวิทยาศาสตร์ที่เข้มแข็ง สร้างคนดีมีคุณภาพ และนวัตกรรมที่ตอบโจทย์ประเทศ",
+  "fiscal_year_2568_budget_baht": 215000000000,
+  "personnel_count_total": 180000,
+  "university_count": 170,
+  "student_count_total": 2500000,
+  "departments": [
+    {"code":"OPS","name_th":"สำนักงานปลัดกระทรวง อว.","head_position":"ปลัดกระทรวง","icon":"🏛️","function":"อำนวยการ ประสานนโยบาย บริหารทั่วไป"},
+    {"code":"OHEC","name_th":"สำนักงานปลัด (การอุดมศึกษา)","head_position":"ปลัดกระทรวง","icon":"🎓","function":"กำกับดูแลมหาวิทยาลัยทั่วประเทศ 170 แห่ง","province_presence":"มหาวิทยาลัยรัฐ 80 แห่ง · เอกชน 90 แห่ง"},
+    {"code":"NSTDA","name_th":"สำนักงานพัฒนาวิทยาศาสตร์และเทคโนโลยีแห่งชาติ (สวทช.)","head_position":"ผู้อำนวยการ","icon":"🔬","function":"วิจัยและพัฒนาเทคโนโลยี — NECTEC, BIOTEC, MTEC, NANOTEC","key_programs":["Thailand Science Park","NECTEC Digital Tech","BIOTEC เกษตรแม่นยำ","NANOTEC นาโนวัสดุ"]},
+    {"code":"NRCT","name_th":"สำนักงานการวิจัยแห่งชาติ (วช.)","head_position":"ผู้อำนวยการ","icon":"📚","function":"บริหารทุนวิจัยแห่งชาติ — ทุน วช. + ฐานข้อมูลวิจัยไทย"},
+    {"code":"NIA","name_th":"สำนักงานนวัตกรรมแห่งชาติ (NIA)","head_position":"ผู้อำนวยการ","icon":"💡","function":"ส่งเสริม Startup นวัตกรรม — ทุน Innovation Voucher + AgriTech Startup"},
+    {"code":"BSID","name_th":"สำนักงานพัฒนาเศรษฐกิจจากชีวภาพแห่งชาติ (BEDO/สพภ.)","head_position":"ผู้อำนวยการ","icon":"🌿","function":"Bio-Economy พัฒนาทรัพยากรชีวภาพ"},
+    {"code":"HAII","name_th":"สถาบันสารสนเทศทรัพยากรน้ำ (สสน.)","head_position":"ผู้อำนวยการ","icon":"💧","function":"ระบบสารสนเทศน้ำ — flood forecast + drought alert + ข้อมูลน้ำแบบ real-time"},
+    {"code":"KURDI","name_th":"หน่วยบริหารและจัดการทุน ด้านการพัฒนาระดับพื้นที่ (บพท.)","head_position":"ผู้อำนวยการ","icon":"🗺️","function":"ทุนวิจัยพัฒนาพื้นที่ — มหาวิทยาลัยนำการพัฒนาจังหวัด"},
+    {"code":"TSRI","name_th":"สำนักงานคณะกรรมการส่งเสริมวิทยาศาสตร์ วิจัยและนวัตกรรม (สกสว.)","head_position":"เลขาธิการ","icon":"📊","function":"กำหนดทิศทางและจัดสรรงบวิจัยและนวัตกรรมของประเทศ"},
+    {"code":"PMUC","name_th":"หน่วยบริหารและจัดการทุน (PMU-B, PMU-C, PMU-A)","head_position":"ผู้อำนวยการ","icon":"💰","function":"PMU-A (วิชาการ) PMU-B (บัณฑิตศึกษา) PMU-C (ชุมชน/พื้นที่)"}
+  ],
+  "policy_priorities_2568": [
+    {"name":"Reinventing University — มหาวิทยาลัยพันธุ์ใหม่","lead_dept":"OHEC","kpi":"30 มหาวิทยาลัยเปลี่ยนรูปแบบภายในปี 2570","target_farmer":0},
+    {"name":"AgriTech University Hub ประจำจังหวัด","lead_dept":"KURDI + NSTDA","kpi":"76 จังหวัด × มหาวิทยาลัย Hub 1 แห่ง ภายในปี 2570","note":"เชื่อมต่อกับ PLAT — ข้อมูลเกษตรกร + AI advisory"},
+    {"name":"อว. for BCG Economy","lead_dept":"NSTDA + NIA","kpi":"มูลค่า BCG 4.4 ล้านล้านบาท / 3.5% GDP ปี 2570"},
+    {"name":"Startup Thailand + AgriTech","lead_dept":"NIA","kpi":"Startup ใหม่ 10,000 ราย · AgriTech Startup 500 บริษัท"},
+    {"name":"Digital Platform มหาวิทยาลัย","lead_dept":"OPS","kpi":"170 มหาวิทยาลัยบน MyUni Platform ปี 2568"},
+    {"name":"วิจัยเกษตรแม่นยำ (Precision Agriculture)","lead_dept":"NSTDA + BIOTEC","kpi":"พันธุ์พืชใหม่ 50 พันธุ์ · ลดต้นทุนเกษตร 20%"},
+    {"name":"ระบบน้ำ AI — HAII + Flood/Drought","lead_dept":"HAII","kpi":"ครอบคลุม 76 จังหวัด · forecast accuracy >85%"},
+    {"name":"PLAT × อว. — AI for Farmers","lead_dept":"OPS + NSTDA","kpi":"เกษตรกรเข้าถึงงานวิจัย 5 ล้านคน ภายในปี 2570","note":"นักวิจัยเชื่อมต่อตรงกับเกษตรกรผ่าน PLAT"}
+  ],
+  "key_kpi_2568": {
+    "university_count": 170,
+    "student_count": 2500000,
+    "researcher_count": 85000,
+    "research_paper_per_year": 28000,
+    "startup_count": 3200,
+    "agritech_startup": 180,
+    "budget_research_baht": 80000000000,
+    "bcg_economy_value_baht": 3200000000000,
+    "patent_per_year": 4200
+  },
+  "mhesi_agri_connection": {
+    "title": "อว. × เกษตร — เชื่อมต่อ PLAT",
+    "connections": [
+      "NSTDA/BIOTEC: พันธุ์พืชทนโรค ปุ๋ยชีวภาพ เกษตรแม่นยำ",
+      "HAII: ระบบเตือนภัยน้ำท่วม/แล้ง เชื่อมต่อ /api/{prov}/alerts",
+      "NIA: AgriTech Startup ใช้ข้อมูลเกษตรกรจาก PLAT",
+      "KURDI/บพท.: มหาวิทยาลัย Hub พัฒนาพืชประจำจังหวัด",
+      "มหาวิทยาลัยแม่โจ้: เชียงราย Hub เกษตรอินทรีย์",
+      "มหาวิทยาลัยอุดรธานี Hub: โคขุน+อ้อย precision farming"
+    ]
+  },
+  "plat_rollout_mhesi": {
+    "phase_1_universities": ["มหาวิทยาลัยแม่โจ้ (เชียงใหม่/เชียงราย)", "มหาวิทยาลัยราชภัฏแพร่"],
+    "phase_2_provinces": ["เชียงราย", "อุดรธานี", "แพร่"],
+    "target": "มหาวิทยาลัย Hub 76 จังหวัด ภายในปี 2570"
+  },
+  "_data_sources": [
+    "กระทรวง อว. — mhesi.go.th",
+    "สวทช. — nstda.or.th",
+    "สกสว. — tsri.or.th",
+    "NIA — nia.or.th",
+    "เอกสารงบประมาณรายจ่ายประจำปี 2568"
+  ],
+  "_version": "1.0",
+  "_updated": "2026-05-25"
+}

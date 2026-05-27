@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI ประจำตำแหน่ง — กรมส่งเสริมการเกษตร</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --green-dark: #1a5c1a;
+      --green: #2d7a2d;
+      --green-light: #3d9a3d;
+      --gold: #c8a400;
+      --gold-light: #f0c800;
+      --bg: #f0f4f0;
+      --card: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 12px;
+      --shadow: 0 2px 12px rgba(26,92,26,0.10);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Sarabun', 'Noto Sans Thai', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ─── Header ─────────────────────────────────── */
+    .header {
+      background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 60%, var(--green-light) 100%);
+      color: #fff;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0;
+      border-bottom: 3px solid var(--gold);
+    }
+    .header-logo {
+      font-size: 28px;
+      width: 46px;
+      height: 46px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .header-text { flex: 1; }
+    .header-title { font-size: 17px; font-weight: 700; }
+    .header-sub { font-size: 12px; opacity: 0.80; margin-top: 2px; }
+    .header-badge {
+      background: var(--gold);
+      color: #1a1a00;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.3px;
+    }
+    .header-back {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.4);
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: inherit;
+      transition: opacity 0.15s;
+    }
+    .header-back:hover { opacity: 0.8; }
+
+    /* ─── Body Layout ─────────────────────────────── */
+    .body-wrap {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    /* ─── Left Panel ──────────────────────────────── */
+    .left-panel {
+      width: 300px;
+      flex-shrink: 0;
+      background: var(--card);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .position-avatar {
+      text-align: center;
+      padding: 20px 0 12px;
+    }
+    .avatar-emoji {
+      font-size: 56px;
+      display: block;
+      margin-bottom: 10px;
+    }
+    .position-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--green-dark);
+      text-align: center;
+      line-height: 1.3;
+      margin-bottom: 4px;
+    }
+    .position-incumbent {
+      font-size: 16px;
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 4px;
+    }
+    .position-level {
+      display: inline-block;
+      background: #e8f5e9;
+      color: var(--green-dark);
+      border: 1px solid #a5d6a7;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 10px;
+      border-radius: 20px;
+      text-align: center;
+    }
+    .panel-section {
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+    }
+    .panel-section-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+    .kpi-item {
+      margin-bottom: 10px;
+    }
+    .kpi-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+    .kpi-label span { color: var(--text-muted); font-size: 12px; }
+    .kpi-bar {
+      height: 6px;
+      background: #e2e8f0;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .kpi-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--green), var(--green-light));
+      border-radius: 3px;
+      transition: width 0.5s ease;
+    }
+    .pending-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      color: #856404;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .pending-badge .count {
+      background: #ffc107;
+      color: #1a1a00;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .btn-orgchart {
+      width: 100%;
+      padding: 10px;
+      background: var(--green-dark);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-family: inherit;
+      font-weight: 600;
+      transition: opacity 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-orgchart:hover { opacity: 0.85; }
+    .resp-list {
+      list-style: none;
+      padding: 0;
+    }
+    .resp-list li {
+      padding: 5px 0;
+      font-size: 13px;
+      color: var(--text);
+      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+    .resp-list li::before { content: "•"; color: var(--green); flex-shrink: 0; margin-top: 1px; }
+
+    /* ─── Chat Panel ──────────────────────────────── */
+    .chat-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-height: 0;
+    }
+    .chat-header {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .chat-header-avatar {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--green-dark), var(--green-light));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .chat-header-name { font-size: 16px; font-weight: 700; color: var(--green-dark); }
+    .chat-header-sub { font-size: 12px; color: var(--text-muted); }
+    .chat-status-dot {
+      width: 8px;
+      height: 8px;
+      background: #22c55e;
+      border-radius: 50%;
+      margin-left: auto;
+    }
+    .chat-status-text { font-size: 12px; color: #22c55e; font-weight: 600; }
+
+    .conversation {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-height: 0;
+    }
+    .bubble-wrap {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+      max-width: 82%;
+    }
+    .bubble-wrap.user { flex-direction: row-reverse; align-self: flex-end; }
+    .bubble-wrap.ai { align-self: flex-start; }
+    .bubble-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .bubble-avatar.ai-av {
+      background: linear-gradient(135deg, var(--green-dark), var(--green-light));
+    }
+    .bubble-avatar.user-av {
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    }
+    .bubble {
+      padding: 12px 16px;
+      border-radius: 16px;
+      font-size: 15px;
+      line-height: 1.6;
+      max-width: 100%;
+    }
+    .bubble.ai {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-bottom-left-radius: 4px;
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+    .bubble.user {
+      background: var(--green-dark);
+      color: #fff;
+      border-bottom-right-radius: 4px;
+    }
+    .bubble-time {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      text-align: right;
+    }
+    .bubble-wrap.ai .bubble-time { text-align: left; }
+    .quick-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .quick-btn {
+      background: #f0faf0;
+      border: 1px solid #a5d6a7;
+      color: var(--green-dark);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 600;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .quick-btn:hover { background: var(--green-dark); color: #fff; border-color: var(--green-dark); }
+
+    /* typing indicator */
+    .typing-indicator {
+      display: none;
+      align-self: flex-start;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      border-bottom-left-radius: 4px;
+      padding: 12px 16px;
+      box-shadow: var(--shadow);
+    }
+    .typing-dots {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+    }
+    .typing-dots span {
+      width: 8px;
+      height: 8px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: bounce 1.2s infinite;
+    }
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-6px); }
+    }
+
+    /* Loading overlay */
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(26,92,26,0.92);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      z-index: 9999;
+      gap: 16px;
+    }
+    .loading-spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid rgba(255,255,255,0.3);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { font-size: 17px; font-weight: 600; }
+    .loading-sub { font-size: 13px; opacity: 0.75; }
+
+    /* ─── Input Bar ───────────────────────────────── */
+    .input-area {
+      background: #fff;
+      border-top: 1px solid var(--border);
+      padding: 12px 16px;
+      flex-shrink: 0;
+    }
+    .quick-action-bar {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .qa-btn {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .qa-btn:hover { background: var(--green-dark); color: #fff; border-color: var(--green-dark); }
+    .input-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+    }
+    .chat-textarea {
+      flex: 1;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 15px;
+      font-family: inherit;
+      resize: none;
+      outline: none;
+      line-height: 1.5;
+      max-height: 120px;
+      min-height: 44px;
+      transition: border-color 0.15s;
+    }
+    .chat-textarea:focus { border-color: var(--green); }
+    .send-btn {
+      width: 44px;
+      height: 44px;
+      background: var(--green-dark);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.15s;
+      flex-shrink: 0;
+    }
+    .send-btn:hover:not(:disabled) { opacity: 0.85; }
+    .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* Error state */
+    .error-state {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      gap: 12px;
+      color: var(--text-muted);
+    }
+    .error-state .icon { font-size: 48px; }
+    .error-state p { font-size: 15px; }
+    .error-state a { color: var(--green); text-decoration: none; font-weight: 600; }
+
+    @media (max-width: 768px) {
+      .left-panel { display: none; }
+      .body-wrap { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Loading overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">กำลังโหลด AI ประจำตำแหน่งของคุณ...</div>
+  <div class="loading-sub" id="loadingSubText">กำลังดึงข้อมูล KPI และงานค้าง</div>
+</div>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-logo">🌾</div>
+  <div class="header-text">
+    <div class="header-title">AI ประจำตำแหน่ง — กรมส่งเสริมการเกษตร</div>
+    <div class="header-sub">กระทรวงเกษตรและสหกรณ์ | Personal AI Engine</div>
+  </div>
+  <div class="header-badge">🤖 Personal AI</div>
+  <button class="header-back" onclick="window.location.href='/agency-platform.html'">← กลับ</button>
+</div>
+
+<!-- Main body -->
+<div class="body-wrap">
+
+  <!-- Left Panel -->
+  <div class="left-panel" id="leftPanel">
+    <div class="position-avatar">
+      <span class="avatar-emoji" id="positionEmoji">🌾</span>
+      <div class="position-title" id="positionTitle">กำลังโหลด...</div>
+      <div class="position-incumbent" id="incumbentName"></div>
+      <div style="text-align:center;margin-top:6px">
+        <span class="position-level" id="positionLevel"></span>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-section-title">KPI ปัจจุบัน</div>
+      <div id="kpiList"></div>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-section-title">งานค้าง</div>
+      <div id="pendingTasksSection">
+        <div class="pending-badge">
+          <span>งานค้าง</span>
+          <span class="count" id="pendingCount">0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-section-title">ความรับผิดชอบหลัก</div>
+      <ul class="resp-list" id="respList"></ul>
+    </div>
+
+    <div class="panel-section">
+      <button class="btn-orgchart" onclick="window.open('/position-registry.html','_blank')">
+        🏢 ดู Org Chart
+      </button>
+    </div>
+  </div>
+
+  <!-- Chat Panel -->
+  <div class="chat-panel">
+    <div class="chat-header">
+      <div class="chat-header-avatar">🤖</div>
+      <div>
+        <div class="chat-header-name" id="chatHeaderName">AI ประจำตำแหน่ง</div>
+        <div class="chat-header-sub" id="chatHeaderSub">กรมส่งเสริมการเกษตร</div>
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
+        <div class="chat-status-dot"></div>
+        <div class="chat-status-text">พร้อมใช้งาน</div>
+      </div>
+    </div>
+
+    <div class="conversation" id="conversation">
+      <!-- Error state -->
+      <div class="error-state" id="errorState">
+        <div class="icon">⚠️</div>
+        <p id="errorMsg">ไม่พบข้อมูลตำแหน่ง</p>
+        <a href="/position-registry.html">ไปที่ทะเบียนตำแหน่ง</a>
+      </div>
+
+      <!-- Typing indicator -->
+      <div class="typing-indicator" id="typingIndicator">
+        <div class="typing-dots">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-area">
+      <div class="quick-action-bar">
+        <button class="qa-btn" onclick="sendQuick('📋 งานค้างของฉันมีอะไรบ้าง?')">📋 งานค้างของฉัน</button>
+        <button class="qa-btn" onclick="sendQuick('📊 KPI สัปดาห์นี้เป็นอย่างไรบ้าง?')">📊 KPI สัปดาห์นี้</button>
+        <button class="qa-btn" onclick="sendQuick('📝 ช่วยร่างรายงานประจำสัปดาห์ให้หน่อย')">📝 ช่วยร่างรายงาน</button>
+        <button class="qa-btn" onclick="sendQuick('📨 หนังสือราชการที่ยังไม่ได้ดำเนินการมีอะไรบ้าง?')">📨 หนังสือที่ยังไม่อ่าน</button>
+        <button class="qa-btn" onclick="sendQuick('🔄 ช่วยเตรียมเอกสารส่งมอบงาน (Handover) ให้หน่อย')">🔄 ส่งมอบงาน</button>
+      </div>
+      <div class="input-row">
+        <textarea
+          class="chat-textarea"
+          id="chatInput"
+          placeholder="พิมพ์ข้อความ หรือถามเรื่องงาน..."
+          rows="1"
+          onkeydown="handleKey(event)"
+          oninput="autoResize(this)"
+        ></textarea>
+        <button class="send-btn" id="sendBtn" onclick="sendMessage()" title="ส่ง">
+          ➤
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── State ─────────────────────────────────────────────────────
+const BASE_URL = "";
+let positionId = null;
+let positionContext = null;
+let conversationHistory = [];
+let sending = false;
+
+// ─── Boot ────────────────────────────────────────────────────────
+window.addEventListener("DOMContentLoaded", async () => {
+  const params = new URLSearchParams(window.location.search);
+  positionId = params.get("position");
+
+  if (!positionId) {
+    showError("ไม่พบ position_id ใน URL กรุณาระบุ ?position=POSITION_ID");
+    return;
+  }
+
+  try {
+    updateLoadingText("กำลังดึง context ของตำแหน่ง...");
+    const resp = await fetch(`${BASE_URL}/api/personal-ai/${encodeURIComponent(positionId)}/context`);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    if (!data.ok) throw new Error(data.error || "context_failed");
+
+    positionContext = data.context;
+    renderLeftPanel(positionContext);
+    updateLoadingText("AI กำลังเตรียมข้อความทักทาย...");
+
+    // Hide loading, show chat
+    document.getElementById("loadingOverlay").style.display = "none";
+
+    // AI ทักทายเชิงรุกทันที
+    await aiGreeting(positionContext);
+
+  } catch (err) {
+    console.error("Boot error:", err);
+    showError("ไม่สามารถโหลดข้อมูลตำแหน่งได้: " + err.message);
+  }
+});
+
+function updateLoadingText(txt) {
+  document.getElementById("loadingSubText").textContent = txt;
+}
+
+function showError(msg) {
+  document.getElementById("loadingOverlay").style.display = "none";
+  document.getElementById("errorState").style.display = "flex";
+  document.getElementById("errorMsg").textContent = msg;
+}
+
+// ─── Render Left Panel ─────────────────────────────────────────
+function renderLeftPanel(ctx) {
+  const pos = ctx.position;
+  const isAgriculture = pos.title_th.includes("เกษตร") || pos.title_th.includes("วิชาการ");
+  const emoji = isAgriculture ? "🌾" : "🏢";
+
+  document.getElementById("positionEmoji").textContent = emoji;
+  document.getElementById("positionTitle").textContent = pos.title_th;
+  document.getElementById("incumbentName").textContent = pos.incumbent?.name || "ว่าง";
+  document.getElementById("positionLevel").textContent = pos.level || "";
+  document.getElementById("chatHeaderName").textContent = `AI ประจำ${pos.title_th}`;
+  document.getElementById("chatHeaderSub").textContent = pos.department_name || "กรมส่งเสริมการเกษตร";
+  document.title = `AI ${pos.title_th} — กรมส่งเสริมการเกษตร`;
+
+  // KPI bars (simulate progress 40-85%)
+  const kpiList = document.getElementById("kpiList");
+  kpiList.innerHTML = (pos.kpis || []).map((k, i) => {
+    const pct = [72, 55, 83, 68, 90][i % 5];
+    return `
+      <div class="kpi-item">
+        <div class="kpi-label">
+          <span>${k.name}</span>
+          <span>${pct}%</span>
+        </div>
+        <div class="kpi-bar"><div class="kpi-fill" style="width:${pct}%"></div></div>
+      </div>`;
+  }).join("");
+
+  // Pending tasks
+  const memory = ctx.memory || {};
+  const pendingTasks = (memory.memories || []).filter(m => m.type === "task" && m.status === "pending");
+  document.getElementById("pendingCount").textContent = pendingTasks.length;
+
+  // Responsibilities
+  const respList = document.getElementById("respList");
+  respList.innerHTML = (pos.responsibilities || []).map(r => `<li>${r}</li>`).join("");
+}
+
+// ─── AI Greeting (proactive) ──────────────────────────────────
+async function aiGreeting(ctx) {
+  const pos = ctx.position;
+  const memory = ctx.memory || {};
+  const pendingTasks = (memory.memories || []).filter(m => m.type === "task" && m.status === "pending");
+  const notes = (memory.memories || []).filter(m => m.type === "note");
+  const today = new Date().toLocaleDateString("th-TH", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+
+  // Build greeting
+  const incumbentFirstName = (pos.incumbent?.name || "").replace(/^(นาย|นาง|นางสาว)\s*/, "").split(" ")[0];
+
+  let greetText = `สวัสดีครับ คุณ${incumbentFirstName} 👋\n\n`;
+  greetText += `ผมคือ AI ประจำตำแหน่ง${pos.title_th}ของคุณ\n`;
+  greetText += `วันนี้ ${today}\n\n`;
+
+  const lines = [];
+  if (pendingTasks.length > 0) {
+    lines.push(`📋 งานค้าง: **${pendingTasks.length} รายการ**`);
+    const nearest = pendingTasks.sort((a,b)=>(a.deadline||"").localeCompare(b.deadline||""))[0];
+    if (nearest?.deadline) lines.push(`⏰ Deadline ใกล้สุด: **${nearest.content}** (${nearest.deadline})`);
+  } else {
+    lines.push(`📋 งานค้าง: ไม่มีในขณะนี้ ✅`);
+  }
+  if (notes.length > 0) {
+    lines.push(`📝 บันทึกล่าสุด: **${notes[notes.length-1].content}**`);
+  }
+  lines.push(`📨 KPI ที่ต้องติดตาม: **${(pos.kpis||[]).length} ตัวชี้วัด**`);
+
+  greetText += lines.join("\n") + "\n\n";
+  greetText += `จะเริ่มจากเรื่องไหนก่อนดีครับ?`;
+
+  const quickButtons = [
+    { label: "📋 งานค้าง", action: "📋 งานค้างของฉันมีอะไรบ้าง?" },
+    { label: "⏰ Deadline", action: "Deadline ที่ใกล้จะถึงมีอะไรบ้าง?" },
+    { label: "📊 KPI", action: "📊 KPI สัปดาห์นี้เป็นอย่างไรบ้าง?" },
+  ];
+
+  appendAIBubble(greetText, quickButtons);
+
+  // Track greeting in conversation history
+  conversationHistory.push({
+    role: "assistant",
+    content: greetText
+  });
+}
+
+// ─── Send Message ─────────────────────────────────────────────
+function sendQuick(msg) {
+  document.getElementById("chatInput").value = msg;
+  sendMessage();
+}
+
+function handleKey(e) {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+async function sendMessage() {
+  if (sending) return;
+  const input = document.getElementById("chatInput");
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  input.value = "";
+  autoResize(input);
+  sending = true;
+  document.getElementById("sendBtn").disabled = true;
+
+  appendUserBubble(msg);
+  conversationHistory.push({ role: "user", content: msg });
+
+  showTyping(true);
+
+  try {
+    const resp = await fetch(`${BASE_URL}/api/personal-ai/${encodeURIComponent(positionId)}/chat`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message: msg,
+        conversation_history: conversationHistory.slice(-12) // last 6 turns
+      })
+    });
+    const data = await resp.json();
+    showTyping(false);
+    const reply = data.reply || data.error || "ขออภัย ไม่สามารถตอบได้ในขณะนี้";
+    appendAIBubble(reply);
+    conversationHistory.push({ role: "assistant", content: reply });
+  } catch (err) {
+    showTyping(false);
+    appendAIBubble("ขออภัย เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่");
+  }
+
+  sending = false;
+  document.getElementById("sendBtn").disabled = false;
+  input.focus();
+}
+
+// ─── UI Helpers ───────────────────────────────────────────────
+function appendAIBubble(text, quickButtons) {
+  const conversation = document.getElementById("conversation");
+  const typing = document.getElementById("typingIndicator");
+
+  const wrap = document.createElement("div");
+  wrap.className = "bubble-wrap ai";
+
+  const avatarDiv = document.createElement("div");
+  avatarDiv.className = "bubble-avatar ai-av";
+  avatarDiv.textContent = "🤖";
+
+  const contentDiv = document.createElement("div");
+  const bubble = document.createElement("div");
+  bubble.className = "bubble ai";
+  bubble.innerHTML = markdownToHtml(text);
+
+  const timeDiv = document.createElement("div");
+  timeDiv.className = "bubble-time";
+  timeDiv.textContent = nowTime();
+
+  contentDiv.appendChild(bubble);
+
+  if (quickButtons && quickButtons.length > 0) {
+    const qa = document.createElement("div");
+    qa.className = "quick-actions";
+    quickButtons.forEach(btn => {
+      const b = document.createElement("button");
+      b.className = "quick-btn";
+      b.textContent = btn.label;
+      b.onclick = () => sendQuick(btn.action);
+      qa.appendChild(b);
+    });
+    contentDiv.appendChild(qa);
+  }
+
+  contentDiv.appendChild(timeDiv);
+  wrap.appendChild(avatarDiv);
+  wrap.appendChild(contentDiv);
+
+  conversation.insertBefore(wrap, typing);
+  scrollToBottom();
+}
+
+function appendUserBubble(text) {
+  const conversation = document.getElementById("conversation");
+  const typing = document.getElementById("typingIndicator");
+
+  const wrap = document.createElement("div");
+  wrap.className = "bubble-wrap user";
+
+  const avatarDiv = document.createElement("div");
+  avatarDiv.className = "bubble-avatar user-av";
+  avatarDiv.textContent = "👤";
+
+  const contentDiv = document.createElement("div");
+  const bubble = document.createElement("div");
+  bubble.className = "bubble user";
+  bubble.textContent = text;
+
+  const timeDiv = document.createElement("div");
+  timeDiv.className = "bubble-time";
+  timeDiv.textContent = nowTime();
+
+  contentDiv.appendChild(bubble);
+  contentDiv.appendChild(timeDiv);
+  wrap.appendChild(contentDiv);
+  wrap.appendChild(avatarDiv);
+
+  conversation.insertBefore(wrap, typing);
+  scrollToBottom();
+}
+
+function showTyping(show) {
+  const indicator = document.getElementById("typingIndicator");
+  indicator.style.display = show ? "block" : "none";
+  if (show) scrollToBottom();
+}
+
+function scrollToBottom() {
+  const conversation = document.getElementById("conversation");
+  setTimeout(() => {
+    conversation.scrollTop = conversation.scrollHeight;
+  }, 50);
+}
+
+function nowTime() {
+  return new Date().toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" });
+}
+
+function autoResize(el) {
+  el.style.height = "auto";
+  el.style.height = Math.min(el.scrollHeight, 120) + "px";
+}
+
+function markdownToHtml(text) {
+  return text
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    .replace(/\n/g, "<br/>");
+}
+</script>
+<script src="/access-bar.js"></script>
+</body>
+</html>

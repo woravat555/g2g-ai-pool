@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ศูนย์บริหาร กษ. — Executive Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --p1:#0b3d2e;--p2:#1b4332;--p3:#2d6a4f;--p4:#b7e4c7;--p5:#e6f4ea;
+  --gold:#c9a227;--gold2:#e8c55a;
+  --green1:#166534;--green2:#22c55e;
+  --red:#dc2626;--blue:#1e40af;--teal:#0d9488;--orange:#ea580c;
+  --bg:#e6f4ea;--bg2:#d3eddc;--border:#9bcaa9;
+  --white:#fff;--text:#1e293b;--sub:#56707a;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Sarabun',sans-serif}
+body{background:var(--bg);color:var(--text);min-height:100vh}
+
+.hdr{background:linear-gradient(135deg,var(--p1) 0%,var(--p2) 55%,var(--p3) 100%);color:#fff;padding:22px 40px 18px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.25);border-bottom:3px solid var(--gold)}
+.hdr-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.hdr-left{display:flex;align-items:center;gap:16px}
+.hdr-emblem{width:48px;height:48px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;border:2px solid var(--gold)}
+.hdr-t1{font-size:18px;font-weight:800}
+.hdr-t2{font-size:11px;opacity:.85;margin-top:2px}
+.hdr-right{display:flex;gap:8px;align-items:center}
+.hdr-btn{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);color:#fff;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;text-decoration:none;font-family:inherit;cursor:pointer;transition:.15s}
+.hdr-btn:hover{background:rgba(255,255,255,.28)}
+.hdr-btn.gold{background:var(--gold);color:var(--p1);border-color:var(--gold);font-weight:700}
+
+.breadcrumb{background:rgba(0,0,0,.18);border-top:1px solid rgba(255,255,255,.12);padding:7px 40px;font-size:11px;color:rgba(255,255,255,.85)}
+.breadcrumb a{color:rgba(255,255,255,.85);text-decoration:none}
+
+.main{max-width:1400px;margin:0 auto;padding:24px 40px 60px}
+
+.stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:24px}
+.stat-card{background:#fff;border-radius:10px;padding:12px 14px;border:1px solid var(--border);text-align:center;border-top:3px solid var(--gold)}
+.stat-v{font-size:18px;font-weight:800;color:var(--p1)}
+.stat-l{font-size:10px;color:var(--sub);margin-top:2px}
+
+.quick-launch{background:#fff;border-radius:14px;padding:20px 24px;margin-bottom:24px;border:1.5px solid var(--border);box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.ql-title{font-size:13px;font-weight:800;color:var(--p1);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.ql-title-sub{font-size:11px;font-weight:400;color:var(--sub)}
+.ql-grid{display:flex;gap:10px;flex-wrap:wrap}
+
+.logo-tile{display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;cursor:pointer;transition:.18s;padding:6px;border-radius:10px}
+.logo-tile:hover{background:var(--bg);transform:translateY(-2px)}
+.logo-badge{width:60px;height:60px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:11px;color:#fff;text-align:center;line-height:1.15;letter-spacing:-.3px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.18);border:2px solid rgba(255,255,255,.25)}
+.logo-badge.b-ministry{background:linear-gradient(135deg,#0b3d2e,#2d6a4f)}
+.logo-badge.b-dept{background:linear-gradient(135deg,#1b4332,#52b788)}
+.logo-badge.b-deputy{background:linear-gradient(135deg,#1e40af,#3b82f6)}
+.logo-badge.b-staff{background:linear-gradient(135deg,#c2410c,#ea580c)}
+.logo-badge.b-gold{background:linear-gradient(135deg,#8a6d1f,#c9a227)}
+.logo-name{font-size:10px;font-weight:700;color:var(--sub);text-align:center;max-width:62px;line-height:1.3}
+
+.search-bar{background:#fff;border-radius:12px;padding:14px 18px;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:20px;display:flex;gap:10px;align-items:center}
+.search-inp{border:1.5px solid var(--border);border-radius:8px;padding:9px 14px;font-size:14px;width:100%;outline:none;font-family:inherit}
+.search-inp:focus{border-color:var(--gold)}
+.filter-btn{background:var(--bg);border:1.5px solid var(--border);padding:8px 12px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;transition:.15s}
+.filter-btn.active{background:var(--p1);color:#fff;border-color:var(--p1)}
+
+.level-section{margin-bottom:32px}
+.level-hdr{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--gold)}
+.level-badge{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;font-weight:800;font-size:13px;color:#fff;flex-shrink:0}
+.lvl-ministry{background:var(--p1)}.lvl-dept{background:var(--p3)}.lvl-deputy{background:var(--blue)}.lvl-staff{background:var(--orange)}
+.level-hdr-text{font-size:15px;font-weight:800;color:var(--p1)}
+.level-hdr-sub{font-size:11px;color:var(--sub);margin-left:4px}
+
+.exec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.exec-card{background:#fff;border-radius:12px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.07);border:1.5px solid var(--border);text-decoration:none;color:var(--text);display:flex;flex-direction:column;gap:10px;transition:.2s;position:relative;overflow:hidden}
+.exec-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.exec-card.ministry::before{background:linear-gradient(90deg,var(--p1),var(--gold))}
+.exec-card.dept::before{background:linear-gradient(90deg,var(--p2),var(--p4))}
+.exec-card.deputy::before{background:linear-gradient(90deg,var(--blue),#60a5fa)}
+.exec-card.staff::before{background:linear-gradient(90deg,#c2410c,var(--orange))}
+.exec-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.12)}
+
+.exec-top{display:flex;align-items:flex-start;gap:12px}
+.exec-logo{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:10px;color:#fff;text-align:center;line-height:1.2;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.exec-card.ministry .exec-logo{background:linear-gradient(135deg,var(--p1),var(--p3))}
+.exec-card.dept .exec-logo{background:linear-gradient(135deg,var(--p2),#52b788)}
+.exec-card.deputy .exec-logo{background:linear-gradient(135deg,#1e40af,#3b82f6)}
+.exec-card.staff .exec-logo{background:linear-gradient(135deg,#c2410c,#ea580c)}
+
+.exec-title-wrap{flex:1;min-width:0}
+.exec-role{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:3px}
+.exec-role.ministry{color:var(--p1)}.exec-role.dept{color:var(--p3)}.exec-role.deputy{color:var(--blue)}.exec-role.staff{color:var(--orange)}
+.exec-name{font-size:13px;font-weight:800;color:var(--text);line-height:1.3}
+.exec-sub{font-size:10px;color:var(--sub);margin-top:2px;line-height:1.4}
+
+.exec-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.exec-stat{background:var(--bg);border-radius:6px;padding:5px 8px;text-align:center}
+.exec-stat-v{font-size:12px;font-weight:800;color:var(--p1)}
+.exec-stat-l{font-size:9px;color:var(--sub)}
+
+.exec-footer{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--bg2);padding-top:8px;margin-top:2px}
+.exec-link{font-size:11px;font-weight:700}
+.exec-link.ministry{color:var(--p1)}.exec-link.dept{color:var(--p3)}.exec-link.deputy{color:var(--blue)}.exec-link.staff{color:var(--orange)}
+.exec-status{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--sub)}
+.dot-g{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green2)}
+
+.footer{text-align:center;padding:20px;font-size:11px;color:var(--sub);border-top:1px solid var(--border);background:#fff}
+
+@media(max-width:768px){.main{padding:14px}.stats-row{grid-template-columns:1fr 1fr}.hdr{padding:14px 18px}.breadcrumb{padding:6px 18px}.exec-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-inner">
+    <div class="hdr-left">
+      <div class="hdr-emblem">🌾</div>
+      <div>
+        <div class="hdr-t1">ศูนย์บริหาร — กระทรวงเกษตรและสหกรณ์ (กษ.)</div>
+        <div class="hdr-t2">EXECUTIVE MANAGEMENT PORTAL · Ministry of Agriculture and Cooperatives · G2G AgriTech © 2026</div>
+      </div>
+    </div>
+    <div class="hdr-right">
+      <a href="/moac-ps.html" class="hdr-btn">⚙️ ระบบปลัด กษ.</a>
+      <a href="/moac-minister.html" class="hdr-btn">🏛️ แดชบอร์ด รมว.</a>
+      <a href="/moac-org.html" class="hdr-btn">🗺️ Org Chart</a>
+      <a href="/platform-overview.html" class="hdr-btn gold">🌐 G2G Platform</a>
+    </div>
+  </div>
+  <div class="breadcrumb">
+    <a href="/platform-overview.html">G2G Platform</a> › กระทรวงเกษตรและสหกรณ์ › ศูนย์บริหารผู้บริหาร
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-v">154,800M</div><div class="stat-l">งบประมาณรวม (บาท)</div></div>
+    <div class="stat-card"><div class="stat-v">32,500</div><div class="stat-l">บุคลากร กษ.</div></div>
+    <div class="stat-card"><div class="stat-v">8.2M</div><div class="stat-l">เกษตรกรที่ขึ้นทะเบียน</div></div>
+    <div class="stat-card"><div class="stat-v">15</div><div class="stat-l">หน่วยงาน/กรม</div></div>
+    <div class="stat-card"><div class="stat-v">8.5%</div><div class="stat-l">GDP ภาคเกษตร</div></div>
+  </div>
+
+  <div class="quick-launch">
+    <div class="ql-title">🚀 เลือกผู้บริหาร — กดโลโก้เพื่อเข้าสู่ระบบ <span class="ql-title-sub">Quick Access · แยกตามระดับ</span></div>
+
+    <div style="margin-bottom:14px">
+      <div style="font-size:10px;font-weight:800;color:var(--p1);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;padding-left:4px">🏛️ ระดับกระทรวง</div>
+      <div class="ql-grid">
+        <a href="/moac-minister.html" class="logo-tile">
+          <div class="logo-badge b-ministry">รมว.<br>กษ.</div>
+          <div class="logo-name">รัฐมนตรี</div>
+        </a>
+        <a href="/moac-minister-sec.html" class="logo-tile">
+          <div class="logo-badge b-ministry" style="font-size:9px">เลขา<br>รมว.</div>
+          <div class="logo-name">เลขาฯ รมว.</div>
+        </a>
+        <a href="/moac-dep-minister.html" class="logo-tile" title="รมช.กษ. (คนที่ 1) — นายวัชระพล ขาวขำ">
+          <div class="logo-badge b-ministry" style="font-size:9px">รมช.1<br>กษ.</div>
+          <div class="logo-name">รมช.กษ. (คนที่ 1) — นายวัชระพล ขาวขำ</div>
+        </a>
+        <a href="/moac-dep-minister-sec.html" class="logo-tile">
+          <div class="logo-badge b-ministry" style="font-size:9px">เลขา<br>รมช.1</div>
+          <div class="logo-name">เลขาฯ รมช. (1)</div>
+        </a>
+        <a href="/moac-dep-minister-2.html" class="logo-tile" title="รมช.กษ. (คนที่ 2) — นางสาวปิยรัฐชย์ ติยะไพรัช" style="background:linear-gradient(135deg,#1b5e20,#66bb6a);color:#fff">
+          <div class="logo-badge b-ministry" style="font-size:9px;background:rgba(255,255,255,.2);color:#fff">🎖<br>รมช.2</div>
+          <div class="logo-name" style="color:#fff">รมช.กษ. (คนที่ 2)<br><span style="font-size:9px;opacity:.9">นางสาวปิยรัฐชย์ ติยะไพรัช</span></div>
+        </a>
+        <a href="/moac-dep-minister-2-sec.html" class="logo-tile" style="background:linear-gradient(135deg,#1b5e20,#66bb6a);color:#fff">
+          <div class="logo-badge b-ministry" style="font-size:9px;background:rgba(255,255,255,.2);color:#fff">เลขา<br>รมช.2</div>
+          <div class="logo-name" style="color:#fff">เลขาฯ รมช. (2)</div>
+        </a>
+        <a href="/moac-ps.html" class="logo-tile">
+          <div class="logo-badge b-ministry">ปลัด<br>กษ.</div>
+          <div class="logo-name">ปลัด กษ.</div>
+        </a>
+        <a href="/moac-ps-sec.html" class="logo-tile">
+          <div class="logo-badge b-ministry" style="font-size:9px">เลขา<br>ปลัด</div>
+          <div class="logo-name">เลขาฯ ปลัด</div>
+        </a>
+        <a href="/moac-ps-advisor.html" class="logo-tile">
+          <div class="logo-badge b-gold" style="font-size:9px">ที่ปรึกษา<br>ปลัด</div>
+          <div class="logo-name">ที่ปรึกษา</div>
+        </a>
+        <a href="/moac-deputy-ps.html" class="logo-tile">
+          <div class="logo-badge b-ministry" style="font-size:9px">รอง<br>ปลัด</div>
+          <div class="logo-name">รองปลัด</div>
+        </a>
+        <a href="/moac-deputy-ps-sec.html" class="logo-tile">
+          <div class="logo-badge b-ministry" style="font-size:9px">เลขา<br>รอง</div>
+          <div class="logo-name">เลขาฯ รองปลัด</div>
+        </a>
+      </div>
+    </div>
+
+    <div style="margin-bottom:14px">
+      <div style="font-size:10px;font-weight:800;color:var(--p3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;padding-left:4px">🌾 หัวหน้าหน่วยงาน 15 กรม</div>
+      <div class="ql-grid">
+        <a href="/moac-dept.html?dept=DOAE" class="logo-tile"><div class="logo-badge b-dept">กสก.</div><div class="logo-name">กรมส่งเสริมเกษตร</div></a>
+        <a href="/moac-dept.html?dept=CPD" class="logo-tile"><div class="logo-badge b-dept">กสส.</div><div class="logo-name">กรมส่งเสริมสหกรณ์</div></a>
+        <a href="/moac-dept.html?dept=CAD" class="logo-tile"><div class="logo-badge b-dept">กตส.</div><div class="logo-name">กรมตรวจบัญชี</div></a>
+        <a href="/moac-dept.html?dept=DLD" class="logo-tile"><div class="logo-badge b-dept">ปศ.</div><div class="logo-name">กรมปศุสัตว์</div></a>
+        <a href="/moac-dept.html?dept=DOF" class="logo-tile"><div class="logo-badge b-dept">ปม.</div><div class="logo-name">กรมประมง</div></a>
+        <a href="/moac-dept.html?dept=RD" class="logo-tile"><div class="logo-badge b-dept">กข.</div><div class="logo-name">กรมการข้าว</div></a>
+        <a href="/moac-dept.html?dept=DOA" class="logo-tile"><div class="logo-badge b-dept">กวก.</div><div class="logo-name">กรมวิชาการ</div></a>
+        <a href="/moac-dept.html?dept=LDD" class="logo-tile"><div class="logo-badge b-dept">พด.</div><div class="logo-name">กรมพัฒนาที่ดิน</div></a>
+        <a href="/moac-dept.html?dept=RID" class="logo-tile"><div class="logo-badge b-dept">ชป.</div><div class="logo-name">กรมชลประทาน</div></a>
+        <a href="/moac-dept.html?dept=ALRO" class="logo-tile"><div class="logo-badge b-dept">ส.ป.ก.</div><div class="logo-name">ส.ป.ก.</div></a>
+        <a href="/moac-dept.html?dept=RAOT" class="logo-tile"><div class="logo-badge b-dept">กยท.</div><div class="logo-name">การยาง</div></a>
+        <a href="/moac-dept.html?dept=QSDS" class="logo-tile"><div class="logo-badge b-dept">มม.</div><div class="logo-name">หม่อนไหม</div></a>
+        <a href="/moac-dept.html?dept=OAE" class="logo-tile"><div class="logo-badge b-dept">สศก.</div><div class="logo-name">เศรษฐกิจเกษตร</div></a>
+        <a href="/moac-dept.html?dept=ACFS" class="logo-tile"><div class="logo-badge b-dept">มกอช.</div><div class="logo-name">มาตรฐาน</div></a>
+        <a href="/moac-dept.html?dept=OPS" class="logo-tile"><div class="logo-badge b-dept">สป.</div><div class="logo-name">สป.กษ.</div></a>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:10px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;padding-left:4px">🤝 รอง/ผู้ช่วย 15 ตำแหน่ง</div>
+      <div class="ql-grid">
+        <a href="/moac-deputy.html?dept=DOAE" class="logo-tile"><div class="logo-badge b-deputy" style="font-size:9px">รอง<br>กสก.</div><div class="logo-name">รองอธิบดี กสก.</div></a>
+        <a href="/moac-deputy.html?dept=CPD" class="logo-tile"><div class="logo-badge b-deputy" style="font-size:9px">รอง<br>กสส.</div><div class="logo-name">รองอธิบดี กสส.</div></a>
+        <a href="/moac-deputy.html?dept=DLD" class="logo-tile"><div class="logo-badge b-deputy" style="font-size:9px">รอง<br>ปศ.</div><div class="logo-name">รองอธิบดี ปศ.</div></a>
+        <a href="/moac-deputy.html?dept=DOF" class="logo-tile"><div class="logo-badge b-deputy" style="font-size:9px">รอง<br>ปม.</div><div class="logo-name">รองอธิบดี ปม.</div></a>
+        <a href="/moac-deputy.html?dept=RD" class="logo-tile"><div class="logo-badge b-deputy" style="font-size:9px">รอง<br>กข.</div><div class="logo-name">รองอธิบดี กข.</div></a>
+        <a href="/moac-deputy.html?dept=DOA" class="logo-tile"><div class="logo-badge b-deputy" style="font-size:9px">รอง<br>กวก.</div><div class="logo-name">รองอธิบดี กวก.</div></a>
+        <a href="/moac-deputy.html?dept=LDD" class="logo-tile"><div class="logo-badge b-deputy" style="font-size:9px">รอง<br>พด.</div><div class="logo-name">รองอธิบดี พด.</div></a>
+        <a href="/moac-deputy.html?dept=RID" class="logo-tile"><div class="logo-badge b-deputy" style="font-size:9px">รอง<br>ชป.</div><div class="logo-name">รองอธิบดี ชป.</div></a>
+        <a href="/moac-deputy.html?dept=ALRO" class="logo-tile"><div class="logo-badge b-deputy" style="font-size:9px">รอง<br>ส.ป.ก.</div><div class="logo-name">รองเลขาฯ ส.ป.ก.</div></a>
+        <a href="/moac-deputy.html?dept=RAOT" class="logo-tile"><div class="logo-badge b-deputy" style="font-size:9px">รอง<br>กยท.</div><div class="logo-name">รองผู้ว่าฯ กยท.</div></a>
+        <a href="/moac-deputy.html?dept=OAE" class="logo-tile"><div class="logo-badge b-deputy" style="font-size:9px">รอง<br>สศก.</div><div class="logo-name">รองเลขาฯ สศก.</div></a>
+        <a href="/moac-deputy.html?dept=ACFS" class="logo-tile"><div class="logo-badge b-deputy" style="font-size:9px">รอง<br>มกอช.</div><div class="logo-name">รองเลขาฯ มกอช.</div></a>
+        <a href="/moac-deputy.html?dept=CAD" class="logo-tile"><div class="logo-badge b-deputy" style="font-size:9px">รอง<br>กตส.</div><div class="logo-name">รองอธิบดี กตส.</div></a>
+        <a href="/moac-deputy.html?dept=QSDS" class="logo-tile"><div class="logo-badge b-deputy" style="font-size:9px">รอง<br>มม.</div><div class="logo-name">รองอธิบดี มม.</div></a>
+        <a href="/moac-deputy.html?dept=OPS" class="logo-tile"><div class="logo-badge b-deputy" style="font-size:9px">รอง<br>สป.</div><div class="logo-name">รองปลัด</div></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="search-bar">
+    <input class="search-inp" id="searchInp" placeholder="🔍 ค้นหาตำแหน่ง หน่วยงาน..." oninput="filterCards()">
+    <button class="filter-btn active" onclick="setFilter('all',this)">ทั้งหมด</button>
+    <button class="filter-btn" onclick="setFilter('ministry',this)">กระทรวง</button>
+    <button class="filter-btn" onclick="setFilter('dept',this)">หัวหน้ากรม</button>
+    <button class="filter-btn" onclick="setFilter('deputy',this)">รองอธิบดี</button>
+    <button class="filter-btn" onclick="setFilter('staff',this)">เจ้าหน้าที่</button>
+  </div>
+
+  <!-- LEVEL 1: ระดับกระทรวง -->
+  <div class="level-section" id="sec-ministry" data-level="ministry">
+    <div class="level-hdr">
+      <div class="level-badge lvl-ministry">1</div>
+      <div class="level-hdr-text">ระดับกระทรวง</div>
+      <div class="level-hdr-sub">— รัฐมนตรี / รัฐมนตรีช่วย / ปลัด / รองปลัด / เลขานุการ</div>
+    </div>
+    <div class="exec-grid">
+
+      <a href="/moac-minister.html" class="exec-card ministry" data-level="ministry" data-name="รัฐมนตรีว่าการ กษ.">
+        <div class="exec-top">
+          <div class="exec-logo">รมว.<br>กษ.</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role ministry">รัฐมนตรีว่าการ</div>
+            <div class="exec-name">กระทรวงเกษตรและสหกรณ์</div>
+            <div class="exec-sub">กำหนดนโยบาย · กำกับ 15 กรม · 8.2M เกษตรกร</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">154,800M</div><div class="exec-stat-l">งบประมาณ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">15</div><div class="exec-stat-l">หน่วยงาน</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link ministry">🔗 เข้าสู่แดชบอร์ดรัฐมนตรี →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+      <a href="/moac-minister-sec.html" class="exec-card ministry" data-level="ministry" data-name="เลขานุการ รมว.">
+        <div class="exec-top">
+          <div class="exec-logo" style="font-size:9px">เลขา<br>รมว.</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role ministry">เลขานุการ รมว.</div>
+            <div class="exec-name">เลขานุการรัฐมนตรีว่าการ กษ.</div>
+            <div class="exec-sub">ตารางนัด · เอกสารเข้า · Brief วันนี้</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">28</div><div class="exec-stat-l">นัดสัปดาห์นี้</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">12</div><div class="exec-stat-l">เอกสารรอ</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link ministry">🔗 เข้าสู่ระบบ →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+      <a href="/moac-dep-minister.html" class="exec-card ministry" data-level="ministry" data-name="รมช.กษ. (คนที่ 1) — นายวัชระพล ขาวขำ">
+        <div class="exec-top">
+          <div class="exec-logo" style="font-size:9px">🎖<br>รมช.1</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role ministry">รัฐมนตรีช่วยว่าการ (คนที่ 1)</div>
+            <div class="exec-name">นายวัชระพล ขาวขำ</div>
+            <div class="exec-sub">กำกับ 6 หน่วยงาน · กรมประมง · กรมหม่อนไหม · ส.ป.ก. · อตก. · อสค. · สวก.</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">52,000M</div><div class="exec-stat-l">งบในกำกับ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">6</div><div class="exec-stat-l">กรมในกำกับ</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link ministry">🔗 เข้าสู่แดชบอร์ด →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+      <a href="/moac-dep-minister-sec.html" class="exec-card ministry" data-level="ministry" data-name="เลขาฯ รมช. (คนที่ 1)">
+        <div class="exec-top">
+          <div class="exec-logo" style="font-size:9px">เลขา<br>รมช.1</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role ministry">เลขานุการ รมช. (คนที่ 1)</div>
+            <div class="exec-name">สังกัด นายวัชระพล ขาวขำ</div>
+            <div class="exec-sub">ตารางนัด · เอกสาร · Brief รมช.</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">18</div><div class="exec-stat-l">นัดสัปดาห์นี้</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">8</div><div class="exec-stat-l">เอกสารรอ</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link ministry">🔗 เข้าสู่ระบบ →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+      <a href="/moac-dep-minister-2.html" class="exec-card ministry" data-level="ministry" data-name="รมช.กษ. (คนที่ 2) — นางสาวปิยรัฐชย์ ติยะไพรัช" style="background:linear-gradient(135deg,#1b5e20,#66bb6a);color:#fff">
+        <div class="exec-top">
+          <div class="exec-logo" style="font-size:9px;background:rgba(255,255,255,.2);color:#fff">🎖<br>รมช.2</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role ministry" style="color:#fff">รัฐมนตรีช่วยว่าการ (คนที่ 2)</div>
+            <div class="exec-name" style="color:#fff">นางสาวปิยรัฐชย์ ติยะไพรัช</div>
+            <div class="exec-sub" style="color:rgba(255,255,255,.85)">กำกับ 6 หน่วยงาน · DOAE · CPD · CAD · มกอช. · สะพานปลา · สวพส.</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v" style="color:#fff">46,300M</div><div class="exec-stat-l" style="color:rgba(255,255,255,.85)">งบในกำกับ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v" style="color:#fff">6</div><div class="exec-stat-l" style="color:rgba(255,255,255,.85)">หน่วยงานในกำกับ</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link ministry" style="color:#fff">🔗 เข้าสู่แดชบอร์ด →</span>
+          <span class="exec-status" style="color:#fff"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+      <a href="/moac-dep-minister-2-sec.html" class="exec-card ministry" data-level="ministry" data-name="เลขาฯ รมช. (คนที่ 2)" style="background:linear-gradient(135deg,#1b5e20,#66bb6a);color:#fff">
+        <div class="exec-top">
+          <div class="exec-logo" style="font-size:9px;background:rgba(255,255,255,.2);color:#fff">เลขา<br>รมช.2</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role ministry" style="color:#fff">เลขานุการ รมช. (คนที่ 2)</div>
+            <div class="exec-name" style="color:#fff">สังกัด นางสาวปิยรัฐชย์ ติยะไพรัช</div>
+            <div class="exec-sub" style="color:rgba(255,255,255,.85)">ตารางนัด · เอกสาร · Brief รมช. (2)</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v" style="color:#fff">16</div><div class="exec-stat-l" style="color:rgba(255,255,255,.85)">นัดสัปดาห์นี้</div></div>
+          <div class="exec-stat"><div class="exec-stat-v" style="color:#fff">7</div><div class="exec-stat-l" style="color:rgba(255,255,255,.85)">เอกสารรอ</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link ministry" style="color:#fff">🔗 เข้าสู่ระบบ →</span>
+          <span class="exec-status" style="color:#fff"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+      <a href="/moac-ps.html" class="exec-card ministry" data-level="ministry" data-name="ปลัดกระทรวง กษ.">
+        <div class="exec-top">
+          <div class="exec-logo">ปลัด<br>กษ.</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role ministry">ปลัดกระทรวง กษ.</div>
+            <div class="exec-name">สำนักงานปลัดกระทรวงเกษตรฯ</div>
+            <div class="exec-sub">บูรณาการ 15 กรม · บริหาร 32,500 คน</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">8,400M</div><div class="exec-stat-l">งบ สป.กษ.</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">32,500</div><div class="exec-stat-l">บุคลากร</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link ministry">🔗 เข้าสู่ระบบปลัด →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+      <a href="/moac-ps-sec.html" class="exec-card ministry" data-level="ministry" data-name="เลขานุการปลัด">
+        <div class="exec-top">
+          <div class="exec-logo" style="font-size:9px">เลขา<br>ปลัด</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role ministry">เลขานุการปลัด</div>
+            <div class="exec-name">เลขานุการปลัดกระทรวง กษ.</div>
+            <div class="exec-sub">บริหารงานเลขาฯ · เอกสาร · ตารางงาน</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">45</div><div class="exec-stat-l">งาน Active</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">15</div><div class="exec-stat-l">นัดสัปดาห์นี้</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link ministry">🔗 เข้าสู่ระบบ →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+      <a href="/moac-ps-advisor.html" class="exec-card ministry" data-level="ministry" data-name="ที่ปรึกษาปลัด">
+        <div class="exec-top">
+          <div class="exec-logo" style="background:linear-gradient(135deg,#8a6d1f,#c9a227);font-size:9px">ที่ปรึกษา<br>ปลัด</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role ministry">ที่ปรึกษาปลัด</div>
+            <div class="exec-name">ที่ปรึกษาด้านนโยบายและยุทธศาสตร์</div>
+            <div class="exec-sub">ที่ปรึกษากม. / วิชาการ / ระหว่างประเทศ</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">3</div><div class="exec-stat-l">ที่ปรึกษา</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">12</div><div class="exec-stat-l">เรื่อง Active</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link ministry">🔗 เข้าสู่ระบบ →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+      <a href="/moac-deputy-ps.html" class="exec-card ministry" data-level="ministry" data-name="รองปลัดกระทรวง กษ.">
+        <div class="exec-top">
+          <div class="exec-logo" style="font-size:9px">รอง<br>ปลัด</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role ministry">รองปลัดกระทรวง</div>
+            <div class="exec-name">รองปลัด กษ. (3 ตำแหน่ง)</div>
+            <div class="exec-sub">พืช-สัตว์น้ำ · ที่ดิน-น้ำ · บริหาร-เศรษฐกิจ</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">3</div><div class="exec-stat-l">สายงาน</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">15</div><div class="exec-stat-l">กรมในกำกับ</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link ministry">🔗 เข้าสู่ระบบรองปลัด →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+      <a href="/moac-deputy-ps-sec.html" class="exec-card ministry" data-level="ministry" data-name="เลขานุการรองปลัด">
+        <div class="exec-top">
+          <div class="exec-logo" style="font-size:9px">เลขา<br>รอง</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role ministry">เลขานุการรองปลัด</div>
+            <div class="exec-name">เลขานุการรองปลัดกระทรวง</div>
+            <div class="exec-sub">ประสาน · เอกสาร · ติดตามคำสั่ง</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">22</div><div class="exec-stat-l">งาน Active</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">8</div><div class="exec-stat-l">นัดสัปดาห์นี้</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link ministry">🔗 เข้าสู่ระบบ →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- LEVEL 2: หัวหน้ากรม -->
+  <div class="level-section" id="sec-dept" data-level="dept">
+    <div class="level-hdr">
+      <div class="level-badge lvl-dept">2</div>
+      <div class="level-hdr-text">หัวหน้าหน่วยงาน 15 กรม</div>
+      <div class="level-hdr-sub">— อธิบดี / เลขาธิการ / ผู้ว่าการ</div>
+    </div>
+    <div class="exec-grid">
+
+      <a href="/moac-dept.html?dept=DOAE" class="exec-card dept" data-level="dept" data-name="กรมส่งเสริมการเกษตร DOAE">
+        <div class="exec-top">
+          <div class="exec-logo">กสก.<br><span style="font-size:8px">DOAE</span></div>
+          <div class="exec-title-wrap">
+            <div class="exec-role dept">อธิบดี</div>
+            <div class="exec-name">กรมส่งเสริมการเกษตร (กสก.)</div>
+            <div class="exec-sub">8.2M เกษตรกร · 882 ศพก. · แปลงใหญ่</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">22,400M</div><div class="exec-stat-l">งบประมาณ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">8,200</div><div class="exec-stat-l">บุคลากร</div></div>
+        </div>
+        <div class="exec-footer"><span class="exec-link dept">🔗 เข้าสู่ระบบ กสก. →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div>
+      </a>
+
+      <a href="/moac-dept.html?dept=CPD" class="exec-card dept" data-level="dept" data-name="กรมส่งเสริมสหกรณ์ CPD">
+        <div class="exec-top">
+          <div class="exec-logo">กสส.<br><span style="font-size:8px">CPD</span></div>
+          <div class="exec-title-wrap">
+            <div class="exec-role dept">อธิบดี</div>
+            <div class="exec-name">กรมส่งเสริมสหกรณ์ (กสส.)</div>
+            <div class="exec-sub">7,200 สหกรณ์ · 4,500 กลุ่มเกษตรกร</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">3,800M</div><div class="exec-stat-l">งบประมาณ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">2,400</div><div class="exec-stat-l">บุคลากร</div></div>
+        </div>
+        <div class="exec-footer"><span class="exec-link dept">🔗 เข้าสู่ระบบ กสส. →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div>
+      </a>
+
+      <a href="/moac-dept.html?dept=DLD" class="exec-card dept" data-level="dept" data-name="กรมปศุสัตว์ DLD">
+        <div class="exec-top">
+          <div class="exec-logo">ปศ.<br><span style="font-size:8px">DLD</span></div>
+          <div class="exec-title-wrap">
+            <div class="exec-role dept">อธิบดี</div>
+            <div class="exec-name">กรมปศุสัตว์ (ปศ.)</div>
+            <div class="exec-sub">โค-กระบือ-สุกร-ไก่ · ควบคุมโรค ASF</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">8,200M</div><div class="exec-stat-l">งบประมาณ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">4,800</div><div class="exec-stat-l">บุคลากร</div></div>
+        </div>
+        <div class="exec-footer"><span class="exec-link dept">🔗 เข้าสู่ระบบ ปศ. →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div>
+      </a>
+
+      <a href="/moac-dept.html?dept=DOF" class="exec-card dept" data-level="dept" data-name="กรมประมง DOF">
+        <div class="exec-top">
+          <div class="exec-logo">ปม.<br><span style="font-size:8px">DOF</span></div>
+          <div class="exec-title-wrap">
+            <div class="exec-role dept">อธิบดี</div>
+            <div class="exec-name">กรมประมง (ปม.)</div>
+            <div class="exec-sub">ประมงน้ำจืด-ทะเล · ควบคุม IUU</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">5,400M</div><div class="exec-stat-l">งบประมาณ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">2,800</div><div class="exec-stat-l">บุคลากร</div></div>
+        </div>
+        <div class="exec-footer"><span class="exec-link dept">🔗 เข้าสู่ระบบ ปม. →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div>
+      </a>
+
+      <a href="/moac-dept.html?dept=RD" class="exec-card dept" data-level="dept" data-name="กรมการข้าว RD">
+        <div class="exec-top">
+          <div class="exec-logo">กข.<br><span style="font-size:8px">RD</span></div>
+          <div class="exec-title-wrap">
+            <div class="exec-role dept">อธิบดี</div>
+            <div class="exec-name">กรมการข้าว (กข.)</div>
+            <div class="exec-sub">ข้าวหอมมะลิ GI · นาแปลงใหญ่ GAP</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">6,200M</div><div class="exec-stat-l">งบประมาณ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">2,100</div><div class="exec-stat-l">บุคลากร</div></div>
+        </div>
+        <div class="exec-footer"><span class="exec-link dept">🔗 เข้าสู่ระบบ กข. →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div>
+      </a>
+
+      <a href="/moac-dept.html?dept=DOA" class="exec-card dept" data-level="dept" data-name="กรมวิชาการเกษตร DOA">
+        <div class="exec-top">
+          <div class="exec-logo">กวก.<br><span style="font-size:8px">DOA</span></div>
+          <div class="exec-title-wrap">
+            <div class="exec-role dept">อธิบดี</div>
+            <div class="exec-name">กรมวิชาการเกษตร (กวก.)</div>
+            <div class="exec-sub">วิจัยพันธุ์พืช · GAP · ปุ๋ย/สารเคมี</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">4,800M</div><div class="exec-stat-l">งบประมาณ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">3,200</div><div class="exec-stat-l">บุคลากร</div></div>
+        </div>
+        <div class="exec-footer"><span class="exec-link dept">🔗 เข้าสู่ระบบ กวก. →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div>
+      </a>
+
+      <a href="/moac-dept.html?dept=LDD" class="exec-card dept" data-level="dept" data-name="กรมพัฒนาที่ดิน LDD">
+        <div class="exec-top">
+          <div class="exec-logo">พด.<br><span style="font-size:8px">LDD</span></div>
+          <div class="exec-title-wrap">
+            <div class="exec-role dept">อธิบดี</div>
+            <div class="exec-name">กรมพัฒนาที่ดิน (พด.)</div>
+            <div class="exec-sub">วิเคราะห์ดิน · ปุ๋ยพืชสด · อนุรักษ์</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">4,200M</div><div class="exec-stat-l">งบประมาณ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">2,600</div><div class="exec-stat-l">บุคลากร</div></div>
+        </div>
+        <div class="exec-footer"><span class="exec-link dept">🔗 เข้าสู่ระบบ พด. →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div>
+      </a>
+
+      <a href="/moac-dept.html?dept=RID" class="exec-card dept" data-level="dept" data-name="กรมชลประทาน RID">
+        <div class="exec-top">
+          <div class="exec-logo">ชป.<br><span style="font-size:8px">RID</span></div>
+          <div class="exec-title-wrap">
+            <div class="exec-role dept">อธิบดี</div>
+            <div class="exec-name">กรมชลประทาน (ชป.)</div>
+            <div class="exec-sub">เขื่อน · อ่างเก็บน้ำ · คลองส่งน้ำ</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">68,400M</div><div class="exec-stat-l">งบประมาณ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">11,200</div><div class="exec-stat-l">บุคลากร</div></div>
+        </div>
+        <div class="exec-footer"><span class="exec-link dept">🔗 เข้าสู่ระบบ ชป. →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div>
+      </a>
+
+      <a href="/moac-dept.html?dept=ALRO" class="exec-card dept" data-level="dept" data-name="ส.ป.ก. ALRO">
+        <div class="exec-top">
+          <div class="exec-logo" style="font-size:9px">ส.ป.ก.<br>ALRO</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role dept">เลขาธิการ</div>
+            <div class="exec-name">สำนักงาน ส.ป.ก.</div>
+            <div class="exec-sub">จัดสรรที่ดินทำกิน · ส.ป.ก. 4-01</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">2,400M</div><div class="exec-stat-l">งบประมาณ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">1,400</div><div class="exec-stat-l">บุคลากร</div></div>
+        </div>
+        <div class="exec-footer"><span class="exec-link dept">🔗 เข้าสู่ระบบ ส.ป.ก. →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div>
+      </a>
+
+      <a href="/moac-dept.html?dept=RAOT" class="exec-card dept" data-level="dept" data-name="การยางแห่งประเทศไทย RAOT">
+        <div class="exec-top">
+          <div class="exec-logo" style="font-size:9px">กยท.<br>RAOT</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role dept">ผู้ว่าการ</div>
+            <div class="exec-name">การยางแห่งประเทศไทย (กยท.)</div>
+            <div class="exec-sub">ยางพารา · ราคาอ้างอิง 65+ บ./กก.</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">5,800M</div><div class="exec-stat-l">งบประมาณ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">1,900</div><div class="exec-stat-l">บุคลากร</div></div>
+        </div>
+        <div class="exec-footer"><span class="exec-link dept">🔗 เข้าสู่ระบบ กยท. →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div>
+      </a>
+
+      <a href="/moac-dept.html?dept=QSDS" class="exec-card dept" data-level="dept" data-name="กรมหม่อนไหม QSDS">
+        <div class="exec-top">
+          <div class="exec-logo">มม.<br><span style="font-size:8px">QSDS</span></div>
+          <div class="exec-title-wrap">
+            <div class="exec-role dept">อธิบดี</div>
+            <div class="exec-name">กรมหม่อนไหม (มม.)</div>
+            <div class="exec-sub">หม่อน · ผ้าไหมไทย · 24 ศูนย์</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">680M</div><div class="exec-stat-l">งบประมาณ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">420</div><div class="exec-stat-l">บุคลากร</div></div>
+        </div>
+        <div class="exec-footer"><span class="exec-link dept">🔗 เข้าสู่ระบบ มม. →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div>
+      </a>
+
+      <a href="/moac-dept.html?dept=OAE" class="exec-card dept" data-level="dept" data-name="สำนักงานเศรษฐกิจการเกษตร OAE">
+        <div class="exec-top">
+          <div class="exec-logo" style="font-size:9px">สศก.<br>OAE</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role dept">เลขาธิการ</div>
+            <div class="exec-name">สำนักงานเศรษฐกิจการเกษตร</div>
+            <div class="exec-sub">วิเคราะห์ราคา · พยากรณ์ผลผลิต</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">1,200M</div><div class="exec-stat-l">งบประมาณ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">820</div><div class="exec-stat-l">บุคลากร</div></div>
+        </div>
+        <div class="exec-footer"><span class="exec-link dept">🔗 เข้าสู่ระบบ สศก. →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div>
+      </a>
+
+      <a href="/moac-dept.html?dept=ACFS" class="exec-card dept" data-level="dept" data-name="มกอช. ACFS">
+        <div class="exec-top">
+          <div class="exec-logo" style="font-size:9px">มกอช.<br>ACFS</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role dept">เลขาธิการ</div>
+            <div class="exec-name">มกอช. (มาตรฐานสินค้าเกษตรฯ)</div>
+            <div class="exec-sub">GAP · Organic · GMP · ส่งออก</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">820M</div><div class="exec-stat-l">งบประมาณ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">480</div><div class="exec-stat-l">บุคลากร</div></div>
+        </div>
+        <div class="exec-footer"><span class="exec-link dept">🔗 เข้าสู่ระบบ มกอช. →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div>
+      </a>
+
+      <a href="/moac-dept.html?dept=CAD" class="exec-card dept" data-level="dept" data-name="กรมตรวจบัญชีสหกรณ์ CAD">
+        <div class="exec-top">
+          <div class="exec-logo">กตส.<br><span style="font-size:8px">CAD</span></div>
+          <div class="exec-title-wrap">
+            <div class="exec-role dept">อธิบดี</div>
+            <div class="exec-name">กรมตรวจบัญชีสหกรณ์ (กตส.)</div>
+            <div class="exec-sub">ตรวจบัญชี · บัญชีฟาร์มเกษตรกร</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">1,400M</div><div class="exec-stat-l">งบประมาณ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">1,800</div><div class="exec-stat-l">บุคลากร</div></div>
+        </div>
+        <div class="exec-footer"><span class="exec-link dept">🔗 เข้าสู่ระบบ กตส. →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div>
+      </a>
+
+      <a href="/moac-dept.html?dept=OPS" class="exec-card dept" data-level="dept" data-name="สำนักงานปลัด OPS">
+        <div class="exec-top">
+          <div class="exec-logo">สป.<br><span style="font-size:8px">OPS</span></div>
+          <div class="exec-title-wrap">
+            <div class="exec-role dept">ปลัดกระทรวง</div>
+            <div class="exec-name">สำนักงานปลัดกระทรวง กษ.</div>
+            <div class="exec-sub">อำนวยการ · 76 จังหวัด · G2G AgriTech</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">8,400M</div><div class="exec-stat-l">งบประมาณ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">3,800</div><div class="exec-stat-l">บุคลากร</div></div>
+        </div>
+        <div class="exec-footer"><span class="exec-link dept">🔗 เข้าสู่ระบบ สป.กษ. →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- LEVEL 3: รองอธิบดี/รองเลขาฯ -->
+  <div class="level-section" id="sec-deputy" data-level="deputy">
+    <div class="level-hdr">
+      <div class="level-badge lvl-deputy">3</div>
+      <div class="level-hdr-text">รองอธิบดี / รองเลขาธิการ / รองผู้ว่าการ</div>
+      <div class="level-hdr-sub">— 15 ตำแหน่งรองหัวหน้าหน่วยงาน</div>
+    </div>
+    <div class="exec-grid">
+      <a href="/moac-deputy.html?dept=DOAE" class="exec-card deputy" data-level="deputy" data-name="รองอธิบดี กสก."><div class="exec-top"><div class="exec-logo" style="font-size:9px">รอง<br>กสก.</div><div class="exec-title-wrap"><div class="exec-role deputy">รองอธิบดี</div><div class="exec-name">รองอธิบดีกรมส่งเสริมการเกษตร</div><div class="exec-sub">รองอธิบดี 3 ตำแหน่ง · กำกับสายงาน</div></div></div><div class="exec-stats"><div class="exec-stat"><div class="exec-stat-v">3</div><div class="exec-stat-l">รองอธิบดี</div></div><div class="exec-stat"><div class="exec-stat-v">22</div><div class="exec-stat-l">สำนัก/กอง</div></div></div><div class="exec-footer"><span class="exec-link deputy">🔗 เข้าสู่ระบบ →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div></a>
+      <a href="/moac-deputy.html?dept=CPD" class="exec-card deputy" data-level="deputy" data-name="รองอธิบดี กสส."><div class="exec-top"><div class="exec-logo" style="font-size:9px">รอง<br>กสส.</div><div class="exec-title-wrap"><div class="exec-role deputy">รองอธิบดี</div><div class="exec-name">รองอธิบดีกรมส่งเสริมสหกรณ์</div><div class="exec-sub">2 ตำแหน่ง · ส่งเสริม + กำกับ</div></div></div><div class="exec-stats"><div class="exec-stat"><div class="exec-stat-v">2</div><div class="exec-stat-l">รองอธิบดี</div></div><div class="exec-stat"><div class="exec-stat-v">12</div><div class="exec-stat-l">กอง</div></div></div><div class="exec-footer"><span class="exec-link deputy">🔗 เข้าสู่ระบบ →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div></a>
+      <a href="/moac-deputy.html?dept=DLD" class="exec-card deputy" data-level="deputy" data-name="รองอธิบดี ปศ."><div class="exec-top"><div class="exec-logo" style="font-size:9px">รอง<br>ปศ.</div><div class="exec-title-wrap"><div class="exec-role deputy">รองอธิบดี</div><div class="exec-name">รองอธิบดีกรมปศุสัตว์</div><div class="exec-sub">3 ตำแหน่ง · สัตว์ใหญ่/เล็ก/ควบคุมโรค</div></div></div><div class="exec-stats"><div class="exec-stat"><div class="exec-stat-v">3</div><div class="exec-stat-l">รองอธิบดี</div></div><div class="exec-stat"><div class="exec-stat-v">18</div><div class="exec-stat-l">กอง/สำนัก</div></div></div><div class="exec-footer"><span class="exec-link deputy">🔗 เข้าสู่ระบบ →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div></a>
+      <a href="/moac-deputy.html?dept=DOF" class="exec-card deputy" data-level="deputy" data-name="รองอธิบดี ปม."><div class="exec-top"><div class="exec-logo" style="font-size:9px">รอง<br>ปม.</div><div class="exec-title-wrap"><div class="exec-role deputy">รองอธิบดี</div><div class="exec-name">รองอธิบดีกรมประมง</div><div class="exec-sub">2 ตำแหน่ง · น้ำจืด/ทะเล + IUU</div></div></div><div class="exec-stats"><div class="exec-stat"><div class="exec-stat-v">2</div><div class="exec-stat-l">รองอธิบดี</div></div><div class="exec-stat"><div class="exec-stat-v">14</div><div class="exec-stat-l">กอง</div></div></div><div class="exec-footer"><span class="exec-link deputy">🔗 เข้าสู่ระบบ →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div></a>
+      <a href="/moac-deputy.html?dept=RD" class="exec-card deputy" data-level="deputy" data-name="รองอธิบดี กข."><div class="exec-top"><div class="exec-logo" style="font-size:9px">รอง<br>กข.</div><div class="exec-title-wrap"><div class="exec-role deputy">รองอธิบดี</div><div class="exec-name">รองอธิบดีกรมการข้าว</div><div class="exec-sub">2 ตำแหน่ง · วิจัย + เมล็ดพันธุ์</div></div></div><div class="exec-stats"><div class="exec-stat"><div class="exec-stat-v">2</div><div class="exec-stat-l">รองอธิบดี</div></div><div class="exec-stat"><div class="exec-stat-v">9</div><div class="exec-stat-l">ศูนย์วิจัย</div></div></div><div class="exec-footer"><span class="exec-link deputy">🔗 เข้าสู่ระบบ →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div></a>
+      <a href="/moac-deputy.html?dept=DOA" class="exec-card deputy" data-level="deputy" data-name="รองอธิบดี กวก."><div class="exec-top"><div class="exec-logo" style="font-size:9px">รอง<br>กวก.</div><div class="exec-title-wrap"><div class="exec-role deputy">รองอธิบดี</div><div class="exec-name">รองอธิบดีกรมวิชาการเกษตร</div><div class="exec-sub">3 ตำแหน่ง · วิจัย + กำกับมาตรฐาน</div></div></div><div class="exec-stats"><div class="exec-stat"><div class="exec-stat-v">3</div><div class="exec-stat-l">รองอธิบดี</div></div><div class="exec-stat"><div class="exec-stat-v">28</div><div class="exec-stat-l">ศูนย์/สถานี</div></div></div><div class="exec-footer"><span class="exec-link deputy">🔗 เข้าสู่ระบบ →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div></a>
+      <a href="/moac-deputy.html?dept=LDD" class="exec-card deputy" data-level="deputy" data-name="รองอธิบดี พด."><div class="exec-top"><div class="exec-logo" style="font-size:9px">รอง<br>พด.</div><div class="exec-title-wrap"><div class="exec-role deputy">รองอธิบดี</div><div class="exec-name">รองอธิบดีกรมพัฒนาที่ดิน</div><div class="exec-sub">2 ตำแหน่ง · วิเคราะห์ดิน + อนุรักษ์</div></div></div><div class="exec-stats"><div class="exec-stat"><div class="exec-stat-v">2</div><div class="exec-stat-l">รองอธิบดี</div></div><div class="exec-stat"><div class="exec-stat-v">76</div><div class="exec-stat-l">สถานี</div></div></div><div class="exec-footer"><span class="exec-link deputy">🔗 เข้าสู่ระบบ →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div></a>
+      <a href="/moac-deputy.html?dept=RID" class="exec-card deputy" data-level="deputy" data-name="รองอธิบดี ชป."><div class="exec-top"><div class="exec-logo" style="font-size:9px">รอง<br>ชป.</div><div class="exec-title-wrap"><div class="exec-role deputy">รองอธิบดี</div><div class="exec-name">รองอธิบดีกรมชลประทาน</div><div class="exec-sub">4 ตำแหน่ง · ก่อสร้าง/ส่งน้ำ/วิชาการ/บริหาร</div></div></div><div class="exec-stats"><div class="exec-stat"><div class="exec-stat-v">4</div><div class="exec-stat-l">รองอธิบดี</div></div><div class="exec-stat"><div class="exec-stat-v">76</div><div class="exec-stat-l">โครงการ</div></div></div><div class="exec-footer"><span class="exec-link deputy">🔗 เข้าสู่ระบบ →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div></a>
+      <a href="/moac-deputy.html?dept=ALRO" class="exec-card deputy" data-level="deputy" data-name="รองเลขาฯ ส.ป.ก."><div class="exec-top"><div class="exec-logo" style="font-size:9px">รอง<br>ส.ป.ก.</div><div class="exec-title-wrap"><div class="exec-role deputy">รองเลขาธิการ</div><div class="exec-name">รองเลขาธิการ ส.ป.ก.</div><div class="exec-sub">2 ตำแหน่ง · จัดที่ดิน + บริหาร</div></div></div><div class="exec-stats"><div class="exec-stat"><div class="exec-stat-v">2</div><div class="exec-stat-l">รองเลขาฯ</div></div><div class="exec-stat"><div class="exec-stat-v">70</div><div class="exec-stat-l">สำนักงาน จว.</div></div></div><div class="exec-footer"><span class="exec-link deputy">🔗 เข้าสู่ระบบ →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div></a>
+      <a href="/moac-deputy.html?dept=RAOT" class="exec-card deputy" data-level="deputy" data-name="รองผู้ว่าฯ กยท."><div class="exec-top"><div class="exec-logo" style="font-size:9px">รอง<br>กยท.</div><div class="exec-title-wrap"><div class="exec-role deputy">รองผู้ว่าการ</div><div class="exec-name">รองผู้ว่าการ กยท.</div><div class="exec-sub">3 ตำแหน่ง · ส่งเสริม/แปรรูป/บริหาร</div></div></div><div class="exec-stats"><div class="exec-stat"><div class="exec-stat-v">3</div><div class="exec-stat-l">รองผู้ว่าฯ</div></div><div class="exec-stat"><div class="exec-stat-v">19</div><div class="exec-stat-l">จว.ยางหลัก</div></div></div><div class="exec-footer"><span class="exec-link deputy">🔗 เข้าสู่ระบบ →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div></a>
+      <a href="/moac-deputy.html?dept=OAE" class="exec-card deputy" data-level="deputy" data-name="รองเลขาฯ สศก."><div class="exec-top"><div class="exec-logo" style="font-size:9px">รอง<br>สศก.</div><div class="exec-title-wrap"><div class="exec-role deputy">รองเลขาธิการ</div><div class="exec-name">รองเลขาธิการ สศก.</div><div class="exec-sub">2 ตำแหน่ง · วิเคราะห์ + วิจัย</div></div></div><div class="exec-stats"><div class="exec-stat"><div class="exec-stat-v">2</div><div class="exec-stat-l">รองเลขาฯ</div></div><div class="exec-stat"><div class="exec-stat-v">12</div><div class="exec-stat-l">เขต</div></div></div><div class="exec-footer"><span class="exec-link deputy">🔗 เข้าสู่ระบบ →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div></a>
+      <a href="/moac-deputy.html?dept=ACFS" class="exec-card deputy" data-level="deputy" data-name="รองเลขาฯ มกอช."><div class="exec-top"><div class="exec-logo" style="font-size:9px">รอง<br>มกอช.</div><div class="exec-title-wrap"><div class="exec-role deputy">รองเลขาธิการ</div><div class="exec-name">รองเลขาธิการ มกอช.</div><div class="exec-sub">2 ตำแหน่ง · กำหนดมาตรฐาน + รับรอง</div></div></div><div class="exec-stats"><div class="exec-stat"><div class="exec-stat-v">2</div><div class="exec-stat-l">รองเลขาฯ</div></div><div class="exec-stat"><div class="exec-stat-v">165K</div><div class="exec-stat-l">ฟาร์ม GAP</div></div></div><div class="exec-footer"><span class="exec-link deputy">🔗 เข้าสู่ระบบ →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div></a>
+      <a href="/moac-deputy.html?dept=CAD" class="exec-card deputy" data-level="deputy" data-name="รองอธิบดี กตส."><div class="exec-top"><div class="exec-logo" style="font-size:9px">รอง<br>กตส.</div><div class="exec-title-wrap"><div class="exec-role deputy">รองอธิบดี</div><div class="exec-name">รองอธิบดีกรมตรวจบัญชีสหกรณ์</div><div class="exec-sub">2 ตำแหน่ง · ตรวจสอบ + วิชาการ</div></div></div><div class="exec-stats"><div class="exec-stat"><div class="exec-stat-v">2</div><div class="exec-stat-l">รองอธิบดี</div></div><div class="exec-stat"><div class="exec-stat-v">76</div><div class="exec-stat-l">สำนักงาน</div></div></div><div class="exec-footer"><span class="exec-link deputy">🔗 เข้าสู่ระบบ →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div></a>
+      <a href="/moac-deputy.html?dept=QSDS" class="exec-card deputy" data-level="deputy" data-name="รองอธิบดี มม."><div class="exec-top"><div class="exec-logo" style="font-size:9px">รอง<br>มม.</div><div class="exec-title-wrap"><div class="exec-role deputy">รองอธิบดี</div><div class="exec-name">รองอธิบดีกรมหม่อนไหม</div><div class="exec-sub">1 ตำแหน่ง</div></div></div><div class="exec-stats"><div class="exec-stat"><div class="exec-stat-v">1</div><div class="exec-stat-l">รองอธิบดี</div></div><div class="exec-stat"><div class="exec-stat-v">24</div><div class="exec-stat-l">ศูนย์หม่อน</div></div></div><div class="exec-footer"><span class="exec-link deputy">🔗 เข้าสู่ระบบ →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div></a>
+      <a href="/moac-deputy.html?dept=OPS" class="exec-card deputy" data-level="deputy" data-name="รองปลัดกระทรวง"><div class="exec-top"><div class="exec-logo" style="font-size:9px">รอง<br>สป.</div><div class="exec-title-wrap"><div class="exec-role deputy">รองปลัดกระทรวง</div><div class="exec-name">รองปลัด กษ. 3 ตำแหน่ง</div><div class="exec-sub">พืช/สัตว์น้ำ · ที่ดิน-น้ำ · บริหาร</div></div></div><div class="exec-stats"><div class="exec-stat"><div class="exec-stat-v">3</div><div class="exec-stat-l">รองปลัด</div></div><div class="exec-stat"><div class="exec-stat-v">15</div><div class="exec-stat-l">กรมในกำกับ</div></div></div><div class="exec-footer"><span class="exec-link deputy">🔗 เข้าสู่ระบบ →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div></a>
+    </div>
+  </div>
+
+  <!-- LEVEL 4: เจ้าหน้าที่ระดับปฏิบัติ -->
+  <div class="level-section" id="sec-staff" data-level="staff">
+    <div class="level-hdr">
+      <div class="level-badge lvl-staff">4</div>
+      <div class="level-hdr-text">เจ้าหน้าที่ระดับปฏิบัติ (ตัวอย่าง 15 บทบาท)</div>
+      <div class="level-hdr-sub">— ผอ.สำนัก · เกษตรจังหวัด · ผอ.ศูนย์ · นักวิชาการ</div>
+    </div>
+    <div class="exec-grid">
+      <a href="/moac-staff.html?role=agri-prov" class="exec-card staff" data-level="staff" data-name="เกษตรจังหวัด"><div class="exec-top"><div class="exec-logo">เกษตร<br>จว.</div><div class="exec-title-wrap"><div class="exec-role staff">เกษตรจังหวัด</div><div class="exec-name">เกษตรจังหวัด (76 จว.)</div><div class="exec-sub">หัวหน้าสำนักงานเกษตรจังหวัด</div></div></div><div class="exec-stats"><div class="exec-stat"><div class="exec-stat-v">76</div><div class="exec-stat-l">จังหวัด</div></div><div class="exec-stat"><div class="exec-stat-v">8.2M</div><div class="exec-stat-l">เกษตรกร</div></div></div><div class="exec-footer"><span class="exec-link staff">🔗 เข้าสู่ระบบ →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div></a>
+      <a href="/moac-staff.html?role=agri-dist" class="exec-card staff" data-level="staff" data-name="เกษตรอำเภอ"><div class="exec-top"><div class="exec-logo">เกษตร<br>อำเภอ</div><div class="exec-title-wrap"><div class="exec-role staff">เกษตรอำเภอ</div><div class="exec-name">เกษตรอำเภอ (882 อำเภอ)</div><div class="exec-sub">หัวหน้าสำนักงานเกษตรอำเภอ</div></div></div><div class="exec-stats"><div class="exec-stat"><div class="exec-stat-v">882</div><div class="exec-stat-l">อำเภอ</div></div><div class="exec-stat"><div class="exec-stat-v">3.2K</div><div class="exec-stat-l">นักส่งเสริม</div></div></div><div class="exec-footer"><span class="exec-link staff">🔗 เข้าสู่ระบบ →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div></a>
+      <a href="/moac-staff.html?role=spk" class="exec-card staff" data-level="staff" data-name="ผอ.ศพก."><div class="exec-top"><div class="exec-logo" style="font-size:9px">ผอ.<br>ศพก.</div><div class="exec-title-wrap"><div class="exec-role staff">ผอ.ศพก.</div><div class="exec-name">ผอ.ศูนย์เรียนรู้ ศพก.</div><div class="exec-sub">882 ศพก. · ศูนย์การเรียนรู้</div></div></div><div class="exec-stats"><div class="exec-stat"><div class="exec-stat-v">882</div><div class="exec-stat-l">ศพก.</div></div><div class="exec-stat"><div class="exec-stat-v">220K</div><div class="exec-stat-l">Smart Farmer</div></div></div><div class="exec-footer"><span class="exec-link staff">🔗 เข้าสู่ระบบ →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div></a>
+      <a href="/moac-staff.html?role=vet" class="exec-card staff" data-level="staff" data-name="ปศุสัตว์จังหวัด"><div class="exec-top"><div class="exec-logo" style="font-size:9px">ปศจ.</div><div class="exec-title-wrap"><div class="exec-role staff">ปศุสัตว์จังหวัด</div><div class="exec-name">ปศุสัตว์จังหวัด</div><div class="exec-sub">76 จว. · ควบคุมโรคระบาดสัตว์</div></div></div><div class="exec-stats"><div class="exec-stat"><div class="exec-stat-v">76</div><div class="exec-stat-l">จังหวัด</div></div><div class="exec-stat"><div class="exec-stat-v">4.8K</div><div class="exec-stat-l">จนท.</div></div></div><div class="exec-footer"><span class="exec-link staff">🔗 เข้าสู่ระบบ →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div></a>
+      <a href="/moac-staff.html?role=fish-prov" class="exec-card staff" data-level="staff" data-name="ประมงจังหวัด"><div class="exec-top"><div class="exec-logo" style="font-size:9px">ปมจ.</div><div class="exec-title-wrap"><div class="exec-role staff">ประมงจังหวัด</div><div class="exec-name">ประมงจังหวัด</div><div class="exec-sub">76 จว. · ประมงน้ำจืด-ทะเล</div></div></div><div class="exec-stats"><div class="exec-stat"><div class="exec-stat-v">76</div><div class="exec-stat-l">จังหวัด</div></div><div class="exec-stat"><div class="exec-stat-v">2.8K</div><div class="exec-stat-l">จนท.</div></div></div><div class="exec-footer"><span class="exec-link staff">🔗 เข้าสู่ระบบ →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div></a>
+      <a href="/moac-staff.html?role=ldd-prov" class="exec-card staff" data-level="staff" data-name="หัวหน้า สพด."><div class="exec-top"><div class="exec-logo" style="font-size:9px">สพด.</div><div class="exec-title-wrap"><div class="exec-role staff">ผอ. สพด.</div><div class="exec-name">ผอ.สถานีพัฒนาที่ดิน</div><div class="exec-sub">76 สพด. · วิเคราะห์ดินรายตำบล</div></div></div><div class="exec-stats"><div class="exec-stat"><div class="exec-stat-v">76</div><div class="exec-stat-l">สถานี</div></div><div class="exec-stat"><div class="exec-stat-v">2.6K</div><div class="exec-stat-l">นักวิชาการดิน</div></div></div><div class="exec-footer"><span class="exec-link staff">🔗 เข้าสู่ระบบ →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div></a>
+      <a href="/moac-staff.html?role=rid-prov" class="exec-card staff" data-level="staff" data-name="ผอ.โครงการชลประทาน"><div class="exec-top"><div class="exec-logo" style="font-size:9px">ชป.จว.</div><div class="exec-title-wrap"><div class="exec-role staff">ผอ.โครงการชลประทาน</div><div class="exec-name">ผอ.โครงการชลประทาน 76 จว.</div><div class="exec-sub">บริหารน้ำ · เขื่อน · อ่าง · คลอง</div></div></div><div class="exec-stats"><div class="exec-stat"><div class="exec-stat-v">76</div><div class="exec-stat-l">โครงการ</div></div><div class="exec-stat"><div class="exec-stat-v">11K</div><div class="exec-stat-l">จนท.</div></div></div><div class="exec-footer"><span class="exec-link staff">🔗 เข้าสู่ระบบ →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div></a>
+      <a href="/moac-staff.html?role=spk-prov" class="exec-card staff" data-level="staff" data-name="ปฏิรูปที่ดิน จว."><div class="exec-top"><div class="exec-logo" style="font-size:9px">ส.ป.ก.จว.</div><div class="exec-title-wrap"><div class="exec-role staff">ผอ. ส.ป.ก.จังหวัด</div><div class="exec-name">ผอ.สำนักงาน ส.ป.ก.จังหวัด</div><div class="exec-sub">70 จว. · ส.ป.ก. 4-01</div></div></div><div class="exec-stats"><div class="exec-stat"><div class="exec-stat-v">70</div><div class="exec-stat-l">จังหวัด</div></div><div class="exec-stat"><div class="exec-stat-v">36M</div><div class="exec-stat-l">ไร่ ส.ป.ก.</div></div></div><div class="exec-footer"><span class="exec-link staff">🔗 เข้าสู่ระบบ →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div></a>
+      <a href="/moac-staff.html?role=coop-prov" class="exec-card staff" data-level="staff" data-name="ผอ.สหกรณ์จังหวัด"><div class="exec-top"><div class="exec-logo" style="font-size:9px">สหกรณ์<br>จว.</div><div class="exec-title-wrap"><div class="exec-role staff">ผอ.สหกรณ์จังหวัด</div><div class="exec-name">ผอ.สำนักงานสหกรณ์จังหวัด</div><div class="exec-sub">76 จว. · 7,200 สหกรณ์</div></div></div><div class="exec-stats"><div class="exec-stat"><div class="exec-stat-v">76</div><div class="exec-stat-l">จังหวัด</div></div><div class="exec-stat"><div class="exec-stat-v">7.2K</div><div class="exec-stat-l">สหกรณ์</div></div></div><div class="exec-footer"><span class="exec-link staff">🔗 เข้าสู่ระบบ →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div></a>
+      <a href="/moac-staff.html?role=rice-ctr" class="exec-card staff" data-level="staff" data-name="ผอ.ศูนย์วิจัยข้าว"><div class="exec-top"><div class="exec-logo" style="font-size:9px">ศวข.</div><div class="exec-title-wrap"><div class="exec-role staff">ผอ.ศูนย์วิจัยข้าว</div><div class="exec-name">ผอ.ศูนย์วิจัย/เมล็ดพันธุ์ข้าว</div><div class="exec-sub">28 ศูนย์ · พันธุ์ข้าว GAP/GI</div></div></div><div class="exec-stats"><div class="exec-stat"><div class="exec-stat-v">28</div><div class="exec-stat-l">ศูนย์</div></div><div class="exec-stat"><div class="exec-stat-v">2.1K</div><div class="exec-stat-l">นักวิจัย</div></div></div><div class="exec-footer"><span class="exec-link staff">🔗 เข้าสู่ระบบ →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div></a>
+      <a href="/moac-staff.html?role=acfs-officer" class="exec-card staff" data-level="staff" data-name="นักวิชาการมาตรฐาน"><div class="exec-top"><div class="exec-logo" style="font-size:9px">มกอช.<br>นว.</div><div class="exec-title-wrap"><div class="exec-role staff">นักวิชาการมาตรฐาน</div><div class="exec-name">นักวิชาการมาตรฐานสินค้าเกษตร</div><div class="exec-sub">รับรอง GAP/Organic/GMP</div></div></div><div class="exec-stats"><div class="exec-stat"><div class="exec-stat-v">480</div><div class="exec-stat-l">นักวิชาการ</div></div><div class="exec-stat"><div class="exec-stat-v">165K</div><div class="exec-stat-l">ฟาร์ม GAP</div></div></div><div class="exec-footer"><span class="exec-link staff">🔗 เข้าสู่ระบบ →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div></a>
+      <a href="/moac-staff.html?role=oae-analyst" class="exec-card staff" data-level="staff" data-name="นักเศรษฐศาสตร์เกษตร"><div class="exec-top"><div class="exec-logo" style="font-size:9px">สศก.<br>นวเ.</div><div class="exec-title-wrap"><div class="exec-role staff">นักวิเคราะห์ราคา</div><div class="exec-name">นักวิเคราะห์ราคาและพยากรณ์</div><div class="exec-sub">สศก. · ราคาสินค้าเกษตร 12 เขต</div></div></div><div class="exec-stats"><div class="exec-stat"><div class="exec-stat-v">12</div><div class="exec-stat-l">เขต</div></div><div class="exec-stat"><div class="exec-stat-v">820</div><div class="exec-stat-l">นักวิชาการ</div></div></div><div class="exec-footer"><span class="exec-link staff">🔗 เข้าสู่ระบบ →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div></a>
+      <a href="/moac-staff.html?role=raot-ctr" class="exec-card staff" data-level="staff" data-name="ผอ.กยท.จังหวัด"><div class="exec-top"><div class="exec-logo" style="font-size:9px">กยท.<br>จว.</div><div class="exec-title-wrap"><div class="exec-role staff">ผอ.กยท.จังหวัด</div><div class="exec-name">ผอ.การยางแห่งประเทศไทย จว.</div><div class="exec-sub">19 จว.ยาง · รับซื้อ-แปรรูป</div></div></div><div class="exec-stats"><div class="exec-stat"><div class="exec-stat-v">19</div><div class="exec-stat-l">จว.ยาง</div></div><div class="exec-stat"><div class="exec-stat-v">1.5M</div><div class="exec-stat-l">ครัวเรือนยาง</div></div></div><div class="exec-footer"><span class="exec-link staff">🔗 เข้าสู่ระบบ →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div></a>
+      <a href="/moac-staff.html?role=qsds-ctr" class="exec-card staff" data-level="staff" data-name="ผอ.ศูนย์หม่อนไหม"><div class="exec-top"><div class="exec-logo" style="font-size:9px">มม.<br>ศูนย์</div><div class="exec-title-wrap"><div class="exec-role staff">ผอ.ศูนย์หม่อนไหม</div><div class="exec-name">ผอ.ศูนย์หม่อนไหมเฉลิมพระเกียรติฯ</div><div class="exec-sub">24 ศูนย์ · ผ้าไหมไทย</div></div></div><div class="exec-stats"><div class="exec-stat"><div class="exec-stat-v">24</div><div class="exec-stat-l">ศูนย์</div></div><div class="exec-stat"><div class="exec-stat-v">120K</div><div class="exec-stat-l">ครัวเรือน</div></div></div><div class="exec-footer"><span class="exec-link staff">🔗 เข้าสู่ระบบ →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div></a>
+      <a href="/moac-staff.html?role=g2g-coord" class="exec-card staff" data-level="staff" data-name="G2G AgriTech Coordinator"><div class="exec-top"><div class="exec-logo" style="background:linear-gradient(135deg,#8a6d1f,#c9a227);font-size:9px">G2G<br>AgriTech</div><div class="exec-title-wrap"><div class="exec-role staff">G2G AgriTech ผู้ประสาน</div><div class="exec-name">ผู้ประสาน G2G AgriTech 76 จว.</div><div class="exec-sub">นำร่อง: แพร่/เชียงราย/อุดรธานี</div></div></div><div class="exec-stats"><div class="exec-stat"><div class="exec-stat-v">3</div><div class="exec-stat-l">จว.นำร่อง</div></div><div class="exec-stat"><div class="exec-stat-v">5M</div><div class="exec-stat-l">เป้าหมาย</div></div></div><div class="exec-footer"><span class="exec-link staff">🔗 เข้าสู่ระบบ →</span><span class="exec-status"><span class="dot-g"></span>ออนไลน์</span></div></a>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  ศูนย์บริหาร กระทรวงเกษตรและสหกรณ์ · G2G AgriTech © 2026 · พัฒนาโดย G2G Gov2Global · <a href="/platform-overview.html" style="color:var(--p1)">ภาพรวมระบบ</a>
+</div>
+
+<script>
+var currentFilter = 'all';
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  applyFilter();
+}
+function filterCards() { applyFilter(); }
+function applyFilter() {
+  var q = document.getElementById('searchInp').value.toLowerCase();
+  document.querySelectorAll('.exec-card').forEach(function(card){
+    var level = card.dataset.level || '';
+    var name = (card.dataset.name || card.textContent).toLowerCase();
+    var levelOk = (currentFilter === 'all') || (level === currentFilter);
+    var searchOk = !q || name.includes(q);
+    card.style.display = (levelOk && searchOk) ? '' : 'none';
+  });
+  document.querySelectorAll('.level-section').forEach(function(sec){
+    var lvl = sec.dataset.level || '';
+    if (currentFilter === 'all' || lvl === currentFilter) {
+      sec.style.display = '';
+    } else { sec.style.display = 'none'; }
+    if (q) sec.style.display = '';
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ระบบบริหารงานเกษตร — กรมส่งเสริมการเกษตร</title>
+  <style>
+    :root {
+      --gov-blue: #2d7a2d;
+      --gov-blue-dark: #1a5c1a;
+      --gov-blue-light: #3d9a3d;
+      --gov-green: #1f7a4d;
+      --gov-green-light: #27a263;
+      --gov-gold: #c8991e;
+      --bg: #f0f4f8;
+      --card: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --shadow: 0 2px 8px rgba(26,79,138,0.10);
+      --radius: 10px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Sarabun', 'Noto Sans Thai', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; }
+
+    /* ─── Header ──────────────────────────────── */
+    .header {
+      background: linear-gradient(135deg, var(--gov-blue-dark) 0%, var(--gov-blue) 60%, var(--gov-blue-light) 100%);
+      color: #fff;
+      padding: 0;
+    }
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px 32px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+    }
+    .header-logo {
+      width: 64px;
+      height: 64px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      flex-shrink: 0;
+    }
+    .header-titles { flex: 1; }
+    .header-ministry {
+      font-size: 12px;
+      opacity: 0.80;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .header-agency {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin: 2px 0;
+    }
+    .header-dept {
+      font-size: 13px;
+      opacity: 0.85;
+    }
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .btn {
+      padding: 8px 18px;
+      border-radius: 6px;
+      border: none;
+      font-size: 13px;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 600;
+      transition: opacity 0.15s;
+    }
+    .btn:hover:not(:disabled) { opacity: 0.85; }
+    .btn-outline-white {
+      background: transparent;
+      border: 1.5px solid rgba(255,255,255,0.6);
+      color: #fff;
+    }
+    .btn-white {
+      background: #fff;
+      color: var(--gov-blue);
+    }
+
+    /* ─── Nav Tabs ────────────────────────────── */
+    .nav-tabs {
+      display: flex;
+      gap: 4px;
+      padding: 12px 32px 0;
+      overflow-x: auto;
+    }
+    .nav-tab {
+      padding: 10px 22px;
+      border-radius: 8px 8px 0 0;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      background: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.75);
+      border: none;
+      white-space: nowrap;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .nav-tab:hover { background: rgba(255,255,255,0.20); color: #fff; }
+    .nav-tab.active { background: var(--bg); color: var(--gov-blue); }
+
+    /* ─── Main Content ────────────────────────── */
+    .main { padding: 24px 32px 40px; max-width: 1280px; margin: 0 auto; }
+
+    /* ─── Access Control Banner ───────────────── */
+    .access-banner {
+      border: 2px dashed #94a3b8;
+      padding: 16px;
+      border-radius: 8px;
+      text-align: center;
+      margin-bottom: 20px;
+      background: #f8fafc;
+    }
+    .access-banner p { margin: 4px 0; color: #64748b; }
+    .access-banner small { color: #94a3b8; }
+
+    /* ─── KPI Cards ───────────────────────────── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .kpi-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      border-left: 4px solid var(--gov-blue);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .kpi-card.green  { border-left-color: var(--gov-green); }
+    .kpi-card.gold   { border-left-color: var(--gov-gold); }
+    .kpi-card.purple { border-left-color: #7c3aed; }
+    .kpi-icon { font-size: 32px; line-height: 1; }
+    .kpi-number { font-size: 28px; font-weight: 800; color: var(--gov-blue); line-height: 1; }
+    .kpi-card.green  .kpi-number { color: var(--gov-green); }
+    .kpi-card.gold   .kpi-number { color: #b07d10; }
+    .kpi-card.purple .kpi-number { color: #7c3aed; }
+    .kpi-label { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+
+    /* ─── Tab Content ─────────────────────────── */
+    .tab-section { display: none; }
+    .tab-section.active { display: block; }
+
+    /* ─── Table ───────────────────────────────── */
+    .table-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .table-card-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .table-card-title { font-weight: 700; font-size: 16px; color: var(--gov-blue); }
+    .badge {
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .badge-blue { background: #dbeafe; color: var(--gov-blue); }
+    .badge-green { background: #d1fae5; color: var(--gov-green); }
+    .badge-gold { background: #fef3c7; color: #92400e; }
+    .badge-gray { background: #f1f5f9; color: #64748b; }
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      background: #f8fafc;
+      padding: 11px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    td {
+      padding: 12px 14px;
+      font-size: 13.5px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f8fafc; }
+
+    /* ─── Progress Bar ────────────────────────── */
+    .progress-wrap { display: flex; align-items: center; gap: 8px; min-width: 140px; }
+    .progress-bar-bg { flex: 1; height: 8px; background: #e2e8f0; border-radius: 99px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; border-radius: 99px; background: var(--gov-green); transition: width 0.5s; }
+    .progress-bar-fill.orange { background: #f59e0b; }
+    .progress-bar-fill.red { background: #ef4444; }
+    .progress-pct { font-size: 12px; font-weight: 700; min-width: 34px; text-align: right; }
+
+    /* ─── Budget Chart ────────────────────────── */
+    .budget-section { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+    @media (max-width: 680px) { .budget-section { grid-template-columns: 1fr; } }
+    .budget-breakdown { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; }
+    .budget-breakdown h3 { font-size: 14px; font-weight: 700; color: var(--gov-blue); margin-bottom: 14px; }
+    .budget-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .budget-row-label { font-size: 13px; color: var(--text-muted); }
+    .budget-row-val { font-size: 13px; font-weight: 700; }
+    .budget-bar-row { margin-bottom: 14px; }
+    .budget-bar-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; color: var(--text-muted); }
+    .bbar { height: 10px; background: #e2e8f0; border-radius: 99px; overflow: hidden; }
+    .bbar-fill { height: 100%; border-radius: 99px; }
+
+    /* ─── Modal ───────────────────────────────── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: #fff;
+      border-radius: 12px;
+      padding: 28px;
+      width: 480px;
+      max-width: 95vw;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    }
+    .modal h2 { font-size: 18px; color: var(--gov-blue); margin-bottom: 18px; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 5px; }
+    .form-group select,
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .form-group select:focus,
+    .form-group input:focus,
+    .form-group textarea:focus { border-color: var(--gov-blue); }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+    .btn-primary { background: var(--gov-blue); color: #fff; }
+    .btn-secondary { background: var(--border); color: var(--text); }
+
+    /* ─── Loading / Error ─────────────────────── */
+    .loading { text-align: center; padding: 60px; color: var(--text-muted); font-size: 16px; }
+    .loading-spinner {
+      width: 40px; height: 40px;
+      border: 4px solid var(--border);
+      border-top-color: var(--gov-blue);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .empty { text-align: center; padding: 40px; color: var(--text-muted); font-size: 14px; }
+
+    /* ─── Back link ───────────────────────────── */
+    .back-link { font-size: 13px; color: rgba(255,255,255,0.75); text-decoration: none; display: flex; align-items: center; gap: 5px; }
+    .back-link:hover { color: #fff; }
+
+    /* ─── Responsive ──────────────────────────── */
+    @media (max-width: 640px) {
+      .header-top { padding: 16px; gap: 12px; }
+      .header-agency { font-size: 17px; }
+      .nav-tabs { padding: 10px 16px 0; }
+      .main { padding: 16px; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<header class="header">
+  <div class="header-top">
+    <a href="/kst-agencies.html" class="back-link">&#8592; รายชื่อหน่วยงาน</a>
+    <div class="header-logo" id="agencyIcon">🌾</div>
+    <div class="header-titles">
+      <div class="header-ministry" id="ministryName">กรมส่งเสริมการเกษตร — กระทรวงเกษตรและสหกรณ์</div>
+      <div class="header-agency" id="agencyName">ระบบบริหารงานเกษตร — กำลังโหลด...</div>
+      <div class="header-dept" id="deptName"></div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-outline-white" onclick="openPersonalAI()" style="background:rgba(200,164,0,0.25);border-color:rgba(200,164,0,0.8);font-weight:700;">
+        🤖 AI ประจำตำแหน่งของฉัน
+      </button>
+      <button class="btn btn-outline-white" onclick="openDataRequest()" style="position:relative">
+        ขอข้อมูลจากหน่วยงาน
+        <span id="pendingBadge" style="display:none;position:absolute;top:-8px;right:-8px;background:#ef4444;color:#fff;border-radius:50%;width:20px;height:20px;font-size:11px;font-weight:700;line-height:20px;text-align:center"></span>
+      </button>
+      <button class="btn btn-white" onclick="window.location.href='/management.html'">ภาพรวมจังหวัด</button>
+    </div>
+  </div>
+  <nav class="nav-tabs">
+    <button class="nav-tab active" onclick="switchTab('personnel', this)">👤 คน</button>
+    <button class="nav-tab" onclick="switchTab('budget', this)">💰 เงิน</button>
+    <button class="nav-tab" onclick="switchTab('projects', this)">📋 งาน</button>
+    <button class="nav-tab" onclick="switchTab('contracts', this)">📄 สัญญา</button>
+    <button class="nav-tab" onclick="switchTab('integration', this)">🔗 บูรณาการ</button>
+  </nav>
+</header>
+
+<!-- ═══ MAIN ═══ -->
+<main class="main">
+
+  <!-- Access Control Banner -->
+  <div class="access-banner">
+    <span style="font-size:20px">🔐</span>
+    <p>ระบบควบคุมการเข้าถึงตามสายบังคับบัญชา</p>
+    <small>(จะเปิดใช้งานเมื่อระบบพร้อม)</small><br>
+    <button disabled style="margin-top:8px;opacity:0.5;padding:6px 16px;border-radius:6px;border:1px solid #cbd5e1;cursor:not-allowed;font-family:inherit;">
+      เข้าสู่ระบบ
+    </button>
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="kpi-grid" id="kpiGrid">
+    <div class="kpi-card">
+      <div class="kpi-icon">👥</div>
+      <div>
+        <div class="kpi-number" id="kpiPersonnel">—</div>
+        <div class="kpi-label">จำนวนบุคลากร</div>
+      </div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-icon">💵</div>
+      <div>
+        <div class="kpi-number" id="kpiBudget">—</div>
+        <div class="kpi-label">งบประมาณรวม (ล้านบาท)</div>
+      </div>
+    </div>
+    <div class="kpi-card gold">
+      <div class="kpi-icon">📌</div>
+      <div>
+        <div class="kpi-number" id="kpiProjects">—</div>
+        <div class="kpi-label">โครงการทั้งหมด</div>
+      </div>
+    </div>
+    <div class="kpi-card purple">
+      <div class="kpi-icon">📝</div>
+      <div>
+        <div class="kpi-number" id="kpiContracts">—</div>
+        <div class="kpi-label">สัญญาจ้างเหมา</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── TAB: PERSONNEL ─── -->
+  <section class="tab-section active" id="tab-personnel">
+    <div class="table-card">
+      <div class="table-card-header">
+        <span class="table-card-title">บุคลากร</span>
+        <span class="badge badge-blue" id="badgePersonnel">0 คน</span>
+      </div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead>
+            <tr>
+              <th>ชื่อ-สกุล</th>
+              <th>ตำแหน่ง</th>
+              <th>ระดับ</th>
+              <th>ประเภท</th>
+              <th>อำเภอ</th>
+              <th>เบอร์โทร</th>
+              <th>สถานะ</th>
+            </tr>
+          </thead>
+          <tbody id="personnelBody">
+            <tr><td colspan="7" class="loading"><div class="loading-spinner"></div>กำลังโหลด...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── TAB: BUDGET ─── -->
+  <section class="tab-section" id="tab-budget">
+    <div id="budgetContent">
+      <div class="loading"><div class="loading-spinner"></div>กำลังโหลด...</div>
+    </div>
+  </section>
+
+  <!-- ─── TAB: PROJECTS ─── -->
+  <section class="tab-section" id="tab-projects">
+    <div class="table-card">
+      <div class="table-card-header">
+        <span class="table-card-title">โครงการ ปีงบประมาณ 2568</span>
+        <span class="badge badge-gold" id="badgeProjects">0 โครงการ</span>
+      </div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead>
+            <tr>
+              <th>รหัสโครงการ</th>
+              <th>ชื่อโครงการ</th>
+              <th>งบประมาณ</th>
+              <th>เป้าหมาย KPI</th>
+              <th>ความก้าวหน้า</th>
+              <th>ระดับยุทธศาสตร์</th>
+              <th>สถานะ</th>
+            </tr>
+          </thead>
+          <tbody id="projectsBody">
+            <tr><td colspan="7" class="loading"><div class="loading-spinner"></div>กำลังโหลด...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── TAB: CONTRACTS ─── -->
+  <section class="tab-section" id="tab-contracts">
+    <div class="table-card">
+      <div class="table-card-header">
+        <span class="table-card-title">สัญญาจ้างเหมาบริการ</span>
+        <span class="badge badge-gray" id="badgeContracts">0 สัญญา</span>
+      </div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead>
+            <tr>
+              <th>ผู้รับจ้าง</th>
+              <th>ลักษณะงาน</th>
+              <th>ประเภท</th>
+              <th>อัตรา/เดือน</th>
+              <th>ระยะเวลา</th>
+              <th>วงเงินรวม</th>
+              <th>วิธีจัดซื้อ</th>
+              <th>เลขที่ EGP</th>
+              <th>สถานะ</th>
+            </tr>
+          </thead>
+          <tbody id="contractsBody">
+            <tr><td colspan="9" class="loading"><div class="loading-spinner"></div>กำลังโหลด...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── TAB: INTEGRATION ─── -->
+  <section class="tab-section" id="tab-integration">
+    <div class="table-card">
+      <div class="table-card-header">
+        <span class="table-card-title">แผนบูรณาการ</span>
+        <span class="badge badge-blue" id="badgeIntegration">0 แผน</span>
+      </div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead>
+            <tr>
+              <th>รหัสแผน</th>
+              <th>ชื่อแผนบูรณาการ</th>
+              <th>หน่วยงานเจ้าภาพ</th>
+              <th>หน่วยงานร่วม</th>
+              <th>วัตถุประสงค์</th>
+              <th>งบประมาณ</th>
+              <th>ความก้าวหน้า</th>
+              <th>สถานะ</th>
+            </tr>
+          </thead>
+          <tbody id="integrationBody">
+            <tr><td colspan="8" class="loading"><div class="loading-spinner"></div>กำลังโหลด...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══ DATA REQUEST MODAL ═══ -->
+<div class="modal-overlay" id="requestModal">
+  <div class="modal">
+    <h2>🔗 ขอข้อมูลจากหน่วยงาน</h2>
+    <div class="form-group">
+      <label>หน่วยงานที่ขอข้อมูล (หน่วยงานของท่าน)</label>
+      <select id="reqAgency">
+        <option value="">-- เลือกหน่วยงาน --</option>
+        <option value="KST-54-001">สำนักงานเกษตรจังหวัดแพร่ (กรมส่งเสริมการเกษตร)</option>
+        <option value="KST-54-002">สำนักงานปศุสัตว์จังหวัดแพร่ (กรมปศุสัตว์)</option>
+        <option value="KST-54-003">สำนักงานประมงจังหวัดแพร่ (กรมประมง)</option>
+        <option value="KST-54-004">การยางแห่งประเทศไทย จ.แพร่ (กยท.)</option>
+        <option value="KST-54-005">ศูนย์วิจัยข้าวแพร่ (กรมการข้าว)</option>
+        <option value="KST-54-006">สำนักงานสหกรณ์จังหวัดแพร่ (กรมส่งเสริมสหกรณ์)</option>
+        <option value="KST-54-007">สำนักงานตรวจบัญชีสหกรณ์แพร่ (กรมตรวจบัญชีสหกรณ์)</option>
+        <option value="KST-54-008">สำนักงาน ส.ป.ก.จังหวัดแพร่</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>ประเภทข้อมูลที่ต้องการ</label>
+      <select id="reqDataType">
+        <option value="">-- เลือกประเภทข้อมูล --</option>
+        <option value="personnel">ข้อมูลบุคลากร (คน)</option>
+        <option value="budget">ข้อมูลงบประมาณ (เงิน)</option>
+        <option value="projects">ข้อมูลโครงการ (งาน)</option>
+        <option value="contracts">ข้อมูลสัญญาจ้างเหมา</option>
+        <option value="integration">ข้อมูลแผนบูรณาการ</option>
+        <option value="all">ข้อมูลทั้งหมด</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>เหตุผลในการขอข้อมูล</label>
+      <textarea id="reqReason" rows="3" placeholder="ระบุเหตุผลและวัตถุประสงค์ในการขอข้อมูล เช่น เพื่อประกอบการจัดทำแผนบูรณาการ..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeRequestModal()">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="submitRequest()">ส่งคำขอ</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ─── State ───────────────────────────────────
+  let agencyData = null;
+  let currentTab = 'personnel';
+
+  // ─── Agency icons map ─────────────────────────
+  const AGENCY_ICONS = {
+    'KST-54-001': '🌾',
+    'KST-54-002': '🐄',
+    'KST-54-003': '🐟',
+    'KST-54-004': '🌿',
+    'KST-54-005': '🌾',
+    'KST-54-006': '🤝',
+    'KST-54-007': '📊',
+    'KST-54-008': '🗺️',
+  };
+
+  // ─── Helpers ──────────────────────────────────
+  function fmt(n) {
+    if (!n) return '—';
+    return Number(n).toLocaleString('th-TH');
+  }
+  function fmtM(n) {
+    if (!n) return '—';
+    return (Number(n) / 1000000).toFixed(2) + ' ล.';
+  }
+  function progressBar(pct) {
+    const cls = pct >= 70 ? '' : pct >= 40 ? ' orange' : ' red';
+    return `<div class="progress-wrap">
+      <div class="progress-bar-bg"><div class="progress-bar-fill${cls}" style="width:${pct}%"></div></div>
+      <span class="progress-pct">${pct}%</span>
+    </div>`;
+  }
+  function statusBadge(s) {
+    const map = {
+      'ปฏิบัติงาน': 'badge-green',
+      'กำลังดำเนินการ': 'badge-blue',
+      'มีผลบังคับ': 'badge-green',
+      'เสร็จสิ้น': 'badge-gray',
+      'ยังไม่เริ่ม': 'badge-gray',
+    };
+    return `<span class="badge ${map[s] || 'badge-gray'}">${s || '—'}</span>`;
+  }
+
+  // ─── Load Data ────────────────────────────────
+  async function loadData() {
+    const params = new URLSearchParams(window.location.search);
+    const agencyId = params.get('agency') || 'KST-54-001';
+
+    // Set icon
+    document.getElementById('agencyIcon').textContent = AGENCY_ICONS[agencyId] || '🌾';
+
+    let data;
+    try {
+      const res = await fetch(`/api/phrae/agency/${agencyId}/summary`);
+      if (res.ok) data = await res.json();
+      else throw new Error('api_fail');
+    } catch {
+      try {
+        const res = await fetch(`/agency-data/${agencyId}.json`);
+        if (!res.ok) throw new Error('not_found');
+        const raw = await res.json();
+        data = {
+          ok: true,
+          agency_id: agencyId,
+          agency_name: raw.agency_name,
+          dept_name: raw.dept_name,
+          ministry: raw.ministry,
+          summary: {
+            personnel_total: (raw.personnel || []).length,
+            budget_total: (raw.budget || []).reduce((s, b) => s + (b.budget_total || 0), 0),
+            projects_total: (raw.projects || []).length,
+            contracts_total: (raw.contracts || []).length,
+          },
+          personnel:   raw.personnel   || [],
+          budget:      raw.budget      || [],
+          projects:    raw.projects    || [],
+          contracts:   raw.contracts   || [],
+          integration: raw.integration || [],
+        };
+      } catch (e) {
+        document.getElementById('agencyName').textContent = 'ไม่พบข้อมูลหน่วยงาน';
+        return;
+      }
+    }
+
+    agencyData = data;
+    renderHeader(data);
+    renderKPI(data);
+    renderPersonnel(data.personnel || []);
+    renderBudget(data.budget || []);
+    renderProjects(data.projects || []);
+    renderContracts(data.contracts || []);
+    renderIntegration(data.integration || []);
+  }
+
+  // ─── Render Header ────────────────────────────
+  function renderHeader(d) {
+    document.title = `${d.agency_name} — ระบบบริหารงานเกษตร กรมส่งเสริมการเกษตร`;
+    document.getElementById('agencyName').textContent = d.agency_name || '';
+    document.getElementById('deptName').textContent = d.dept_name || '';
+    if (d.ministry) document.getElementById('ministryName').textContent = 'กรมส่งเสริมการเกษตร — ' + d.ministry;
+  }
+
+  // ─── Render KPI ───────────────────────────────
+  function renderKPI(d) {
+    const s = d.summary || {};
+    document.getElementById('kpiPersonnel').textContent = s.personnel_total ?? (d.personnel||[]).length;
+    const budgetM = s.budget_total ? (s.budget_total / 1000000).toFixed(2) : '—';
+    document.getElementById('kpiBudget').textContent = budgetM;
+    document.getElementById('kpiProjects').textContent = s.projects_total ?? (d.projects||[]).length;
+    document.getElementById('kpiContracts').textContent = s.contracts_total ?? (d.contracts||[]).length;
+  }
+
+  // ─── Render Personnel ─────────────────────────
+  function renderPersonnel(people) {
+    document.getElementById('badgePersonnel').textContent = people.length + ' คน';
+    const tbody = document.getElementById('personnelBody');
+    if (!people.length) {
+      tbody.innerHTML = '<tr><td colspan="7" class="empty">ไม่พบข้อมูลบุคลากร</td></tr>';
+      return;
+    }
+    tbody.innerHTML = people.map(p => `
+      <tr>
+        <td><strong>${p.full_name || '—'}</strong></td>
+        <td>${p.position_title || '—'}</td>
+        <td>${p.position_level || '—'}</td>
+        <td><span class="badge ${p.employee_type === 'ข้าราชการ' ? 'badge-blue' : 'badge-gray'}">${p.employee_type || '—'}</span></td>
+        <td>${p.district || '—'}</td>
+        <td>${p.phone || '—'}</td>
+        <td>${statusBadge(p.status)}</td>
+      </tr>
+    `).join('');
+  }
+
+  // ─── Render Budget ────────────────────────────
+  function renderBudget(budgets) {
+    const container = document.getElementById('budgetContent');
+    if (!budgets.length) {
+      container.innerHTML = '<div class="empty">ไม่พบข้อมูลงบประมาณ</div>';
+      return;
+    }
+    const b = budgets[0];
+    const total = b.budget_total || 1;
+    const disbPct = b.disbursed_pct || 0;
+    const cats = [
+      { label: 'งบบุคลากร', val: b.personnel_budget, color: '#2e6db8' },
+      { label: 'งบดำเนินงาน', val: b.operating_budget, color: '#1f7a4d' },
+      { label: 'งบลงทุน', val: b.capital_budget, color: '#c8991e' },
+      { label: 'งบอุดหนุน', val: b.subsidy_budget, color: '#7c3aed' },
+      { label: 'งบอื่น', val: b.other_budget, color: '#64748b' },
+    ].filter(c => c.val > 0);
+
+    container.innerHTML = `
+      <div class="budget-section">
+        <div class="budget-breakdown">
+          <h3>📊 สัดส่วนงบประมาณ ปี ${b.fiscal_year || '2568'}</h3>
+          ${cats.map(c => `
+            <div class="budget-bar-row">
+              <div class="budget-bar-label">
+                <span>${c.label}</span>
+                <span style="font-weight:700">${fmtM(c.val)}</span>
+              </div>
+              <div class="bbar">
+                <div class="bbar-fill" style="width:${Math.round(c.val/total*100)}%;background:${c.color}"></div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        <div class="budget-breakdown">
+          <h3>💰 สรุปงบประมาณ</h3>
+          <div class="budget-row">
+            <span class="budget-row-label">งบประมาณที่ได้รับจัดสรร</span>
+            <span class="budget-row-val" style="color:var(--gov-blue)">${fmt(b.budget_total)} บาท</span>
+          </div>
+          <div class="budget-row">
+            <span class="budget-row-label">เบิกจ่ายแล้ว</span>
+            <span class="budget-row-val" style="color:var(--gov-green)">${fmt(b.disbursed_total)} บาท</span>
+          </div>
+          <div class="budget-row">
+            <span class="budget-row-label">คงเหลือ</span>
+            <span class="budget-row-val" style="color:#b07d10">${fmt((b.budget_total||0)-(b.disbursed_total||0))} บาท</span>
+          </div>
+          <div style="margin-top:16px">
+            <div class="budget-bar-label">
+              <span>อัตราการเบิกจ่าย</span>
+              <strong>${disbPct}%</strong>
+            </div>
+            <div class="bbar" style="height:16px">
+              <div class="bbar-fill" style="width:${disbPct}%;background:${disbPct>=80?'#1f7a4d':disbPct>=60?'#c8991e':'#ef4444'}"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="table-card">
+        <div class="table-card-header">
+          <span class="table-card-title">รายละเอียดงบประมาณแยกตามหมวด</span>
+          <span class="badge badge-blue">ปีงบประมาณ ${b.fiscal_year || '2568'}</span>
+        </div>
+        <div style="overflow-x:auto">
+          <table>
+            <thead>
+              <tr>
+                <th>หมวดงบประมาณ</th>
+                <th>จัดสรร (บาท)</th>
+                <th>สัดส่วน</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${cats.map(c => `
+                <tr>
+                  <td>${c.label}</td>
+                  <td style="font-weight:700">${fmt(c.val)}</td>
+                  <td>${Math.round(c.val/total*100)}%</td>
+                </tr>
+              `).join('')}
+              <tr style="background:#f8fafc;font-weight:700">
+                <td>รวมทั้งสิ้น</td>
+                <td style="color:var(--gov-blue)">${fmt(b.budget_total)}</td>
+                <td>100%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+  }
+
+  // ─── Render Projects ──────────────────────────
+  function renderProjects(projects) {
+    document.getElementById('badgeProjects').textContent = projects.length + ' โครงการ';
+    const tbody = document.getElementById('projectsBody');
+    if (!projects.length) {
+      tbody.innerHTML = '<tr><td colspan="7" class="empty">ไม่พบข้อมูลโครงการ</td></tr>';
+      return;
+    }
+    tbody.innerHTML = projects.map(p => `
+      <tr>
+        <td><code style="font-size:12px;color:var(--text-muted)">${p.project_code || '—'}</code></td>
+        <td>
+          <strong>${p.project_name || '—'}</strong>
+          ${p.description ? `<br><small style="color:var(--text-muted)">${p.description}</small>` : ''}
+        </td>
+        <td style="white-space:nowrap">${fmt(p.budget_total)} บาท</td>
+        <td style="font-size:12px;max-width:200px">${p.kpi_target || '—'}</td>
+        <td>${progressBar(p.progress_pct || 0)}</td>
+        <td><span class="badge badge-gray">${p.strategy_level || '—'}</span></td>
+        <td>${statusBadge(p.status)}</td>
+      </tr>
+    `).join('');
+  }
+
+  // ─── Render Contracts ─────────────────────────
+  function renderContracts(contracts) {
+    document.getElementById('badgeContracts').textContent = contracts.length + ' สัญญา';
+    const tbody = document.getElementById('contractsBody');
+    if (!contracts.length) {
+      tbody.innerHTML = '<tr><td colspan="9" class="empty">ไม่พบข้อมูลสัญญา</td></tr>';
+      return;
+    }
+    tbody.innerHTML = contracts.map(c => `
+      <tr>
+        <td><strong>${c.contractor_name || '—'}</strong></td>
+        <td style="max-width:220px;font-size:13px">${c.work_description || '—'}</td>
+        <td><span class="badge ${c.contract_type==='รายเดือน'?'badge-blue':'badge-gold'}">${c.contract_type||'—'}</span></td>
+        <td>${c.monthly_rate ? fmt(c.monthly_rate)+' บ.' : '—'}</td>
+        <td>${c.duration_months ? c.duration_months+' เดือน' : '—'}</td>
+        <td style="font-weight:700;white-space:nowrap">${fmt(c.total_amount)} บาท</td>
+        <td>${c.procurement_method || '—'}</td>
+        <td style="font-size:12px;color:var(--text-muted)">${c.egp_number || '—'}</td>
+        <td>${statusBadge(c.status)}</td>
+      </tr>
+    `).join('');
+  }
+
+  // ─── Render Integration ───────────────────────
+  function renderIntegration(plans) {
+    document.getElementById('badgeIntegration').textContent = plans.length + ' แผน';
+    const tbody = document.getElementById('integrationBody');
+    if (!plans.length) {
+      tbody.innerHTML = '<tr><td colspan="8" class="empty">ไม่พบข้อมูลแผนบูรณาการ</td></tr>';
+      return;
+    }
+    tbody.innerHTML = plans.map(p => `
+      <tr>
+        <td><code style="font-size:12px;color:var(--text-muted)">${p.plan_id || '—'}</code></td>
+        <td><strong>${p.plan_name || '—'}</strong></td>
+        <td>${p.host_agency || '—'}</td>
+        <td style="font-size:12px;max-width:200px">${p.partner_agencies || '—'}</td>
+        <td style="font-size:12px;max-width:200px">${p.objective || '—'}</td>
+        <td style="white-space:nowrap">${fmt(p.budget)} บาท</td>
+        <td>${progressBar(p.progress_pct || 0)}</td>
+        <td>${statusBadge(p.status)}</td>
+      </tr>
+    `).join('');
+  }
+
+  // ─── Tab switching ────────────────────────────
+  function switchTab(tab, btn) {
+    document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    btn.classList.add('active');
+    currentTab = tab;
+  }
+
+  // ─── Personal AI Navigation ───────────────────
+  function openPersonalAI() {
+    // Default to head position for the agency; can be customized per agency
+    const agencyId = new URLSearchParams(window.location.search).get('agency') || 'KST-54-001';
+    // Map agency to default head position
+    const agencyPositionMap = {
+      'KST-54-001': 'DOAE-54-AGR-HEAD',
+    };
+    const positionId = agencyPositionMap[agencyId] || 'DOAE-54-AGR-HEAD';
+    window.location.href = `/personal-ai.html?position=${positionId}`;
+  }
+
+  // ─── Data Request Navigation ──────────────────
+  function openDataRequest() {
+    const agencyId = new URLSearchParams(window.location.search).get('agency') || 'KST-54-001';
+    window.location.href = `/data-request.html?from=${agencyId}`;
+  }
+
+  // ─── Pending Badge ────────────────────────────
+  async function loadPendingBadge() {
+    const agencyId = new URLSearchParams(window.location.search).get('agency') || 'KST-54-001';
+    try {
+      const res = await fetch(`/api/phrae/data-request/list?agency_id=${agencyId}&role=target&status=pending_approval`);
+      const d = await res.json();
+      if (d.ok && d.total > 0) {
+        const badge = document.getElementById('pendingBadge');
+        badge.textContent = d.total;
+        badge.style.display = 'block';
+      }
+    } catch (_) {}
+  }
+
+  // ─── Modal (legacy — kept for compatibility) ──
+  function openRequestModal() {
+    openDataRequest();
+  }
+  function closeRequestModal() {
+    document.getElementById('requestModal').classList.remove('open');
+  }
+  function submitRequest() {
+    openDataRequest();
+  }
+
+  // Close modal on overlay click
+  document.getElementById('requestModal').addEventListener('click', function(e) {
+    if (e.target === this) closeRequestModal();
+  });
+
+  // ─── Init ─────────────────────────────────────
+  loadData();
+  loadPendingBadge();
+</script>
+<footer style="background:#1a5c1a;color:#fff;text-align:center;padding:16px 24px;font-size:13px;margin-top:32px;">
+  © กรมส่งเสริมการเกษตร กระทรวงเกษตรและสหกรณ์
+</footer>
+<script src="/access-bar.js"></script>
+</body>
+</html>

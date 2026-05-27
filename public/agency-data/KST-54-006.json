@@ -1,0 +1,25 @@
+{
+  "agency_id": "KST-54-006",
+  "agency_name": "สำนักงานสหกรณ์จังหวัดแพร่",
+  "dept_name": "กรมส่งเสริมสหกรณ์",
+  "ministry": "กระทรวงเกษตรและสหกรณ์",
+  "personnel": [
+    { "id": "rectAPTZszM15BkO5", "full_name": "นายอนุกูล เจริญรัตน์", "agency_id": "KST-54-006", "agency_name": "สำนักงานสหกรณ์จังหวัดแพร่", "dept_name": "กรมส่งเสริมสหกรณ์", "employee_type": "ข้าราชการ", "position_title": "สหกรณ์จังหวัด", "position_level": "ชำนาญการ (ชก.)", "position_id": "CPD-54-HEAD", "district": "อ.เมืองแพร่", "phone": "054-511456", "status": "ปฏิบัติงาน" },
+    { "id": "rec006per002", "full_name": "นางกัญญาณัฐ รวมสหกรณ์", "agency_id": "KST-54-006", "agency_name": "สำนักงานสหกรณ์จังหวัดแพร่", "dept_name": "กรมส่งเสริมสหกรณ์", "employee_type": "ข้าราชการ", "position_title": "นักวิชาการสหกรณ์", "position_level": "ชำนาญการ", "district": "อ.เมืองแพร่", "phone": "054-511457", "status": "ปฏิบัติงาน" },
+    { "id": "rec006per003", "full_name": "นายธีรภัทร สามัคคีดี", "agency_id": "KST-54-006", "agency_name": "สำนักงานสหกรณ์จังหวัดแพร่", "dept_name": "กรมส่งเสริมสหกรณ์", "employee_type": "ข้าราชการ", "position_title": "นักวิชาการสหกรณ์", "position_level": "ปฏิบัติการ", "district": "อ.ร้องกวาง", "phone": "054-511458", "status": "ปฏิบัติงาน" }
+  ],
+  "budget": [
+    { "id": "rec8xhFzvZTw6eVpq", "agency_id": "KST-54-006", "agency_name": "สำนักงานสหกรณ์จังหวัดแพร่", "dept_name": "กรมส่งเสริมสหกรณ์", "personnel_budget": 7600000, "operating_budget": 5900000, "capital_budget": 1100000, "subsidy_budget": 12000000, "other_budget": 0, "budget_total": 26600000, "disbursed_total": 18200000, "disbursed_pct": 68, "fiscal_year": "2568" }
+  ],
+  "projects": [
+    { "id": "recOJBMjtxvZXcnaC", "project_code": "P2568-KST006-001", "project_name": "โครงการพัฒนาสหกรณ์การเกษตรสู่ความเข้มแข็ง", "agency_id": "KST-54-006", "agency_name": "สำนักงานสหกรณ์จังหวัดแพร่", "budget_total": 3200000, "kpi_target": "สหกรณ์การเกษตร 15 แห่ง ผ่านเกณฑ์มาตรฐาน", "progress_pct": 55, "status": "กำลังดำเนินการ", "start_date": "2024-10-01", "end_date": "2025-09-30", "strategy_level": "แผนพัฒนาเกษตรกรรม", "fiscal_year": "2568", "description": "พัฒนาระบบบริหารจัดการสหกรณ์ให้มีประสิทธิภาพ" },
+    { "id": "rec006prj002", "project_code": "P2568-KST006-002", "project_name": "โครงการส่งเสริมกลุ่มเกษตรกรและวิสาหกิจชุมชนจังหวัดแพร่", "agency_id": "KST-54-006", "agency_name": "สำนักงานสหกรณ์จังหวัดแพร่", "budget_total": 2100000, "kpi_target": "กลุ่มเกษตรกร 30 กลุ่ม ผ่านมาตรฐานวิสาหกิจชุมชน", "progress_pct": 48, "status": "กำลังดำเนินการ", "start_date": "2024-10-01", "end_date": "2025-09-30", "strategy_level": "แผนพัฒนาเกษตรกรรม", "fiscal_year": "2568", "description": "พัฒนาศักยภาพกลุ่มเกษตรกรและวิสาหกิจชุมชนให้สามารถบริหารจัดการองค์กรได้อย่างมืออาชีพ" }
+  ],
+  "contracts": [
+    { "id": "recUXKxSPc6w15TTA", "contractor_name": "นางวิไลวรรณ แก้วประเสริฐ", "agency_id": "KST-54-006", "agency_name": "สำนักงานสหกรณ์จังหวัดแพร่", "dept_name": "กรมส่งเสริมสหกรณ์", "contract_type": "รายเดือน", "work_description": "ผู้ช่วยส่งเสริมสหกรณ์ ประจำอำเภอร้องกวาง", "monthly_rate": 15000, "duration_months": 12, "total_amount": 180000, "procurement_method": "เฉพาะเจาะจง", "egp_number": "67049000035", "fiscal_year": "2568", "status": "มีผลบังคับ" },
+    { "id": "rec006ctr002", "contractor_name": "นายณรงค์ ร่วมมือ", "agency_id": "KST-54-006", "agency_name": "สำนักงานสหกรณ์จังหวัดแพร่", "dept_name": "กรมส่งเสริมสหกรณ์", "contract_type": "รายเดือน", "work_description": "ผู้ช่วยนักวิชาการสหกรณ์ ประจำอำเภอสูงเม่น พัฒนากลุ่มเกษตรกร", "monthly_rate": 15000, "duration_months": 12, "total_amount": 180000, "procurement_method": "เฉพาะเจาะจง", "egp_number": "67049000036", "fiscal_year": "2568", "status": "มีผลบังคับ" }
+  ],
+  "integration": [
+    { "id": "recAtPbj97Yc3acp5_006", "plan_id": "INTG-2568-001", "plan_name": "แผนบูรณาการแก้ปัญหาหนี้สินเกษตรกรจังหวัดแพร่", "host_agency": "สำนักงานเกษตรจังหวัดแพร่", "partner_agencies": "สำนักงานสหกรณ์จังหวัดแพร่, สำนักงานตรวจบัญชีสหกรณ์แพร่, ส.ป.ก.แพร่", "objective": "แก้ปัญหาหนี้สินเกษตรกรอย่างยั่งยืน โดยการปรับโครงสร้างหนี้ ลดดอกเบี้ย และพัฒนาอาชีพเสริม", "budget": 4500000, "kpi": "เกษตรกรมีหนี้ลดลง 20% ภายใน 1 ปี", "progress_pct": 35, "status": "กำลังดำเนินการ", "fiscal_year": "2568", "district": "ทุกอำเภอ", "target_group": "เกษตรกรที่มีหนี้สินสหกรณ์", "role": "หน่วยงานร่วม — ปรับโครงสร้างหนี้สหกรณ์" }
+  ]
+}

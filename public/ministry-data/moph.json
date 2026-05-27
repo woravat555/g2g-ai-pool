@@ -1,0 +1,48 @@
+{
+  "ministry": {
+    "name_th": "กระทรวงสาธารณสุข",
+    "name_en": "Ministry of Public Health",
+    "acronym": "สธ.",
+    "code": "moph",
+    "minister": "รมว.สาธารณสุข",
+    "established": 2485,
+    "budget_2568": 230000,
+    "color_primary": "#1b5e20",
+    "color_secondary": "#2e7d32",
+    "color_accent": "#76ff03",
+    "icon": "🏥",
+    "api_key": "moph2026",
+    "api_base": "https://g2g-ai-pool.fly.dev"
+  },
+  "departments": [
+    {"code": "ddc", "name": "กรมควบคุมโรค", "name_en": "DDC", "budget": 18000, "staff": 5000, "focus": "ป้องกันโรคติดต่อ"},
+    {"code": "dms", "name": "กรมการแพทย์", "name_en": "DMS", "budget": 45000, "staff": 25000, "focus": "รักษาพยาบาลระดับสูง"},
+    {"code": "dmh", "name": "กรมสุขภาพจิต", "name_en": "DMH", "budget": 8000, "staff": 3000, "focus": "สุขภาพจิต/จิตเวช"},
+    {"code": "dch", "name": "กรมอนามัย", "name_en": "DOH", "budget": 12000, "staff": 4000, "focus": "ส่งเสริมสุขภาพ"},
+    {"code": "fda", "name": "สำนักงานคณะกรรมการอาหารและยา", "name_en": "FDA", "budget": 4500, "staff": 2500, "focus": "อาหาร/ยา/เครื่องมือแพทย์"},
+    {"code": "nhso", "name": "สำนักงานหลักประกันสุขภาพแห่งชาติ", "name_en": "NHSO", "budget": 130000, "staff": 1500, "focus": "บัตรทอง 30 บาท"}
+  ],
+  "policies": [
+    {"id": 1, "title": "30 บาทรักษาทุกที่", "description": "รักษาพยาบาลได้ทุกที่ทุกเวลาด้วยบัตรทอง", "status": "กำลังดำเนินการ", "progress": 85, "budget": 130000},
+    {"id": 2, "title": "สุขภาพเกษตรกร", "description": "ตรวจสุขภาพเกษตรกรฟรีประจำปี ลดสารพิษ", "status": "กำลังดำเนินการ", "progress": 72, "budget": 5000},
+    {"id": 3, "title": "Telemedicine ชนบท", "description": "แพทย์ทางไกลสำหรับพื้นที่ห่างไกล", "status": "กำลังดำเนินการ", "progress": 60, "budget": 3500},
+    {"id": 4, "title": "Mental Health ดิจิทัล", "description": "แพลตฟอร์มสุขภาพจิตออนไลน์", "status": "เริ่มดำเนินการ", "progress": 40, "budget": 2000},
+    {"id": 5, "title": "Smart Hospital", "description": "โรงพยาบาลอัจฉริยะ AI-powered", "status": "กำลังดำเนินการ", "progress": 50, "budget": 8000},
+    {"id": 6, "title": "โรคไม่ติดต่อ NCD", "description": "ลดเบาหวาน/ความดัน/มะเร็ง 30%", "status": "กำลังดำเนินการ", "progress": 45, "budget": 6000}
+  ],
+  "key_kpis": {
+    "hospital_count": 1345,
+    "health_center_count": 11458,
+    "uc_coverage_pct": 99,
+    "doctor_per_10000": 8.5,
+    "avg_life_expectancy": 77.5,
+    "farmer_health_check_pct": 68
+  },
+  "province_rollout": [
+    {"province": "เชียงราย", "province_code": "chiangrai", "completion_pct": 80, "phase": 1, "focus": "สุขภาพเกษตรกร+Telemedicine"},
+    {"province": "อุดรธานี", "province_code": "udonthani", "completion_pct": 75, "phase": 1, "focus": "30บาทรักษาทุกที่"},
+    {"province": "เชียงใหม่", "province_code": "chiangmai", "completion_pct": 88, "phase": 1, "focus": "Smart Hospital"},
+    {"province": "ขอนแก่น", "province_code": "khonkaen", "completion_pct": 70, "phase": 2, "focus": "NCD+Mental Health"},
+    {"province": "สงขลา", "province_code": "songkhla", "completion_pct": 65, "phase": 2, "focus": "Telemedicine ชายแดน"}
+  ]
+}

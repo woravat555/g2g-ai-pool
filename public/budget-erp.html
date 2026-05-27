@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Budget ERP — ระบบบริหารงบประมาณ (พรบ.วิธีการงบประมาณ 2561)</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --em:#004D40;--em2:#00695C;--em3:#00897B;--em4:#26A69A;
+  --light:#E0F2F1;--light2:#B2DFDB;--light3:#f0fafa;
+  --gold:#F57F17;--gold2:#F9A825;
+  --red:#c62828;--red2:#ffebee;--orange:#e65100;
+  --bg:#f0f7f6;--bg2:#e0f2f1;--border:#b2dfdb;
+  --white:#fff;--text:#1b3a35;--sub:#546e7a;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Sarabun',sans-serif}
+body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+.topbar{background:linear-gradient(135deg,var(--em),var(--em2));color:#fff;padding:0 20px;height:60px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.tb-left{display:flex;align-items:center;gap:14px}
+.tb-logo{font-size:28px}
+.tb-t1{font-size:15px;font-weight:800;white-space:nowrap}
+.tb-t2{font-size:11px;opacity:.7}
+.tb-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.agency-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);padding:5px 12px;border-radius:8px;font-size:12px;font-weight:700}
+.tb-user{font-size:12px;opacity:.85;background:rgba(255,255,255,.1);padding:5px 10px;border-radius:6px}
+.tabbar{background:#fff;border-bottom:2px solid var(--light2);padding:0 16px;display:flex;gap:2px;overflow-x:auto;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.tab{padding:13px 18px;font-size:13px;font-weight:700;color:var(--sub);cursor:pointer;border:none;background:transparent;border-bottom:3px solid transparent;white-space:nowrap;font-family:inherit;transition:.15s}
+.tab:hover{color:var(--em);background:var(--light3)}
+.tab.active{color:var(--em);border-bottom-color:var(--em)}
+.main{flex:1;padding:20px;overflow-y:auto;max-width:1400px;width:100%;margin:0 auto}
+.page{display:none}.page.active{display:block}
+.card{background:#fff;border-radius:12px;padding:18px 20px;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:16px;border:1px solid rgba(0,77,64,.06)}
+.card-h{font-size:15px;font-weight:700;color:var(--em);margin-bottom:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.law-note{font-size:11px;background:var(--light);color:var(--em2);padding:3px 10px;border-radius:10px;font-weight:500;border:1px solid var(--light2)}
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px}
+@media(max-width:900px){.kpi-row{grid-template-columns:repeat(2,1fr)}}
+.kpi-card{background:#fff;border-radius:10px;padding:14px;border-left:4px solid var(--em);box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.kpi-card.c2{border-left-color:#0097A7}.kpi-card.c3{border-left-color:#00897B}
+.kpi-card.c4{border-left-color:#43A047}.kpi-card.c5{border-left-color:var(--gold)}
+.kpi-v{font-size:22px;font-weight:800;color:var(--em)}.kpi-l{font-size:11px;color:var(--sub);margin-top:2px}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center}
+.inp,.sel{border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;outline:none;font-family:inherit;background:#fff;color:var(--text)}
+.inp:focus,.sel:focus{border-color:var(--em3)}
+.btn{background:var(--em);color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;font-weight:600;transition:.15s;display:inline-flex;align-items:center;gap:5px}
+.btn:hover{background:var(--em2);transform:translateY(-1px)}
+.btn-sm{padding:5px 10px;font-size:12px}
+.btn-out{background:#fff;color:var(--em);border:1px solid var(--border)}.btn-out:hover{background:var(--light)}
+.btn-gold{background:var(--gold);color:#fff}.btn-gold:hover{background:var(--gold2)}
+.btn-r{background:var(--red);color:#fff}.btn-r:hover{background:#b71c1c}
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{background:var(--em);color:#fff;padding:10px 12px;text-align:left;font-weight:600;font-size:12px;white-space:nowrap}
+.tbl td{padding:9px 12px;border-bottom:1px solid var(--bg2);vertical-align:middle}
+.tbl tr:hover td{background:var(--light3)}
+.tbl-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--light2)}
+.pb{background:var(--bg2);border-radius:4px;height:10px;overflow:hidden;width:100%}
+.pf{height:100%;border-radius:4px;background:var(--em3);transition:.4s}
+.chip{display:inline-block;font-size:11px;padding:2px 9px;border-radius:11px;font-weight:600;white-space:nowrap}
+.chip-p{background:#e8eaf6;color:#283593}.chip-o{background:#e8f5e9;color:#1b5e20}
+.chip-c{background:#fff8e1;color:#e65100}.chip-s{background:#fce4ec;color:#880e4f}
+.chip-r{background:#f3e5f5;color:#4a148c}.chip-ok{background:var(--light);color:var(--em)}
+.chip-pen{background:#fff9c4;color:#f57f17}.chip-done{background:#e8f5e9;color:#2e7d32}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,30,25,.55);z-index:1000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(2px)}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:14px;width:min(680px,100%);max-height:92vh;overflow-y:auto;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.modal-h{font-size:17px;font-weight:800;color:var(--em);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;padding-bottom:12px;border-bottom:2px solid var(--light)}
+.modal-close{background:transparent;border:none;font-size:22px;cursor:pointer;color:var(--sub);width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.modal-close:hover{background:var(--bg2)}
+.frow{margin-bottom:13px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.frow.full{grid-template-columns:1fr}.frow.three{grid-template-columns:1fr 1fr 1fr}
+.fg label{display:block;font-size:12px;font-weight:600;color:var(--em);margin-bottom:4px}
+.fg .req{color:var(--red)}
+.fg .inp,.fg .sel,.fg textarea{width:100%;font-family:inherit;font-size:13px;padding:9px 12px;border:1px solid var(--border);border-radius:8px;outline:none;background:#fff}
+.fg .inp:focus,.fg .sel:focus,.fg textarea:focus{border-color:var(--em3)}
+.fg textarea{resize:vertical;min-height:70px}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;padding-top:14px;border-top:2px solid var(--bg2)}
+.loading{text-align:center;padding:40px 20px;color:var(--sub);font-size:14px}
+.empty{text-align:center;padding:40px 20px;color:var(--sub);font-size:13px}
+#toast{position:fixed;bottom:24px;right:24px;background:var(--em);color:#fff;padding:14px 20px;border-radius:10px;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.3);z-index:2000;display:none;max-width:380px;animation:slideUp .3s}
+#toast.ok{background:#2e7d32}#toast.er{background:var(--red)}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+/* Cycle Timeline */
+.cycle-wrap{display:flex;gap:0;margin-bottom:20px;overflow-x:auto}
+.cycle-step{flex:1;min-width:180px;padding:16px 18px;border-right:1px solid var(--light2);position:relative}
+.cycle-step:last-child{border-right:none}
+.cycle-step.current{background:var(--light);border-radius:10px}
+.cs-num{font-size:32px;font-weight:800;color:var(--light2);line-height:1}
+.cs-title{font-size:14px;font-weight:700;color:var(--em);margin:4px 0 2px}
+.cs-period{font-size:11px;color:var(--sub);margin-bottom:8px}
+.cs-items{font-size:11px;color:var(--text);line-height:1.7}
+.cs-badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:8px;font-weight:700;margin-top:6px}
+.cs-badge.active{background:var(--em);color:#fff}
+.cs-badge.done{background:#e8f5e9;color:#2e7d32}
+.cs-badge.wait{background:var(--bg2);color:var(--sub)}
+
+/* Workflow Status */
+.wf-track{display:flex;align-items:center;gap:0;margin:14px 0;overflow-x:auto}
+.wf-step{display:flex;flex-direction:column;align-items:center;min-width:100px}
+.wf-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:4px;border:2px solid var(--border)}
+.wf-icon.done{background:var(--em);border-color:var(--em);color:#fff}
+.wf-icon.current{background:var(--gold2);border-color:var(--gold);color:#fff}
+.wf-icon.wait{background:#fff;color:var(--sub)}
+.wf-label{font-size:11px;color:var(--sub);text-align:center;font-weight:600}
+.wf-line{flex:1;height:2px;background:var(--light2);min-width:30px}
+.wf-line.done{background:var(--em)}
+
+/* Budget type bars */
+.bt-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:13px}
+.bt-label{width:130px;flex-shrink:0;font-weight:600;color:var(--em)}
+.bt-bar{flex:1}.bt-pct{width:50px;text-align:right;font-weight:700;color:var(--em)}
+.bt-amt{width:120px;text-align:right;font-size:12px;color:var(--sub)}
+
+/* Summary row */
+.sum-box{background:var(--light);border-radius:10px;padding:14px;display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:600;color:var(--em)}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="tb-left">
+    <div class="tb-logo">💰</div>
+    <div>
+      <div class="tb-t1">Budget ERP — ระบบบริหารงบประมาณ</div>
+      <div class="tb-t2">พระราชบัญญัติวิธีการงบประมาณ พ.ศ. 2561 | พระราชบัญญัติวินัยการเงินการคลังของรัฐ พ.ศ. 2561</div>
+    </div>
+  </div>
+  <div class="tb-right">
+    <div class="agency-badge" id="agencyLabel">NSTDA</div>
+    <div class="tb-user">ปีงบประมาณ 2568</div>
+  </div>
+</div>
+
+<div class="tabbar">
+  <button class="tab active" onclick="switchTab('cycle')">🔄 วงจรงบประมาณ</button>
+  <button class="tab" onclick="switchTab('request')">📋 คำของบประมาณ</button>
+  <button class="tab" onclick="switchTab('allocation')">💰 งบที่ได้รับจัดสรร</button>
+  <button class="tab" onclick="switchTab('disbursement')">📤 การเบิกจ่าย</button>
+  <button class="tab" onclick="switchTab('offbudget')">🏦 เงินนอกงบประมาณ</button>
+  <button class="tab" onclick="switchTab('surplus')">💵 เงินเหลือจ่าย</button>
+  <button class="tab" onclick="switchTab('report')">📊 รายงานผล</button>
+</div>
+
+<div class="main">
+
+<!-- ===== TAB 1: วงจรงบประมาณ ===== -->
+<div class="page active" id="page-cycle">
+  <div class="card">
+    <div class="card-h">🔄 วงจรงบประมาณ 4 ขั้น <span class="law-note">พรบ.วิธีการงบประมาณ พ.ศ. 2561</span></div>
+    <div class="cycle-wrap" id="cycleWrap"></div>
+    <div style="font-size:12px;color:var(--sub);padding:8px 12px;background:var(--light);border-radius:8px;">
+      <strong>หมายเหตุ:</strong> ปีงบประมาณของไทยเริ่ม 1 ตุลาคม – 30 กันยายน | สถานะปัจจุบัน (พ.ค. 2569) อยู่ในขั้นที่ 4: การติดตามและประเมินผล ปีงบ 2568
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-h">หน่วยงานที่เกี่ยวข้องในแต่ละขั้น</div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>ขั้นตอน</th><th>หน่วยงานหลัก</th><th>ระยะเวลา</th><th>ผลลัพธ์</th></tr></thead>
+        <tbody>
+          <tr><td>1. ทบทวนและวางแผน</td><td>กระทรวงการคลัง / สภาพัฒน์ / ธปท. / สำนักงบประมาณ / ครม.</td><td>ม.ค. – ก.พ.</td><td>กรอบวงเงินงบประมาณ</td></tr>
+          <tr><td>2. จัดทำงบประมาณ</td><td>หน่วยรับงบประมาณ → กระทรวง → สำนักงบประมาณ → ครม.</td><td>ก.พ. – ก.ค.</td><td>ร่าง พ.ร.บ. งบประมาณ</td></tr>
+          <tr><td>3. อนุมัติงบประมาณ</td><td>สภาผู้แทนราษฎร (3 วาระ) → วุฒิสภา → ทูลเกล้าฯ</td><td>ส.ค. – ก.ย.</td><td>พ.ร.บ. งบประมาณรายจ่ายประจำปี</td></tr>
+          <tr><td>4. ติดตามและประเมินผล</td><td>หน่วยรับงบ (GFMIS) → สำนักงบประมาณ → สตง.</td><td>ต.ค. – ก.ย.</td><td>รายงานผลรายไตรมาส</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-h">ไปยังโมดูลที่เกี่ยวข้อง</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn" onclick="switchTab('request')">📋 ทำคำของบประมาณ (ขั้น 2)</button>
+      <button class="btn btn-out" onclick="switchTab('allocation')">💰 งบที่ได้รับจัดสรร (ขั้น 2–3)</button>
+      <button class="btn btn-out" onclick="switchTab('disbursement')">📤 เบิกจ่าย GFMIS (ขั้น 4)</button>
+      <button class="btn btn-out" onclick="switchTab('report')">📊 รายงานไตรมาส (ขั้น 4)</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TAB 2: คำของบประมาณ ===== -->
+<div class="page" id="page-request">
+  <div class="card">
+    <div class="card-h">📋 ทำคำของบประมาณ <span class="law-note">มาตรา 9, 12 พรบ.วิธีการงบประมาณ 2561</span></div>
+    <p style="font-size:12px;color:var(--sub);margin-bottom:16px">หน่วยรับงบประมาณต้องระบุ: วัตถุประสงค์ + แผนการปฏิบัติงาน + แผนการใช้จ่าย + ตัวชี้วัด ส่งผ่านระบบ e-Budgeting</p>
+
+    <div class="frow">
+      <div class="fg"><label>ปีงบประมาณที่ขอ <span class="req">*</span></label>
+        <select class="sel" id="rqYear"><option>2569</option><option>2570</option><option>2571</option></select>
+      </div>
+      <div class="fg"><label>หน่วยรับงบประมาณ <span class="req">*</span></label>
+        <input class="inp" id="rqUnit" placeholder="เช่น สวทช., กรมวิชาการเกษตร" /></div>
+    </div>
+    <div class="frow">
+      <div class="fg"><label>กระทรวงต้นสังกัด <span class="req">*</span></label>
+        <select class="sel" id="rqMinistry">
+          <option value="">-- เลือกกระทรวง --</option>
+          <option>กระทรวงการอุดมศึกษาฯ (อว.)</option>
+          <option>กระทรวงเกษตรและสหกรณ์</option>
+          <option>กระทรวงดิจิทัลเพื่อเศรษฐกิจ</option>
+          <option>กระทรวงสาธารณสุข</option>
+          <option>กระทรวงมหาดไทย</option>
+          <option>กระทรวงพาณิชย์</option>
+        </select>
+      </div>
+      <div class="fg"><label>แผนงาน / โครงการ <span class="req">*</span></label>
+        <input class="inp" id="rqPlan" placeholder="ชื่อแผนงาน/โครงการ" /></div>
+    </div>
+    <div class="frow full">
+      <div class="fg"><label>วัตถุประสงค์ <span class="req">*</span> <span style="font-weight:400;color:var(--sub)">(ตามมาตรา 12(2))</span></label>
+        <textarea id="rqObjective" placeholder="ระบุวัตถุประสงค์ของคำของบประมาณ..."></textarea>
+      </div>
+    </div>
+    <div class="frow full">
+      <div class="fg"><label>ตัวชี้วัด (KPI) <span class="req">*</span></label>
+        <textarea id="rqKpi" rows="2" placeholder="เช่น จำนวนผลงานวิจัย, ร้อยละความพึงพอใจ..."></textarea>
+      </div>
+    </div>
+
+    <div style="border:2px solid var(--light2);border-radius:10px;padding:16px;margin-bottom:14px">
+      <div style="font-size:13px;font-weight:700;color:var(--em);margin-bottom:12px">💰 รายละเอียดงบ 5 ประเภท <span class="law-note">หลักการจำแนกประเภทรายจ่าย กรมบัญชีกลาง</span></div>
+      <div class="frow three">
+        <div class="fg"><label>1. งบบุคลากร (บาท)</label>
+          <input class="inp" type="number" id="rqP1" placeholder="0" min="0" />
+          <div style="font-size:11px;color:var(--sub);margin-top:3px">เงินเดือน, ค่าจ้างประจำ/ชั่วคราว, เงินตอบแทนอื่น</div>
+        </div>
+        <div class="fg"><label>2. งบดำเนินงาน (บาท)</label>
+          <input class="inp" type="number" id="rqP2" placeholder="0" min="0" />
+          <div style="font-size:11px;color:var(--sub);margin-top:3px">ค่าตอบแทน, ค่าใช้สอย, ค่าวัสดุ, ค่าสาธารณูปโภค</div>
+        </div>
+        <div class="fg"><label>3. งบลงทุน (บาท)</label>
+          <input class="inp" type="number" id="rqP3" placeholder="0" min="0" />
+          <div style="font-size:11px;color:var(--sub);margin-top:3px">ค่าครุภัณฑ์, ค่าที่ดินและสิ่งก่อสร้าง</div>
+        </div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>4. งบเงินอุดหนุน (บาท)</label>
+          <input class="inp" type="number" id="rqP4" placeholder="0" min="0" />
+          <div style="font-size:11px;color:var(--sub);margin-top:3px">ทั่วไป / เฉพาะกิจ</div>
+        </div>
+        <div class="fg"><label>5. งบรายจ่ายอื่น (บาท)</label>
+          <input class="inp" type="number" id="rqP5" placeholder="0" min="0" />
+          <div style="font-size:11px;color:var(--sub);margin-top:3px">รายจ่ายที่ไม่เข้าลักษณะ 4 ประเภทข้างต้น</div>
+        </div>
+      </div>
+      <div class="sum-box" id="rqTotal">รวมทั้งสิ้น: 0 บาท</div>
+    </div>
+
+    <div class="frow full">
+      <div class="fg"><label>แผนการปฏิบัติงาน <span class="req">*</span> <span style="font-weight:400;color:var(--sub)">(มาตรา 12(3))</span></label>
+        <textarea id="rqWorkplan" rows="3" placeholder="ระบุขั้นตอนและระยะเวลาดำเนินงาน..."></textarea>
+      </div>
+    </div>
+    <div class="frow">
+      <div class="fg"><label>สอดคล้องกับยุทธศาสตร์ชาติ</label>
+        <select class="sel" id="rqStrategy">
+          <option value="">-- เลือกด้านยุทธศาสตร์ --</option>
+          <option>ด้านความมั่นคง</option>
+          <option>ด้านการสร้างความสามารถในการแข่งขัน</option>
+          <option>ด้านการพัฒนาและเสริมสร้างศักยภาพทรัพยากรมนุษย์</option>
+          <option>ด้านการสร้างโอกาสและความเสมอภาคทางสังคม</option>
+          <option>ด้านการสร้างการเติบโตบนคุณภาพชีวิตที่เป็นมิตรกับสิ่งแวดล้อม</option>
+          <option>ด้านการปรับสมดุลและพัฒนาระบบการบริหารจัดการภาครัฐ</option>
+        </select>
+      </div>
+      <div class="fg"><label>แผนพัฒนาเศรษฐกิจและสังคมแห่งชาติ</label>
+        <select class="sel" id="rqPlan14">
+          <option value="">-- เลือกแผน --</option>
+          <option>แผนพัฒนาฯ ฉบับที่ 13 (พ.ศ. 2566–2570) หมุดหมายที่ 1</option>
+          <option>แผนพัฒนาฯ ฉบับที่ 13 หมุดหมายที่ 2</option>
+          <option>แผนพัฒนาฯ ฉบับที่ 13 หมุดหมายที่ 3</option>
+          <option>แผนพัฒนาฯ ฉบับที่ 13 หมุดหมายที่ 4</option>
+          <option>แผนพัฒนาฯ ฉบับที่ 13 หมุดหมายที่ 5</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:4px">
+      <button class="btn" onclick="submitBudgetRequest()">📤 ส่งคำของบประมาณ</button>
+      <button class="btn btn-out" onclick="clearBudgetRequest()">ล้างฟอร์ม</button>
+    </div>
+  </div>
+
+  <div class="card" id="wfCard" style="display:none">
+    <div class="card-h">สถานะเวิร์กโฟลว์คำของบประมาณ <span class="law-note">มาตรา 12-16 พรบ.วิธีการงบประมาณ 2561</span></div>
+    <div class="wf-track" id="wfTrack"></div>
+    <div style="font-size:12px;color:var(--sub);margin-top:8px">อ้างอิง: มาตรา 12 หน่วยรับงบต้องส่งผ่านกระทรวงต้นสังกัด → สำนักงบประมาณ ผ่านระบบ e-Budgeting ภายในกำหนด</div>
+  </div>
+
+  <div class="card">
+    <div class="card-h">รายการคำของบประมาณที่บันทึกไว้</div>
+    <div class="tbl-wrap"><table class="tbl" id="reqTable">
+      <thead><tr><th>ปีงบ</th><th>หน่วยงาน</th><th>โครงการ</th><th>รวมที่ขอ (บาท)</th><th>สถานะ</th><th>วันที่</th></tr></thead>
+      <tbody id="reqTbody"><tr><td colspan="6" class="empty">ยังไม่มีคำของบประมาณ</td></tr></tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- ===== TAB 3: งบที่ได้รับจัดสรร ===== -->
+<div class="page" id="page-allocation">
+  <div class="kpi-row" id="allocKpi">
+    <div class="kpi-card"><div class="kpi-v" id="ak1">-</div><div class="kpi-l">💼 งบบุคลากร</div></div>
+    <div class="kpi-card c2"><div class="kpi-v" id="ak2">-</div><div class="kpi-l">⚙️ งบดำเนินงาน</div></div>
+    <div class="kpi-card c3"><div class="kpi-v" id="ak3">-</div><div class="kpi-l">🏗️ งบลงทุน</div></div>
+    <div class="kpi-card c4"><div class="kpi-v" id="ak4">-</div><div class="kpi-l">🤝 งบเงินอุดหนุน</div></div>
+    <div class="kpi-card c5"><div class="kpi-v" id="ak5">-</div><div class="kpi-l">📑 งบรายจ่ายอื่น</div></div>
+  </div>
+  <div class="card">
+    <div class="card-h">💰 งบประมาณที่ได้รับจัดสรร <span class="law-note">พรบ.งบประมาณรายจ่ายประจำปี + หลักการจำแนกประเภทรายจ่าย กรมบัญชีกลาง</span></div>
+    <div class="toolbar">
+      <button class="btn" onclick="openAllocModal()">+ เพิ่มรายการจัดสรร</button>
+      <input class="inp" id="allocSearch" placeholder="ค้นหาโครงการ..." oninput="renderAllocTable()" style="width:220px">
+    </div>
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>แผนงาน/โครงการ</th><th>ประเภทงบ</th><th>วงเงินที่ขอ (บาท)</th><th>วงเงินที่ได้รับ (บาท)</th><th>ส่วนต่าง (บาท)</th><th>%ได้รับ</th><th>จัดการ</th></tr></thead>
+      <tbody id="allocTbody"><tr><td colspan="7" class="empty">ยังไม่มีรายการจัดสรร</td></tr></tbody>
+    </table></div>
+    <div style="font-size:11px;color:var(--sub);margin-top:10px">อ้างอิง: หลักการจำแนกประเภทรายจ่ายตามงบประมาณ กรมบัญชีกลาง ฉบับปรับปรุง</div>
+  </div>
+</div>
+
+<!-- ===== TAB 4: การเบิกจ่าย ===== -->
+<div class="page" id="page-disbursement">
+  <div class="card">
+    <div class="card-h">📤 ฎีกาเบิกเงิน (GFMIS) <span class="law-note">มาตรา 22 พรบ.วิธีการงบประมาณ 2561 | ระบบ GFMIS กรมบัญชีกลาง</span></div>
+    <div style="background:#e0f7fa;border-left:4px solid #00838f;border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:12px;color:#004d40">
+      <strong>ขั้นตอนการเบิกจ่าย GFMIS (Procurement → Disbursement Cycle):</strong><br>
+      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-top:8px;font-size:11px;font-weight:700">
+        <span style="background:#00838f;color:#fff;padding:4px 10px;border-radius:6px">📝 PR ใบขอซื้อ/จ้าง</span>
+        <span style="color:#00838f">→</span>
+        <span style="background:#00838f;color:#fff;padding:4px 10px;border-radius:6px">📦 PO ใบสั่งซื้อ/จ้าง</span>
+        <span style="color:#00838f">→</span>
+        <span style="background:#00838f;color:#fff;padding:4px 10px;border-radius:6px">✅ ตรวจรับสินค้า/งาน</span>
+        <span style="color:#00838f">→</span>
+        <span style="background:#00695c;color:#fff;padding:4px 10px;border-radius:6px">📤 ฎีกาเบิกเงิน</span>
+        <span style="color:#00838f">→</span>
+        <span style="background:#1b5e20;color:#fff;padding:4px 10px;border-radius:6px">🏦 โอนเงินจากคลัง</span>
+      </div>
+      <div style="margin-top:6px;color:#546e7a;font-size:10px">อ้างอิง: ระเบียบว่าด้วยการพัสดุ พ.ศ. 2560 + ระบบ GFMIS กรมบัญชีกลาง | ต้องมี PO อ้างอิงก่อนทำฎีกา</div>
+    </div>
+    <div class="frow three">
+      <div class="fg"><label>รหัส Cost Center <span class="req">*</span></label>
+        <input class="inp" id="disCC" placeholder="เช่น 1234567890" /></div>
+      <div class="fg"><label>ประเภทงบรายจ่าย <span class="req">*</span></label>
+        <select class="sel" id="disType">
+          <option value="">-- เลือกประเภทงบ --</option>
+          <option value="1">1. งบบุคลากร</option>
+          <option value="2">2. งบดำเนินงาน</option>
+          <option value="3">3. งบลงทุน</option>
+          <option value="4">4. งบเงินอุดหนุน</option>
+          <option value="5">5. งบรายจ่ายอื่น</option>
+        </select>
+      </div>
+      <div class="fg"><label>จำนวนเงิน (บาท) <span class="req">*</span></label>
+        <input class="inp" type="number" id="disAmt" placeholder="0" min="0" /></div>
+    </div>
+    <div class="frow full">
+      <div class="fg"><label>รายละเอียด <span class="req">*</span></label>
+        <textarea id="disDesc" rows="2" placeholder="ระบุรายละเอียดการเบิกจ่าย..."></textarea>
+      </div>
+    </div>
+    <div class="frow three">
+      <div class="fg"><label>เลขที่ PO / ใบสั่งซื้อ</label>
+        <input class="inp" id="disPO" placeholder="PO-XXXX" /></div>
+      <div class="fg"><label>เลขที่ใบแจ้งหนี้ (Invoice)</label>
+        <input class="inp" id="disInv" placeholder="INV-XXXX" /></div>
+      <div class="fg"><label>ผู้อนุมัติ <span class="req">*</span></label>
+        <input class="inp" id="disApprover" placeholder="ชื่อ-นามสกุล ตำแหน่ง" /></div>
+    </div>
+    <div style="margin-top:4px;display:flex;gap:10px">
+      <button class="btn" onclick="submitDisbursement()">📤 บันทึกฎีกาเบิกเงิน</button>
+      <button class="btn btn-out" onclick="clearDisbForm()">ล้างฟอร์ม</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-h">ความก้าวหน้าการเบิกจ่ายต่อประเภทงบ</div>
+    <div id="disProgress"><div class="loading">กำลังโหลด...</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-h">รายการฎีกาเบิกเงิน</div>
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>วันที่</th><th>Cost Center</th><th>ประเภทงบ</th><th>รายละเอียด</th><th>จำนวน (บาท)</th><th>PO/Invoice</th><th>ผู้อนุมัติ</th><th>สถานะ</th></tr></thead>
+      <tbody id="disTbody"><tr><td colspan="8" class="empty">ยังไม่มีรายการเบิกจ่าย</td></tr></tbody>
+    </table></div>
+    <div style="font-size:11px;color:var(--sub);margin-top:10px">อ้างอิง: การเบิกจ่ายต้องผ่านระบบ GFMIS (Government Fiscal Management Information System) กรมบัญชีกลาง</div>
+  </div>
+</div>
+
+<!-- ===== TAB 5: เงินนอกงบประมาณ ===== -->
+<div class="page" id="page-offbudget">
+  <div class="card">
+    <div class="card-h">🏦 นิยาม: เงินนอกงบประมาณ <span class="law-note">มาตรา 4 พรบ.วินัยการเงินการคลังของรัฐ 2561</span></div>
+    <div style="background:var(--light);border-left:4px solid var(--em);border-radius:8px;padding:14px;font-size:13px;line-height:1.8;color:var(--text)">
+      <strong>"บรรดาเงินทั้งปวงที่หน่วยงานของรัฐจัดเก็บหรือได้รับไว้เป็นกรรมสิทธิ์ตามกฎหมาย ที่มีกฎหมายอนุญาตให้เก็บไว้ใช้จ่ายได้โดยไม่ต้องนำส่งคลัง"</strong>
+      <br>— มาตรา 4 พระราชบัญญัติวินัยการเงินการคลังของรัฐ พ.ศ. 2561
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px">
+      <div style="background:#fff;border:1px solid var(--light2);border-radius:8px;padding:12px;font-size:12px">
+        <div style="font-weight:700;color:var(--em);margin-bottom:4px">💼 เงินรายได้หน่วยงาน</div>
+        รายได้จากการให้บริการ, ขายสินค้า ที่มีกฎหมายให้เก็บไว้ใช้</div>
+      <div style="background:#fff;border:1px solid var(--light2);border-radius:8px;padding:12px;font-size:12px">
+        <div style="font-weight:700;color:var(--em);margin-bottom:4px">🏛️ เงินกองทุน</div>
+        กองทุนที่จัดตั้งตามกฎหมายเฉพาะ มีวัตถุประสงค์กำหนด</div>
+      <div style="background:#fff;border:1px solid var(--light2);border-radius:8px;padding:12px;font-size:12px">
+        <div style="font-weight:700;color:var(--em);margin-bottom:4px">🎁 เงินบริจาค</div>
+        เงินที่ได้รับบริจาคเพื่อวัตถุประสงค์เฉพาะตามกฎหมาย</div>
+      <div style="background:#fff;border:1px solid var(--light2);border-radius:8px;padding:12px;font-size:12px">
+        <div style="font-weight:700;color:var(--em);margin-bottom:4px">📋 เงินค่าธรรมเนียม</div>
+        ค่าธรรมเนียมที่เก็บตามกฎหมาย มีอำนาจเก็บไว้ใช้</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-h">บันทึกรายรับ-รายจ่ายเงินนอกงบประมาณ</div>
+    <div class="frow three">
+      <div class="fg"><label>ประเภทเงินนอกงบ <span class="req">*</span></label>
+        <select class="sel" id="obType">
+          <option value="">-- เลือกประเภท --</option>
+          <option value="revenue">เงินรายได้หน่วยงาน</option>
+          <option value="fund">เงินกองทุน</option>
+          <option value="donation">เงินบริจาค</option>
+          <option value="fee">เงินค่าธรรมเนียม</option>
+        </select>
+      </div>
+      <div class="fg"><label>ประเภทรายการ <span class="req">*</span></label>
+        <select class="sel" id="obTrans">
+          <option value="in">รายรับ</option>
+          <option value="out">รายจ่าย</option>
+        </select>
+      </div>
+      <div class="fg"><label>จำนวนเงิน (บาท) <span class="req">*</span></label>
+        <input class="inp" type="number" id="obAmt" placeholder="0" min="0" /></div>
+    </div>
+    <div class="frow full">
+      <div class="fg"><label>รายละเอียด <span class="req">*</span></label>
+        <input class="inp" id="obDesc" placeholder="ระบุรายละเอียด..." /></div>
+    </div>
+    <div class="frow">
+      <div class="fg"><label>ฐานอำนาจตามกฎหมาย <span class="req">*</span></label>
+        <input class="inp" id="obLaw" placeholder="เช่น พรบ. สวทช. มาตรา 30" /></div>
+      <div class="fg"><label>วันที่ทำรายการ</label>
+        <input class="inp" type="date" id="obDate" /></div>
+    </div>
+    <button class="btn" onclick="submitOffBudget()">💾 บันทึกรายการ</button>
+  </div>
+
+  <div class="card">
+    <div class="card-h">รายการเงินนอกงบประมาณ</div>
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>วันที่</th><th>ประเภทเงิน</th><th>รายการ</th><th>รายละเอียด</th><th>รายรับ (บาท)</th><th>รายจ่าย (บาท)</th><th>ฐานกฎหมาย</th></tr></thead>
+      <tbody id="obTbody"><tr><td colspan="7" class="empty">ยังไม่มีรายการ</td></tr></tbody>
+    </table></div>
+    <div style="font-size:11px;color:var(--sub);margin-top:10px">
+      <strong>หมายเหตุ:</strong> เงินนอกงบประมาณต้องมีกฎหมายรองรับ | ห้ามใช้เพื่อวัตถุประสงค์อื่นนอกจากที่กฎหมายกำหนด (มาตรา 4, 23 พรบ.วินัยการเงินการคลัง 2561)
+    </div>
+  </div>
+</div>
+
+<!-- ===== TAB 6: เงินเหลือจ่าย ===== -->
+<div class="page" id="page-surplus">
+  <div class="card">
+    <div class="card-h">💵 นิยาม: เงินเหลือจ่าย <span class="law-note">พรบ.วินัยการเงินการคลังของรัฐ 2561</span></div>
+    <div style="background:var(--light);border-left:4px solid var(--gold);border-radius:8px;padding:14px;font-size:13px;line-height:1.8">
+      <strong>"เงินงบประมาณที่เบิกจากคลังไปแล้วแต่จ่ายไม่หมด หรือจ่ายแล้วถูกเรียกคืน ต้องนำส่งคลัง"</strong>
+      <br>— พระราชบัญญัติวินัยการเงินการคลังของรัฐ พ.ศ. 2561
+      <br><span style="color:var(--red);font-weight:700">⚠️ หน่วยงานต้องนำส่งคลังภายในกำหนด ห้ามนำไปใช้จ่ายต่อ</span>
+    </div>
+    <div style="background:#fff9c4;border:1px solid #f9a825;border-radius:8px;padding:12px;margin-top:10px;font-size:12px;color:#7c4a00">
+      <strong>หมายเหตุสำคัญ:</strong> เงินสะสม ใช้เฉพาะ อปท. (องค์กรปกครองส่วนท้องถิ่น) ตามระเบียบกระทรวงมหาดไทย เท่านั้น ไม่ใช้กับส่วนราชการกระทรวงกลาง
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-h">ตารางเงินเหลือจ่ายแต่ละโครงการ</div>
+    <div class="toolbar">
+      <button class="btn" onclick="openSurplusModal()">+ เพิ่มรายการเงินเหลือจ่าย</button>
+    </div>
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>โครงการ</th><th>ประเภทงบ</th><th>วงเงินเบิก (บาท)</th><th>จ่ายจริง (บาท)</th><th>เงินเหลือจ่าย (บาท)</th><th>สถานะ</th><th>จัดการ</th></tr></thead>
+      <tbody id="surplusTbody"><tr><td colspan="7" class="empty">ยังไม่มีรายการ</td></tr></tbody>
+    </table></div>
+
+    <div class="sum-box" id="surplusSum" style="margin-top:14px">
+      รวมเงินเหลือจ่ายที่ต้องนำส่งคลัง: <span id="surplusTotal">0</span> บาท
+    </div>
+    <div style="font-size:11px;color:var(--sub);margin-top:8px">อ้างอิง: พรบ.วินัยการเงินการคลังของรัฐ พ.ศ. 2561 — ห้ามนำเงินเหลือจ่ายไปใช้จ่ายนอกเหนืออำนาจ</div>
+  </div>
+</div>
+
+<!-- ===== TAB 7: รายงานผล ===== -->
+<div class="page" id="page-report">
+  <div class="card">
+    <div class="card-h">📊 รายงานผลการใช้จ่ายรายไตรมาส <span class="law-note">มาตรา 28 พรบ.วิธีการงบประมาณ 2561 | สำนักงบประมาณ</span></div>
+    <div style="background:var(--light);border-radius:8px;padding:12px;font-size:12px;color:var(--em2);margin-bottom:14px">
+      📌 <strong>หมายเหตุ:</strong> รายงานผลต่อสำนักงบประมาณ <strong>ภายใน 45 วันหลังสิ้นไตรมาส</strong> | สำนักงานตรวจเงินแผ่นดิน (สตง.) มีอำนาจตรวจสอบ ตาม พรบ.ประกอบรัฐธรรมนูญว่าด้วยการตรวจเงินแผ่นดิน
+    </div>
+
+    <div class="tbl-wrap" style="margin-bottom:16px">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>ประเภทงบ</th>
+            <th>งบจัดสรร (บาท)</th>
+            <th>ไตรมาส 1</th><th>ไตรมาส 2</th><th>ไตรมาส 3</th><th>ไตรมาส 4</th>
+            <th>เบิกจ่ายรวม</th><th>%เบิก</th><th>เงินเหลือ</th>
+          </tr>
+        </thead>
+        <tbody id="reportTbody">
+          <tr><td colspan="9" class="empty">กำลังโหลดข้อมูล...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <button class="btn btn-gold" onclick="submitReport()">📤 ส่งรายงานต่อสำนักงบประมาณ</button>
+      <button class="btn btn-out" onclick="refreshReport()">🔄 รีเฟรชข้อมูล</button>
+      <span style="font-size:12px;color:var(--sub)">ส่งรายงานผ่านระบบ eMENSCR / ระบบติดตามและประเมินผลแห่งชาติ</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-h">ตรวจสอบโดย สตง.</div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>รายการตรวจสอบ</th><th>ผู้ตรวจสอบ</th><th>ฐานกฎหมาย</th><th>สถานะ</th></tr></thead>
+        <tbody>
+          <tr><td>การเบิกจ่ายถูกต้องตามระเบียบ</td><td>สำนักงานตรวจเงินแผ่นดิน (สตง.)</td><td>พรบ.ประกอบรัฐธรรมนูญว่าด้วยการตรวจเงินแผ่นดิน</td><td><span class="chip chip-pen">รอตรวจสอบ</span></td></tr>
+          <tr><td>ความถูกต้องของฎีกา</td><td>กรมบัญชีกลาง</td><td>ระเบียบว่าด้วยการเบิกจ่ายเงินจากคลัง</td><td><span class="chip chip-pen">รอตรวจสอบ</span></td></tr>
+          <tr><td>รายงานผลการดำเนินงาน</td><td>สำนักงบประมาณ</td><td>มาตรา 28 พรบ.วิธีการงบประมาณ 2561</td><td><span class="chip chip-pen">รอตรวจสอบ</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div><!-- end main -->
+
+<!-- MODAL: เพิ่มรายการจัดสรร -->
+<div class="modal-bg" id="modalAlloc">
+  <div class="modal">
+    <div class="modal-h">
+      เพิ่มรายการงบประมาณที่ได้รับจัดสรร
+      <button class="modal-close" onclick="closeModal('modalAlloc')">✕</button>
+    </div>
+    <div class="frow full"><div class="fg"><label>แผนงาน/โครงการ <span class="req">*</span></label>
+      <input class="inp" id="alPlan" placeholder="ชื่อแผนงาน/โครงการ" /></div></div>
+    <div class="frow">
+      <div class="fg"><label>ประเภทงบรายจ่าย <span class="req">*</span></label>
+        <select class="sel" id="alType">
+          <option value="1">1. งบบุคลากร</option>
+          <option value="2">2. งบดำเนินงาน</option>
+          <option value="3">3. งบลงทุน</option>
+          <option value="4">4. งบเงินอุดหนุน</option>
+          <option value="5">5. งบรายจ่ายอื่น</option>
+        </select>
+      </div>
+      <div class="fg"><label>วงเงินที่ขอ (บาท) <span class="req">*</span></label>
+        <input class="inp" type="number" id="alRequested" placeholder="0" min="0" /></div>
+    </div>
+    <div class="frow full"><div class="fg"><label>วงเงินที่ได้รับ (บาท) <span class="req">*</span></label>
+      <input class="inp" type="number" id="alApproved" placeholder="0" min="0" /></div></div>
+    <div class="modal-actions">
+      <button class="btn btn-out" onclick="closeModal('modalAlloc')">ยกเลิก</button>
+      <button class="btn" onclick="saveAlloc()">💾 บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: เพิ่มเงินเหลือจ่าย -->
+<div class="modal-bg" id="modalSurplus">
+  <div class="modal">
+    <div class="modal-h">
+      เพิ่มรายการเงินเหลือจ่าย
+      <button class="modal-close" onclick="closeModal('modalSurplus')">✕</button>
+    </div>
+    <div class="frow full"><div class="fg"><label>ชื่อโครงการ <span class="req">*</span></label>
+      <input class="inp" id="spProject" placeholder="ชื่อโครงการ" /></div></div>
+    <div class="frow three">
+      <div class="fg"><label>ประเภทงบ</label>
+        <select class="sel" id="spType">
+          <option value="1">งบบุคลากร</option>
+          <option value="2">งบดำเนินงาน</option>
+          <option value="3">งบลงทุน</option>
+          <option value="4">งบเงินอุดหนุน</option>
+          <option value="5">งบรายจ่ายอื่น</option>
+        </select>
+      </div>
+      <div class="fg"><label>วงเงินเบิก (บาท) <span class="req">*</span></label>
+        <input class="inp" type="number" id="spWithdrawn" placeholder="0" min="0" /></div>
+      <div class="fg"><label>จ่ายจริง (บาท) <span class="req">*</span></label>
+        <input class="inp" type="number" id="spPaid" placeholder="0" min="0" /></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-out" onclick="closeModal('modalSurplus')">ยกเลิก</button>
+      <button class="btn" onclick="saveSurplus()">💾 บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const agencyId = new URLSearchParams(location.search).get('agency') || 'nstda';
+const agencyLabels = {nstda:'NSTDA',moac:'กษ.',mhesi:'อว.',mdes:'ดศ.',moph:'สธ.',moi:'มท.',moc:'พณ.'};
+document.getElementById('agencyLabel').textContent = agencyLabels[agencyId] || agencyId.toUpperCase();
+
+// ---- STATE ----
+let allocData = [];
+let disData = [];
+let obData = [];
+let surplusData = [];
+let reqData = [];
+
+// ---- TOAST ----
+function toast(msg, type) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = type === 'ok' ? 'ok' : type === 'er' ? 'er' : '';
+  el.style.display = 'block';
+  setTimeout(function() { el.style.display = 'none'; }, 3000);
+}
+
+// ---- TAB ----
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(function(t,i) {
+    var names = ['cycle','request','allocation','disbursement','offbudget','surplus','report'];
+    t.classList.toggle('active', names[i] === name);
+  });
+  document.querySelectorAll('.page').forEach(function(p) {
+    p.classList.toggle('active', p.id === 'page-'+name);
+  });
+  if (name === 'allocation') renderAllocTable();
+  if (name === 'disbursement') renderDisTable();
+  if (name === 'report') renderReport();
+}
+
+// ---- MODAL ----
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ---- CYCLE TIMELINE ----
+var cycleSteps = [
+  {num:'01', title:'ทบทวนและวางแผน', period:'มกราคม – กุมภาพันธ์',
+    items:['กระทรวงการคลัง + สภาพัฒน์ + ธปท.','กำหนดกรอบวงเงินงบประมาณ','ครม. อนุมัตินโยบายและวงเงิน','แจ้งกรอบวงเงินให้หน่วยรับงบ']},
+  {num:'02', title:'จัดทำงบประมาณ', period:'กุมภาพันธ์ – กรกฎาคม',
+    items:['หน่วยรับงบทำคำของบประมาณ','ส่งผ่านกระทรวงต้นสังกัด','สำนักงบประมาณพิจารณา (e-Budgeting)','ครม. อนุมัติร่าง พ.ร.บ.']},
+  {num:'03', title:'อนุมัติงบประมาณ', period:'สิงหาคม – กันยายน',
+    items:['สภาผู้แทนราษฎร 3 วาระ','วุฒิสภารับรอง (ภายใน 20 วัน)','ทูลเกล้าฯ → ประกาศใช้','พ.ร.บ.งบประมาณรายจ่ายประจำปี']},
+  {num:'04', title:'ติดตามและประเมินผล', period:'ตุลาคม – กันยายน',
+    items:['เบิกจ่ายผ่านระบบ GFMIS','รายงานผลรายไตรมาส (สำนักงบ)','สตง. ตรวจสอบ','นำส่งเงินเหลือจ่ายคลัง']}
+];
+
+function buildCycle() {
+  var now = new Date();
+  var month = now.getMonth() + 1;
+  // ปีงบ ต.ค.-ก.ย. : month 10-12 = ขั้น 4, 1-2 = ขั้น 1, 2-7 = ขั้น 2, 8-9 = ขั้น 3, otherwise 4
+  var curStep = 4;
+  if (month === 1 || month === 2) curStep = 1;
+  else if (month >= 2 && month <= 7) curStep = 2;
+  else if (month === 8 || month === 9) curStep = 3;
+  var html = "";
+  cycleSteps.forEach(function(s, i) {
+    var isCur = (i + 1 === curStep);
+    var isDone = (i + 1 < curStep);
+    html += "<div class='cycle-step" + (isCur ? " current" : "") + "'>";
+    html += "<div class='cs-num'>" + s.num + "</div>";
+    html += "<div class='cs-title'>" + s.title + "</div>";
+    html += "<div class='cs-period'>📅 " + s.period + "</div>";
+    html += "<div class='cs-items'>" + s.items.map(function(x) { return "• " + x; }).join("<br>") + "</div>";
+    if (isCur) html += "<span class='cs-badge active'>● ขั้นตอนปัจจุบัน</span>";
+    else if (isDone) html += "<span class='cs-badge done'>✓ เสร็จสิ้น</span>";
+    else html += "<span class='cs-badge wait'>○ รอดำเนินการ</span>";
+    html += "</div>";
+  });
+  document.getElementById('cycleWrap').innerHTML = html;
+}
+buildCycle();
+
+// ---- WORKFLOW TRACKER ----
+function buildWorkflow(stepIdx) {
+  var steps = ['หน่วยงาน','กระทรวง','สำนักงบ','ครม.','สภาฯ'];
+  var icons = ['🏢','🏛️','📋','⚖️','🏛️'];
+  var html = "";
+  steps.forEach(function(s, i) {
+    if (i > 0) html += "<div class='wf-line" + (i <= stepIdx ? " done" : "") + "'></div>";
+    var cls = i < stepIdx ? "done" : i === stepIdx ? "current" : "wait";
+    html += "<div class='wf-step'><div class='wf-icon " + cls + "'>" + icons[i] + "</div><div class='wf-label'>" + s + "</div></div>";
+  });
+  return html;
+}
+
+// ---- REQUEST ----
+function calcTotal() {
+  var ids = ['rqP1','rqP2','rqP3','rqP4','rqP5'];
+  var total = 0;
+  ids.forEach(function(id) { total += parseFloat(document.getElementById(id).value) || 0; });
+  document.getElementById('rqTotal').textContent = "รวมทั้งสิ้น: " + fmtNum(total) + " บาท";
+}
+['rqP1','rqP2','rqP3','rqP4','rqP5'].forEach(function(id) {
+  document.getElementById(id).addEventListener('input', calcTotal);
+});
+
+function submitBudgetRequest() {
+  var unit = document.getElementById('rqUnit').value.trim();
+  var proj = document.getElementById('rqPlan').value.trim();
+  var obj = document.getElementById('rqObjective').value.trim();
+  var wplan = document.getElementById('rqWorkplan').value.trim();
+  var min = document.getElementById('rqMinistry').value;
+  if (!unit || !proj || !obj || !wplan || !min) {
+    toast('กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน', 'er'); return;
+  }
+  var p1 = parseFloat(document.getElementById('rqP1').value) || 0;
+  var p2 = parseFloat(document.getElementById('rqP2').value) || 0;
+  var p3 = parseFloat(document.getElementById('rqP3').value) || 0;
+  var p4 = parseFloat(document.getElementById('rqP4').value) || 0;
+  var p5 = parseFloat(document.getElementById('rqP5').value) || 0;
+  var total = p1+p2+p3+p4+p5;
+  if (total <= 0) { toast('ต้องระบุวงเงินอย่างน้อยหนึ่งประเภทงบ', 'er'); return; }
+  var rec = {
+    year: document.getElementById('rqYear').value,
+    unit: unit, min: min, proj: proj, obj: obj,
+    p1:p1, p2:p2, p3:p3, p4:p4, p5:p5, total:total,
+    kpi: document.getElementById('rqKpi').value,
+    wplan: wplan,
+    strategy: document.getElementById('rqStrategy').value,
+    date: new Date().toLocaleDateString('th-TH'),
+    status: 'ส่งแล้ว'
+  };
+  reqData.push(rec);
+  renderReqTable();
+  document.getElementById('wfCard').style.display = 'block';
+  document.getElementById('wfTrack').innerHTML = buildWorkflow(0);
+  toast('ส่งคำของบประมาณเรียบร้อย — สถานะ: หน่วยงาน ✓', 'ok');
+  postBudget(rec);
+}
+
+function postBudget(rec) {
+  fetch('/api/subagency/' + agencyId + '/budget', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({type:'request', data:rec})
+  }).catch(function() {});
+}
+
+function renderReqTable() {
+  var tbody = document.getElementById('reqTbody');
+  if (reqData.length === 0) {
+    tbody.innerHTML = "<tr><td colspan='6' class='empty'>ยังไม่มีคำของบประมาณ</td></tr>"; return;
+  }
+  var html = "";
+  reqData.forEach(function(r) {
+    html += "<tr><td>" + r.year + "</td><td>" + r.unit + "</td><td>" + r.proj + "</td>";
+    html += "<td style='text-align:right'>" + fmtNum(r.total) + "</td>";
+    html += "<td><span class='chip chip-pen'>" + r.status + "</span></td><td>" + r.date + "</td></tr>";
+  });
+  tbody.innerHTML = html;
+}
+
+function clearBudgetRequest() {
+  ['rqUnit','rqPlan','rqObjective','rqKpi','rqP1','rqP2','rqP3','rqP4','rqP5','rqWorkplan'].forEach(function(id) {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('rqMinistry').selectedIndex = 0;
+  document.getElementById('rqStrategy').selectedIndex = 0;
+  document.getElementById('rqTotal').textContent = 'รวมทั้งสิ้น: 0 บาท';
+}
+
+// ---- ALLOCATION ----
+var budgetTypeLabels = {1:'งบบุคลากร',2:'งบดำเนินงาน',3:'งบลงทุน',4:'งบเงินอุดหนุน',5:'งบรายจ่ายอื่น'};
+var budgetTypeChips = {1:'chip-p',2:'chip-o',3:'chip-c',4:'chip-s',5:'chip-r'};
+
+function openAllocModal() { openModal('modalAlloc'); }
+
+function saveAlloc() {
+  var plan = document.getElementById('alPlan').value.trim();
+  var type = document.getElementById('alType').value;
+  var req = parseFloat(document.getElementById('alRequested').value) || 0;
+  var appr = parseFloat(document.getElementById('alApproved').value) || 0;
+  if (!plan || req <= 0) { toast('กรุณากรอกข้อมูลให้ครบ', 'er'); return; }
+  allocData.push({plan:plan, type:parseInt(type), requested:req, approved:appr});
+  closeModal('modalAlloc');
+  document.getElementById('alPlan').value = '';
+  document.getElementById('alRequested').value = '';
+  document.getElementById('alApproved').value = '';
+  renderAllocTable();
+  updateAllocKpi();
+  toast('เพิ่มรายการจัดสรรแล้ว', 'ok');
+}
+
+function renderAllocTable() {
+  var q = (document.getElementById('allocSearch').value || '').toLowerCase();
+  var tbody = document.getElementById('allocTbody');
+  var filtered = allocData.filter(function(r) { return r.plan.toLowerCase().indexOf(q) >= 0; });
+  if (filtered.length === 0) {
+    tbody.innerHTML = "<tr><td colspan='7' class='empty'>ยังไม่มีรายการจัดสรร</td></tr>"; return;
+  }
+  var html = "";
+  filtered.forEach(function(r, i) {
+    var diff = r.approved - r.requested;
+    var pct = r.requested > 0 ? Math.round(r.approved / r.requested * 100) : 0;
+    html += "<tr><td>" + r.plan + "</td>";
+    html += "<td><span class='chip " + budgetTypeChips[r.type] + "'>" + budgetTypeLabels[r.type] + "</span></td>";
+    html += "<td style='text-align:right'>" + fmtNum(r.requested) + "</td>";
+    html += "<td style='text-align:right'>" + fmtNum(r.approved) + "</td>";
+    html += "<td style='text-align:right;color:" + (diff >= 0 ? 'var(--em)' : 'var(--red)') + "'>" + fmtNum(diff) + "</td>";
+    html += "<td><div style='display:flex;align-items:center;gap:6px'><div class='pb' style='width:60px'><div class='pf' style='width:" + Math.min(pct,100) + "%'></div></div><span style='font-size:12px'>" + pct + "%</span></div></td>";
+    html += "<td><button class='btn btn-r btn-sm' onclick='delAlloc(" + i + ")'>ลบ</button></td></tr>";
+  });
+  tbody.innerHTML = html;
+}
+
+function delAlloc(i) { allocData.splice(i, 1); renderAllocTable(); updateAllocKpi(); }
+
+function updateAllocKpi() {
+  var sums = {1:0,2:0,3:0,4:0,5:0};
+  allocData.forEach(function(r) { sums[r.type] = (sums[r.type] || 0) + r.approved; });
+  document.getElementById('ak1').textContent = fmtShort(sums[1]);
+  document.getElementById('ak2').textContent = fmtShort(sums[2]);
+  document.getElementById('ak3').textContent = fmtShort(sums[3]);
+  document.getElementById('ak4').textContent = fmtShort(sums[4]);
+  document.getElementById('ak5').textContent = fmtShort(sums[5]);
+}
+
+// ---- DISBURSEMENT ----
+var disTypeLabels = {1:'งบบุคลากร',2:'งบดำเนินงาน',3:'งบลงทุน',4:'งบเงินอุดหนุน',5:'งบรายจ่ายอื่น'};
+
+function submitDisbursement() {
+  var cc = document.getElementById('disCC').value.trim();
+  var type = document.getElementById('disType').value;
+  var amt = parseFloat(document.getElementById('disAmt').value) || 0;
+  var desc = document.getElementById('disDesc').value.trim();
+  var appr = document.getElementById('disApprover').value.trim();
+  if (!cc || !type || amt <= 0 || !desc || !appr) { toast('กรุณากรอกข้อมูลที่จำเป็นให้ครบ', 'er'); return; }
+  disData.push({
+    date: new Date().toLocaleDateString('th-TH'),
+    cc:cc, type:parseInt(type), desc:desc, amt:amt,
+    po: document.getElementById('disPO').value,
+    inv: document.getElementById('disInv').value,
+    approver:appr, status:'รอตรวจสอบ'
+  });
+  renderDisTable();
+  renderDisProgress();
+  clearDisbForm();
+  toast('บันทึกฎีกาเบิกเงินแล้ว', 'ok');
+}
+
+function clearDisbForm() {
+  ['disCC','disAmt','disDesc','disPO','disInv','disApprover'].forEach(function(id) {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('disType').selectedIndex = 0;
+}
+
+function renderDisTable() {
+  var tbody = document.getElementById('disTbody');
+  if (disData.length === 0) {
+    tbody.innerHTML = "<tr><td colspan='8' class='empty'>ยังไม่มีรายการเบิกจ่าย</td></tr>"; return;
+  }
+  var html = "";
+  disData.forEach(function(r) {
+    html += "<tr><td>" + r.date + "</td><td>" + r.cc + "</td>";
+    html += "<td><span class='chip " + budgetTypeChips[r.type] + "'>" + disTypeLabels[r.type] + "</span></td>";
+    html += "<td>" + r.desc + "</td><td style='text-align:right'>" + fmtNum(r.amt) + "</td>";
+    html += "<td style='font-size:11px'>" + (r.po || '-') + "<br>" + (r.inv || '-') + "</td>";
+    html += "<td>" + r.approver + "</td><td><span class='chip chip-pen'>" + r.status + "</span></td></tr>";
+  });
+  tbody.innerHTML = html;
+}
+
+function renderDisProgress() {
+  var sums = {1:0,2:0,3:0,4:0,5:0};
+  disData.forEach(function(r) { sums[r.type] += r.amt; });
+  var allocSums = {1:0,2:0,3:0,4:0,5:0};
+  allocData.forEach(function(r) { allocSums[r.type] += r.approved; });
+  var labels = {1:'งบบุคลากร',2:'งบดำเนินงาน',3:'งบลงทุน',4:'งบเงินอุดหนุน',5:'งบรายจ่ายอื่น'};
+  var colors = {1:'#3949AB',2:'#00897B',3:'#E65100',4:'#AD1457',5:'#6A1B9A'};
+  var html = "";
+  [1,2,3,4,5].forEach(function(t) {
+    var budget = allocSums[t];
+    var spent = sums[t];
+    var pct = budget > 0 ? Math.min(Math.round(spent/budget*100), 100) : 0;
+    html += "<div class='bt-row'>";
+    html += "<div class='bt-label'>" + labels[t] + "</div>";
+    html += "<div class='bt-bar'><div class='pb'><div class='pf' style='width:" + pct + "%;background:" + colors[t] + "'></div></div></div>";
+    html += "<div class='bt-pct'>" + pct + "%</div>";
+    html += "<div class='bt-amt'>เบิก " + fmtShort(spent) + " / " + fmtShort(budget) + "</div></div>";
+  });
+  if (!html) html = "<div class='empty'>กรุณาเพิ่มรายการจัดสรรก่อน</div>";
+  document.getElementById('disProgress').innerHTML = html;
+}
+
+// ---- OFF BUDGET ----
+var obTypeLabels = {revenue:'เงินรายได้หน่วยงาน',fund:'เงินกองทุน',donation:'เงินบริจาค',fee:'เงินค่าธรรมเนียม'};
+
+function submitOffBudget() {
+  var type = document.getElementById('obType').value;
+  var trans = document.getElementById('obTrans').value;
+  var amt = parseFloat(document.getElementById('obAmt').value) || 0;
+  var desc = document.getElementById('obDesc').value.trim();
+  var law = document.getElementById('obLaw').value.trim();
+  var date = document.getElementById('obDate').value || new Date().toLocaleDateString('th-TH');
+  if (!type || amt <= 0 || !desc || !law) { toast('กรุณากรอกข้อมูลให้ครบ', 'er'); return; }
+  obData.push({date:date, type:type, trans:trans, amt:amt, desc:desc, law:law});
+  renderObTable();
+  document.getElementById('obAmt').value = '';
+  document.getElementById('obDesc').value = '';
+  toast('บันทึกรายการเงินนอกงบประมาณแล้ว', 'ok');
+}
+
+function renderObTable() {
+  var tbody = document.getElementById('obTbody');
+  if (obData.length === 0) {
+    tbody.innerHTML = "<tr><td colspan='7' class='empty'>ยังไม่มีรายการ</td></tr>"; return;
+  }
+  var html = "";
+  obData.forEach(function(r) {
+    html += "<tr><td>" + r.date + "</td><td>" + (obTypeLabels[r.type] || r.type) + "</td>";
+    html += "<td><span class='chip " + (r.trans === 'in' ? 'chip-ok' : 'chip-r') + "'>" + (r.trans === 'in' ? 'รายรับ' : 'รายจ่าย') + "</span></td>";
+    html += "<td>" + r.desc + "</td>";
+    html += "<td style='text-align:right;color:var(--em)'>" + (r.trans === 'in' ? fmtNum(r.amt) : '-') + "</td>";
+    html += "<td style='text-align:right;color:var(--red)'>" + (r.trans === 'out' ? fmtNum(r.amt) : '-') + "</td>";
+    html += "<td style='font-size:11px'>" + r.law + "</td></tr>";
+  });
+  tbody.innerHTML = html;
+}
+
+// ---- SURPLUS ----
+function openSurplusModal() { openModal('modalSurplus'); }
+
+function saveSurplus() {
+  var proj = document.getElementById('spProject').value.trim();
+  var type = document.getElementById('spType').value;
+  var withdrawn = parseFloat(document.getElementById('spWithdrawn').value) || 0;
+  var paid = parseFloat(document.getElementById('spPaid').value) || 0;
+  if (!proj || withdrawn <= 0) { toast('กรุณากรอกข้อมูลให้ครบ', 'er'); return; }
+  if (paid > withdrawn) { toast('จ่ายจริงต้องไม่เกินวงเงินเบิก', 'er'); return; }
+  surplusData.push({proj:proj, type:parseInt(type), withdrawn:withdrawn, paid:paid, surplus:withdrawn-paid, status:'รอนำส่งคลัง'});
+  closeModal('modalSurplus');
+  document.getElementById('spProject').value = '';
+  document.getElementById('spWithdrawn').value = '';
+  document.getElementById('spPaid').value = '';
+  renderSurplusTable();
+  toast('บันทึกรายการเงินเหลือจ่ายแล้ว', 'ok');
+}
+
+function renderSurplusTable() {
+  var tbody = document.getElementById('surplusTbody');
+  var totalSurplus = 0;
+  if (surplusData.length === 0) {
+    tbody.innerHTML = "<tr><td colspan='7' class='empty'>ยังไม่มีรายการ</td></tr>";
+    document.getElementById('surplusTotal').textContent = '0';
+    return;
+  }
+  var html = "";
+  surplusData.forEach(function(r, i) {
+    if (r.status === 'รอนำส่งคลัง') totalSurplus += r.surplus;
+    html += "<tr><td>" + r.proj + "</td>";
+    html += "<td><span class='chip " + budgetTypeChips[r.type] + "'>" + budgetTypeLabels[r.type] + "</span></td>";
+    html += "<td style='text-align:right'>" + fmtNum(r.withdrawn) + "</td>";
+    html += "<td style='text-align:right'>" + fmtNum(r.paid) + "</td>";
+    html += "<td style='text-align:right;font-weight:700;color:var(--gold)'>" + fmtNum(r.surplus) + "</td>";
+    html += "<td><span class='chip " + (r.status === 'นำส่งคลังแล้ว' ? 'chip-done' : 'chip-pen') + "'>" + r.status + "</span></td>";
+    html += "<td>" + (r.status === 'รอนำส่งคลัง' ? "<button class='btn btn-sm btn-gold' onclick='sendToTreasury(" + i + ")'>นำส่งคลัง</button>" : "✓ ดำเนินการแล้ว") + "</td></tr>";
+  });
+  tbody.innerHTML = html;
+  document.getElementById('surplusTotal').textContent = fmtNum(totalSurplus);
+}
+
+function sendToTreasury(i) {
+  surplusData[i].status = 'นำส่งคลังแล้ว';
+  renderSurplusTable();
+  toast('บันทึกการนำส่งคลังแล้ว', 'ok');
+}
+
+// ---- REPORT ----
+function renderReport() {
+  var tbody = document.getElementById('reportTbody');
+  var labels = {1:'งบบุคลากร',2:'งบดำเนินงาน',3:'งบลงทุน',4:'งบเงินอุดหนุน',5:'งบรายจ่ายอื่น'};
+  var allocSums = {1:0,2:0,3:0,4:0,5:0};
+  allocData.forEach(function(r) { allocSums[r.type] += r.approved; });
+  var disSums = {1:0,2:0,3:0,4:0,5:0};
+  disData.forEach(function(r) { disSums[r.type] += r.amt; });
+  // Simple quarterly split (equal quarters for demo - real data from GFMIS)
+  var html = "";
+  var totalAlloc = 0, totalDis = 0;
+  [1,2,3,4,5].forEach(function(t) {
+    var alloc = allocSums[t];
+    var dis = disSums[t];
+    var pct = alloc > 0 ? Math.round(dis/alloc*100) : 0;
+    var leftover = alloc - dis;
+    var qDis = dis / 4;
+    totalAlloc += alloc; totalDis += dis;
+    html += "<tr><td><span class='chip " + budgetTypeChips[t] + "'>" + labels[t] + "</span></td>";
+    html += "<td style='text-align:right'>" + fmtNum(alloc) + "</td>";
+    html += "<td style='text-align:right'>" + fmtNum(qDis) + "</td>";
+    html += "<td style='text-align:right'>" + fmtNum(qDis) + "</td>";
+    html += "<td style='text-align:right'>" + fmtNum(qDis) + "</td>";
+    html += "<td style='text-align:right'>" + fmtNum(dis - qDis*3) + "</td>";
+    html += "<td style='text-align:right;font-weight:700'>" + fmtNum(dis) + "</td>";
+    html += "<td><div style='display:flex;align-items:center;gap:5px'><div class='pb' style='width:50px'><div class='pf' style='width:" + Math.min(pct,100) + "%'></div></div><span style='font-size:11px'>" + pct + "%</span></div></td>";
+    html += "<td style='text-align:right;color:" + (leftover < 0 ? 'var(--red)' : 'var(--em)') + "'>" + fmtNum(leftover) + "</td></tr>";
+  });
+  var totalPct = totalAlloc > 0 ? Math.round(totalDis/totalAlloc*100) : 0;
+  html += "<tr style='font-weight:700;background:var(--light)'><td>รวมทั้งหมด</td><td style='text-align:right'>" + fmtNum(totalAlloc) + "</td>";
+  html += "<td colspan='4' style='text-align:center;font-size:11px;color:var(--sub)'>แบ่ง 4 ไตรมาส</td>";
+  html += "<td style='text-align:right'>" + fmtNum(totalDis) + "</td>";
+  html += "<td style='text-align:right;color:var(--em)'>" + totalPct + "%</td>";
+  html += "<td style='text-align:right;color:var(--em)'>" + fmtNum(totalAlloc-totalDis) + "</td></tr>";
+  tbody.innerHTML = html || "<tr><td colspan='9' class='empty'>ยังไม่มีข้อมูลงบประมาณ — กรุณาเพิ่มรายการจัดสรรและเบิกจ่ายก่อน</td></tr>";
+}
+
+function refreshReport() { renderReport(); toast('รีเฟรชรายงานแล้ว', 'ok'); }
+
+function submitReport() {
+  if (confirm('ยืนยันการส่งรายงานผลการใช้จ่ายต่อสำนักงบประมาณ?\n\nรายงานจะถูกส่งผ่านระบบ eMENSCR ตาม มาตรา 28 พรบ.วิธีการงบประมาณ 2561')) {
+    toast('ส่งรายงานต่อสำนักงบประมาณแล้ว — กรุณาตรวจสอบใน eMENSCR', 'ok');
+  }
+}
+
+// ---- API LOAD ----
+function loadBudgetData() {
+  fetch('/api/subagency/' + agencyId + '/budget')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data && data.allocations) { allocData = data.allocations; renderAllocTable(); updateAllocKpi(); }
+      if (data && data.disbursements) { disData = data.disbursements; renderDisTable(); }
+      if (data && data.offbudget) { obData = data.offbudget; renderObTable(); }
+      if (data && data.surplus) { surplusData = data.surplus; renderSurplusTable(); }
+    })
+    .catch(function() {});
+}
+loadBudgetData();
+
+// ---- UTIL ----
+function fmtNum(n) {
+  if (!n && n !== 0) return '-';
+  return Number(n).toLocaleString('th-TH', {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+function fmtShort(n) {
+  if (!n && n !== 0) return '-';
+  if (n >= 1e9) return (n/1e9).toFixed(1) + ' พันล้าน';
+  if (n >= 1e6) return (n/1e6).toFixed(1) + ' ล้าน';
+  if (n >= 1e3) return (n/1e3).toFixed(1) + ' พัน';
+  return n.toLocaleString('th-TH');
+}
+
+// close modal on bg click
+document.querySelectorAll('.modal-bg').forEach(function(bg) {
+  bg.addEventListener('click', function(e) { if (e.target === bg) bg.classList.remove('open'); });
+});
+</script>
+<script>
+window.G2G_PAGE_CONFIG = {
+  pageName: 'ระบบ ERP งบประมาณ — ตามกฎหมาย',
+  agencyId: (new URLSearchParams(location.search).get('agency') || 'general'), ministryId: 'all',
+  manualText: 'Budget ERP สร้างตาม พรบ.วิธีการงบประมาณ 2561 + พรบ.วินัยการเงินการคลัง 2561 + พรบ.จัดซื้อจัดจ้าง 2560 ครบทุกกระบวนการตั้งแต่ขอจัดสรรจนถึงเบิกจ่าย',
+  manualSteps: [
+    '1. แถบ วงจรงบประมาณ: ดูขั้นตอนตามกฎหมาย 4 ระยะ',
+    '2. แถบ คำของบ: กรอกคำของบประมาณตาม 5 ประเภทงบรายจ่าย',
+    '3. แถบ งบที่ได้รับ: ดูงบที่ได้รับจัดสรรจาก สำนักงบประมาณ',
+    '4. แถบ การเบิกจ่าย: บันทึก PR→PO→ตรวจรับ→ฎีกา ผ่านระบบ GFMIS',
+    '5. แถบ รายงานผล: ส่งรายงานตามมาตรา 75 ภายใน 45 วัน'
+  ]
+};
+</script>
+<script src="/access-bar.js"></script>
+</body>
+</html>

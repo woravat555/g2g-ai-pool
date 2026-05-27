@@ -1,0 +1,2160 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ระบบบริหารราชการ — กระทรวงเกษตรและสหกรณ์</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy1:#1b4332;--navy2:#2d6a4f;--navy3:#40916c;--navy4:#52b788;
+  --gold:#ffd166;--gold2:#e9c46a;--gold3:#f4a261;
+  --green1:#166534;--green2:#22c55e;
+  --red:#dc2626;--orange:#ea580c;--purple:#7c3aed;
+  --bg:#f0faf4;--bg2:#e6f4ea;--border:#b7e4c7;
+  --white:#fff;--text:#1e293b;--sub:#64748b;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Sarabun',sans-serif}
+body{background:var(--bg);color:var(--text);height:100vh;overflow:hidden;display:flex;flex-direction:column}
+#login{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,var(--navy1) 0%,var(--navy2) 60%,var(--navy3) 100%)}
+.lc{background:#fff;border-radius:16px;padding:36px 40px;width:min(700px,96vw);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.lc-badge{display:flex;align-items:center;gap:14px;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid var(--bg2)}
+.lc-crest{font-size:40px}
+.t1{font-size:17px;font-weight:800;color:var(--navy1)}
+.t2{font-size:11px;color:var(--sub);letter-spacing:.5px}
+.lc-title{font-size:18px;font-weight:700;color:var(--navy1);margin-bottom:4px}
+.lc-sub{font-size:12px;color:var(--sub);margin-bottom:18px}
+.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.role-btn{border:2px solid var(--border);border-radius:10px;padding:14px 10px;text-align:center;cursor:pointer;transition:.2s;background:#fff}
+.role-btn:hover,.role-btn.active{border-color:var(--navy3);background:var(--bg2)}
+.role-btn.active{border-color:var(--navy2);background:#e6f4ea}
+.ri{font-size:22px;margin-bottom:4px}
+.rl{font-size:12px;font-weight:700;color:var(--navy1)}
+.rs{font-size:11px;color:var(--sub)}
+.inp{border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;width:100%;outline:none;font-family:inherit}
+.inp:focus{border-color:var(--navy3)}
+.lc-btn{width:100%;padding:13px;background:var(--navy1);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px;font-family:inherit}
+.lc-btn:hover{background:var(--navy2)}
+.lc-foot{text-align:center;font-size:11px;color:var(--sub);margin-top:12px}
+#app{display:none;flex-direction:column;height:100vh;overflow:hidden}
+.topbar{background:var(--navy1);color:#fff;padding:0 20px;height:54px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px}
+.tb-left{display:flex;align-items:center;gap:12px;min-width:0}
+.tb-logo{font-size:26px}
+.tb-t1{font-size:14px;font-weight:700;white-space:nowrap}
+.tb-t2{font-size:10px;opacity:.7;white-space:nowrap}
+.tb-lvl{display:flex;gap:4px;font-size:11px;align-items:center;flex-wrap:nowrap}
+.tb-lv{background:rgba(255,255,255,.12);padding:2px 8px;border-radius:12px;white-space:nowrap}
+.tb-lv.hi{background:var(--gold);color:var(--navy1);font-weight:700}
+.tb-sep{opacity:.4}
+.tb-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.tb-user{font-size:12px;opacity:.85;white-space:nowrap}
+.tb-logout{background:rgba(255,255,255,.15);border:none;color:#fff;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-family:inherit}
+.tb-back{background:rgba(255,255,255,.15);border:none;color:#fff;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-family:inherit;text-decoration:none;display:inline-flex;align-items:center}
+.dim-bar{background:var(--navy2);display:flex;padding:0 16px;gap:4px;flex-shrink:0;overflow-x:auto;height:46px;align-items:flex-end}
+.dim-tab{padding:10px 20px;font-size:13px;font-weight:700;color:rgba(255,255,255,.65);cursor:pointer;border-radius:8px 8px 0 0;white-space:nowrap;transition:.15s;border:none;background:transparent;font-family:inherit}
+.dim-tab:hover{background:rgba(255,255,255,.1);color:#fff}
+.dim-tab.active{background:#fff;color:var(--navy1)}
+.app-body{display:flex;flex:1;overflow:hidden}
+.sidebar{width:210px;background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0}
+.sb-sec{padding:10px 12px 4px;font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.7px}
+.sb-item{display:flex;align-items:center;gap:8px;padding:9px 14px;font-size:13px;color:var(--text);cursor:pointer;border-radius:0;transition:.15s}
+.sb-item:hover{background:var(--bg2)}
+.sb-item.active{background:var(--bg2);color:var(--navy1);font-weight:700;border-left:3px solid var(--navy3)}
+.main{flex:1;overflow-y:auto;padding:20px}
+.page{display:none}
+.page.active{display:block}
+.card{background:#fff;border-radius:12px;padding:18px 20px;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:16px}
+.card-h{font-size:15px;font-weight:700;color:var(--navy1);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.card-h .badge{font-size:11px;background:var(--bg2);color:var(--sub);padding:2px 8px;border-radius:10px;font-weight:500}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.kpi-card{background:#fff;border-radius:10px;padding:14px 16px;border:1px solid var(--border)}
+.kpi-v{font-size:26px;font-weight:800;color:var(--navy1)}
+.kpi-l{font-size:12px;color:var(--sub);margin-top:2px}
+.kpi-sub{font-size:11px;color:var(--sub)}
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{background:var(--navy1);color:#fff;padding:9px 10px;text-align:left;font-weight:600}
+.tbl td{padding:8px 10px;border-bottom:1px solid var(--bg2)}
+.tbl tr:hover td{background:var(--bg2)}
+.pb{background:var(--bg2);border-radius:4px;height:7px;overflow:hidden;width:100%}
+.pf{height:100%;border-radius:4px;transition:.3s}
+.pf.navy{background:var(--navy3)}.pf.gold{background:var(--gold)}.pf.green{background:var(--green2)}.pf.red{background:var(--red)}.pf.purple{background:var(--purple)}
+.level-chip{display:inline-block;font-size:11px;padding:2px 10px;border-radius:12px;font-weight:600}
+.lc-central{background:#dbeafe;color:#1e40af}
+.lc-region{background:#dcfce7;color:#166534}
+.lc-local{background:#fef9c3;color:#854d0e}
+.lc-indep{background:#f3e8ff;color:#6b21a8}
+.dot-g{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green2);margin-right:4px}
+.dot-y{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--gold2);margin-right:4px}
+.dot-r{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);margin-right:4px}
+.btn{background:var(--navy1);color:#fff;border:none;padding:7px 16px;border-radius:7px;cursor:pointer;font-size:13px;font-family:inherit;font-weight:600;transition:.15s}
+.btn:hover{background:var(--navy2)}
+.btn-sm{padding:4px 10px;font-size:12px}
+.btn-g{background:var(--green1)}.btn-g:hover{background:#14532d}
+.btn-out{background:#fff;color:var(--navy1);border:1px solid var(--border)}.btn-out:hover{background:var(--bg2)}
+.row-wrap{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.tag-ok{background:#dcfce7;color:#166534;padding:2px 9px;border-radius:10px;font-size:11px;font-weight:600}
+.tag-warn{background:#fef9c3;color:#854d0e;padding:2px 9px;border-radius:10px;font-size:11px;font-weight:600}
+.tag-err{background:#fee2e2;color:#991b1b;padding:2px 9px;border-radius:10px;font-size:11px;font-weight:600}
+.tag-blue{background:#dbeafe;color:#1e40af;padding:2px 9px;border-radius:10px;font-size:11px;font-weight:600}
+@media(max-width:900px){.sidebar{display:none}.kpi-row{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<!-- ========== LOGIN ========== -->
+<div id="login">
+<div class="lc">
+  <div class="lc-badge">
+    <div class="lc-crest">🌾</div>
+    <div>
+      <div class="t1">ระบบบริหารราชการแผ่นดิน — กระทรวงเกษตรและสหกรณ์</div>
+      <div class="t2">MOAC MANAGEMENT PLATFORM · คน · เงิน · งาน · บูรณาการ · ระดับกระทรวง</div>
+    </div>
+  </div>
+  <div class="lc-title">เลือกระดับการเข้าใช้งาน</div>
+  <div class="lc-sub">ระบบบริหาร กษ. ระดับชาติ — งบประมาณ 154,800 ล้านบาท · เกษตรกร 8.5 ล้านราย · 76 จังหวัด</div>
+  <div class="role-grid">
+    <div class="role-btn" onclick="selRole('perm')" id="r-perm"><div class="ri">🏛️</div><div class="rl">ปลัดกระทรวงเกษตร</div><div class="rs">บูรณาการทั้งระบบ</div></div>
+    <div class="role-btn" onclick="selRole('head')" id="r-head"><div class="ri">⚙️</div><div class="rl">อธิบดีกรม</div><div class="rs">13 กรม/หน่วยงาน</div></div>
+    <div class="role-btn" onclick="selRole('academic')" id="r-academic"><div class="ri">🔬</div><div class="rl">นักวิเคราะห์</div><div class="rs">วิเคราะห์ วิจัย สถิติ</div></div>
+    <div class="role-btn" onclick="selRole('staff')" id="r-staff"><div class="ri">📋</div><div class="rl">เจ้าหน้าที่</div><div class="rs">บันทึก / รายงาน</div></div>
+  </div>
+  <button class="lc-btn" onclick="doLogin()">🔐 เข้าสู่ระบบ กษ. Management</button>
+  <div class="lc-foot">ระบบบูรณาการข้อมูลบริหารราชการ กระทรวงเกษตรและสหกรณ์ · G2G © 2026</div>
+</div>
+</div>
+
+<!-- ========== APP ========== -->
+<div id="app">
+<div class="topbar">
+  <div class="tb-left">
+    <div class="tb-logo">🌾</div>
+    <div>
+      <div class="tb-t1">ระบบบริหารราชการ กระทรวงเกษตรและสหกรณ์</div>
+      <div class="tb-t2">คน · เงิน · งาน · บูรณาการ · ระดับชาติ</div>
+    </div>
+    <div class="tb-lvl">
+      <span class="tb-lv hi">ส่วนกลาง (กษ.)</span><span class="tb-sep">›</span>
+      <span class="tb-lv">13 กรม</span><span class="tb-sep">·</span>
+      <span class="tb-lv">76 จังหวัด</span>
+    </div>
+  </div>
+  <div class="tb-right">
+    <a href="/ministry-agriculture.html" class="tb-back">← กลับ กษ.</a>
+    <div class="tb-user" id="tbUser">—</div>
+    <button class="tb-logout" onclick="doLogout()">ออกระบบ</button>
+  </div>
+</div>
+
+<div style="display:flex;justify-content:flex-end;align-items:center;gap:8px;padding:6px 16px;background:linear-gradient(90deg,transparent,rgba(0,0,0,0.04));border-bottom:1px solid var(--border,#e0e0e0)">
+  <span style="font-size:11px;color:#666">รายงานขึ้นสู่ระบบกลาง:</span>
+  <button id="hub-report-btn" onclick="pushReportToHub()" style="background:#1565c0;color:#fff;border:none;padding:5px 14px;border-radius:20px;font-size:12px;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:4px">📤 ส่งรายงานขึ้นระบบ</button>
+  <a href="/minister-dashboard.html" target="_blank" style="font-size:11px;color:#1565c0;text-decoration:none;padding:5px 10px;border:1px solid #1565c0;border-radius:20px">🏛️ แดชบอร์ดรัฐมนตรี</a>
+  <a href="/ministry-hub.html?ministry=moac" target="_blank" style="font-size:11px;color:#666;text-decoration:none;padding:5px 10px;border:1px solid #ccc;border-radius:20px">📊 Hub กระทรวง</a>
+  <span id="hub-report-msg" style="display:none;font-size:11px;font-weight:600;padding:4px 10px;background:#e8f5e9;color:#2e7d32;border-radius:4px"></span>
+</div>
+<div class="dim-bar">
+  <button class="dim-tab active" data-dim="people" onclick="switchDim('people')">👥 แผนคน</button>
+  <button class="dim-tab" data-dim="budget" onclick="switchDim('budget')">💰 แผนเงิน</button>
+  <button class="dim-tab" data-dim="projects" onclick="switchDim('projects')">📋 แผนงาน/โครงการ</button>
+  <button class="dim-tab" data-dim="integration" onclick="switchDim('integration')">🔗 แผนบูรณาการ</button>
+  <button class="dim-tab" data-dim="finance" onclick="switchDim('finance')">🏦 การเงิน ERP</button>
+  <button class="dim-tab" data-dim="line" onclick="switchDim('line')">📱 LINE บริหาร</button>
+</div>
+
+<div class="app-body">
+<div class="sidebar" id="sidebar">
+  <div id="sb-people">
+    <div class="sb-sec">แผนคน</div>
+    <div class="sb-item active" data-page="people-overview" onclick="showPage('people-overview')">📊 ภาพรวมบุคลากร</div>
+    <div class="sb-item" data-page="people-list" onclick="showPage('people-list')">📋 ทะเบียนบุคลากร</div>
+    <div class="sb-item" data-page="people-add" onclick="showPage('people-add')">➕ เพิ่มบุคลากร</div>
+    <div class="sb-item" data-page="people-provinces" onclick="showPage('people-provinces')">🗺️ รายจังหวัด</div>
+  </div>
+  <div id="sb-budget" style="display:none">
+    <div class="sb-sec">แผนเงิน</div>
+    <div class="sb-item" data-page="budget-overview" onclick="showPage('budget-overview')">📊 ภาพรวมงบประมาณ</div>
+    <div class="sb-item" data-page="budget-depts" onclick="showPage('budget-depts')">🏛️ งบรายกรม</div>
+    <div class="sb-item" data-page="budget-categories" onclick="showPage('budget-categories')">📂 หมวดรายจ่าย 5 หมวด</div>
+    <div class="sb-item" data-page="budget-tracking" onclick="showPage('budget-tracking')">📈 ติดตามเบิกจ่าย</div>
+  </div>
+  <div id="sb-projects" style="display:none">
+    <div class="sb-sec">แผนงาน</div>
+    <div class="sb-item" data-page="proj-overview" onclick="showPage('proj-overview')">📊 ภาพรวมโครงการ</div>
+    <div class="sb-item" data-page="proj-list" onclick="showPage('proj-list')">📋 ทะเบียนโครงการ</div>
+    <div class="sb-item" data-page="proj-kpi" onclick="showPage('proj-kpi')">🎯 KPI ระดับกระทรวง</div>
+    <div class="sb-item" data-page="proj-add" onclick="showPage('proj-add')">➕ เพิ่มโครงการ</div>
+    <div class="sb-item" data-page="proj-contracts" onclick="showPage('proj-contracts')">📄 สัญญาจัดซื้อจัดจ้าง</div>
+  </div>
+  <div id="sb-integration" style="display:none">
+    <div class="sb-sec">แผนบูรณาการ</div>
+    <div class="sb-item" data-page="integ-overview" onclick="showPage('integ-overview')">📊 ภาพรวมบูรณาการ</div>
+    <div class="sb-item" data-page="integ-plans" onclick="showPage('integ-plans')">📋 แผนบูรณาการ</div>
+    <div class="sb-item" data-page="integ-budget" onclick="showPage('integ-budget')">💰 งบบูรณาการ</div>
+    <div class="sb-item" data-page="integ-add" onclick="showPage('integ-add')">➕ เพิ่มแผนบูรณาการ</div>
+    <div class="sb-item" data-page="integ-bcg" onclick="showPage('integ-bcg')">🌱 BCG / Bio-Economy</div>
+  </div>
+  <div id="sb-finance" style="display:none">
+    <div class="sb-sec">💰 การเงิน ERP</div>
+    <div class="sb-item" data-page="fin-payroll" onclick="showPage('fin-payroll')">👤 เงินเดือน/Payroll</div>
+    <div class="sb-item" data-page="fin-expense" onclick="showPage('fin-expense')">📤 รายรับรายจ่าย</div>
+    <div class="sb-item" data-page="fin-accounting" onclick="showPage('fin-accounting')">📒 บัญชี/Ledger</div>
+    <div class="sb-item" data-page="fin-documents" onclick="showPage('fin-documents')">📄 เอกสารการเงิน</div>
+    <div class="sb-item" data-page="fin-stock" onclick="showPage('fin-stock')">📦 สต๊อกพัสดุ</div>
+  </div>
+  <div id="sb-line" style="display:none">
+    <div class="sb-sec">📱 LINE บริหาร</div>
+    <div class="sb-item" data-page="line-command" onclick="showPage('line-command')">📲 สั่งงานผ่าน LINE</div>
+    <div class="sb-item" data-page="line-history" onclick="showPage('line-history')">📋 ประวัติคำสั่ง</div>
+  </div>
+</div><!-- /sidebar -->
+
+<div class="main" id="mainContent">
+
+<!-- ══════ PEOPLE PAGES ══════ -->
+<div id="page-people-overview" class="page active">
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="kpi-v" id="kpi-total">−</div><div class="kpi-l">บุคลากรรวม กษ.</div><div class="kpi-sub">ทุกประเภท</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="kpi-civil">−</div><div class="kpi-l">ข้าราชการ</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="kpi-gov-emp">−</div><div class="kpi-l">พนักงานราชการ</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="kpi-contract">−</div><div class="kpi-l">จ้างเหมาบริการ</div></div>
+  </div>
+  <div class="card">
+    <div class="card-h">👥 โครงสร้างบุคลากรรายกรม — กระทรวงเกษตรและสหกรณ์</div>
+    <table class="tbl">
+      <thead><tr><th>กรม/หน่วยงาน</th><th>ประเภท/ระดับตำแหน่ง</th><th>ข้าราชการ</th><th>พนักงานราชการ</th><th>จ้างเหมา</th><th>รวม</th></tr></thead>
+      <tbody id="people-dept-tbody"><tr><td colspan="6" style="text-align:center;padding:20px;color:var(--sub)">⏳ กำลังโหลด...</td></tr></tbody>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-h">📊 KPI สำคัญระดับกระทรวง <span class="badge">ปีงบประมาณ 2568</span></div>
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-v">8.5M</div><div class="kpi-l">เกษตรกรในระบบ</div></div>
+      <div class="kpi-card"><div class="kpi-v">31M ไร่</div><div class="kpi-l">พื้นที่ชลประทาน</div></div>
+      <div class="kpi-card"><div class="kpi-v">28M ตัน</div><div class="kpi-l">ผลผลิตข้าว/ปี</div></div>
+      <div class="kpi-card"><div class="kpi-v">120,000</div><div class="kpi-l">Smart Farmer</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="page-people-list" class="page">
+  <div class="card">
+    <div class="card-h">📋 ทะเบียนบุคลากร <span class="badge" id="people-count-badge">โหลด...</span></div>
+    <div class="row-wrap" style="margin-bottom:12px">
+      <input id="people-search" class="inp" style="max-width:250px" placeholder="ค้นหาชื่อ / กรม..." oninput="filterPeople()">
+      <select id="people-dept-filter" class="inp" style="max-width:200px" onchange="filterPeople()">
+        <option value="">— กรมทั้งหมด —</option>
+      </select>
+      <button class="btn btn-sm" onclick="showPage('people-add')">➕ เพิ่มบุคลากร</button>
+    </div>
+    <table class="tbl">
+      <thead><tr><th>ชื่อ-นามสกุล</th><th>ประเภท</th><th>ตำแหน่ง</th><th>กรม/สังกัด</th><th>ประเภท/ระดับตำแหน่ง</th><th>สถานะ</th></tr></thead>
+      <tbody id="people-tbody"><tr><td colspan="6" style="text-align:center;padding:20px;color:var(--sub)">⏳ กำลังโหลด...</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<div id="page-people-add" class="page">
+  <div class="card">
+    <div class="card-h">➕ เพิ่มบุคลากรใหม่</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:700px">
+      <div><label style="font-size:12px;font-weight:600;color:var(--navy1);display:block;margin-bottom:4px">ชื่อ-นามสกุล *</label><input id="add-name" class="inp" placeholder="นาย/นาง/นางสาว..."></div>
+      <div><label style="font-size:12px;font-weight:600;color:var(--navy1);display:block;margin-bottom:4px">กรม/สังกัด *</label>
+        <select id="add-dept" class="inp">
+          <option value="สำนักงานปลัดกระทรวง">สำนักงานปลัดกระทรวง</option>
+          <option value="กรมส่งเสริมการเกษตร">กรมส่งเสริมการเกษตร</option>
+          <option value="กรมชลประทาน">กรมชลประทาน</option>
+          <option value="กรมวิชาการเกษตร">กรมวิชาการเกษตร</option>
+          <option value="กรมประมง">กรมประมง</option>
+          <option value="กรมปศุสัตว์">กรมปศุสัตว์</option>
+          <option value="กรมพัฒนาที่ดิน">กรมพัฒนาที่ดิน</option>
+          <option value="กรมการข้าว">กรมการข้าว</option>
+          <option value="กรมส่งเสริมสหกรณ์">กรมส่งเสริมสหกรณ์</option>
+          <option value="กรมตรวจบัญชีสหกรณ์">กรมตรวจบัญชีสหกรณ์</option>
+          <option value="การยางแห่งประเทศไทย (กยท.)">การยางแห่งประเทศไทย (กยท.)</option>
+          <option value="ส.ป.ก.">ส.ป.ก.</option>
+          <option value="ธ.ก.ส.">ธ.ก.ส.</option>
+        </select>
+      </div>
+      <div><label style="font-size:12px;font-weight:600;color:var(--navy1);display:block;margin-bottom:4px">ตำแหน่ง</label><input id="add-position" class="inp" placeholder="ผู้อำนวยการ / นักวิชาการ..."></div>
+      <div><label style="font-size:12px;font-weight:600;color:var(--navy1);display:block;margin-bottom:4px">ระดับ</label>
+        <select id="add-grade" class="inp">
+          <option value="บริหาร ระดับสูง">ประเภทบริหาร ระดับสูง</option>
+          <option value="บริหาร ระดับต้น">ประเภทบริหาร ระดับต้น</option>
+          <option value="อำนวยการ ระดับสูง">ประเภทอำนวยการ ระดับสูง</option>
+          <option value="อำนวยการ ระดับต้น">ประเภทอำนวยการ ระดับต้น</option>
+          <option value="วิชาการ ทรงคุณวุฒิ">ประเภทวิชาการ ทรงคุณวุฒิ</option>
+          <option value="วิชาการ เชี่ยวชาญ">ประเภทวิชาการ เชี่ยวชาญ</option>
+          <option value="วิชาการ ชำนาญการพิเศษ">ประเภทวิชาการ ชำนาญการพิเศษ</option>
+          <option value="วิชาการ ชำนาญการ" selected>ประเภทวิชาการ ชำนาญการ</option>
+          <option value="วิชาการ ปฏิบัติการ">ประเภทวิชาการ ปฏิบัติการ</option>
+          <option value="ทั่วไป อาวุโส">ประเภททั่วไป อาวุโส</option>
+          <option value="ทั่วไป ชำนาญงานพิเศษ">ประเภททั่วไป ชำนาญงานพิเศษ</option>
+          <option value="ทั่วไป ชำนาญงาน">ประเภททั่วไป ชำนาญงาน</option>
+          <option value="ทั่วไป ปฏิบัติงาน">ประเภททั่วไป ปฏิบัติงาน</option>
+          <option value="พนักงานราชการ">พนักงานราชการ</option>
+          <option value="ลูกจ้างประจำ">ลูกจ้างประจำ</option>
+          <option value="พนักงานรัฐวิสาหกิจ">พนักงานรัฐวิสาหกิจ</option>
+        </select>
+      </div>
+      <div><label style="font-size:12px;font-weight:600;color:var(--navy1);display:block;margin-bottom:4px">ประเภท</label>
+        <select id="add-type" class="inp"><option>ข้าราชการ</option><option>พนักงานราชการ</option><option>ลูกจ้างประจำ</option><option>จ้างเหมาบริการ</option></select>
+      </div>
+      <div><label style="font-size:12px;font-weight:600;color:var(--navy1);display:block;margin-bottom:4px">วันเริ่มงาน</label><input id="add-since" class="inp" type="date"></div>
+    </div>
+    <div style="margin-top:16px">
+      <button class="btn btn-g" onclick="submitAddPerson()">✅ บันทึกบุคลากร</button>
+      <button class="btn btn-out" style="margin-left:8px" onclick="showPage('people-list')">← กลับรายการ</button>
+    </div>
+    <div id="add-person-msg" style="margin-top:10px;font-size:13px"></div>
+  </div>
+</div>
+
+<div id="page-people-provinces" class="page">
+  <div class="card">
+    <div class="card-h">🗺️ บุคลากรส่วนภูมิภาค — สำนักงานเกษตรและสหกรณ์จังหวัด 76 แห่ง</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px">
+      <div style="background:var(--bg2);border-radius:8px;padding:14px;text-align:center"><div style="font-size:24px;font-weight:800;color:var(--navy1)">76</div><div style="font-size:13px;color:var(--sub)">สำนักงานเกษตรและสหกรณ์จังหวัด</div></div>
+      <div style="background:var(--bg2);border-radius:8px;padding:14px;text-align:center"><div style="font-size:24px;font-weight:800;color:var(--navy1)">882</div><div style="font-size:13px;color:var(--sub)">สำนักงานเกษตรอำเภอ</div></div>
+      <div style="background:var(--bg2);border-radius:8px;padding:14px;text-align:center"><div style="font-size:24px;font-weight:800;color:var(--navy1)">~75,000</div><div style="font-size:13px;color:var(--sub)">อกม. ทั่วประเทศ</div></div>
+    </div>
+    <table class="tbl">
+      <thead><tr><th>ภาค</th><th>จังหวัด</th><th>อำเภอ</th><th>อกม. (ประมาณ)</th><th>อัตราใช้งาน</th></tr></thead>
+      <tbody id="provinces-tbody"><tr><td colspan="5" style="text-align:center;padding:20px;color:var(--sub)">⏳ กำลังโหลด...</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════ LINE COMMAND PAGES ══════ -->
+<div id="page-line-command" class="page">
+  <div class="card">
+    <div class="card-h">📡 สถานะ LINE OA <span class="badge" id="line-status-badge">กำลังตรวจสอบ...</span></div>
+    <div id="line-status-detail" style="font-size:13px;color:var(--sub);margin-top:6px">⏳ กำลังโหลด...</div>
+  </div>
+  <div class="card">
+    <div class="card-h">📲 ส่งคำสั่งผ่าน LINE</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+      <div>
+        <label style="font-size:12px;color:var(--sub);display:block;margin-bottom:4px">ประเภทคำสั่ง</label>
+        <select id="line-cmd-type" class="inp" onchange="updateLinePreview()">
+          <option value="/สั่งงาน">📌 /สั่งงาน — ออกคำสั่งให้กรม</option>
+          <option value="/รายงาน">📊 /รายงาน — ขอรายงานสถานะ</option>
+          <option value="/อนุมัติ">✅ /อนุมัติ — อนุมัติโครงการ/งบ</option>
+          <option value="/ประชุม">📅 /ประชุม — นัดประชุม</option>
+          <option value="/ตรวจสอบ">🔍 /ตรวจสอบ — ตรวจสอบความคืบหน้า</option>
+          <option value="/งบ">💰 /งบ — สอบถามงบประมาณ</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:12px;color:var(--sub);display:block;margin-bottom:4px">กรมปลายทาง</label>
+        <select id="line-cmd-dept" class="inp" onchange="updateLinePreview()">
+          <option value="กรมชลประทาน">กรมชลประทาน</option>
+          <option value="กรมส่งเสริมการเกษตร">กรมส่งเสริมการเกษตร</option>
+          <option value="กรมวิชาการเกษตร">กรมวิชาการเกษตร</option>
+          <option value="กรมปศุสัตว์">กรมปศุสัตว์</option>
+          <option value="กรมประมง">กรมประมง</option>
+          <option value="กรมพัฒนาที่ดิน">กรมพัฒนาที่ดิน</option>
+          <option value="กรมการข้าว">กรมการข้าว</option>
+          <option value="กรมหม่อนไหม">กรมหม่อนไหม</option>
+          <option value="กรมตรวจบัญชีสหกรณ์">กรมตรวจบัญชีสหกรณ์</option>
+          <option value="กรมส่งเสริมสหกรณ์">กรมส่งเสริมสหกรณ์</option>
+          <option value="กรมฝนหลวงและการบินเกษตร">กรมฝนหลวงและการบินเกษตร</option>
+          <option value="สำนักงานเศรษฐกิจการเกษตร">สำนักงานเศรษฐกิจการเกษตร</option>
+          <option value="มกอช.">สำนักงานมาตรฐานสินค้าเกษตร (มกอช.)</option>
+        </select>
+      </div>
+    </div>
+    <div style="margin-bottom:12px">
+      <label style="font-size:12px;color:var(--sub);display:block;margin-bottom:4px">รายละเอียดคำสั่ง</label>
+      <textarea id="line-cmd-detail" class="inp" rows="3" placeholder="ระบุรายละเอียดคำสั่ง..." oninput="updateLinePreview()" style="resize:vertical"></textarea>
+    </div>
+    <div style="background:var(--bg2);border-radius:8px;padding:12px;margin-bottom:12px;font-size:13px">
+      <div style="font-size:11px;color:var(--sub);margin-bottom:4px">👁 ตัวอย่างข้อความที่จะส่ง</div>
+      <div id="line-preview-text" style="color:var(--navy1);white-space:pre-wrap">กรุณาเลือกคำสั่งและกรอกรายละเอียด</div>
+    </div>
+    <button class="btn btn-g" onclick="sendLineCommand()" id="line-send-btn">📲 ส่งคำสั่ง</button>
+    <div id="line-cmd-result" style="margin-top:12px;font-size:13px"></div>
+  </div>
+  <div class="card">
+    <div class="card-h">⚡ คำสั่งด่วน</div>
+    <div class="row-wrap">
+      <button class="btn btn-out" onclick="quickLineCmd('/รายงาน','สรุปรายงานประจำสัปดาห์ทุกโครงการ')">📊 ขอรายงานประจำสัปดาห์</button>
+      <button class="btn btn-out" onclick="quickLineCmd('/อนุมัติ','อนุมัติโครงการทั้งหมดที่รออนุมัติในสัปดาห์นี้')">✅ อนุมัติโครงการที่รออยู่</button>
+      <button class="btn btn-out" onclick="quickLineCmd('/ประชุม','นัดประชุมอธิบดีทุกกรมสัปดาห์หน้า วาระ: ติดตามงานไตรมาส 3')">📅 นัดประชุมกรม</button>
+      <button class="btn btn-out" onclick="quickLineCmd('/สั่งงาน','แจ้งเตือนทีมให้เร่งรัดการเบิกจ่ายงบประมาณที่ยังค้างอยู่')">⚠️ แจ้งเตือนทีม</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-h">📋 ประวัติคำสั่ง LINE <span class="badge">10 รายการล่าสุด</span></div>
+    <table class="tbl">
+      <thead><tr><th>เวลา</th><th>คำสั่ง</th><th>กรมปลายทาง</th><th>รายละเอียด</th><th>AI ตอบกลับ</th><th>สถานะ</th></tr></thead>
+      <tbody id="line-history-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div id="page-line-history" class="page">
+  <div class="card">
+    <div class="card-h">📋 ประวัติคำสั่ง LINE ทั้งหมด</div>
+    <table class="tbl">
+      <thead><tr><th>เวลา</th><th>คำสั่ง</th><th>กรมปลายทาง</th><th>รายละเอียด</th><th>AI ตอบกลับ</th><th>สถานะ</th></tr></thead>
+      <tbody id="line-history-all-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+</div><!-- /main -->
+</div><!-- /app-body -->
+</div><!-- /app -->
+
+<script>
+/* ──────────────── LINE COMMAND SYSTEM ──────────────── */
+let lineCommandHistory = [
+  {time:'09:30',cmd:'/สั่งงาน',target:'กรมชลประทาน',msg:'ขอรายงานความคืบหน้าโครงการประตูระบายน้ำเดือนนี้',reply:'✅ รับทราบคำสั่ง — จะจัดทำรายงานความคืบหน้าและส่งภายใน 24 ชั่วโมง',status:'ส่งแล้ว'}
+];
+</script>
+
+<!-- ══════ BUDGET PAGES ══════ -->
+<div id="page-budget-overview" class="page">
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="kpi-v" id="b-total">−</div><div class="kpi-l">งบรวม (ล้านบาท)</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="b-spent">−</div><div class="kpi-l">เบิกจ่ายแล้ว</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="b-pct">−</div><div class="kpi-l">% เบิกจ่าย</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="b-depts">−</div><div class="kpi-l">กรม/หน่วยงาน</div></div>
+  </div>
+  <div class="card">
+    <div class="card-h">💰 สัดส่วนงบประมาณตามหมวดรายจ่าย</div>
+    <div class="law-note" style="font-size:11px;background:#e3f2fd;border-left:3px solid #1565c0;padding:6px 10px;margin-bottom:10px;border-radius:0 4px 4px 0">
+      ⚖️ <strong>ขั้นตอนการอนุมัติงบประมาณ</strong> — พรบ.วิธีการงบประมาณ พ.ศ. 2561 มาตรา 24–25<br>
+      <span style="color:#555;font-size:10px">🏢 หน่วยงาน → 🏛️ กระทรวง → 📋 สำนักงบประมาณ → ⚖️ ครม.อนุมัติ → 🗳️ สภาผู้แทนราษฎร → 🏅 วุฒิสภา → 📰 ราชกิจจานุเบกษา</span>
+    </div>
+    <div id="budget-cat-bars-moac"></div>
+  </div>
+  <div class="card">
+    <div class="card-h">🏛️ งบประมาณรายกรม ปีงบประมาณ 2568</div>
+    <table class="tbl">
+      <thead><tr><th>กรม/หน่วยงาน</th><th style="text-align:right">งบรวม (ล.บ.)</th><th style="text-align:right">เบิกแล้ว (ล.บ.)</th><th style="text-align:right">คงเหลือ</th><th>ความก้าวหน้า</th></tr></thead>
+      <tbody id="budget-dept-tbody"><tr><td colspan="5" style="text-align:center;padding:20px;color:var(--sub)">⏳ กำลังโหลด...</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<div id="page-budget-depts" class="page">
+  <div class="card">
+    <div class="card-h">🏛️ รายละเอียดงบประมาณรายกรม <span class="badge">อัปเดตรายเดือน</span></div>
+    <div class="row-wrap" style="margin-bottom:12px">
+      <button class="btn btn-sm" onclick="showBudgetUpdateForm()">🔄 อัปเดตยอดเบิกจ่าย</button>
+    </div>
+    <div id="budget-depts-detail"></div>
+    <div id="budget-update-form" style="display:none;margin-top:14px;padding:16px;background:var(--bg2);border-radius:10px">
+      <div style="font-weight:700;font-size:14px;color:var(--navy1);margin-bottom:10px">🔄 อัปเดตยอดเบิกจ่าย</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+        <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">กรม/หน่วยงาน</label>
+          <select id="upd-dept" class="inp">
+            <option value="กรมส่งเสริมการเกษตร">กรมส่งเสริมการเกษตร</option>
+            <option value="กรมชลประทาน">กรมชลประทาน</option>
+            <option value="กรมวิชาการเกษตร">กรมวิชาการเกษตร</option>
+            <option value="กรมประมง">กรมประมง</option>
+            <option value="กรมปศุสัตว์">กรมปศุสัตว์</option>
+            <option value="กรมพัฒนาที่ดิน">กรมพัฒนาที่ดิน</option>
+            <option value="กรมการข้าว">กรมการข้าว</option>
+            <option value="กรมส่งเสริมสหกรณ์">กรมส่งเสริมสหกรณ์</option>
+            <option value="กรมตรวจบัญชีสหกรณ์">กรมตรวจบัญชีสหกรณ์</option>
+            <option value="สำนักงานปลัดกระทรวง">สำนักงานปลัดกระทรวง</option>
+          </select>
+        </div>
+        <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">ยอดเบิกจ่ายสะสม (ล้าน)</label><input id="upd-disbursed" class="inp" type="number" placeholder="เช่น 6500"></div>
+        <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">% เบิกจ่าย</label><input id="upd-pct" class="inp" type="number" min="0" max="100" placeholder="เช่น 72"></div>
+      </div>
+      <div style="margin-top:10px">
+        <button class="btn btn-g" onclick="submitBudgetUpdate()">✅ บันทึกการอัปเดต</button>
+        <button class="btn btn-out" style="margin-left:8px" onclick="hideBudgetUpdateForm()">ยกเลิก</button>
+      </div>
+      <div id="budget-update-msg" style="margin-top:8px;font-size:13px"></div>
+    </div>
+  </div>
+</div>
+
+<div id="page-budget-categories" class="page">
+  <div class="card">
+    <div class="card-h">📂 หมวดรายจ่าย 5 หมวด — กระทรวงเกษตรและสหกรณ์</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px" id="budget-cats-detail"></div>
+  </div>
+</div>
+
+<div id="page-budget-tracking" class="page">
+  <div class="card">
+    <div class="card-h">📈 ติดตามเบิกจ่าย รายเดือน ปีงบประมาณ 2568</div>
+    <div id="budget-tracking-table"></div>
+  </div>
+</div>
+
+<!-- ══════ PROJECT PAGES ══════ -->
+<div id="page-proj-overview" class="page">
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="kpi-v" id="proj-total">−</div><div class="kpi-l">โครงการทั้งหมด</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="proj-ontrack">−</div><div class="kpi-l">ดำเนินการตามแผน</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="proj-risk">−</div><div class="kpi-l">เสี่ยงล่าช้า</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="proj-done">−</div><div class="kpi-l">เสร็จสิ้นแล้ว</div></div>
+  </div>
+  <div class="card">
+    <div class="card-h">📊 ภาพรวมโครงการรายกรม</div>
+    <div class="law-note" style="font-size:11px;background:#e8f5e9;border-left:3px solid #2e7d32;padding:6px 10px;margin-bottom:10px;border-radius:0 4px 4px 0">
+      ⚖️ <strong>กระบวนการโครงการตามกฎหมาย</strong> — พรบ.การจัดซื้อจัดจ้างฯ 2560 + พรบ.วิธีการงบประมาณ 2561<br>
+      <span style="color:#555;font-size:10px">📋 จัดทำโครงการ → 💰 ขอจัดสรรงบ → 🏛️ กระทรวง → สำนักงบ → ครม. → สภาฯ → 📑 ได้รับจัดสรร → 🛒 จัดซื้อ (e-bidding/เฉพาะเจาะจง) → ✅ ตรวจรับ → 💳 เบิกจ่าย GFMIS → 📊 รายงาน eMENSCR</span>
+    </div>
+    <div id="proj-overview-table"><div style="text-align:center;color:var(--sub);padding:20px">⏳ กำลังโหลด...</div></div>
+  </div>
+</div>
+
+<div id="page-proj-list" class="page">
+  <div class="card">
+    <div class="card-h">📋 ทะเบียนโครงการ <span class="badge" id="proj-count-badge">โหลด...</span></div>
+    <div class="row-wrap" style="margin-bottom:12px">
+      <input id="proj-search" class="inp" style="max-width:250px" placeholder="ค้นหาโครงการ..." oninput="filterProjects()">
+      <button class="btn btn-sm" onclick="showPage('proj-add')">➕ เพิ่มโครงการ</button>
+    </div>
+    <table class="tbl">
+      <thead><tr><th>รหัส</th><th>โครงการ</th><th>กรม</th><th style="text-align:right">งบ (ล้าน)</th><th>KPI</th><th>ความก้าวหน้า</th><th>สถานะ</th></tr></thead>
+      <tbody id="proj-list-tbody"><tr><td colspan="7" style="text-align:center;padding:20px;color:var(--sub)">⏳ กำลังโหลด...</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<div id="page-proj-kpi" class="page">
+  <div class="card">
+    <div class="card-h">🎯 KPI ระดับกระทรวง — ปีงบประมาณ 2568</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px" id="kpi-ministry-grid"></div>
+  </div>
+</div>
+
+<div id="page-proj-add" class="page">
+  <div class="card">
+    <div class="card-h">➕ เพิ่มโครงการใหม่</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:700px">
+      <div style="grid-column:span 2"><label style="font-size:12px;font-weight:600;color:var(--navy1);display:block;margin-bottom:4px">ชื่อโครงการ *</label><input id="proj-name" class="inp" placeholder="โครงการ..."></div>
+      <div><label style="font-size:12px;font-weight:600;color:var(--navy1);display:block;margin-bottom:4px">กรม/สังกัด *</label>
+        <select id="proj-dept" class="inp">
+          <option value="กรมส่งเสริมการเกษตร">กรมส่งเสริมการเกษตร</option>
+          <option value="กรมชลประทาน">กรมชลประทาน</option>
+          <option value="กรมวิชาการเกษตร">กรมวิชาการเกษตร</option>
+          <option value="กรมประมง">กรมประมง</option>
+          <option value="กรมปศุสัตว์">กรมปศุสัตว์</option>
+        </select>
+      </div>
+      <div><label style="font-size:12px;font-weight:600;color:var(--navy1);display:block;margin-bottom:4px">งบประมาณ (ล้านบาท)</label><input id="proj-budget" class="inp" type="number" placeholder="0"></div>
+      <div><label style="font-size:12px;font-weight:600;color:var(--navy1);display:block;margin-bottom:4px">KPI หลัก</label><input id="proj-kpi-field" class="inp" placeholder="เป้าหมาย..."></div>
+      <div><label style="font-size:12px;font-weight:600;color:var(--navy1);display:block;margin-bottom:4px">ความก้าวหน้า (%)</label><input id="proj-progress" class="inp" type="number" min="0" max="100" value="0"></div>
+      <div><label style="font-size:12px;font-weight:600;color:var(--navy1);display:block;margin-bottom:4px">สถานะ</label>
+        <select id="proj-status" class="inp"><option>อยู่ระหว่างดำเนินการ</option><option>เสี่ยงล่าช้า</option><option>เสร็จสิ้น</option></select>
+      </div>
+    </div>
+    <div style="margin-top:16px">
+      <button class="btn btn-g" onclick="submitAddProject()">✅ บันทึกโครงการ</button>
+      <button class="btn btn-out" style="margin-left:8px" onclick="showPage('proj-list')">← กลับรายการ</button>
+    </div>
+    <div id="add-proj-msg" style="margin-top:10px;font-size:13px"></div>
+  </div>
+</div>
+
+<div id="page-proj-contracts" class="page">
+  <div class="card">
+    <div class="card-h">📄 สัญญาจัดซื้อจัดจ้าง <span class="badge" id="contract-count-badge">โหลด...</span></div>
+    <div class="row-wrap" style="margin-bottom:12px">
+      <button class="btn btn-sm" onclick="showAddContractForm()">➕ เพิ่มสัญญา</button>
+      <button class="btn btn-sm btn-out" onclick="showEGPInfo()">❓ วิธีจัดซื้อ e-GP</button>
+    </div>
+    <table class="tbl">
+      <thead><tr><th>คู่สัญญา</th><th>หน่วยงาน</th><th>รายการ</th><th style="text-align:right">มูลค่า (บาท)</th><th>วิธี</th><th>เลขที่ e-GP</th><th>สถานะ</th></tr></thead>
+      <tbody id="contracts-tbody"><tr><td colspan="7" style="text-align:center;padding:20px;color:var(--sub)">⏳ กำลังโหลด...</td></tr></tbody>
+    </table>
+    <div id="add-contract-form" style="display:none;margin-top:14px;padding:16px;background:var(--bg2);border-radius:10px">
+      <div style="font-weight:700;font-size:14px;color:var(--navy1);margin-bottom:10px">➕ เพิ่มสัญญาใหม่</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">ชื่อคู่สัญญา *</label><input id="ctr-name" class="inp" placeholder="บริษัท/ห้างหุ้นส่วน..."></div>
+        <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">หน่วยงานผู้จัดซื้อ</label><input id="ctr-agency" class="inp" placeholder="กรม..."></div>
+        <div style="grid-column:span 2"><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">รายละเอียดงาน</label><input id="ctr-work" class="inp" placeholder="ซื้อ/จ้าง..."></div>
+        <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">มูลค่า (บาท)</label><input id="ctr-total" class="inp" type="number" placeholder="0"></div>
+        <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">เลขที่ e-GP</label><input id="ctr-egp" class="inp" placeholder="GP-..."></div>
+      </div>
+      <div style="margin-top:10px">
+        <button class="btn btn-g" onclick="submitAddContract()">✅ บันทึกสัญญา</button>
+        <button class="btn btn-out" style="margin-left:8px" onclick="hideAddContractForm()">ยกเลิก</button>
+      </div>
+      <div id="add-contract-msg" style="margin-top:8px;font-size:13px"></div>
+    </div>
+  </div>
+</div>
+  {time:'08:15',cmd:'/อนุมัติ',target:'กรมส่งเสริมการเกษตร',msg:'อนุมัติงบโครงการ Smart Farmer 2 ล้านบาท',reply:'✅ รับทราบการอนุมัติ — บันทึกเลข อนม. 2568/0521 เรียบร้อย',status:'ส่งแล้ว'},
+  {time:'08:00',cmd:'/ประชุม',target:'กรมวิชาการเกษตร',msg:'นัดประชุมวาระมาตรฐานพืช Q3 วันพุธที่ 28 พ.ค.',reply:'📅 บันทึกนัดประชุมเรียบร้อย — ส่งหนังสือเชิญประชุมให้ผู้เกี่ยวข้องแล้ว',status:'ส่งแล้ว'},
+  {time:'07:45',cmd:'/รายงาน',target:'กรมปศุสัตว์',msg:'ขอรายงานสถานการณ์โรคสัตว์ประจำสัปดาห์',reply:'📊 สรุปสถานการณ์: ไม่พบโรคระบาดใหม่ ติดตาม AI-Bird Flu ในพื้นที่เฝ้าระวัง 12 จังหวัด',status:'ส่งแล้ว'},
+  {time:'07:30',cmd:'/ตรวจสอบ',target:'กรมประมง',msg:'ตรวจสอบความคืบหน้าโครงการประมงชายฝั่ง',reply:'🔍 ความคืบหน้า 67% — เบิกจ่ายแล้ว 45.2 ล้าน / 67.5 ล้าน คงเหลือ 22.3 ล้าน',status:'ส่งแล้ว'},
+  {time:'เมื่อวาน',cmd:'/งบ',target:'สำนักงานเศรษฐกิจการเกษตร',msg:'สอบถามงบวิจัยเหลือจ่ายปีนี้',reply:'💰 งบวิจัยคงเหลือ 38.5 ล้านบาท จากงบทั้งปี 120 ล้าน ใช้ไปแล้ว 81.5 ล้าน (67.9%)',status:'ส่งแล้ว'},
+  {time:'เมื่อวาน',cmd:'/สั่งงาน',target:'กรมพัฒนาที่ดิน',msg:'เร่งรัดแผนการใช้ที่ดินเกษตรกรรม 76 จังหวัด ให้แล้วเสร็จภายใน Q3',reply:'✅ รับทราบ — แผนงาน 76 จังหวัดเสร็จแล้ว 61 จังหวัด (80%) กำลังเร่ง 15 จังหวัดที่เหลือ',status:'ส่งแล้ว'},
+  {time:'เมื่อวาน',cmd:'/อนุมัติ',target:'กรมการข้าว',msg:'อนุมัติโครงการพัฒนาพันธุ์ข้าวทนแล้ง งบ 5.5 ล้าน',reply:'✅ รับทราบการอนุมัติ — เลข อนม. 2568/0518 บันทึกลงระบบแล้ว',status:'ส่งแล้ว'},
+  {time:'2 วันที่แล้ว',cmd:'/ประชุม',target:'กรมหม่อนไหม',msg:'ประชุมแผนพัฒนาไหมไทยสู่ตลาดโลก',reply:'📅 ยืนยันการประชุม — ห้องประชุม 1 ชั้น 3 กษ. 10:00-12:00 น. วันศุกร์',status:'ส่งแล้ว'},
+  {time:'2 วันที่แล้ว',cmd:'/รายงาน',target:'กรมส่งเสริมสหกรณ์',msg:'รายงานผลการดำเนินงานสหกรณ์การเกษตรปีงบ 2568',reply:'📊 สหกรณ์ที่ผ่านมาตรฐาน 2,341 แห่ง (83%) สมาชิกรวม 1.2 ล้านราย ทุน 58,000 ล้าน',status:'ส่งแล้ว'},
+  {time:'3 วันที่แล้ว',cmd:'/ตรวจสอบ',target:'กรมฝนหลวงและการบินเกษตร',msg:'ตรวจสอบแผนปฏิบัติการฝนหลวงช่วงแล้ง',reply:'🔍 ปฏิบัติการแล้ว 312 เที่ยวบิน ครอบคลุม 45 จังหวัด ปริมาณน้ำเพิ่ม 890 ล้าน ลบ.ม.',status:'ส่งแล้ว'},
+];
+
+function renderLineHistory(tbodyId, data) {
+  var tbody = document.getElementById(tbodyId);
+  if (!tbody) return;
+  var h = '';
+  data.forEach(function(r) {
+    var replyShort = (r.reply||'—').substring(0,50) + ((r.reply||'').length>50?'...':'');
+    h += '<tr>';
+    h += '<td style="white-space:nowrap">'+r.time+'</td>';
+    h += '<td><strong>'+r.cmd+'</strong></td>';
+    h += '<td>'+r.target+'</td>';
+    h += '<td style="font-size:12px">'+r.msg+'</td>';
+    h += '<td style="font-size:12px;color:var(--navy2)">'+replyShort+'</td>';
+    h += '<td><span style="background:var(--bg2);padding:2px 8px;border-radius:10px;font-size:11px">'+r.status+'</span></td>';
+    h += '</tr>';
+  });
+  tbody.innerHTML = h || '<tr><td colspan="6" style="text-align:center;color:var(--sub);padding:16px">ไม่มีประวัติคำสั่ง</td></tr>';
+}
+
+<!-- ══════ INTEGRATION PAGES ══════ -->
+<div id="page-integ-overview" class="page">
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="kpi-v" id="integ-total">−</div><div class="kpi-l">แผนบูรณาการทั้งหมด</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="integ-inprog">−</div><div class="kpi-l">กำลังดำเนินการ</div></div>
+    <div class="kpi-card"><div class="kpi-v">5</div><div class="kpi-l">กระทรวงร่วม</div></div>
+    <div class="kpi-card"><div class="kpi-v">BCG</div><div class="kpi-l">นโยบายหลัก</div></div>
+  </div>
+  <div class="card">
+    <div class="card-h">🔗 แผนบูรณาการรายแผน</div>
+    <div id="integ-overview-table"><div style="text-align:center;color:var(--sub);padding:20px">⏳ กำลังโหลด...</div></div>
+  </div>
+</div>
+
+<div id="page-integ-plans" class="page">
+  <div class="card">
+    <div class="card-h">📋 ทะเบียนแผนบูรณาการ</div>
+    <div id="integ-plans-list"><div style="text-align:center;color:var(--sub);padding:20px">⏳ กำลังโหลด...</div></div>
+  </div>
+</div>
+
+<div id="page-integ-budget" class="page">
+  <div class="card">
+    <div class="card-h">💰 งบประมาณแผนบูรณาการ</div>
+    <div id="integ-budget-table"><div style="text-align:center;color:var(--sub);padding:20px">⏳ กำลังโหลด...</div></div>
+  </div>
+</div>
+
+<div id="page-integ-add" class="page">
+  <div class="card">
+    <div class="card-h">➕ เพิ่มแผนบูรณาการ</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:700px">
+      <div style="grid-column:span 2"><label style="font-size:12px;font-weight:600;color:var(--navy1);display:block;margin-bottom:4px">ชื่อแผนบูรณาการ *</label><input id="integ-name" class="inp" placeholder="แผนบูรณาการ..."></div>
+      <div><label style="font-size:12px;font-weight:600;color:var(--navy1);display:block;margin-bottom:4px">หน่วยงานเจ้าภาพ</label><input id="integ-host" class="inp" placeholder="กรม / กระทรวง..."></div>
+      <div><label style="font-size:12px;font-weight:600;color:var(--navy1);display:block;margin-bottom:4px">งบบูรณาการ (บาท)</label><input id="integ-budget" class="inp" type="number" placeholder="0"></div>
+      <div style="grid-column:span 2"><label style="font-size:12px;font-weight:600;color:var(--navy1);display:block;margin-bottom:4px">หน่วยงานร่วม (คั่นด้วยจุลภาค)</label><input id="integ-partners" class="inp" placeholder="กรมชลประทาน, กรมส่งเสริมการเกษตร, ..."></div>
+      <div style="grid-column:span 2"><label style="font-size:12px;font-weight:600;color:var(--navy1);display:block;margin-bottom:4px">KPI หลัก</label><input id="integ-kpi" class="inp" placeholder="เป้าหมาย KPI..."></div>
+      <div><label style="font-size:12px;font-weight:600;color:var(--navy1);display:block;margin-bottom:4px">ความก้าวหน้า (%)</label><input id="integ-prog" class="inp" type="number" min="0" max="100" value="0"></div>
+    </div>
+    <div style="margin-top:16px">
+      <button class="btn btn-g" onclick="submitAddInteg()">✅ บันทึกแผนบูรณาการ</button>
+      <button class="btn btn-out" style="margin-left:8px" onclick="showPage('integ-plans')">← กลับรายการ</button>
+    </div>
+    <div id="add-integ-msg" style="margin-top:10px;font-size:13px"></div>
+  </div>
+</div>
+
+<div id="page-integ-bcg" class="page">
+  <div class="card">
+    <div class="card-h">🌱 BCG Economy Model — Bio-Circular-Green</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px">
+      <div style="background:linear-gradient(135deg,#166534,#22c55e);color:#fff;border-radius:12px;padding:18px;text-align:center">
+        <div style="font-size:30px;margin-bottom:6px">🌿</div>
+        <div style="font-weight:800;font-size:16px">Bio Economy</div>
+        <div style="font-size:12px;opacity:.85;margin-top:4px">เกษตรมูลค่าสูง, เทคโนโลยีชีวภาพ</div>
+        <div style="font-size:24px;font-weight:800;margin-top:10px">45,000 ล.</div>
+        <div style="font-size:11px;opacity:.8">งบประมาณ 2568</div>
+      </div>
+      <div style="background:linear-gradient(135deg,#1e40af,#3b82f6);color:#fff;border-radius:12px;padding:18px;text-align:center">
+        <div style="font-size:30px;margin-bottom:6px">♻️</div>
+        <div style="font-weight:800;font-size:16px">Circular Economy</div>
+        <div style="font-size:12px;opacity:.85;margin-top:4px">ลดของเสีย, ใช้ทรัพยากรหมุนเวียน</div>
+        <div style="font-size:24px;font-weight:800;margin-top:10px">28,500 ล.</div>
+        <div style="font-size:11px;opacity:.8">งบประมาณ 2568</div>
+      </div>
+      <div style="background:linear-gradient(135deg,#065f46,#10b981);color:#fff;border-radius:12px;padding:18px;text-align:center">
+        <div style="font-size:30px;margin-bottom:6px">🌎</div>
+        <div style="font-weight:800;font-size:16px">Green Economy</div>
+        <div style="font-size:12px;opacity:.85;margin-top:4px">เกษตรอินทรีย์, ลด Carbon</div>
+        <div style="font-size:24px;font-weight:800;margin-top:10px">18,200 ล.</div>
+        <div style="font-size:11px;opacity:.8">งบประมาณ 2568</div>
+      </div>
+    </div>
+    <table class="tbl">
+      <thead><tr><th>โครงการ BCG</th><th>ประเภท</th><th>กรม</th><th style="text-align:right">งบ (ล้าน)</th><th>ความก้าวหน้า</th></tr></thead>
+      <tbody>
+        <tr><td><strong>เกษตรอินทรีย์ 2 ล้านไร่</strong></td><td><span class="tag-ok">Green</span></td><td>กรมส่งเสริมการเกษตร</td><td style="text-align:right">8,500</td><td><div class="pb" style="width:100px"><div class="pf green" style="width:47%"></div></div> 47%</td></tr>
+        <tr><td><strong>เกษตรแปรรูปมูลค่าสูง</strong></td><td><span class="tag-blue">Bio</span></td><td>กรมวิชาการเกษตร</td><td style="text-align:right">12,000</td><td><div class="pb" style="width:100px"><div class="pf navy" style="width:62%"></div></div> 62%</td></tr>
+        <tr><td><strong>จัดการน้ำแบบวงจรปิด</strong></td><td><span class="tag-warn">Circular</span></td><td>กรมชลประทาน</td><td style="text-align:right">15,200</td><td><div class="pb" style="width:100px"><div class="pf gold" style="width:55%"></div></div> 55%</td></tr>
+        <tr><td><strong>ลด Carbon เกษตร</strong></td><td><span class="tag-ok">Green</span></td><td>กรมพัฒนาที่ดิน</td><td style="text-align:right">4,800</td><td><div class="pb" style="width:100px"><div class="pf green" style="width:38%"></div></div> 38%</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+function updateLinePreview() {
+  var cmd = (document.getElementById('line-cmd-type')||{}).value || '/สั่งงาน';
+  var dept = (document.getElementById('line-cmd-dept')||{}).value || 'กรม';
+  var detail = (document.getElementById('line-cmd-detail')||{}).value || '';
+  var preview = '[ถึง: '+dept+']\n'+cmd+' '+detail;
+  var el = document.getElementById('line-preview-text');
+  if (el) el.textContent = preview;
+}
+
+async function sendLineCommand() {
+  var cmd = (document.getElementById('line-cmd-type')||{}).value;
+  var dept = (document.getElementById('line-cmd-dept')||{}).value;
+  var detail = (document.getElementById('line-cmd-detail')||{}).value || '';
+  var btn = document.getElementById('line-send-btn');
+  var resultEl = document.getElementById('line-cmd-result');
+  if (!detail.trim()) { alert('กรุณากรอกรายละเอียดคำสั่ง'); return; }
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ กำลังส่ง...'; }
+  if (resultEl) resultEl.textContent = '';
+  try {
+    var resp = await fetch('/api/management/line-command', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({command:cmd, params:detail, ministry:'กระทรวงเกษตรและสหกรณ์', targetDept:dept, sender:'mgmt-boss'}),
+    });
+    var data = await resp.json();
+    if (data.ok) {
+      var aiReply = data.response || '—';
+      if (resultEl) resultEl.innerHTML = '<div style="background:#f0fdf4;border:1px solid var(--border);border-radius:8px;padding:12px"><div style="font-size:11px;color:var(--sub);margin-bottom:4px">🤖 AI ตอบกลับ:</div><div style="color:var(--navy1);white-space:pre-wrap">'+aiReply+'</div></div>';
+      var now = new Date();
+      var timeStr = now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
+      lineCommandHistory.unshift({time:timeStr, cmd:cmd, target:dept, msg:detail, reply:aiReply, status:'ส่งแล้ว'});
+      if (lineCommandHistory.length > 20) lineCommandHistory.pop();
+      renderLineHistory('line-history-tbody', lineCommandHistory.slice(0,10));
+      renderLineHistory('line-history-all-tbody', lineCommandHistory);
+    } else {
+      if (resultEl) resultEl.innerHTML = '<span style="color:var(--red)">❌ '+data.error+'</span>';
+    }
+  } catch(e) {
+    if (resultEl) resultEl.innerHTML = '<span style="color:var(--red)">❌ ไม่สามารถเชื่อมต่อ API ได้</span>';
+  }
+  if (btn) { btn.disabled = false; btn.textContent = '📲 ส่งคำสั่ง'; }
+}
+
+function quickLineCmd(cmd, detail) {
+  var typeEl = document.getElementById('line-cmd-type');
+  var detailEl = document.getElementById('line-cmd-detail');
+  if (typeEl) typeEl.value = cmd;
+  if (detailEl) detailEl.value = detail;
+  updateLinePreview();
+  showPage('line-command');
+}
+
+async function loadLineStatus() {
+  var badge = document.getElementById('line-status-badge');
+  var detail = document.getElementById('line-status-detail');
+  try {
+    var resp = await fetch('/api/management/line-status');
+    var data = await resp.json();
+    if (data.ok) {
+      var count = data.count || 0;
+      if (badge) badge.textContent = count + ' ช่องทาง';
+      var chList = data.channels.length ? data.channels.join(', ') : '(ไม่มี)';
+      if (detail) detail.innerHTML = '<span class="dot-g"></span>เชื่อมต่อแล้ว · ช่องทาง: <strong>'+chList+'</strong>'+(data.hasDefault?' · มี DEFAULT token':'');
+    }
+  } catch(e) {
+    if (badge) badge.textContent = 'ไม่สามารถตรวจสอบได้';
+    if (detail) detail.innerHTML = '<span class="dot-r"></span>ไม่สามารถเชื่อมต่อ API ได้';
+  }
+}
+
+/* ──────────────── DIMENSION / PAGE SWITCHING ──────────────── */
+var DIM_SB_MAP = {
+  people:'sb-people', budget:'sb-budget', projects:'sb-projects',
+  integration:'sb-integration', finance:'sb-finance', line:'sb-line'
+};
+var DIM_DEFAULT_PAGE = {
+  people:'people-overview', budget:'budget-overview', projects:'proj-overview',
+  integration:'integ-overview', finance:'fin-payroll', line:'line-command'
+};
+
+function switchDim(dim) {
+  document.querySelectorAll('.dim-tab').forEach(function(t){t.classList.remove('active')});
+  var activeTab = document.querySelector('[data-dim="'+dim+'"]');
+  if (activeTab) activeTab.classList.add('active');
+  Object.keys(DIM_SB_MAP).forEach(function(d){
+    var el = document.getElementById(DIM_SB_MAP[d]);
+    if (el) el.style.display = d===dim?'':'none';
+  });
+  showPage(DIM_DEFAULT_PAGE[dim]||'people-overview');
+  if (dim==='line') { loadLineStatus(); renderLineHistory('line-history-tbody',lineCommandHistory.slice(0,10)); renderLineHistory('line-history-all-tbody',lineCommandHistory); }
+}
+
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
+  var pg = document.getElementById('page-'+pageId);
+  if (pg) pg.classList.add('active');
+  document.querySelectorAll('.sb-item').forEach(function(i){i.classList.remove('active')});
+  var sbItem = document.querySelector('[data-page="'+pageId+'"]');
+  if (sbItem) sbItem.classList.add('active');
+}
+
+/* ──────────────── LOGIN / ROLE ──────────────── */
+var _role = '';
+function selRole(r) {
+  _role = r;
+  document.querySelectorAll('.role-btn').forEach(function(b){b.classList.remove('active')});
+  var rb = document.getElementById('r-'+r);
+  if (rb) rb.classList.add('active');
+}
+function doLogin() {
+  if (!_role) { selRole('perm'); }
+  var roleNames = {perm:'ปลัดกระทรวงเกษตร',head:'อธิบดีกรม',academic:'นักวิเคราะห์',staff:'เจ้าหน้าที่'};
+  document.getElementById('tbUser').textContent = roleNames[_role]||_role;
+  document.getElementById('login').style.display='none';
+  document.getElementById('app').style.display='flex';
+}
+function doLogout() {
+  document.getElementById('login').style.display='flex';
+  document.getElementById('app').style.display='none';
+}
+
+/* ── INIT ── */
+window.addEventListener('DOMContentLoaded', function(){
+  document.getElementById('login').style.display='flex';
+  document.getElementById('app').style.display='none';
+  renderLineHistory('line-history-tbody', lineCommandHistory.slice(0,10));
+  renderLineHistory('line-history-all-tbody', lineCommandHistory);
+});
+
+<!-- ══════ FINANCE ERP PAGES ══════ -->
+
+<!-- PAGE: fin-payroll -->
+<div id="page-fin-payroll" class="page">
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="kpi-v" id="pay-total-amt">−</div><div class="kpi-l">ยอดเงินเดือนรวม/เดือน</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="pay-total-ppl">−</div><div class="kpi-l">จำนวนบุคลากร</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="pay-used-budget">−</div><div class="kpi-l">งบที่ใช้ (ล้าน/ปี)</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="pay-budget-plan">45,200</div><div class="kpi-l">งบที่ตั้ง (ล้าน/ปี)</div></div>
+  </div>
+  <div class="card">
+    <div class="card-h">👤 ตารางเงินเดือนข้าราชการ กษ. <span class="badge">ประจำเดือน พ.ค. 2568</span></div>
+    <div class="law-note" style="font-size:11px;background:#e8f5e9;border-left:3px solid #388e3c;padding:4px 8px;margin:4px 0">⚖️ ระบบตำแหน่งตาม พรบ.ระเบียบข้าราชการพลเรือน 2551 มาตรา 45 (4 ประเภทตำแหน่ง) | พนักงานรัฐวิสาหกิจ (กยท., ธ.ก.ส.) ใช้กฎหมายแรงงานรัฐวิสาหกิจ</div>
+    <div class="row-wrap" style="margin-bottom:12px">
+      <input id="pay-search" class="inp" style="max-width:220px" placeholder="ค้นหาชื่อ / กรม..." oninput="filterPayroll()">
+      <select id="pay-dept-filter" class="inp" style="max-width:200px" onchange="filterPayroll()">
+        <option value="">— กรมทั้งหมด —</option>
+        <option value="สำนักงานปลัดกระทรวง">สำนักงานปลัดกระทรวง</option>
+        <option value="กรมส่งเสริมการเกษตร">กรมส่งเสริมการเกษตร</option>
+        <option value="กรมชลประทาน">กรมชลประทาน</option>
+        <option value="กรมวิชาการเกษตร">กรมวิชาการเกษตร</option>
+        <option value="กรมประมง">กรมประมง</option>
+        <option value="กรมปศุสัตว์">กรมปศุสัตว์</option>
+      </select>
+      <button class="btn btn-g" onclick="processPayroll()">⚙️ ประมวลผลเงินเดือนประจำเดือน</button>
+      <button class="btn btn-out" onclick="exportPayrollPDF()">📄 Export PDF</button>
+    </div>
+    <table class="tbl">
+      <thead><tr><th>ชื่อ-สกุล</th><th>ตำแหน่ง</th><th>กรม</th><th>ประเภท/ระดับตำแหน่ง</th><th style="text-align:right">เงินเดือน</th><th style="text-align:right">เงินตำแหน่ง</th><th style="text-align:right">รวม</th><th>สถานะ</th></tr></thead>
+      <tbody id="payroll-tbody"></tbody>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-h">➕ เพิ่ม/แก้ไขรายการเงินเดือน</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;max-width:800px">
+      <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">ชื่อ-สกุล</label><input id="py-name" class="inp" placeholder="นาย/นาง..."></div>
+      <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">กรม</label>
+        <select id="py-dept" class="inp">
+          <option>สำนักงานปลัดกระทรวง</option>
+          <option>กรมส่งเสริมการเกษตร</option>
+          <option>กรมชลประทาน</option>
+          <option>กรมวิชาการเกษตร</option>
+          <option>กรมประมง</option>
+          <option>กรมปศุสัตว์</option>
+          <option>กรมพัฒนาที่ดิน</option>
+        </select>
+      </div>
+      <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">ระดับ</label>
+        <select id="py-grade" class="inp">
+          <option value="บริหาร ระดับสูง">ประเภทบริหาร ระดับสูง</option>
+          <option value="บริหาร ระดับต้น">ประเภทบริหาร ระดับต้น</option>
+          <option value="อำนวยการ ระดับสูง" selected>ประเภทอำนวยการ ระดับสูง</option>
+          <option value="อำนวยการ ระดับต้น">ประเภทอำนวยการ ระดับต้น</option>
+          <option value="วิชาการ ทรงคุณวุฒิ">ประเภทวิชาการ ทรงคุณวุฒิ</option>
+          <option value="วิชาการ เชี่ยวชาญ">ประเภทวิชาการ เชี่ยวชาญ</option>
+          <option value="วิชาการ ชำนาญการพิเศษ">ประเภทวิชาการ ชำนาญการพิเศษ</option>
+          <option value="วิชาการ ชำนาญการ">ประเภทวิชาการ ชำนาญการ</option>
+          <option value="วิชาการ ปฏิบัติการ">ประเภทวิชาการ ปฏิบัติการ</option>
+          <option value="ทั่วไป อาวุโส">ประเภททั่วไป อาวุโส</option>
+          <option value="ทั่วไป ชำนาญงานพิเศษ">ประเภททั่วไป ชำนาญงานพิเศษ</option>
+          <option value="ทั่วไป ชำนาญงาน">ประเภททั่วไป ชำนาญงาน</option>
+          <option value="ทั่วไป ปฏิบัติงาน">ประเภททั่วไป ปฏิบัติงาน</option>
+          <option value="พนักงานราชการ">พนักงานราชการ</option>
+          <option value="ลูกจ้างประจำ">ลูกจ้างประจำ</option>
+          <option value="พนักงานรัฐวิสาหกิจ">พนักงานรัฐวิสาหกิจ</option>
+        </select>
+      </div>
+      <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">ตำแหน่ง</label><input id="py-position" class="inp" placeholder="ผอ. / นักวิชาการ..."></div>
+      <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">เงินเดือน (บาท)</label><input id="py-salary" class="inp" type="number" placeholder="0"></div>
+      <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">เงินตำแหน่ง (บาท)</label><input id="py-pos-pay" class="inp" type="number" placeholder="0"></div>
+    </div>
+    <div style="margin-top:12px">
+      <button class="btn btn-g" onclick="addPayrollRecord()">✅ บันทึกรายการ</button>
+    </div>
+    <div id="pay-add-msg" style="margin-top:8px;font-size:13px"></div>
+  </div>
+</div>
+
+<!-- PAGE: fin-expense -->
+<div id="page-fin-expense" class="page">
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="kpi-v" id="exp-total">−</div><div class="kpi-l">รายจ่ายสะสม (ล้าน)</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="exp-budget">60,000</div><div class="kpi-l">งบดำเนินงาน (ล้าน)</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="exp-pct">−</div><div class="kpi-l">% เบิกจ่าย</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="exp-this-month">−</div><div class="kpi-l">เดือนนี้ (ล้าน)</div></div>
+  </div>
+  <div class="card">
+    <div class="card-h">📊 รายจ่ายตามหมวด vs งบที่ตั้ง</div>
+    <div id="expense-cat-bars"></div>
+  </div>
+  <div class="card">
+    <div class="card-h">📤 ตารางรายจ่าย <span class="badge" id="exp-count-badge">0 รายการ</span></div>
+    <div class="row-wrap" style="margin-bottom:12px">
+      <select id="exp-type-filter" class="inp" style="max-width:200px" onchange="filterExpense()">
+        <option value="">— ประเภททั้งหมด —</option>
+        <option value="ค่าตอบแทน">ค่าตอบแทน</option>
+        <option value="ค่าวัสดุ">ค่าวัสดุ</option>
+        <option value="ค่าครุภัณฑ์">ค่าครุภัณฑ์</option>
+        <option value="ค่าสาธารณูปโภค">ค่าสาธารณูปโภค</option>
+        <option value="ค่าใช้สอย">ค่าใช้สอย</option>
+      </select>
+      <button class="btn btn-sm" onclick="toggleExpenseForm()">➕ เพิ่มรายจ่าย</button>
+    </div>
+    <div id="expense-add-form" style="display:none;padding:14px;background:var(--bg2);border-radius:10px;margin-bottom:14px">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+        <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">วันที่</label><input id="ex-date" class="inp" type="date"></div>
+        <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">ประเภท</label>
+          <select id="ex-type" class="inp"><option>ค่าตอบแทน</option><option>ค่าวัสดุ</option><option>ค่าครุภัณฑ์</option><option>ค่าสาธารณูปโภค</option><option>ค่าใช้สอย</option></select>
+        </div>
+        <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">จำนวน (บาท)</label><input id="ex-amount" class="inp" type="number" placeholder="0"></div>
+        <div style="grid-column:span 2"><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">รายละเอียด</label><input id="ex-desc" class="inp" placeholder="รายละเอียด..."></div>
+        <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">หน่วยงาน</label><input id="ex-dept" class="inp" placeholder="กรม..."></div>
+      </div>
+      <div style="margin-top:10px">
+        <button class="btn btn-g" onclick="addExpenseRecord()">✅ บันทึกรายจ่าย</button>
+        <button class="btn btn-out" style="margin-left:8px" onclick="toggleExpenseForm()">ยกเลิก</button>
+      </div>
+    </div>
+    <table class="tbl">
+      <thead><tr><th>วันที่</th><th>เลขที่เอกสาร</th><th>ประเภท</th><th>รายละเอียด</th><th style="text-align:right">จำนวน (บาท)</th><th>หน่วยงาน</th><th>สถานะ</th></tr></thead>
+      <tbody id="expense-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- PAGE: fin-accounting -->
+<div id="page-fin-accounting" class="page">
+  <div class="card">
+    <div class="card-h">📒 สมุดบัญชีรายวัน (General Journal) <span class="badge">ปีงบประมาณ 2568</span></div>
+    <div class="row-wrap" style="margin-bottom:12px">
+      <button class="btn btn-sm" onclick="toggleJournalForm()">➕ เพิ่ม Journal Entry</button>
+      <button class="btn btn-sm btn-out" onclick="renderTrialBalance()">📋 งบทดลอง</button>
+    </div>
+    <div id="journal-form" style="display:none;padding:14px;background:var(--bg2);border-radius:10px;margin-bottom:14px">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px">
+        <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">วันที่</label><input id="jn-date" class="inp" type="date"></div>
+        <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">เลขที่บัญชี</label>
+          <select id="jn-acct" class="inp">
+            <option value="01">01 งบบุคลากร</option>
+            <option value="02">02 งบดำเนินงาน</option>
+            <option value="03">03 งบลงทุน</option>
+            <option value="04">04 งบอุดหนุน</option>
+            <option value="05">05 งบรายจ่ายอื่น</option>
+          </select>
+        </div>
+        <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">เดบิต (บาท)</label><input id="jn-debit" class="inp" type="number" placeholder="0"></div>
+        <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">เครดิต (บาท)</label><input id="jn-credit" class="inp" type="number" placeholder="0"></div>
+        <div style="grid-column:span 4"><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">รายการ</label><input id="jn-desc" class="inp" placeholder="รายละเอียดรายการ..."></div>
+      </div>
+      <div style="margin-top:10px">
+        <button class="btn btn-g" onclick="addJournalEntry()">✅ บันทึก Journal Entry</button>
+        <button class="btn btn-out" style="margin-left:8px" onclick="toggleJournalForm()">ยกเลิก</button>
+      </div>
+    </div>
+    <table class="tbl">
+      <thead><tr><th>วันที่</th><th>เลขที่บัญชี</th><th>รายการ</th><th style="text-align:right">เดบิต</th><th style="text-align:right">เครดิต</th><th style="text-align:right">ยอดคงเหลือ</th></tr></thead>
+      <tbody id="journal-tbody"></tbody>
+    </table>
+  </div>
+  <div class="card" id="trial-balance-card" style="display:none">
+    <div class="card-h">📋 งบทดลอง (Trial Balance) — เดือนปัจจุบัน</div>
+    <table class="tbl">
+      <thead><tr><th>เลขที่บัญชี</th><th>ชื่อบัญชี</th><th style="text-align:right">เดบิตรวม</th><th style="text-align:right">เครดิตรวม</th><th style="text-align:right">ยอดคงเหลือ</th></tr></thead>
+      <tbody id="trial-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- PAGE: fin-documents -->
+<div id="page-fin-documents" class="page">
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="kpi-v" id="doc-pr">−</div><div class="kpi-l">ใบขอซื้อ (PR) รอดำเนินการ</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="doc-po">−</div><div class="kpi-l">ใบสั่งซื้อ (PO) ออกแล้ว</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="doc-pay-req">−</div><div class="kpi-l">ใบเบิกเงิน รอลงนาม</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="doc-invoice">−</div><div class="kpi-l">ฎีกาเบิกจ่าย รอเบิก</div></div>
+  </div>
+  <div class="card">
+    <div class="card-h">📄 สร้างเอกสารการเงิน</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;max-width:800px">
+      <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">ประเภทเอกสาร</label>
+        <select id="doc-type" class="inp">
+          <option value="PR">ใบขอซื้อ (PR)</option>
+          <option value="PO">ใบสั่งซื้อ (PO)</option>
+          <option value="PAY_REQ">ใบเบิกเงิน</option>
+          <option value="VOUCHER">ใบสำคัญจ่าย</option>
+          <option value="INVOICE">ฎีกาเบิกจ่าย</option>
+        </select>
+      </div>
+      <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">วันที่</label><input id="doc-date" class="inp" type="date"></div>
+      <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">หน่วยงาน</label><input id="doc-unit" class="inp" placeholder="กรม..."></div>
+      <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">ผู้ขอ/ผู้รับเงิน</label><input id="doc-requester" class="inp" placeholder="ชื่อ..."></div>
+      <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">จำนวนเงิน (บาท)</label><input id="doc-amount" class="inp" type="number" placeholder="0"></div>
+      <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">วัตถุประสงค์</label><input id="doc-purpose" class="inp" placeholder="เพื่อ..."></div>
+    </div>
+    <div style="margin-top:12px">
+      <button class="btn btn-g" onclick="createFinDocument()">📄 สร้างเอกสาร</button>
+    </div>
+    <div id="doc-create-msg" style="margin-top:8px;font-size:13px"></div>
+  </div>
+  <div class="card">
+    <div class="card-h">📋 รายการเอกสารการเงิน</div>
+    <table class="tbl">
+      <thead><tr><th>เลขที่</th><th>ประเภท</th><th>วันที่</th><th>ผู้ขอ</th><th>หน่วยงาน</th><th style="text-align:right">จำนวน (บาท)</th><th>วัตถุประสงค์</th><th>สถานะ</th></tr></thead>
+      <tbody id="doc-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- PAGE: fin-stock -->
+<div id="page-fin-stock" class="page">
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="kpi-v" id="stk-items">−</div><div class="kpi-l">รายการพัสดุทั้งหมด</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="stk-value">−</div><div class="kpi-l">มูลค่าสต๊อกรวม (บาท)</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="stk-low" style="color:var(--red)">−</div><div class="kpi-l">รายการใกล้หมด</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="stk-assets">−</div><div class="kpi-l">รายการครุภัณฑ์</div></div>
+  </div>
+  <div class="card">
+    <div class="card-h">📦 ตารางสต๊อกพัสดุ</div>
+    <div class="row-wrap" style="margin-bottom:12px">
+      <button class="btn btn-sm" onclick="toggleStockForm()">➕ เพิ่มพัสดุ</button>
+      <button class="btn btn-sm btn-out" onclick="toggleIssueForm()">📤 เบิก/รับพัสดุ</button>
+    </div>
+    <div id="stock-add-form" style="display:none;padding:14px;background:var(--bg2);border-radius:10px;margin-bottom:12px">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px">
+        <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">ชื่อพัสดุ</label><input id="sk-name" class="inp" placeholder="กระดาษ, ปากกา..."></div>
+        <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">หน่วย</label><input id="sk-unit" class="inp" placeholder="รีม/กล่อง/ชิ้น"></div>
+        <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">จำนวน</label><input id="sk-qty" class="inp" type="number" placeholder="0"></div>
+        <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">ราคา/หน่วย</label><input id="sk-price" class="inp" type="number" placeholder="0"></div>
+        <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">จำนวนขั้นต่ำ (แจ้งเตือน)</label><input id="sk-min" class="inp" type="number" placeholder="10"></div>
+        <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">ที่เก็บ</label><input id="sk-location" class="inp" placeholder="ห้องพัสดุ..."></div>
+      </div>
+      <div style="margin-top:10px">
+        <button class="btn btn-g" onclick="addStockItem()">✅ บันทึกพัสดุ</button>
+        <button class="btn btn-out" style="margin-left:8px" onclick="toggleStockForm()">ยกเลิก</button>
+      </div>
+    </div>
+    <div id="issue-form" style="display:none;padding:14px;background:#fff8e1;border-radius:10px;margin-bottom:12px;border:1px solid var(--gold2)">
+      <div style="font-weight:700;font-size:13px;color:var(--navy1);margin-bottom:10px">📤 เบิก/รับพัสดุ</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px">
+        <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">รหัสพัสดุ</label><input id="iss-id" class="inp" placeholder="STK001"></div>
+        <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">ประเภท</label>
+          <select id="iss-type" class="inp"><option value="เบิก">เบิกออก</option><option value="รับ">รับเข้า</option></select>
+        </div>
+        <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">จำนวน</label><input id="iss-qty" class="inp" type="number" placeholder="0"></div>
+        <div><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">ผู้เบิก/ผู้นำส่ง</label><input id="iss-person" class="inp" placeholder="ชื่อ..."></div>
+        <div style="grid-column:span 4"><label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px">วัตถุประสงค์</label><input id="iss-purpose" class="inp" placeholder="เพื่อ..."></div>
+      </div>
+      <div style="margin-top:10px">
+        <button class="btn btn-g" onclick="processIssue()">✅ บันทึกเบิก/รับ</button>
+        <button class="btn btn-out" style="margin-left:8px" onclick="toggleIssueForm()">ยกเลิก</button>
+      </div>
+    </div>
+    <table class="tbl">
+      <thead><tr><th>รหัส</th><th>ชื่อพัสดุ</th><th>หน่วย</th><th style="text-align:right">คงเหลือ</th><th style="text-align:right">ราคา/หน่วย</th><th style="text-align:right">มูลค่ารวม</th><th>ที่เก็บ</th><th>สถานะ</th></tr></thead>
+      <tbody id="stock-tbody"></tbody>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-h">🏷️ ทะเบียนครุภัณฑ์ (Fixed Assets)</div>
+    <table class="tbl">
+      <thead><tr><th>รหัส</th><th>ชื่อครุภัณฑ์</th><th style="text-align:right">ราคา (บาท)</th><th>วันที่ซื้อ</th><th>อายุใช้งาน</th><th>สถานที่</th><th>สถานะ</th></tr></thead>
+      <tbody id="asset-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+</div><!-- /main -->
+</div><!-- /app-body -->
+</div><!-- /app -->
+
+<!-- ========== AI CHAT WIDGET ========== -->
+<div id="ai-chat-btn" onclick="toggleAiChat()" style="position:fixed;bottom:20px;right:20px;width:52px;height:52px;background:#1b4332;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.3);z-index:9999;font-size:22px">🤖</div>
+
+<div id="ai-chat-panel" style="position:fixed;bottom:80px;right:20px;width:360px;height:500px;background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.2);display:none;flex-direction:column;z-index:9998">
+  <div style="background:#1b4332;color:#fff;padding:12px 16px;border-radius:12px 12px 0 0;display:flex;justify-content:space-between;align-items:center">
+    <span style="font-weight:700;font-size:14px">🤖 ผู้ช่วย AI กษ.</span>
+    <span onclick="toggleAiChat()" style="cursor:pointer;opacity:.8;font-size:18px">✕</span>
+  </div>
+  <div id="ai-chat-messages" style="flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px">
+    <div style="background:#f0faf4;border-radius:10px;padding:10px 12px;font-size:13px;color:#1b4332;border-left:3px solid #1b4332">
+      สวัสดีครับ! ผมคือผู้ช่วย AI ระบบบริหาร กษ. ช่วยได้เรื่อง งบประมาณ, โครงการ, บุคลากร, เอกสารราชการ และการเงิน ERP ถามมาได้เลยครับ 🌾
+    </div>
+  </div>
+  <div style="padding:8px;border-top:1px solid #eee;display:flex;gap:6px">
+    <input id="ai-chat-input" placeholder="ถามเรื่องงาน กษ..." style="flex:1;padding:8px;border:1px solid #ddd;border-radius:8px;font-size:13px;font-family:inherit;outline:none" onkeydown="if(event.key==='Enter')sendAiChat()">
+    <button onclick="sendAiChat()" style="background:#1b4332;color:#fff;border:none;border-radius:8px;padding:8px 14px;cursor:pointer;font-size:13px;font-family:inherit;font-weight:600">ส่ง</button>
+  </div>
+</div>
+
+<!-- ========== SCRIPTS ========== -->
+<script>
+var STATE = { role: null, curDim: 'people', curPage: 'people-overview' };
+var _selectedRole = null;
+var DATA_LOADED = false;
+var API_PERSONNEL = [], API_BUDGET = [], API_PROJECTS = [], API_CONTRACTS = [], API_INTEGRATION = [], API_SUMMARY = null;
+var MOAC_API = '/api/moac/management';
+var HPOST = {'Content-Type':'application/json','x-api-key':'moac2026'};
+var currentRole = 'staff';
+
+// ── AI CHAT STATE ──
+var chatHistory = [];
+
+function toggleAiChat() {
+  var p = document.getElementById('ai-chat-panel');
+  p.style.display = p.style.display === 'flex' ? 'none' : 'flex';
+  if (p.style.display === 'flex') document.getElementById('ai-chat-input').focus();
+}
+
+function addChatMsg(role, text) {
+  var box = document.getElementById('ai-chat-messages');
+  var div = document.createElement('div');
+  if (role === 'user') {
+    div.style.cssText = 'background:#1b4332;color:#fff;border-radius:10px;padding:9px 12px;font-size:13px;align-self:flex-end;max-width:85%';
+  } else {
+    div.style.cssText = 'background:#f0faf4;color:#1e293b;border-radius:10px;padding:9px 12px;font-size:13px;max-width:90%;white-space:pre-wrap;border-left:3px solid #40916c';
+  }
+  div.textContent = text;
+  if (role === 'ai' && text === '⏳ กำลังคิด...') div.id = 'ai-pending';
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+
+function removePending() {
+  var el = document.getElementById('ai-pending');
+  if (el) el.remove();
+}
+
+async function sendAiChat() {
+  var input = document.getElementById('ai-chat-input');
+  var msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+  addChatMsg('user', msg);
+  addChatMsg('ai', '⏳ กำลังคิด...');
+  try {
+    var r = await fetch('/api/management/chat', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','x-api-key':'moac2026'},
+      body: JSON.stringify({ministry:'moac', role: currentRole, message: msg, history: chatHistory})
+    });
+    var d = await r.json();
+    removePending();
+    addChatMsg('ai', d.reply || 'ขออภัย ไม่สามารถตอบได้');
+    chatHistory.push({role:'user',content:msg},{role:'assistant',content:d.reply||''});
+    if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
+  } catch(e) {
+    removePending();
+    addChatMsg('ai', '❌ ขออภัย ระบบขัดข้อง กรุณาลองใหม่');
+  }
+}
+
+// ── AUTH ──
+function selRole(r) {
+  _selectedRole = r;
+  document.querySelectorAll('.role-btn').forEach(function(b){b.classList.remove('active');});
+  var el = document.getElementById('r-'+r); if(el) el.classList.add('active');
+}
+
+async function doLogin() {
+  if (!_selectedRole) { alert('กรุณาเลือกระดับการเข้าใช้งาน'); return; }
+  var btn = document.querySelector('.lc-btn');
+  if(btn){ btn.textContent='⏳ กำลังโหลดข้อมูล...'; btn.disabled=true; }
+  STATE.role = _selectedRole; currentRole = _selectedRole;
+  var labels = {perm:'ปลัดกระทรวงเกษตรและสหกรณ์',head:'อธิบดีกรม',academic:'นักวิเคราะห์',staff:'เจ้าหน้าที่'};
+  await loadAllData();
+  document.getElementById('login').style.display='none';
+  document.getElementById('app').style.display='flex';
+  document.getElementById('tbUser').textContent = labels[_selectedRole]||_selectedRole;
+  if(btn){ btn.textContent='🔐 เข้าสู่ระบบ กษ. Management'; btn.disabled=false; }
+  switchDim('people');
+}
+
+function doLogout() {
+  _selectedRole=null; STATE.role=null; DATA_LOADED=false; currentRole='staff';
+  API_PERSONNEL=[]; API_BUDGET=[]; API_PROJECTS=[]; API_CONTRACTS=[]; API_INTEGRATION=[]; API_SUMMARY=null;
+  document.getElementById('app').style.display='none';
+  document.getElementById('login').style.display='flex';
+  document.querySelectorAll('.role-btn').forEach(function(b){b.classList.remove('active');});
+}
+
+// ── NAVIGATION ──
+function switchDim(dim) {
+  STATE.curDim = dim;
+  document.querySelectorAll('.dim-tab').forEach(function(t){t.classList.toggle('active',t.dataset.dim===dim);});
+  ['people','budget','projects','integration','finance'].forEach(function(d){
+    var el=document.getElementById('sb-'+d); if(el) el.style.display=d===dim?'block':'none';
+  });
+  var firstPage = {people:'people-overview',budget:'budget-overview',projects:'proj-overview',integration:'integ-overview',finance:'fin-payroll'}[dim];
+  showPage(firstPage);
+}
+
+function showPage(pg) {
+  STATE.curPage = pg;
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');p.style.display='none';});
+  var el = document.getElementById('page-'+pg);
+  if(el){el.classList.add('active');el.style.display='block';}
+  document.querySelectorAll('.sb-item').forEach(function(i){i.classList.toggle('active',i.dataset.page===pg);});
+  renderPage(pg);
+}
+
+function renderPage(pg) {
+  var fn = {
+    'people-overview':  renderPeopleOverview,
+    'people-list':      renderPeopleList,
+    'people-add':       function(){},
+    'people-provinces': renderPeopleProvinces,
+    'budget-overview':  renderBudgetOverview,
+    'budget-depts':     renderBudgetDepts,
+    'budget-categories':renderBudgetCategories,
+    'budget-tracking':  renderBudgetTracking,
+    'proj-overview':    renderProjOverview,
+    'proj-list':        renderProjList,
+    'proj-kpi':         renderProjKPI,
+    'proj-add':         function(){},
+    'proj-contracts':   renderContracts,
+    'integ-overview':   renderIntegOverview,
+    'integ-plans':      renderIntegPlans,
+    'integ-budget':     renderIntegBudget,
+    'integ-add':        function(){},
+    'integ-bcg':        function(){},
+    'fin-payroll':      renderPayroll,
+    'fin-expense':      renderExpense,
+    'fin-accounting':   renderAccounting,
+    'fin-documents':    renderDocuments,
+    'fin-stock':        renderStock,
+  }[pg];
+  if(fn) fn();
+}
+</script>
+
+<script>
+/* ── DATA LOADING ── */
+async function loadAllData() {
+  try {
+    var headers = {'x-api-key':'moac2026'};
+    var [sumR, perR, budR, projR, ctrR, intR] = await Promise.all([
+      fetch(MOAC_API+'/summary', {headers:headers}),
+      fetch(MOAC_API+'/personnel', {headers:headers}),
+      fetch(MOAC_API+'/budget', {headers:headers}),
+      fetch(MOAC_API+'/projects', {headers:headers}),
+      fetch(MOAC_API+'/contracts', {headers:headers}),
+      fetch(MOAC_API+'/integration', {headers:headers}),
+    ]);
+    var [sumD, perD, budD, projD, ctrD, intD] = await Promise.all([sumR.json(), perR.json(), budR.json(), projR.json(), ctrR.json(), intR.json()]);
+    if (sumD.ok) API_SUMMARY = sumD;
+    if (perD.ok) API_PERSONNEL = perD.personnel || [];
+    if (budD.ok) API_BUDGET = budD.budget || [];
+    if (projD.ok) API_PROJECTS = projD.projects || [];
+    if (ctrD.ok) API_CONTRACTS = ctrD.contracts || [];
+    if (intD.ok) API_INTEGRATION = intD.plans || [];
+    DATA_LOADED = true;
+  } catch(e) {
+    console.warn('[MOAC] API load error (using offline mode):', e.message);
+    DATA_LOADED = true;
+  }
+}
+
+/* ── PEOPLE RENDERERS ── */
+function renderPeopleOverview() {
+  var s = API_SUMMARY;
+  document.getElementById('kpi-total').textContent    = s ? (s.personnel&&s.personnel.total||0).toLocaleString('th-TH') : (DATA_LOADED?'0':'…');
+  document.getElementById('kpi-civil').textContent    = s ? (s.personnel&&s.personnel.civil||0).toLocaleString('th-TH') : '…';
+  document.getElementById('kpi-gov-emp').textContent  = s ? (s.personnel&&s.personnel.govEmp||0).toLocaleString('th-TH') : '…';
+  document.getElementById('kpi-contract').textContent = s ? (s.personnel&&s.personnel.contract||0).toLocaleString('th-TH') : '…';
+  var tbody = document.getElementById('people-dept-tbody');
+  if (!tbody) return;
+  var deptMap = {};
+  API_PERSONNEL.forEach(function(p){
+    var k=p.dept||'ไม่ระบุ';
+    if(!deptMap[k]) deptMap[k]={name:k,civil:0,govEmp:0,contract:0};
+    if(p.employee_type==='ข้าราชการ') deptMap[k].civil++;
+    else if(p.employee_type==='พนักงานราชการ') deptMap[k].govEmp++;
+    else deptMap[k].contract++;
+  });
+  var depts = Object.values(deptMap);
+  if(!depts.length){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--sub);padding:20px">ไม่มีข้อมูล (offline mode)</td></tr>';return;}
+  var h='';
+  depts.forEach(function(d){
+    var tot=d.civil+d.govEmp+d.contract;
+    h+='<tr><td><strong>'+d.name+'</strong></td><td><span class="level-chip lc-central">ส่วนกลาง</span></td>';
+    h+='<td style="text-align:center">'+d.civil+'</td><td style="text-align:center">'+d.govEmp+'</td>';
+    h+='<td style="text-align:center;color:var(--navy3);font-weight:600">'+d.contract+'</td>';
+    h+='<td style="text-align:center;font-weight:700">'+tot+'</td></tr>';
+  });
+  tbody.innerHTML=h;
+}
+
+function renderPeopleList() {
+  var search=(document.getElementById('people-search')||{}).value||'';
+  var deptFilter=(document.getElementById('people-dept-filter')||{}).value||'';
+  var people=API_PERSONNEL.slice();
+  if(search) people=people.filter(function(p){return(p.name||'').includes(search)||(p.dept||'').includes(search);});
+  if(deptFilter) people=people.filter(function(p){return p.dept===deptFilter;});
+  var sel=document.getElementById('people-dept-filter');
+  if(sel&&sel.options.length<=1){
+    var depts=[...new Set(API_PERSONNEL.map(function(p){return p.dept||''}))].filter(Boolean);
+    depts.forEach(function(d){var o=document.createElement('option');o.value=d;o.textContent=d;sel.appendChild(o);});
+  }
+  var badge=document.getElementById('people-count-badge');
+  if(badge) badge.textContent=people.length+' คน';
+  var typeColor={'ข้าราชการ':'lc-central','พนักงานราชการ':'lc-region','ลูกจ้างประจำ':'lc-local','จ้างเหมาบริการ':'lc-indep'};
+  var tbody=document.getElementById('people-tbody');
+  if(!tbody) return;
+  if(people.length===0){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--sub);padding:20px">ไม่มีข้อมูล</td></tr>';return;}
+  var h='';
+  people.forEach(function(p){
+    var cls=typeColor[p.employee_type]||'lc-local';
+    var dot=p.status==='ปฏิบัติงาน'?'<span class="dot-g"></span>':'<span class="dot-y"></span>';
+    h+='<tr><td>'+(p.name||'—')+'</td><td><span class="level-chip '+cls+'">'+(p.employee_type||'—')+'</span></td>';
+    h+='<td>'+(p.position||'—')+'</td><td>'+(p.dept||'—')+'</td>';
+    h+='<td>'+(p.posType||p.grade||'—')+'</td><td>'+dot+(p.status||'—')+'</td></tr>';
+  });
+  tbody.innerHTML=h;
+}
+function filterPeople(){renderPeopleList();}
+
+function renderPeopleProvinces(){
+  var regions=[
+    {name:'ภาคเหนือ',provinces:17,amphoe:204,volunteers:17000,active:15200},
+    {name:'ภาคกลาง',provinces:21,amphoe:231,volunteers:18000,active:16100},
+    {name:'ภาคตะวันออกเฉียงเหนือ',provinces:20,amphoe:277,volunteers:21500,active:19200},
+    {name:'ภาคตะวันออก',provinces:7,amphoe:61,volunteers:5500,active:4900},
+    {name:'ภาคตะวันตก',provinces:5,amphoe:51,volunteers:4200,active:3700},
+    {name:'ภาคใต้',provinces:14,amphoe:142,volunteers:12000,active:10400},
+  ];
+  var tbody=document.getElementById('provinces-tbody');
+  if(!tbody) return;
+  var h='';
+  regions.forEach(function(r){
+    var pct=Math.round(r.active/r.volunteers*100);
+    var col=pct>=85?'var(--green1)':pct>=70?'#b45309':'var(--red)';
+    h+='<tr><td><strong>'+r.name+'</strong></td><td style="text-align:center">'+r.provinces+'</td><td style="text-align:center">'+r.amphoe+'</td>';
+    h+='<td style="text-align:center">'+r.volunteers.toLocaleString('th-TH')+'</td>';
+    h+='<td><span style="color:'+col+';font-weight:700">'+pct+'%</span></td></tr>';
+  });
+  tbody.innerHTML=h;
+}
+
+async function submitAddPerson(){
+  var name=(document.getElementById('add-name')||{}).value||'';
+  var dept=(document.getElementById('add-dept')||{}).value||'';
+  var pos=(document.getElementById('add-position')||{}).value||'';
+  var grade=(document.getElementById('add-grade')||{}).value||'C7';
+  var type=(document.getElementById('add-type')||{}).value||'ข้าราชการ';
+  var since=(document.getElementById('add-since')||{}).value||'';
+  if(!name){alert('กรุณากรอกชื่อ-นามสกุล');return;}
+  var msg=document.getElementById('add-person-msg');
+  if(msg) msg.textContent='⏳ กำลังบันทึก...';
+  try{
+    var r=await fetch(MOAC_API+'/personnel',{method:'POST',headers:HPOST,body:JSON.stringify({name,dept,position:pos,grade,employee_type:type,since,status:'ปฏิบัติงาน'})});
+    var d=await r.json();
+    if(d.ok){if(msg) msg.innerHTML='<span style="color:var(--green1)">✅ '+d.message+'</span>';await loadAllData();}
+    else{if(msg) msg.innerHTML='<span style="color:var(--red)">❌ '+d.error+'</span>';}
+  }catch(e){if(msg) msg.innerHTML='<span style="color:var(--red)">❌ ไม่สามารถเชื่อมต่อ API</span>';}
+}
+</script>
+
+<script>
+/* ── BUDGET RENDERERS ── */
+function fmtM(n){return Number(n||0).toLocaleString('th-TH');}
+
+function renderBudgetOverview(){
+  var data=API_BUDGET;
+  if(!DATA_LOADED){document.getElementById('b-total').textContent='⏳';return;}
+  var totalBudget=data.reduce(function(a,b){return a+Number(b.budget_total||0);},0);
+  var totalDisbursed=data.reduce(function(a,b){return a+Number(b.disbursed_total||0);},0);
+  var avgPct=totalBudget?Math.round(totalDisbursed/totalBudget*100):0;
+  document.getElementById('b-total').textContent=fmtM(totalBudget)+' ล.';
+  document.getElementById('b-spent').textContent=fmtM(totalDisbursed)+' ล.';
+  document.getElementById('b-pct').textContent=avgPct+'%';
+  document.getElementById('b-depts').textContent=data.length+' แห่ง';
+  var cats=[
+    {label:'งบบุคลากร',val:Math.round(totalBudget*0.29),color:'var(--navy3)'},
+    {label:'งบดำเนินงาน',val:Math.round(totalBudget*0.18),color:'var(--green2)'},
+    {label:'งบลงทุน',val:Math.round(totalBudget*0.46),color:'var(--gold)'},
+    {label:'งบอุดหนุน',val:Math.round(totalBudget*0.05),color:'var(--orange)'},
+    {label:'งบอื่น',val:Math.round(totalBudget*0.01),color:'var(--purple)'},
+  ];
+  var catHtml='';
+  cats.forEach(function(c){
+    var pct=totalBudget>0?Math.round(c.val/totalBudget*100):0;
+    catHtml+='<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">';
+    catHtml+='<div style="width:120px;font-size:13px">'+c.label+'</div>';
+    catHtml+='<div class="pb" style="flex:1"><div class="pf" style="width:'+pct+'%;background:'+c.color+'"></div></div>';
+    catHtml+='<div style="width:80px;text-align:right;font-size:13px;font-weight:700">'+fmtM(c.val)+' ล.</div>';
+    catHtml+='<div style="width:35px;font-size:12px;color:var(--sub)">'+pct+'%</div></div>';
+  });
+  document.getElementById('budget-cat-bars-moac').innerHTML=catHtml;
+  var tbody=document.getElementById('budget-dept-tbody');
+  if(!tbody) return;
+  if(!data.length){tbody.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--sub);padding:20px">ไม่มีข้อมูล</td></tr>';return;}
+  var h='';
+  data.forEach(function(b){
+    var tot=Number(b.budget_total||0);
+    var dis=Number(b.disbursed_total||0);
+    var pct=Number(b.pct||0);
+    var col=pct>=75?'var(--green2)':pct>=60?'var(--gold2)':'var(--red)';
+    h+='<tr><td><strong>'+b.dept+'</strong></td>';
+    h+='<td style="text-align:right">'+fmtM(tot)+'</td>';
+    h+='<td style="text-align:right;color:var(--green1)">'+fmtM(dis)+'</td>';
+    h+='<td style="text-align:right;color:var(--sub)">'+fmtM(tot-dis)+'</td>';
+    h+='<td><div style="display:flex;align-items:center;gap:6px"><div class="pb" style="width:80px"><div class="pf" style="width:'+pct+'%;background:'+col+'"></div></div><span style="font-size:12px;font-weight:700;color:'+col+'">'+pct+'%</span></div></td></tr>';
+  });
+  tbody.innerHTML=h;
+}
+
+function renderBudgetDepts(){
+  var el=document.getElementById('budget-depts-detail');
+  if(!el) return;
+  var h='';
+  API_BUDGET.forEach(function(b){
+    var pct=Number(b.pct||0);
+    var col=pct>=75?'var(--green2)':pct>=60?'var(--gold2)':'var(--red)';
+    h+='<div style="border-left:4px solid '+col+';padding:12px;background:var(--bg2);border-radius:0 8px 8px 0;margin-bottom:10px">';
+    h+='<div style="display:flex;justify-content:space-between"><div style="font-weight:700;font-size:13px;color:var(--navy1)">'+b.dept+'</div>';
+    h+='<div style="font-size:12px;font-weight:700;color:'+col+'">'+pct+'%</div></div>';
+    h+='<div style="font-size:12px;color:var(--sub);margin-top:6px">งบรวม: <strong>'+fmtM(b.budget_total)+' ล.บ.</strong> | เบิกแล้ว: '+fmtM(b.disbursed_total)+' ล.บ.</div>';
+    h+='<div class="pb" style="margin-top:6px"><div class="pf navy" style="width:'+pct+'%"></div></div></div>';
+  });
+  el.innerHTML=h||'<div style="text-align:center;color:var(--sub);padding:20px">ไม่มีข้อมูล</div>';
+}
+
+function showBudgetUpdateForm(){var f=document.getElementById('budget-update-form');if(f)f.style.display='block';}
+function hideBudgetUpdateForm(){var f=document.getElementById('budget-update-form');if(f)f.style.display='none';}
+
+async function submitBudgetUpdate(){
+  var dept=(document.getElementById('upd-dept')||{}).value||'';
+  var dis=(document.getElementById('upd-disbursed')||{}).value||'0';
+  var pct=(document.getElementById('upd-pct')||{}).value||'0';
+  var msg=document.getElementById('budget-update-msg');
+  if(msg) msg.textContent='⏳ กำลังบันทึก...';
+  try{
+    var r=await fetch(MOAC_API+'/budget',{method:'POST',headers:HPOST,body:JSON.stringify({dept,disbursed_total:Number(dis),pct:Number(pct)})});
+    var d=await r.json();
+    if(d.ok){if(msg) msg.innerHTML='<span style="color:var(--green1)">✅ '+d.message+'</span>';await loadAllData();renderBudgetDepts();}
+    else{if(msg) msg.innerHTML='<span style="color:var(--red)">❌ '+d.error+'</span>';}
+  }catch(e){if(msg) msg.innerHTML='<span style="color:var(--red)">❌ ไม่สามารถเชื่อมต่อ API</span>';}
+}
+
+function renderBudgetCategories(){
+  var cats=[
+    {name:'หมวด 1 — งบบุคลากร',desc:'เงินเดือน ค่าจ้าง ลูกจ้างประจำ',pct:29,color:'var(--navy3)'},
+    {name:'หมวด 2 — งบดำเนินงาน',desc:'ค่าตอบแทน ค่าใช้สอย ค่าวัสดุ ค่าสาธารณูปโภค',pct:18,color:'var(--green2)'},
+    {name:'หมวด 3 — งบลงทุน',desc:'ครุภัณฑ์ ที่ดิน สิ่งก่อสร้าง (ชลประทานเป็นหลัก)',pct:46,color:'var(--gold)'},
+    {name:'หมวด 4 — งบเงินอุดหนุน',desc:'อุดหนุนทั่วไป / เฉพาะกิจ / ท้องถิ่น',pct:5,color:'var(--orange)'},
+    {name:'หมวด 5 — งบรายจ่ายอื่น',desc:'เงินราชการลับ / สำรองจ่าย',pct:1,color:'var(--purple)'},
+  ];
+  var h='';
+  cats.forEach(function(c){
+    h+='<div style="border:2px solid '+c.color+';border-radius:10px;padding:14px">';
+    h+='<div style="font-weight:700;font-size:13px;color:var(--navy1);margin-bottom:6px">'+c.name+'</div>';
+    h+='<div style="font-size:12px;color:var(--sub);margin-bottom:8px">'+c.desc+'</div>';
+    h+='<div class="pb"><div class="pf" style="width:'+c.pct+'%;background:'+c.color+'"></div></div>';
+    h+='<div style="font-size:12px;margin-top:4px;color:var(--sub)">สัดส่วน '+c.pct+'% ของงบทั้งหมด</div></div>';
+  });
+  document.getElementById('budget-cats-detail').innerHTML=h;
+}
+
+function renderBudgetTracking(){
+  var months=['ต.ค.','พ.ย.','ธ.ค.','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.'];
+  var plan=[8,16,24,33,42,51,60,67];
+  var actual=[7,15,23,31,40,48,58,62];
+  var h='<table class="tbl"><thead><tr><th>เดือน</th><th>เป้า(%)</th><th>จริง(%)</th><th>สถานะ</th><th>Progress</th></tr></thead><tbody>';
+  months.forEach(function(m,i){
+    var ok=actual[i]>=plan[i]-3;
+    var col=ok?'var(--green1)':'var(--red)';
+    var dot=ok?'<span class="dot-g"></span>':'<span class="dot-r"></span>';
+    h+='<tr><td>'+m+' 2568</td><td style="text-align:center">'+plan[i]+'%</td>';
+    h+='<td style="text-align:center;font-weight:700;color:'+col+'">'+actual[i]+'%</td>';
+    h+='<td>'+dot+(ok?'ตามแผน':'ล่าช้า')+'</td>';
+    h+='<td><div class="pb" style="width:160px"><div class="pf green" style="width:'+actual[i]+'%"></div></div></td></tr>';
+  });
+  h+='</tbody></table>';
+  document.getElementById('budget-tracking-table').innerHTML=h;
+}
+</script>
+
+<script>
+/* ── PROJECT RENDERERS ── */
+function _statusColor(s){return s==='เสร็จสิ้น'?'var(--green2)':s==='เสี่ยงล่าช้า'?'var(--red)':'var(--navy3)';}
+function _statusLabel(s){
+  if(s==='เสร็จสิ้น') return '<span class="dot-g"></span>เสร็จสิ้น';
+  if(s==='เสี่ยงล่าช้า') return '<span class="dot-y"></span>เสี่ยงล่าช้า';
+  return '<span class="dot-g"></span>'+(s||'ดำเนินการ');
+}
+
+function renderProjOverview(){
+  var projs=API_PROJECTS;
+  document.getElementById('proj-total').textContent=projs.length||(DATA_LOADED?0:'…');
+  document.getElementById('proj-ontrack').textContent=projs.filter(function(p){return p.status==='อยู่ระหว่างดำเนินการ';}).length;
+  document.getElementById('proj-risk').textContent=projs.filter(function(p){return p.status==='เสี่ยงล่าช้า';}).length;
+  document.getElementById('proj-done').textContent=projs.filter(function(p){return p.status==='เสร็จสิ้น';}).length;
+  var el=document.getElementById('proj-overview-table');
+  if(!el) return;
+  if(!projs.length){el.innerHTML='<div style="text-align:center;color:var(--sub);padding:20px">ไม่มีข้อมูล</div>';return;}
+  var h='<table class="tbl"><thead><tr><th>รหัส</th><th>โครงการ</th><th>กรม</th><th style="text-align:right">งบ (ล.)</th><th>KPI</th><th>ความก้าวหน้า</th></tr></thead><tbody>';
+  projs.forEach(function(p){
+    var sc=_statusColor(p.status);
+    var budM=p.budget?(Number(p.budget)/1e6).toFixed(0):(p.budget_total?(Number(p.budget_total)/1e6).toFixed(0):'—');
+    h+='<tr><td style="font-size:11px;color:var(--sub)">'+(p.code||p.project_code||'—')+'</td>';
+    h+='<td><strong>'+(p.name||p.project_name||'—')+'</strong></td>';
+    h+='<td>'+(p.dept||'—')+'</td><td style="text-align:right">'+budM+'</td>';
+    h+='<td style="font-size:12px">'+(p.kpi||p.kpi_target||'—')+'</td>';
+    h+='<td><div style="display:flex;align-items:center;gap:8px"><div class="pb" style="width:100px"><div class="pf" style="width:'+(p.progress_pct||0)+'%;background:'+sc+'"></div></div>';
+    h+='<span style="font-size:12px;font-weight:700;color:'+sc+'">'+(p.progress_pct||0)+'%</span></div></td></tr>';
+  });
+  el.innerHTML=h+'</tbody></table>';
+}
+
+function renderProjList(){
+  var search=(document.getElementById('proj-search')||{}).value||'';
+  var projs=API_PROJECTS.slice();
+  if(search) projs=projs.filter(function(p){return(p.name||p.project_name||'').includes(search)||(p.dept||'').includes(search);});
+  var badge=document.getElementById('proj-count-badge');
+  if(badge) badge.textContent=projs.length+' โครงการ';
+  var tbody=document.getElementById('proj-list-tbody');
+  if(!tbody) return;
+  if(!projs.length){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--sub);padding:20px">ไม่มีข้อมูล</td></tr>';return;}
+  var h='';
+  projs.forEach(function(p){
+    var budM=p.budget?(Number(p.budget)/1e6).toFixed(0):(p.budget_total?(Number(p.budget_total)/1e6).toFixed(0):'—');
+    h+='<tr><td style="font-size:11px;color:var(--sub)">'+(p.code||p.project_code||'—')+'</td>';
+    h+='<td><strong>'+(p.name||p.project_name||'—')+'</strong></td>';
+    h+='<td>'+(p.dept||'—')+'</td>';
+    h+='<td style="text-align:right">'+budM+'</td>';
+    h+='<td style="font-size:12px">'+(p.kpi||p.kpi_target||'—')+'</td>';
+    h+='<td><div class="pb" style="width:80px"><div class="pf navy" style="width:'+(p.progress_pct||0)+'%"></div></div> '+(p.progress_pct||0)+'%</td>';
+    h+='<td>'+_statusLabel(p.status)+'</td></tr>';
+  });
+  tbody.innerHTML=h;
+}
+function filterProjects(){renderProjList();}
+
+function renderProjKPI(){
+  var kpis=[
+    {val:'8.5 ล้านราย',name:'เกษตรกรในระบบ',sub:'ทั่วประเทศ'},
+    {val:'31 ล้านไร่',name:'พื้นที่ชลประทาน',sub:'เป้าหมาย 35 ล้านไร่'},
+    {val:'28 ล้านตัน',name:'ผลผลิตข้าวต่อปี',sub:'ส่งออก 8.5 ล้านตัน'},
+    {val:'120,000 ราย',name:'Smart Farmer',sub:'ผ่านการอบรม 4.0'},
+    {val:'950,000 ไร่',name:'เกษตรอินทรีย์',sub:'เป้า 2 ล้านไร่ ปี 2573'},
+    {val:'154,800 ล.',name:'งบประมาณ ปี 2568',sub:'ทั้งกระทรวง กษ.'},
+  ];
+  var h='';
+  kpis.forEach(function(k){
+    h+='<div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-align:center">';
+    h+='<div style="font-size:20px;font-weight:800;color:var(--navy1)">'+k.val+'</div>';
+    h+='<div style="font-size:12px;font-weight:700;color:var(--navy2);margin-top:4px">'+k.name+'</div>';
+    h+='<div style="font-size:11px;color:var(--sub);margin-top:2px">'+k.sub+'</div></div>';
+  });
+  document.getElementById('kpi-ministry-grid').innerHTML=h;
+}
+
+async function submitAddProject(){
+  var name=(document.getElementById('proj-name')||{}).value||'';
+  var dept=(document.getElementById('proj-dept')||{}).value||'';
+  var budget=(document.getElementById('proj-budget')||{}).value||'0';
+  var kpi=(document.getElementById('proj-kpi-field')||{}).value||'';
+  var prog=(document.getElementById('proj-progress')||{}).value||'0';
+  var status=(document.getElementById('proj-status')||{}).value||'อยู่ระหว่างดำเนินการ';
+  if(!name){alert('กรุณากรอกชื่อโครงการ');return;}
+  var msg=document.getElementById('add-proj-msg');
+  if(msg) msg.textContent='⏳ กำลังบันทึก...';
+  try{
+    var r=await fetch(MOAC_API+'/projects',{method:'POST',headers:HPOST,body:JSON.stringify({project_name:name,dept,budget_total:Number(budget),kpi_target:kpi,progress_pct:Number(prog),status})});
+    var d=await r.json();
+    if(d.ok){if(msg) msg.innerHTML='<span style="color:var(--green1)">✅ '+d.message+'</span>';await loadAllData();}
+    else{if(msg) msg.innerHTML='<span style="color:var(--red)">❌ '+d.error+'</span>';}
+  }catch(e){if(msg) msg.innerHTML='<span style="color:var(--red)">❌ ไม่สามารถเชื่อมต่อ API</span>';}
+}
+
+function renderContracts(){
+  var contracts=API_CONTRACTS;
+  var badge=document.getElementById('contract-count-badge');
+  if(badge) badge.textContent=contracts.length+' สัญญา';
+  var methodColor={'เฉพาะเจาะจง':'lc-local','สืบราคา':'lc-region','ประกวดราคา':'lc-central'};
+  var tbody=document.getElementById('contracts-tbody');
+  if(!tbody) return;
+  if(!contracts.length){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--sub);padding:20px">ไม่มีข้อมูล</td></tr>';return;}
+  var h='';
+  contracts.forEach(function(c){
+    var cls=methodColor[c.method||c.procurement_method]||'lc-local';
+    var dot=(c.status==='มีผลบังคับ')?'<span class="dot-g"></span>':'<span class="dot-y"></span>';
+    h+='<tr><td><strong>'+(c.contractor||c.contractor_name||'—')+'</strong></td>';
+    h+='<td>'+(c.agency||c.agency_name||'—')+'</td>';
+    h+='<td style="font-size:12px">'+(c.work||c.work_description||'—')+'</td>';
+    h+='<td style="text-align:right;font-weight:700">'+Number(c.total||c.total_amount||0).toLocaleString('th-TH')+'</td>';
+    h+='<td><span class="level-chip '+cls+'">'+(c.method||c.procurement_method||'—')+'</span></td>';
+    h+='<td style="font-size:11px;color:var(--sub)">'+(c.egp||c.egp_number||'—')+'</td>';
+    h+='<td>'+dot+(c.status||'—')+'</td></tr>';
+  });
+  tbody.innerHTML=h;
+}
+
+function showAddContractForm(){var f=document.getElementById('add-contract-form');if(f)f.style.display='block';}
+function hideAddContractForm(){var f=document.getElementById('add-contract-form');if(f)f.style.display='none';}
+
+async function submitAddContract(){
+  var name=(document.getElementById('ctr-name')||{}).value||'';
+  if(!name){alert('กรุณากรอกชื่อคู่สัญญา');return;}
+  var msg=document.getElementById('add-contract-msg');
+  if(msg) msg.textContent='⏳ กำลังบันทึก...';
+  try{
+    var r=await fetch(MOAC_API+'/contracts',{method:'POST',headers:HPOST,body:JSON.stringify({contractor_name:name,agency_name:(document.getElementById('ctr-agency')||{}).value||'',work_description:(document.getElementById('ctr-work')||{}).value||'',total_amount:Number((document.getElementById('ctr-total')||{}).value||0),egp_number:(document.getElementById('ctr-egp')||{}).value||'',fiscal_year:'2568',status:'มีผลบังคับ'})});
+    var d=await r.json();
+    if(d.ok){if(msg) msg.innerHTML='<span style="color:var(--green1)">✅ '+d.message+'</span>';await loadAllData();renderContracts();}
+    else{if(msg) msg.innerHTML='<span style="color:var(--red)">❌ '+d.error+'</span>';}
+  }catch(e){if(msg) msg.innerHTML='<span style="color:var(--red)">❌ ไม่สามารถเชื่อมต่อ</span>';}
+}
+function showEGPInfo(){alert('ระบบ e-GP (Government Procurement)\nวงเงิน ≤100,000: เฉพาะเจาะจง\n100,001-500,000: สืบราคา\n>500,000: ประกวดราคา\n\nทุกสัญญาต้องบันทึกเลขที่ e-GP');}
+
+/* ── INTEGRATION RENDERERS ── */
+function renderIntegOverview(){
+  var plans=API_INTEGRATION;
+  document.getElementById('integ-total').textContent=plans.length||(DATA_LOADED?0:'…');
+  document.getElementById('integ-inprog').textContent=plans.filter(function(p){return p.status==='กำลังดำเนินการ';}).length;
+  var el=document.getElementById('integ-overview-table');
+  if(!el) return;
+  if(!plans.length){el.innerHTML='<div style="text-align:center;color:var(--sub);padding:20px">ไม่มีข้อมูล</div>';return;}
+  var h='<table class="tbl"><thead><tr><th>รหัส</th><th>แผนบูรณาการ</th><th>เจ้าภาพ</th><th>หน่วยงานร่วม</th><th style="text-align:right">งบ</th><th>ความก้าวหน้า</th></tr></thead><tbody>';
+  plans.forEach(function(p){
+    var pct=Number(p.progress_pct||0);
+    var partners=(p.partner_agencies||'').split(',').filter(Boolean).join(' · ');
+    var budM=p.budget?(Number(p.budget)/1e9).toFixed(1)+'B':'—';
+    h+='<tr><td style="font-size:11px;color:var(--sub)">'+(p.plan_id||'—')+'</td>';
+    h+='<td><strong>'+(p.plan_name||'—')+'</strong></td>';
+    h+='<td>'+(p.host_agency||'—')+'</td><td style="font-size:12px">'+(partners||'—')+'</td>';
+    h+='<td style="text-align:right;font-weight:700">'+budM+'</td>';
+    h+='<td><div style="display:flex;align-items:center;gap:6px"><div class="pb" style="width:80px"><div class="pf gold" style="width:'+pct+'%"></div></div><span style="font-size:12px;font-weight:700">'+pct+'%</span></div></td></tr>';
+  });
+  el.innerHTML=h+'</tbody></table>';
+}
+
+function renderIntegPlans(){
+  var plans=API_INTEGRATION;
+  var el=document.getElementById('integ-plans-list');
+  if(!el) return;
+  if(!plans.length){el.innerHTML='<div style="text-align:center;color:var(--sub);padding:20px">ไม่มีข้อมูล</div>';return;}
+  var h='';
+  plans.forEach(function(p){
+    var pct=Number(p.progress_pct||0);
+    var partners=(p.partner_agencies||'').split(',').filter(Boolean);
+    var budB=p.budget?(Number(p.budget)/1e9).toFixed(1)+'B บาท':'—';
+    h+='<div style="border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px">';
+    h+='<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:8px">';
+    h+='<div><div style="font-size:11px;color:var(--sub)">'+(p.plan_id||'—')+'</div>';
+    h+='<div style="font-weight:700;font-size:14px;color:var(--navy1)">'+(p.plan_name||'—')+'</div>';
+    h+='<div style="font-size:12px;color:var(--sub);margin-top:2px">เจ้าภาพ: '+(p.host_agency||'—')+'</div></div>';
+    h+='<div style="text-align:right"><div style="font-size:18px;font-weight:800;color:var(--gold2)">'+budB+'</div>';
+    h+='<div style="font-size:11px;color:var(--sub)">งบบูรณาการ</div></div></div>';
+    if(partners.length){
+      h+='<div style="font-size:12px;margin-bottom:8px">🏛️ หน่วยงานร่วม: ';
+      partners.forEach(function(a){h+='<span style="background:var(--bg2);padding:2px 8px;border-radius:10px;margin:2px;display:inline-block">'+a.trim()+'</span>';});
+      h+='</div>';
+    }
+    h+='<div style="font-size:12px;margin-bottom:8px">🎯 KPI: <strong>'+(p.kpi||'—')+'</strong></div>';
+    h+='<div class="pb"><div class="pf gold" style="width:'+pct+'%"></div></div>';
+    h+='<div style="font-size:12px;margin-top:4px;color:var(--sub)">ความก้าวหน้า '+pct+'%</div></div>';
+  });
+  el.innerHTML=h;
+}
+
+function renderIntegBudget(){
+  var plans=API_INTEGRATION;
+  var el=document.getElementById('integ-budget-table');
+  if(!el) return;
+  if(!plans.length){el.innerHTML='<div style="text-align:center;color:var(--sub);padding:20px">ไม่มีข้อมูล</div>';return;}
+  var h='<table class="tbl"><thead><tr><th>แผนบูรณาการ</th><th>เจ้าภาพ</th><th style="text-align:right">งบรวม</th><th style="text-align:right">เบิกแล้ว</th><th style="text-align:right">คงเหลือ</th><th>%</th></tr></thead><tbody>';
+  plans.forEach(function(p){
+    var budget=Number(p.budget||0);
+    var pct=Number(p.progress_pct||0);
+    var spent=Math.round(budget*pct/100);
+    h+='<tr><td><strong>'+(p.plan_name||'—')+'</strong></td><td>'+(p.host_agency||'—')+'</td>';
+    h+='<td style="text-align:right;font-weight:700">'+budget.toLocaleString('th-TH')+'</td>';
+    h+='<td style="text-align:right;color:var(--green1)">'+spent.toLocaleString('th-TH')+'</td>';
+    h+='<td style="text-align:right;color:var(--gold2)">'+(budget-spent).toLocaleString('th-TH')+'</td>';
+    h+='<td><div class="pb" style="width:80px"><div class="pf gold" style="width:'+pct+'%"></div></div> '+pct+'%</td></tr>';
+  });
+  el.innerHTML=h+'</tbody></table>';
+}
+
+async function submitAddInteg(){
+  var name=(document.getElementById('integ-name')||{}).value||'';
+  if(!name){alert('กรุณากรอกชื่อแผนบูรณาการ');return;}
+  var msg=document.getElementById('add-integ-msg');
+  if(msg) msg.textContent='⏳ กำลังบันทึก...';
+  try{
+    var r=await fetch(MOAC_API+'/integration',{method:'POST',headers:HPOST,body:JSON.stringify({plan_name:name,host_agency:(document.getElementById('integ-host')||{}).value||'',partner_agencies:(document.getElementById('integ-partners')||{}).value||'',budget:Number((document.getElementById('integ-budget')||{}).value||0),kpi:(document.getElementById('integ-kpi')||{}).value||'',progress_pct:Number((document.getElementById('integ-prog')||{}).value||0),status:'กำลังดำเนินการ',fiscal_year:'2568'})});
+    var d=await r.json();
+    if(d.ok){if(msg) msg.innerHTML='<span style="color:var(--green1)">✅ '+d.message+'</span>';await loadAllData();renderIntegPlans();}
+    else{if(msg) msg.innerHTML='<span style="color:var(--red)">❌ '+d.error+'</span>';}
+  }catch(e){if(msg) msg.innerHTML='<span style="color:var(--red)">❌ ไม่สามารถเชื่อมต่อ</span>';}
+}
+</script>
+
+<script>
+/* ═══════════════════════════════════════
+   FINANCE ERP — IN-MEMORY DATA & RENDERERS
+   ═══════════════════════════════════════ */
+
+var PAYROLL_DATA = [
+  {id:'PAY001',name:'นายสมชาย วงศ์เกษตร',position:'ผอ.สำนัก',dept:'สำนักงานปลัดกระทรวง',grade:'C9',posType:'อำนวยการ ระดับสูง',salary:59220,position_pay:21000,total:80220,status:'ปกติ'},
+  {id:'PAY002',name:'นางสาวมาลี ศรีสำราญ',position:'นักวิเคราะห์นโยบาย',dept:'สำนักงานปลัดกระทรวง',grade:'C8',posType:'วิชาการ ชำนาญการพิเศษ',salary:47450,position_pay:13000,total:60450,status:'ปกติ'},
+  {id:'PAY003',name:'นายวิชัย ชัยเกษม',position:'อธิบดีกรม',dept:'กรมส่งเสริมการเกษตร',grade:'C10',posType:'บริหาร ระดับสูง',salary:66480,position_pay:25000,total:91480,status:'ปกติ'},
+  {id:'PAY004',name:'นางสุนีย์ เกษตรสุข',position:'รองอธิบดี',dept:'กรมส่งเสริมการเกษตร',grade:'C9',posType:'บริหาร ระดับต้น',salary:59220,position_pay:21000,total:80220,status:'ปกติ'},
+  {id:'PAY005',name:'นายประชา ชลประทาน',position:'อธิบดีกรม',dept:'กรมชลประทาน',grade:'C10',posType:'บริหาร ระดับสูง',salary:66480,position_pay:25000,total:91480,status:'ปกติ'},
+  {id:'PAY006',name:'นางสาวรัตนา วิชาการ',position:'ผอ.กลุ่ม',dept:'กรมวิชาการเกษตร',grade:'C8',posType:'อำนวยการ ระดับสูง',salary:47450,position_pay:13000,total:60450,status:'ปกติ'},
+  {id:'PAY007',name:'นายสุรชัย ประมงไทย',position:'อธิบดีกรม',dept:'กรมประมง',grade:'C10',posType:'บริหาร ระดับสูง',salary:66480,position_pay:25000,total:91480,status:'ปกติ'},
+  {id:'PAY008',name:'นางอรทัย ปศุสัตว์',position:'รองอธิบดี',dept:'กรมปศุสัตว์',grade:'C9',posType:'บริหาร ระดับต้น',salary:59220,position_pay:21000,total:80220,status:'ปกติ'},
+  {id:'PAY009',name:'นายกฤษณ์ พัฒนาดิน',position:'นักวิชาการ',dept:'กรมพัฒนาที่ดิน',grade:'C7',posType:'วิชาการ ชำนาญการ',salary:37680,position_pay:5000,total:42680,status:'ปกติ'},
+  {id:'PAY010',name:'นางสาวพิมพ์ ข้าวไทย',position:'นักวิชาการ',dept:'กรมการข้าว',grade:'C7',posType:'วิชาการ ชำนาญการ',salary:37680,position_pay:5000,total:42680,status:'ปกติ'},
+  {id:'PAY011',name:'นายธนัท สหกรณ์ไทย',position:'ผอ.กลุ่ม',dept:'กรมส่งเสริมสหกรณ์',grade:'C8',posType:'อำนวยการ ระดับสูง',salary:47450,position_pay:13000,total:60450,status:'ปกติ'},
+  {id:'PAY012',name:'นางสาวกนกวรรณ บัญชีสหกรณ์',position:'นักวิชาการ',dept:'กรมตรวจบัญชีสหกรณ์',grade:'C6',posType:'วิชาการ ปฏิบัติการ',salary:30440,position_pay:3500,total:33940,status:'ปกติ'},
+  {id:'PAY013',name:'นายเอกชัย ยางพารา',position:'ผู้จัดการ',dept:'การยางแห่งประเทศไทย (กยท.)',grade:'P8',posType:'พนักงานรัฐวิสาหกิจ',salary:55000,position_pay:15000,total:70000,status:'ปกติ'},
+  {id:'PAY014',name:'นางมณีรัตน์ ปฏิรูปที่ดิน',position:'นักวิชาการ',dept:'ส.ป.ก.',grade:'C7',posType:'วิชาการ ชำนาญการ',salary:37680,position_pay:5000,total:42680,status:'ลาราชการ'},
+  {id:'PAY015',name:'นายชาติชาย เกษตรกรรม',position:'เจ้าหน้าที่',dept:'ธ.ก.ส.',grade:'P6',posType:'พนักงานรัฐวิสาหกิจ',salary:28000,position_pay:0,total:28000,status:'ปกติ'},
+  {id:'PAY016',name:'นางสาวอรุณรัตน์ บุคลากร',position:'นักทรัพยากรบุคคล',dept:'สำนักงานปลัดกระทรวง',grade:'C7',posType:'วิชาการ ชำนาญการ',salary:37680,position_pay:5000,total:42680,status:'ปกติ'},
+];
+
+var EXPENSE_DATA = [
+  {id:'EXP2568-001',date:'2568-01-05',type:'ค่าตอบแทน',amount:45000,desc:'ค่าตอบแทนกรรมการ',dept:'กรมส่งเสริมการเกษตร',status:'อนุมัติ'},
+  {id:'EXP2568-002',date:'2568-01-12',type:'ค่าวัสดุ',amount:12500,desc:'วัสดุสำนักงาน',dept:'สำนักงานปลัดกระทรวง',status:'อนุมัติ'},
+  {id:'EXP2568-003',date:'2568-01-18',type:'ค่าสาธารณูปโภค',amount:38000,desc:'ค่าไฟฟ้า/น้ำประปา',dept:'กรมชลประทาน',status:'อนุมัติ'},
+  {id:'EXP2568-004',date:'2568-01-25',type:'ค่าครุภัณฑ์',amount:250000,desc:'คอมพิวเตอร์โน้ตบุ๊ก 5 เครื่อง',dept:'กรมวิชาการเกษตร',status:'อนุมัติ'},
+  {id:'EXP2568-005',date:'2568-02-03',type:'ค่าใช้สอย',amount:15000,desc:'ค่าเดินทางไปราชการ',dept:'กรมประมง',status:'รออนุมัติ'},
+  {id:'EXP2568-006',date:'2568-02-10',type:'ค่าตอบแทน',amount:60000,desc:'ค่าล่วงเวลา',dept:'กรมชลประทาน',status:'อนุมัติ'},
+  {id:'EXP2568-007',date:'2568-02-15',type:'ค่าวัสดุ',amount:8900,desc:'วัสดุคอมพิวเตอร์',dept:'กรมปศุสัตว์',status:'อนุมัติ'},
+  {id:'EXP2568-008',date:'2568-02-20',type:'ค่าใช้สอย',amount:32000,desc:'ค่าอบรมสัมมนา',dept:'กรมส่งเสริมสหกรณ์',status:'รออนุมัติ'},
+  {id:'EXP2568-009',date:'2568-03-05',type:'ค่าครุภัณฑ์',amount:180000,desc:'เครื่องพิมพ์ขนาดใหญ่',dept:'กรมการข้าว',status:'อนุมัติ'},
+  {id:'EXP2568-010',date:'2568-03-12',type:'ค่าสาธารณูปโภค',amount:42000,desc:'ค่าโทรศัพท์/อินเทอร์เน็ต',dept:'สำนักงานปลัดกระทรวง',status:'อนุมัติ'},
+  {id:'EXP2568-011',date:'2568-03-20',type:'ค่าตอบแทน',amount:85000,desc:'ค่าจ้างนักวิจัย',dept:'กรมวิชาการเกษตร',status:'อนุมัติ'},
+  {id:'EXP2568-012',date:'2568-04-02',type:'ค่าวัสดุ',amount:22000,desc:'วัสดุการเกษตร',dept:'กรมส่งเสริมการเกษตร',status:'อนุมัติ'},
+  {id:'EXP2568-013',date:'2568-04-10',type:'ค่าใช้สอย',amount:55000,desc:'ค่าจัดนิทรรศการ',dept:'กรมพัฒนาที่ดิน',status:'รออนุมัติ'},
+  {id:'EXP2568-014',date:'2568-04-18',type:'ค่าครุภัณฑ์',amount:95000,desc:'เครื่องวิเคราะห์ดิน',dept:'กรมพัฒนาที่ดิน',status:'อนุมัติ'},
+  {id:'EXP2568-015',date:'2568-05-03',type:'ค่าตอบแทน',amount:40000,desc:'ค่าตอบแทนวิทยากร',dept:'กรมส่งเสริมสหกรณ์',status:'อนุมัติ'},
+  {id:'EXP2568-016',date:'2568-05-10',type:'ค่าสาธารณูปโภค',amount:28000,desc:'ค่าน้ำมันเชื้อเพลิง',dept:'กรมชลประทาน',status:'รออนุมัติ'},
+  {id:'EXP2568-017',date:'2568-05-15',type:'ค่าวัสดุ',amount:18500,desc:'วัสดุสื่อสาร',dept:'กรมประมง',status:'อนุมัติ'},
+  {id:'EXP2568-018',date:'2568-05-20',type:'ค่าใช้สอย',amount:72000,desc:'ค่าจ้างบริการ',dept:'กรมปศุสัตว์',status:'อนุมัติ'},
+  {id:'EXP2568-019',date:'2568-05-22',type:'ค่าครุภัณฑ์',amount:320000,desc:'รถยนต์ราชการ',dept:'กรมตรวจบัญชีสหกรณ์',status:'รออนุมัติ'},
+  {id:'EXP2568-020',date:'2568-05-24',type:'ค่าตอบแทน',amount:35000,desc:'ค่าตอบแทนพิเศษ',dept:'สำนักงานปลัดกระทรวง',status:'ร่าง'},
+];
+
+var STOCK_DATA = [
+  {id:'STK001',name:'กระดาษ A4 70g',unit:'รีม',qty:250,min:50,price:120,location:'ห้องพัสดุ ชั้น 2'},
+  {id:'STK002',name:'ปากกาลูกลื่นน้ำเงิน',unit:'กล่อง',qty:45,min:20,price:80,location:'ห้องพัสดุ ชั้น 2'},
+  {id:'STK003',name:'แฟ้มเอกสาร A4',unit:'แพ็ค',qty:30,min:15,price:150,location:'ห้องพัสดุ ชั้น 2'},
+  {id:'STK004',name:'หมึกพิมพ์ HP LaserJet',unit:'ตลับ',qty:8,min:10,price:2500,location:'ห้องเครื่องพิมพ์'},
+  {id:'STK005',name:'กระดาษฉลาก',unit:'แพ็ค',qty:60,min:20,price:95,location:'ห้องพัสดุ ชั้น 2'},
+  {id:'STK006',name:'สมุดบันทึก A5',unit:'เล่ม',qty:120,min:30,price:45,location:'ห้องพัสดุ ชั้น 2'},
+  {id:'STK007',name:'น้ำยาทำความสะอาด',unit:'แกลลอน',qty:12,min:5,price:280,location:'ห้องพัสดุ ชั้น 1'},
+  {id:'STK008',name:'สายไฟ USB-C',unit:'เส้น',qty:25,min:10,price:180,location:'ห้องคอมพิวเตอร์'},
+  {id:'STK009',name:'ซองเอกสาร A4',unit:'แพ็ค',qty:15,min:20,price:65,location:'ห้องพัสดุ ชั้น 2'},
+  {id:'STK010',name:'กาวแท่ง UHU',unit:'กล่อง',qty:40,min:10,price:120,location:'ห้องพัสดุ ชั้น 2'},
+  {id:'STK011',name:'คลิปหนีบกระดาษ',unit:'กล่อง',qty:80,min:20,price:35,location:'ห้องพัสดุ ชั้น 2'},
+  {id:'STK012',name:'ถ่านไฟฉาย AA',unit:'แพ็ค',qty:6,min:10,price:180,location:'ห้องพัสดุ ชั้น 1'},
+  {id:'STK013',name:'ลวดเย็บกระดาษ',unit:'กล่อง',qty:50,min:15,price:55,location:'ห้องพัสดุ ชั้น 2'},
+  {id:'STK014',name:'ป้ายชื่อ ID Card แขวน',unit:'ชุด',qty:200,min:50,price:25,location:'ห้องพัสดุ ชั้น 2'},
+  {id:'STK015',name:'กระดาษสีเหลี่ยม Post-it',unit:'แพ็ค',qty:35,min:10,price:98,location:'ห้องพัสดุ ชั้น 2'},
+];
+
+var ASSET_DATA = [
+  {id:'FAX001',name:'เครื่องคอมพิวเตอร์ Dell OptiPlex',price:28000,date:'2566-10-01',life:'5 ปี',location:'ห้องปฏิบัติงาน 301',status:'ใช้งาน'},
+  {id:'FAX002',name:'เครื่องพิมพ์ HP LaserJet Pro',price:15000,date:'2567-03-15',life:'5 ปี',location:'ห้องสำนักงาน 201',status:'ใช้งาน'},
+  {id:'FAX003',name:'โต๊ะทำงาน (ชุด)',price:8500,date:'2565-05-20',life:'10 ปี',location:'ห้องประชุม A',status:'ใช้งาน'},
+  {id:'FAX004',name:'เครื่องถ่ายเอกสาร Canon',price:45000,date:'2566-08-10',life:'7 ปี',location:'ห้องสำเนา ชั้น 1',status:'ใช้งาน'},
+  {id:'FAX005',name:'รถยนต์ราชการ Toyota Fortuner',price:1250000,date:'2565-11-30',life:'10 ปี',location:'จอดรถราชการ',status:'ใช้งาน'},
+  {id:'FAX006',name:'โปรเจคเตอร์ Epson',price:32000,date:'2567-01-20',life:'5 ปี',location:'ห้องประชุมใหญ่',status:'ใช้งาน'},
+  {id:'FAX007',name:'ตู้เซฟเอกสาร',price:18000,date:'2564-06-01',life:'15 ปี',location:'ห้องผู้อำนวยการ',status:'ใช้งาน'},
+  {id:'FAX008',name:'เครื่องปรับอากาศ Daikin 24000BTU',price:38000,date:'2566-04-15',life:'10 ปี',location:'ห้องปฏิบัติงาน 301',status:'ซ่อม'},
+];
+
+var JOURNAL_DATA = [
+  {date:'2568-01-05',acct:'01',acctName:'งบบุคลากร',desc:'จ่ายเงินเดือนข้าราชการ ม.ค.2568',debit:3500000,credit:0},
+  {date:'2568-01-05',acct:'01',acctName:'งบบุคลากร',desc:'ธนาคาร/เงินสด',debit:0,credit:3500000},
+  {date:'2568-01-12',acct:'02',acctName:'งบดำเนินงาน',desc:'ค่าวัสดุสำนักงาน',debit:12500,credit:0},
+  {date:'2568-01-12',acct:'02',acctName:'งบดำเนินงาน',desc:'ธนาคาร',debit:0,credit:12500},
+  {date:'2568-02-05',acct:'01',acctName:'งบบุคลากร',desc:'จ่ายเงินเดือนข้าราชการ ก.พ.2568',debit:3500000,credit:0},
+  {date:'2568-02-05',acct:'01',acctName:'งบบุคลากร',desc:'ธนาคาร/เงินสด',debit:0,credit:3500000},
+  {date:'2568-03-01',acct:'03',acctName:'งบลงทุน',desc:'ซื้อครุภัณฑ์คอมพิวเตอร์',debit:250000,credit:0},
+  {date:'2568-03-01',acct:'03',acctName:'งบลงทุน',desc:'ธนาคาร',debit:0,credit:250000},
+  {date:'2568-04-05',acct:'02',acctName:'งบดำเนินงาน',desc:'ค่าสาธารณูปโภค เม.ย.',debit:42000,credit:0},
+  {date:'2568-04-05',acct:'02',acctName:'งบดำเนินงาน',desc:'ธนาคาร',debit:0,credit:42000},
+];
+
+var DOCUMENT_DATA = [
+  {id:'PR2568-001',type:'PR',date:'2568-01-10',requester:'นายสมชาย วงศ์เกษตร',unit:'สำนักงานปลัดกระทรวง',amount:45000,purpose:'จัดซื้อคอมพิวเตอร์',status:'อนุมัติ'},
+  {id:'PO2568-001',type:'PO',date:'2568-01-15',requester:'นายสมชาย วงศ์เกษตร',unit:'สำนักงานปลัดกระทรวง',amount:45000,purpose:'ใบสั่งซื้อคอมพิวเตอร์',status:'เบิกจ่าย'},
+  {id:'PAY2568-001',type:'PAY_REQ',date:'2568-02-03',requester:'นางสาวมาลี ศรีสำราญ',unit:'สำนักงานปลัดกระทรวง',amount:15000,purpose:'ค่าเดินทางอบรม',status:'รอลงนาม'},
+  {id:'VCH2568-001',type:'VOUCHER',date:'2568-02-10',requester:'นายวิชัย ชัยเกษม',unit:'กรมส่งเสริมการเกษตร',amount:60000,purpose:'ค่าล่วงเวลา ก.พ.',status:'อนุมัติ'},
+  {id:'INV2568-001',type:'INVOICE',date:'2568-03-05',requester:'นางสุนีย์ เกษตรสุข',unit:'กรมส่งเสริมการเกษตร',amount:180000,purpose:'ฎีกาเบิกครุภัณฑ์',status:'รอเบิก'},
+  {id:'PR2568-002',type:'PR',date:'2568-03-12',requester:'นายประชา ชลประทาน',unit:'กรมชลประทาน',amount:320000,purpose:'จัดซื้อวัสดุชลประทาน',status:'ร่าง'},
+  {id:'PAY2568-002',type:'PAY_REQ',date:'2568-04-15',requester:'นางสาวรัตนา วิชาการ',unit:'กรมวิชาการเกษตร',amount:85000,purpose:'ค่าจ้างนักวิจัย',status:'อนุมัติ'},
+  {id:'INV2568-002',type:'INVOICE',date:'2568-05-01',requester:'นายสุรชัย ประมงไทย',unit:'กรมประมง',amount:72000,purpose:'ฎีกาเบิกค่าจ้างบริการ',status:'รอเบิก'},
+];
+</script>
+
+<script>
+/* ══ PAYROLL RENDERERS ══ */
+function renderPayroll() {
+  var search = (document.getElementById('pay-search')||{}).value||'';
+  var deptFilter = (document.getElementById('pay-dept-filter')||{}).value||'';
+  var data = PAYROLL_DATA.slice();
+  if (search) data = data.filter(function(p){return (p.name||'').includes(search)||(p.dept||'').includes(search);});
+  if (deptFilter) data = data.filter(function(p){return p.dept===deptFilter;});
+  var totalAmt = data.reduce(function(a,b){return a+b.total;},0);
+  var el1=document.getElementById('pay-total-amt'); if(el1) el1.textContent=totalAmt.toLocaleString('th-TH')+' บ./เดือน';
+  var el2=document.getElementById('pay-total-ppl'); if(el2) el2.textContent=data.length+' คน';
+  var yearly=Math.round(totalAmt*12/1e6);
+  var el3=document.getElementById('pay-used-budget'); if(el3) el3.textContent=yearly.toLocaleString('th-TH');
+  var tbody=document.getElementById('payroll-tbody'); if(!tbody) return;
+  var h='';
+  data.forEach(function(p){
+    var stag=p.status==='ปกติ'?'<span class="tag-ok">'+p.status+'</span>':'<span class="tag-warn">'+p.status+'</span>';
+    h+='<tr><td><strong>'+p.name+'</strong></td><td>'+p.position+'</td><td>'+p.dept+'</td>';
+    h+='<td><span class="level-chip lc-central">'+(p.posType||p.grade)+'</span></td>';
+    h+='<td style="text-align:right;font-weight:600">'+p.salary.toLocaleString('th-TH')+'</td>';
+    h+='<td style="text-align:right">'+p.position_pay.toLocaleString('th-TH')+'</td>';
+    h+='<td style="text-align:right;font-weight:700;color:var(--navy1)">'+p.total.toLocaleString('th-TH')+'</td>';
+    h+='<td>'+stag+'</td></tr>';
+  });
+  tbody.innerHTML=h||'<tr><td colspan="8" style="text-align:center;color:var(--sub);padding:20px">ไม่มีข้อมูล</td></tr>';
+}
+function filterPayroll(){renderPayroll();}
+function processPayroll(){
+  if(confirm('ยืนยันการประมวลผลเงินเดือนประจำเดือน พ.ค. 2568?\n\nระบบจะโอนเงินเดือนให้บุคลากรทั้งหมดในระบบ')){
+    alert('✅ ประมวลผลเงินเดือนสำเร็จ!\nโอนเงินให้บุคลากร '+PAYROLL_DATA.length+' คน\nยอดรวม '+PAYROLL_DATA.reduce(function(a,b){return a+b.total;},0).toLocaleString('th-TH')+' บาท');
+  }
+}
+function exportPayrollPDF(){alert('📄 กำลัง Export PDF...\nระบบจะสร้างรายงานเงินเดือนประจำเดือน พ.ค. 2568\n(ฟีเจอร์ PDF จะพร้อมใช้งานในเวอร์ชันถัดไป)');}
+function addPayrollRecord(){
+  var name=(document.getElementById('py-name')||{}).value||'';
+  var dept=(document.getElementById('py-dept')||{}).value||'';
+  var posType=(document.getElementById('py-grade')||{}).value||'วิชาการ ชำนาญการ';
+  var position=(document.getElementById('py-position')||{}).value||'';
+  var salary=Number((document.getElementById('py-salary')||{}).value||0);
+  var pos_pay=Number((document.getElementById('py-pos-pay')||{}).value||0);
+  if(!name){alert('กรุณากรอกชื่อ-สกุล');return;}
+  var newId='PAY'+String(Date.now()).slice(-4);
+  PAYROLL_DATA.push({id:newId,name:name,position:position,dept:dept,grade:posType,posType:posType,salary:salary,position_pay:pos_pay,total:salary+pos_pay,status:'ปกติ'});
+  var msg=document.getElementById('pay-add-msg');
+  if(msg) msg.innerHTML='<span style="color:var(--green1)">✅ บันทึกรายการ '+name+' เรียบร้อย</span>';
+  renderPayroll();
+  setTimeout(function(){if(msg)msg.textContent='';},3000);
+}
+
+/* ══ EXPENSE RENDERERS ══ */
+function renderExpense() {
+  var typeFilter=(document.getElementById('exp-type-filter')||{}).value||'';
+  var data=EXPENSE_DATA.slice();
+  if(typeFilter) data=data.filter(function(e){return e.type===typeFilter;});
+  var total=data.reduce(function(a,b){return a+b.amount;},0);
+  var allTotal=EXPENSE_DATA.reduce(function(a,b){return a+b.amount;},0);
+  var budget=60000000;
+  var pct=Math.round(allTotal/budget*100);
+  var el1=document.getElementById('exp-total'); if(el1) el1.textContent=(allTotal/1e6).toFixed(2)+' ล.';
+  var el2=document.getElementById('exp-pct'); if(el2) el2.textContent=pct+'%';
+  var thisMonth=EXPENSE_DATA.filter(function(e){return e.date&&e.date.startsWith('2568-05');}).reduce(function(a,b){return a+b.amount;},0);
+  var el3=document.getElementById('exp-this-month'); if(el3) el3.textContent=(thisMonth/1e6).toFixed(2)+' ล.';
+  var badge=document.getElementById('exp-count-badge'); if(badge) badge.textContent=data.length+' รายการ';
+  // Category bars
+  var cats=['ค่าตอบแทน','ค่าวัสดุ','ค่าครุภัณฑ์','ค่าสาธารณูปโภค','ค่าใช้สอย'];
+  var catBudgets={ค่าตอบแทน:20000000,ค่าวัสดุ:8000000,ค่าครุภัณฑ์:20000000,ค่าสาธารณูปโภค:6000000,ค่าใช้สอย:6000000};
+  var catColors={ค่าตอบแทน:'var(--navy3)',ค่าวัสดุ:'var(--green2)',ค่าครุภัณฑ์:'var(--gold)',ค่าสาธารณูปโภค:'var(--orange)',ค่าใช้สอย:'var(--purple)'};
+  var catHtml='';
+  cats.forEach(function(cat){
+    var spent=EXPENSE_DATA.filter(function(e){return e.type===cat;}).reduce(function(a,b){return a+b.amount;},0);
+    var budg=catBudgets[cat]||1;
+    var pctCat=Math.min(100,Math.round(spent/budg*100));
+    catHtml+='<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">';
+    catHtml+='<div style="width:130px;font-size:13px">'+cat+'</div>';
+    catHtml+='<div class="pb" style="flex:1"><div class="pf" style="width:'+pctCat+'%;background:'+catColors[cat]+'"></div></div>';
+    catHtml+='<div style="width:90px;text-align:right;font-size:12px;font-weight:700">'+spent.toLocaleString('th-TH')+'</div>';
+    catHtml+='<div style="width:50px;font-size:12px;color:var(--sub)">'+pctCat+'%</div></div>';
+  });
+  var catEl=document.getElementById('expense-cat-bars'); if(catEl) catEl.innerHTML=catHtml;
+  var tbody=document.getElementById('expense-tbody'); if(!tbody) return;
+  var h='';
+  data.forEach(function(e){
+    var stag=e.status==='อนุมัติ'?'<span class="tag-ok">'+e.status+'</span>':e.status==='รออนุมัติ'?'<span class="tag-warn">'+e.status+'</span>':'<span class="tag-blue">'+e.status+'</span>';
+    h+='<tr><td>'+e.date+'</td><td style="font-size:11px;color:var(--sub)">'+e.id+'</td>';
+    h+='<td><span class="level-chip lc-region">'+e.type+'</span></td>';
+    h+='<td>'+e.desc+'</td>';
+    h+='<td style="text-align:right;font-weight:700">'+e.amount.toLocaleString('th-TH')+'</td>';
+    h+='<td>'+e.dept+'</td><td>'+stag+'</td></tr>';
+  });
+  tbody.innerHTML=h||'<tr><td colspan="7" style="text-align:center;color:var(--sub);padding:20px">ไม่มีข้อมูล</td></tr>';
+}
+function filterExpense(){renderExpense();}
+function toggleExpenseForm(){
+  var f=document.getElementById('expense-add-form');
+  if(f) f.style.display=f.style.display==='none'?'block':'none';
+}
+function addExpenseRecord(){
+  var date=(document.getElementById('ex-date')||{}).value||'';
+  var type=(document.getElementById('ex-type')||{}).value||'ค่าใช้สอย';
+  var amount=Number((document.getElementById('ex-amount')||{}).value||0);
+  var desc=(document.getElementById('ex-desc')||{}).value||'';
+  var dept=(document.getElementById('ex-dept')||{}).value||'';
+  if(!amount){alert('กรุณากรอกจำนวนเงิน');return;}
+  var newId='EXP2568-'+String(EXPENSE_DATA.length+1).padStart(3,'0');
+  EXPENSE_DATA.push({id:newId,date:date||'2568-05-25',type:type,amount:amount,desc:desc,dept:dept,status:'ร่าง'});
+  toggleExpenseForm();
+  renderExpense();
+}
+</script>
+
+<script>
+/* ══ ACCOUNTING RENDERERS ══ */
+function renderAccounting() {
+  var tbody=document.getElementById('journal-tbody'); if(!tbody) return;
+  var h='';
+  var runBalance=0;
+  JOURNAL_DATA.forEach(function(j){
+    runBalance+=j.debit-j.credit;
+    h+='<tr><td>'+j.date+'</td><td><span class="level-chip lc-central">'+j.acct+'</span></td>';
+    h+='<td>'+j.desc+'</td>';
+    h+='<td style="text-align:right;color:var(--navy1)">'+( j.debit>0?j.debit.toLocaleString('th-TH'):'-')+'</td>';
+    h+='<td style="text-align:right;color:var(--red)">'+( j.credit>0?j.credit.toLocaleString('th-TH'):'-')+'</td>';
+    h+='<td style="text-align:right;font-weight:700">'+runBalance.toLocaleString('th-TH')+'</td></tr>';
+  });
+  tbody.innerHTML=h||'<tr><td colspan="6" style="text-align:center;color:var(--sub);padding:20px">ไม่มีรายการ</td></tr>';
+}
+function toggleJournalForm(){
+  var f=document.getElementById('journal-form');
+  if(f) f.style.display=f.style.display==='none'?'block':'none';
+}
+function addJournalEntry(){
+  var date=(document.getElementById('jn-date')||{}).value||'2568-05-25';
+  var acct=(document.getElementById('jn-acct')||{}).value||'02';
+  var debit=Number((document.getElementById('jn-debit')||{}).value||0);
+  var credit=Number((document.getElementById('jn-credit')||{}).value||0);
+  var desc=(document.getElementById('jn-desc')||{}).value||'รายการ';
+  var acctNames={'01':'งบบุคลากร','02':'งบดำเนินงาน','03':'งบลงทุน','04':'งบอุดหนุน','05':'งบรายจ่ายอื่น'};
+  JOURNAL_DATA.push({date:date,acct:acct,acctName:acctNames[acct]||'',desc:desc,debit:debit,credit:credit});
+  toggleJournalForm();
+  renderAccounting();
+}
+function renderTrialBalance(){
+  var card=document.getElementById('trial-balance-card');
+  if(card) card.style.display='block';
+  var accts={'01':{name:'งบบุคลากร',debit:0,credit:0},'02':{name:'งบดำเนินงาน',debit:0,credit:0},'03':{name:'งบลงทุน',debit:0,credit:0},'04':{name:'งบอุดหนุน',debit:0,credit:0},'05':{name:'งบรายจ่ายอื่น',debit:0,credit:0}};
+  JOURNAL_DATA.forEach(function(j){if(accts[j.acct]){accts[j.acct].debit+=j.debit;accts[j.acct].credit+=j.credit;}});
+  var h='';
+  var totD=0,totC=0;
+  Object.keys(accts).forEach(function(k){
+    var a=accts[k];
+    var bal=a.debit-a.credit;
+    totD+=a.debit;totC+=a.credit;
+    h+='<tr><td><span class="level-chip lc-central">'+k+'</span></td><td>'+a.name+'</td>';
+    h+='<td style="text-align:right">'+a.debit.toLocaleString('th-TH')+'</td>';
+    h+='<td style="text-align:right">'+a.credit.toLocaleString('th-TH')+'</td>';
+    h+='<td style="text-align:right;font-weight:700;color:'+(bal>=0?'var(--navy1)':'var(--red)')+'">'+bal.toLocaleString('th-TH')+'</td></tr>';
+  });
+  h+='<tr style="background:var(--bg2);font-weight:700"><td colspan="2">รวม</td>';
+  h+='<td style="text-align:right">'+totD.toLocaleString('th-TH')+'</td>';
+  h+='<td style="text-align:right">'+totC.toLocaleString('th-TH')+'</td>';
+  h+='<td style="text-align:right">'+(totD-totC).toLocaleString('th-TH')+'</td></tr>';
+  var tbody=document.getElementById('trial-tbody'); if(tbody) tbody.innerHTML=h;
+}
+
+/* ══ DOCUMENT RENDERERS ══ */
+function renderDocuments(){
+  var prCount=DOCUMENT_DATA.filter(function(d){return d.type==='PR'&&d.status!=='เบิกจ่าย';}).length;
+  var poCount=DOCUMENT_DATA.filter(function(d){return d.type==='PO';}).length;
+  var payCount=DOCUMENT_DATA.filter(function(d){return d.type==='PAY_REQ'&&d.status==='รอลงนาม';}).length;
+  var invCount=DOCUMENT_DATA.filter(function(d){return d.type==='INVOICE'&&d.status==='รอเบิก';}).length;
+  var e1=document.getElementById('doc-pr'); if(e1) e1.textContent=prCount;
+  var e2=document.getElementById('doc-po'); if(e2) e2.textContent=poCount;
+  var e3=document.getElementById('doc-pay-req'); if(e3) e3.textContent=payCount;
+  var e4=document.getElementById('doc-invoice'); if(e4) e4.textContent=invCount;
+  var tbody=document.getElementById('doc-tbody'); if(!tbody) return;
+  var typeLabel={PR:'ใบขอซื้อ',PO:'ใบสั่งซื้อ',PAY_REQ:'ใบเบิกเงิน',VOUCHER:'ใบสำคัญจ่าย',INVOICE:'ฎีกาเบิกจ่าย'};
+  var h='';
+  DOCUMENT_DATA.forEach(function(d){
+    var stag=d.status==='อนุมัติ'||d.status==='เบิกจ่าย'?'<span class="tag-ok">'+d.status+'</span>':d.status==='รอลงนาม'||d.status==='รอเบิก'?'<span class="tag-warn">'+d.status+'</span>':'<span class="tag-blue">'+d.status+'</span>';
+    h+='<tr><td style="font-size:11px;color:var(--sub)">'+d.id+'</td>';
+    h+='<td><span class="level-chip lc-central">'+(typeLabel[d.type]||d.type)+'</span></td>';
+    h+='<td>'+d.date+'</td><td>'+d.requester+'</td><td>'+d.unit+'</td>';
+    h+='<td style="text-align:right;font-weight:700">'+d.amount.toLocaleString('th-TH')+'</td>';
+    h+='<td style="font-size:12px">'+d.purpose+'</td><td>'+stag+'</td></tr>';
+  });
+  tbody.innerHTML=h||'<tr><td colspan="8" style="text-align:center;color:var(--sub);padding:20px">ไม่มีเอกสาร</td></tr>';
+}
+function createFinDocument(){
+  var type=(document.getElementById('doc-type')||{}).value||'PR';
+  var date=(document.getElementById('doc-date')||{}).value||'2568-05-25';
+  var unit=(document.getElementById('doc-unit')||{}).value||'';
+  var requester=(document.getElementById('doc-requester')||{}).value||'';
+  var amount=Number((document.getElementById('doc-amount')||{}).value||0);
+  var purpose=(document.getElementById('doc-purpose')||{}).value||'';
+  var prefix={PR:'PR',PO:'PO',PAY_REQ:'PAY',VOUCHER:'VCH',INVOICE:'INV'}[type]||'DOC';
+  var newId=prefix+'2568-'+String(Date.now()).slice(-4);
+  DOCUMENT_DATA.push({id:newId,type:type,date:date,requester:requester,unit:unit,amount:amount,purpose:purpose,status:'ร่าง'});
+  var msg=document.getElementById('doc-create-msg');
+  if(msg) msg.innerHTML='<span style="color:var(--green1)">✅ สร้างเอกสาร '+newId+' สำเร็จ — สถานะ: ร่าง</span>';
+  renderDocuments();
+  setTimeout(function(){if(msg)msg.textContent='';},4000);
+}
+
+/* ══ STOCK RENDERERS ══ */
+function renderStock(){
+  var totalVal=STOCK_DATA.reduce(function(a,b){return a+b.qty*b.price;},0);
+  var lowItems=STOCK_DATA.filter(function(s){return s.qty<=s.min;}).length;
+  var e1=document.getElementById('stk-items'); if(e1) e1.textContent=STOCK_DATA.length;
+  var e2=document.getElementById('stk-value'); if(e2) e2.textContent=totalVal.toLocaleString('th-TH');
+  var e3=document.getElementById('stk-low'); if(e3) e3.textContent=lowItems;
+  var e4=document.getElementById('stk-assets'); if(e4) e4.textContent=ASSET_DATA.length;
+  var tbody=document.getElementById('stock-tbody'); if(!tbody) return;
+  var h='';
+  STOCK_DATA.forEach(function(s){
+    var isLow=s.qty<=s.min;
+    var stag=isLow?'<span class="tag-err">ใกล้หมด</span>':'<span class="tag-ok">พร้อมใช้</span>';
+    h+='<tr style="'+(isLow?'background:#fff5f5;':'')+'"><td style="font-size:11px;color:var(--sub)">'+s.id+'</td>';
+    h+='<td><strong>'+s.name+'</strong></td><td>'+s.unit+'</td>';
+    h+='<td style="text-align:right;font-weight:700;color:'+(isLow?'var(--red)':'var(--navy1)')+'">'+s.qty.toLocaleString()+'</td>';
+    h+='<td style="text-align:right">'+s.price.toLocaleString('th-TH')+'</td>';
+    h+='<td style="text-align:right;font-weight:600">'+(s.qty*s.price).toLocaleString('th-TH')+'</td>';
+    h+='<td>'+s.location+'</td><td>'+stag+'</td></tr>';
+  });
+  tbody.innerHTML=h;
+  var atbody=document.getElementById('asset-tbody'); if(!atbody) return;
+  var ah='';
+  ASSET_DATA.forEach(function(a){
+    var stag=a.status==='ใช้งาน'?'<span class="tag-ok">'+a.status+'</span>':'<span class="tag-warn">'+a.status+'</span>';
+    ah+='<tr><td style="font-size:11px;color:var(--sub)">'+a.id+'</td>';
+    ah+='<td><strong>'+a.name+'</strong></td>';
+    ah+='<td style="text-align:right;font-weight:700">'+Number(a.price).toLocaleString('th-TH')+'</td>';
+    ah+='<td>'+a.date+'</td><td>'+a.life+'</td><td>'+a.location+'</td><td>'+stag+'</td></tr>';
+  });
+  atbody.innerHTML=ah;
+}
+function toggleStockForm(){
+  var f=document.getElementById('stock-add-form');
+  if(f) f.style.display=f.style.display==='none'?'block':'none';
+}
+function toggleIssueForm(){
+  var f=document.getElementById('issue-form');
+  if(f) f.style.display=f.style.display==='none'?'block':'none';
+}
+function addStockItem(){
+  var name=(document.getElementById('sk-name')||{}).value||'';
+  if(!name){alert('กรุณากรอกชื่อพัสดุ');return;}
+  var unit=(document.getElementById('sk-unit')||{}).value||'ชิ้น';
+  var qty=Number((document.getElementById('sk-qty')||{}).value||0);
+  var price=Number((document.getElementById('sk-price')||{}).value||0);
+  var min=Number((document.getElementById('sk-min')||{}).value||10);
+  var location=(document.getElementById('sk-location')||{}).value||'ห้องพัสดุ';
+  var newId='STK'+String(STOCK_DATA.length+1).padStart(3,'0');
+  STOCK_DATA.push({id:newId,name:name,unit:unit,qty:qty,min:min,price:price,location:location});
+  toggleStockForm();
+  renderStock();
+}
+function processIssue(){
+  var itemId=(document.getElementById('iss-id')||{}).value||'';
+  var type=(document.getElementById('iss-type')||{}).value||'เบิก';
+  var qty=Number((document.getElementById('iss-qty')||{}).value||0);
+  if(!qty){alert('กรุณากรอกจำนวน');return;}
+  var item=STOCK_DATA.find(function(s){return s.id===itemId;});
+  if(!item){alert('ไม่พบรหัสพัสดุ: '+itemId);return;}
+  if(type==='เบิก'){
+    if(item.qty<qty){alert('สต๊อกไม่เพียงพอ มีเพียง '+item.qty+' '+item.unit);return;}
+    item.qty-=qty;
+  } else {
+    item.qty+=qty;
+  }
+  toggleIssueForm();
+  renderStock();
+  alert('✅ '+type+'พัสดุ '+item.name+' จำนวน '+qty+' '+item.unit+' สำเร็จ\nคงเหลือ: '+item.qty+' '+item.unit);
+}
+
+/* ── INIT ── */
+window.addEventListener('DOMContentLoaded', function(){
+  document.getElementById('login').style.display='flex';
+  document.getElementById('app').style.display='none';
+});
+
+async function pushReportToHub() {
+  const btn = document.getElementById('hub-report-btn');
+  if(btn) { btn.disabled=true; btn.textContent='⏳ กำลังส่ง...'; }
+  const report = {
+    agencyId: 'moac-central',
+    agencyName: 'กระทรวงเกษตรและสหกรณ์ (ส่วนกลาง)',
+    parentId: 'moac',
+    ministryId: 'moac',
+    level: 3,
+    reportedBy: 'system-auto',
+    kpis: [],
+    budget: { total: 0, spent: 0, remaining: 0, unit: 'ล้านบาท' },
+    personnel: { total: 0, present: 0, onLeave: 0, other: 0 },
+    projects: { total: 0, ontrack: 0, delayed: 0, completed: 0 },
+    alerts: [],
+    timestamp: new Date().toISOString()
+  };
+  // Try to pick up live values from the page
+  try {
+    const kv = (id) => { const el=document.getElementById(id); return el?(parseFloat(el.textContent.replace(/[^0-9.]/g,''))||0):0; };
+    report.budget.spent = kv('b-spent') || kv('pay-used-budget') || 0;
+    report.budget.total = kv('b-total') || 0;
+    report.personnel.total = kv('pay-total-ppl') || 0;
+  } catch(e) {}
+  try {
+    const resp = await fetch('/api/hub/report', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(report) });
+    const data = await resp.json();
+    const msg = document.getElementById('hub-report-msg');
+    if(msg) { msg.textContent = data.ok ? '✅ ส่งรายงานขึ้นระบบแล้ว — '+new Date().toLocaleTimeString('th-TH') : '❌ '+data.error; msg.style.display='block'; setTimeout(()=>{msg.style.display='none';},4000); }
+  } catch(e) {
+    const msg=document.getElementById('hub-report-msg');
+    if(msg){msg.textContent='❌ ไม่สามารถส่งได้: '+e.message;msg.style.display='block';setTimeout(()=>{msg.style.display='none';},4000);}
+  }
+  if(btn){btn.disabled=false;btn.textContent='📤 ส่งรายงานขึ้นระบบ';}
+}
+</script>
+<script>
+window.G2G_PAGE_CONFIG = {
+  pageName: 'ระบบบริหารกระทรวงเกษตรและสหกรณ์',
+  agencyId: 'moac-central', ministryId: 'moac',
+  manualText: 'ระบบบริหารจัดการข้อมูลกระทรวงเกษตรและสหกรณ์ ครอบคลุม 12 กรม ได้แก่ กรมส่งเสริมการเกษตร กรมชลประทาน กรมประมง กรมปศุสัตว์ กรมพัฒนาที่ดิน กรมการข้าว กรมวิชาการเกษตร กรมส่งเสริมสหกรณ์ กรมตรวจบัญชีสหกรณ์ กรมฝนหลวง สปก. และ กยท.',
+  manualSteps: [
+    '1. เลือกหมวดข้อมูลด้านบน: คน เงิน งาน/วิจัย บูรณาการ',
+    '2. ใช้แถบด้านซ้ายเลือกหน้าย่อย เช่น ภาพรวม ทะเบียน หรือ ตารางข้อมูล',
+    '3. กดปุ่ม ➕ เพิ่ม หรือ ✏️ แก้ไข เพื่อจัดการข้อมูลในระบบ',
+    '4. กด 📤 ส่งรายงาน (แถบด้านบน) เพื่อส่งข้อมูลขึ้นระบบ Hub กระทรวง',
+    '5. กด 🤖 มุมขวาล่างเพื่อคุยกับ AI ผู้ช่วยได้ตลอดเวลา'
+  ]
+};
+</script>
+<script src="/access-bar.js"></script>
+<script src="/delegation.js"></script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+{
+  "_comment": "Master list of all 76 Thai provinces. active=true means clickable in launcher, others show as disabled gray buttons.",
+  "_version": "1.0",
+  "_updated": "2026-05-25",
+  "_active_provinces": ["phrae", "chiangrai", "udonthani"],
+  "_active_count": 3,
+  "_total_count": 76,
+  "regions": [
+    {
+      "code": "north",
+      "name_th": "ภาคเหนือ",
+      "name_en": "Northern Thailand",
+      "color": "#1a7a3a",
+      "provinces": [
+        { "code": "chiangmai",    "province_code_th": "50", "name_th": "เชียงใหม่",       "active": false, "status": "phase_3" },
+        { "code": "chiangrai",    "province_code_th": "57", "name_th": "เชียงราย",        "active": true,  "status": "live", "url": "chiangrai.html" },
+        { "code": "lamphun",      "province_code_th": "51", "name_th": "ลำพูน",          "active": false, "status": "coming_soon" },
+        { "code": "lampang",      "province_code_th": "52", "name_th": "ลำปาง",          "active": false, "status": "coming_soon" },
+        { "code": "uttaradit",    "province_code_th": "53", "name_th": "อุตรดิตถ์",       "active": false, "status": "coming_soon" },
+        { "code": "phrae",        "province_code_th": "54", "name_th": "แพร่",            "active": true,  "status": "live", "url": "phrae.html" },
+        { "code": "nan",          "province_code_th": "55", "name_th": "น่าน",           "active": false, "status": "coming_soon" },
+        { "code": "phayao",       "province_code_th": "56", "name_th": "พะเยา",          "active": false, "status": "coming_soon" },
+        { "code": "maehongson",   "province_code_th": "58", "name_th": "แม่ฮ่องสอน",     "active": false, "status": "coming_soon" }
+      ]
+    },
+    {
+      "code": "northeast",
+      "name_th": "ภาคตะวันออกเฉียงเหนือ (อีสาน)",
+      "name_en": "Northeastern Thailand (Isan)",
+      "color": "#d35400",
+      "provinces": [
+        { "code": "udonthani",      "province_code_th": "41", "name_th": "อุดรธานี",       "active": true,  "status": "live", "url": "udonthani.html" },
+        { "code": "khonkaen",       "province_code_th": "40", "name_th": "ขอนแก่น",        "active": false, "status": "phase_3" },
+        { "code": "nakhonratchasima","province_code_th": "30", "name_th": "นครราชสีมา",    "active": false, "status": "phase_3" },
+        { "code": "ubonratchathani", "province_code_th": "34", "name_th": "อุบลราชธานี",   "active": false, "status": "coming_soon" },
+        { "code": "burirum",         "province_code_th": "31", "name_th": "บุรีรัมย์",     "active": false, "status": "coming_soon" },
+        { "code": "surin",           "province_code_th": "32", "name_th": "สุรินทร์",      "active": false, "status": "coming_soon" },
+        { "code": "sisaket",         "province_code_th": "33", "name_th": "ศรีสะเกษ",      "active": false, "status": "coming_soon" },
+        { "code": "yasothon",        "province_code_th": "35", "name_th": "ยโสธร",        "active": false, "status": "coming_soon" },
+        { "code": "chaiyaphum",      "province_code_th": "36", "name_th": "ชัยภูมิ",       "active": false, "status": "coming_soon" },
+        { "code": "amnatcharoen",    "province_code_th": "37", "name_th": "อำนาจเจริญ",   "active": false, "status": "coming_soon" },
+        { "code": "bungkan",         "province_code_th": "38", "name_th": "บึงกาฬ",       "active": false, "status": "coming_soon" },
+        { "code": "nongbualamphu",   "province_code_th": "39", "name_th": "หนองบัวลำภู",   "active": false, "status": "coming_soon" },
+        { "code": "loei",            "province_code_th": "42", "name_th": "เลย",          "active": false, "status": "coming_soon" },
+        { "code": "nongkhai",        "province_code_th": "43", "name_th": "หนองคาย",      "active": false, "status": "coming_soon" },
+        { "code": "mahasarakham",    "province_code_th": "44", "name_th": "มหาสารคาม",    "active": false, "status": "coming_soon" },
+        { "code": "roiet",           "province_code_th": "45", "name_th": "ร้อยเอ็ด",     "active": false, "status": "coming_soon" },
+        { "code": "kalasin",         "province_code_th": "46", "name_th": "กาฬสินธุ์",    "active": false, "status": "coming_soon" },
+        { "code": "sakonnakhon",     "province_code_th": "47", "name_th": "สกลนคร",       "active": false, "status": "coming_soon" },
+        { "code": "nakhonphanom",    "province_code_th": "48", "name_th": "นครพนม",       "active": false, "status": "coming_soon" },
+        { "code": "mukdahan",        "province_code_th": "49", "name_th": "มุกดาหาร",     "active": false, "status": "coming_soon" }
+      ]
+    },
+    {
+      "code": "central",
+      "name_th": "ภาคกลาง",
+      "name_en": "Central Thailand",
+      "color": "#2980b9",
+      "provinces": [
+        { "code": "bangkok",        "province_code_th": "10", "name_th": "กรุงเทพมหานคร", "active": false, "status": "phase_4" },
+        { "code": "samutprakan",    "province_code_th": "11", "name_th": "สมุทรปราการ",   "active": false, "status": "coming_soon" },
+        { "code": "nonthaburi",     "province_code_th": "12", "name_th": "นนทบุรี",       "active": false, "status": "coming_soon" },
+        { "code": "pathumthani",    "province_code_th": "13", "name_th": "ปทุมธานี",      "active": false, "status": "coming_soon" },
+        { "code": "ayutthaya",      "province_code_th": "14", "name_th": "พระนครศรีอยุธยา","active": false, "status": "coming_soon" },
+        { "code": "angthong",       "province_code_th": "15", "name_th": "อ่างทอง",       "active": false, "status": "coming_soon" },
+        { "code": "lopburi",        "province_code_th": "16", "name_th": "ลพบุรี",        "active": false, "status": "coming_soon" },
+        { "code": "singburi",       "province_code_th": "17", "name_th": "สิงห์บุรี",      "active": false, "status": "coming_soon" },
+        { "code": "chainat",        "province_code_th": "18", "name_th": "ชัยนาท",        "active": false, "status": "coming_soon" },
+        { "code": "saraburi",       "province_code_th": "19", "name_th": "สระบุรี",       "active": false, "status": "coming_soon" },
+        { "code": "nakhonnayok",    "province_code_th": "26", "name_th": "นครนายก",       "active": false, "status": "coming_soon" },
+        { "code": "samutsakhon",    "province_code_th": "74", "name_th": "สมุทรสาคร",     "active": false, "status": "coming_soon" },
+        { "code": "samutsongkhram", "province_code_th": "75", "name_th": "สมุทรสงคราม",   "active": false, "status": "coming_soon" },
+        { "code": "nakhonpathom",   "province_code_th": "73", "name_th": "นครปฐม",        "active": false, "status": "coming_soon" },
+        { "code": "kanchanaburi",   "province_code_th": "71", "name_th": "กาญจนบุรี",     "active": false, "status": "coming_soon" },
+        { "code": "ratchaburi",     "province_code_th": "70", "name_th": "ราชบุรี",       "active": false, "status": "coming_soon" },
+        { "code": "suphanburi",     "province_code_th": "72", "name_th": "สุพรรณบุรี",    "active": false, "status": "coming_soon" },
+        { "code": "phetchaburi",    "province_code_th": "76", "name_th": "เพชรบุรี",      "active": false, "status": "coming_soon" },
+        { "code": "prachuapkhirikhan","province_code_th":"77","name_th": "ประจวบคีรีขันธ์","active": false, "status": "coming_soon" },
+        { "code": "sukhothai",      "province_code_th": "64", "name_th": "สุโขทัย",       "active": false, "status": "coming_soon" },
+        { "code": "phitsanulok",    "province_code_th": "65", "name_th": "พิษณุโลก",      "active": false, "status": "phase_3" },
+        { "code": "phichit",        "province_code_th": "66", "name_th": "พิจิตร",        "active": false, "status": "coming_soon" },
+        { "code": "kamphaengphet",  "province_code_th": "62", "name_th": "กำแพงเพชร",     "active": false, "status": "coming_soon" },
+        { "code": "tak",            "province_code_th": "63", "name_th": "ตาก",          "active": false, "status": "coming_soon" },
+        { "code": "phetchabun",     "province_code_th": "67", "name_th": "เพชรบูรณ์",    "active": false, "status": "coming_soon" },
+        { "code": "nakhonsawan",    "province_code_th": "60", "name_th": "นครสวรรค์",     "active": false, "status": "coming_soon" },
+        { "code": "uthaithani",     "province_code_th": "61", "name_th": "อุทัยธานี",     "active": false, "status": "coming_soon" }
+      ]
+    },
+    {
+      "code": "east",
+      "name_th": "ภาคตะวันออก",
+      "name_en": "Eastern Thailand",
+      "color": "#7d3c98",
+      "provinces": [
+        { "code": "chonburi",       "province_code_th": "20", "name_th": "ชลบุรี",         "active": false, "status": "coming_soon" },
+        { "code": "rayong",         "province_code_th": "21", "name_th": "ระยอง",         "active": false, "status": "coming_soon" },
+        { "code": "chanthaburi",    "province_code_th": "22", "name_th": "จันทบุรี",      "active": false, "status": "coming_soon" },
+        { "code": "trat",           "province_code_th": "23", "name_th": "ตราด",         "active": false, "status": "coming_soon" },
+        { "code": "chachoengsao",   "province_code_th": "24", "name_th": "ฉะเชิงเทรา",   "active": false, "status": "coming_soon" },
+        { "code": "prachinburi",    "province_code_th": "25", "name_th": "ปราจีนบุรี",   "active": false, "status": "coming_soon" },
+        { "code": "sakaeo",         "province_code_th": "27", "name_th": "สระแก้ว",      "active": false, "status": "coming_soon" }
+      ]
+    },
+    {
+      "code": "west",
+      "name_th": "ภาคตะวันตก",
+      "name_en": "Western Thailand",
+      "color": "#0e7490",
+      "provinces": []
+    },
+    {
+      "code": "south",
+      "name_th": "ภาคใต้",
+      "name_en": "Southern Thailand",
+      "color": "#0891b2",
+      "provinces": [
+        { "code": "nakhonsithammarat","province_code_th":"80","name_th": "นครศรีธรรมราช",  "active": false, "status": "coming_soon" },
+        { "code": "krabi",          "province_code_th": "81", "name_th": "กระบี่",        "active": false, "status": "coming_soon" },
+        { "code": "phangnga",       "province_code_th": "82", "name_th": "พังงา",         "active": false, "status": "coming_soon" },
+        { "code": "phuket",         "province_code_th": "83", "name_th": "ภูเก็ต",         "active": false, "status": "coming_soon" },
+        { "code": "suratthani",     "province_code_th": "84", "name_th": "สุราษฎร์ธานี",  "active": false, "status": "coming_soon" },
+        { "code": "ranong",         "province_code_th": "85", "name_th": "ระนอง",        "active": false, "status": "coming_soon" },
+        { "code": "chumphon",       "province_code_th": "86", "name_th": "ชุมพร",        "active": false, "status": "coming_soon" },
+        { "code": "songkhla",       "province_code_th": "90", "name_th": "สงขลา",         "active": false, "status": "coming_soon" },
+        { "code": "satun",          "province_code_th": "91", "name_th": "สตูล",         "active": false, "status": "coming_soon" },
+        { "code": "trang",          "province_code_th": "92", "name_th": "ตรัง",         "active": false, "status": "coming_soon" },
+        { "code": "phatthalung",    "province_code_th": "93", "name_th": "พัทลุง",       "active": false, "status": "coming_soon" },
+        { "code": "pattani",        "province_code_th": "94", "name_th": "ปัตตานี",      "active": false, "status": "coming_soon" },
+        { "code": "yala",           "province_code_th": "95", "name_th": "ยะลา",         "active": false, "status": "coming_soon" },
+        { "code": "narathiwat",     "province_code_th": "96", "name_th": "นราธิวาส",     "active": false, "status": "coming_soon" }
+      ]
+    }
+  ]
+}

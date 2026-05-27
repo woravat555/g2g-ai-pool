@@ -1,0 +1,2215 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIตลอดชีวิต — G2G Lifelong AI Companion</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Sarabun',sans-serif;background:#f0f4f8;color:#1a1a2e;font-size:15px}
+:root{
+  --green:#00897b;--green-light:#e0f2f1;--green-dark:#004d40;
+  --blue:#1565c0;--blue-light:#e3f2fd;--blue-dark:#0d47a1;
+  --purple:#6a1b9a;--purple-light:#f3e5f5;--purple-dark:#4a148c;
+  --red:#c62828;--orange:#e65100;--amber:#f57f17;
+  --gray:#607d8b;--gray-light:#eceff1;--white:#fff;
+  --shadow:0 2px 12px rgba(0,0,0,.1);--radius:12px
+}
+
+/* ===== PDPA MODAL ===== */
+#pdpaOverlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;
+  display:flex;align-items:center;justify-content:center;padding:20px
+}
+.pdpa-card{
+  background:var(--white);border-radius:20px;padding:36px 32px;
+  width:100%;max-width:480px;box-shadow:0 20px 60px rgba(0,0,0,.3)
+}
+.pdpa-icon{font-size:48px;text-align:center;margin-bottom:12px}
+.pdpa-title{font-size:20px;font-weight:700;color:var(--green-dark);text-align:center;margin-bottom:6px}
+.pdpa-subtitle{font-size:13px;color:var(--gray);text-align:center;margin-bottom:20px}
+.pdpa-list{background:var(--green-light);border-radius:10px;padding:16px;margin-bottom:20px}
+.pdpa-list li{font-size:13px;color:var(--green-dark);margin-bottom:6px;line-height:1.5;list-style:none;padding-left:4px}
+.pdpa-list li::before{content:"✅ ";margin-right:4px}
+.pdpa-btn-row{display:flex;gap:12px}
+.pdpa-btn-row button{flex:1;padding:14px;border:none;border-radius:10px;font-size:15px;font-weight:600;font-family:'Sarabun',sans-serif;cursor:pointer}
+.pdpa-accept{background:linear-gradient(135deg,var(--green),var(--blue));color:var(--white)}
+.pdpa-reject{background:var(--gray-light);color:var(--gray)}
+
+/* ===== LOGIN SCREEN ===== */
+#loginScreen{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#004d40 0%,#00897b 50%,#1565c0 100%)
+}
+.login-card{
+  background:var(--white);border-radius:20px;padding:48px 40px;
+  width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.25);text-align:center
+}
+.login-logo{font-size:56px;margin-bottom:12px}
+.login-title{font-size:26px;font-weight:700;color:var(--green-dark);margin-bottom:6px}
+.login-subtitle{color:var(--gray);font-size:14px;margin-bottom:32px}
+.login-card input{
+  width:100%;padding:14px 16px;border:2px solid #ddd;border-radius:10px;
+  font-family:'Sarabun',sans-serif;font-size:15px;margin-bottom:14px;outline:none;transition:border .2s
+}
+.login-card input:focus{border-color:var(--green)}
+.btn-login{
+  width:100%;padding:15px;background:linear-gradient(135deg,var(--green),var(--blue));
+  color:var(--white);border:none;border-radius:10px;font-size:16px;font-weight:600;
+  cursor:pointer;font-family:'Sarabun',sans-serif;transition:opacity .2s
+}
+.btn-login:hover{opacity:.9}
+.demo-hint{
+  margin-top:20px;padding:14px;background:var(--green-light);border-radius:10px;
+  font-size:13px;color:var(--green-dark)
+}
+
+/* ===== MAIN APP ===== */
+#mainApp{display:none}
+.top-bar{
+  background:linear-gradient(135deg,var(--green-dark),var(--green));
+  color:var(--white);padding:14px 20px;display:flex;align-items:center;
+  justify-content:space-between;position:sticky;top:0;z-index:100;
+  box-shadow:0 2px 10px rgba(0,0,0,.2)
+}
+.top-bar-left{display:flex;align-items:center;gap:12px}
+.top-bar-avatar{
+  width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.3);
+  display:flex;align-items:center;justify-content:center;font-size:20px
+}
+.top-bar-name{font-weight:600;font-size:16px}
+.top-bar-id{font-size:12px;opacity:.8}
+.btn-logout{
+  background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);
+  color:var(--white);padding:7px 14px;border-radius:8px;cursor:pointer;
+  font-family:'Sarabun',sans-serif;font-size:13px
+}
+
+/* ===== TAB NAV ===== */
+.tab-nav{
+  background:var(--white);border-bottom:2px solid var(--gray-light);
+  display:flex;overflow-x:auto;gap:0;position:sticky;top:70px;z-index:99;
+  box-shadow:0 2px 8px rgba(0,0,0,.06)
+}
+.tab-nav::-webkit-scrollbar{height:3px}
+.tab-nav::-webkit-scrollbar-thumb{background:var(--green)}
+.tab-btn{
+  flex:0 0 auto;padding:14px 18px;border:none;background:none;cursor:pointer;
+  font-family:'Sarabun',sans-serif;font-size:13px;font-weight:500;color:var(--gray);
+  border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap
+}
+.tab-btn.active{color:var(--green-dark);border-bottom-color:var(--green);font-weight:600}
+.tab-btn:hover{background:var(--green-light)}
+
+/* ===== CONTENT AREA ===== */
+.tab-content{display:none;padding:20px;max-width:1000px;margin:0 auto}
+.tab-content.active{display:block}
+
+/* ===== CARDS ===== */
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden}
+.card-header{
+  padding:16px 20px;border-bottom:1px solid var(--gray-light);
+  display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px
+}
+.card-header .icon{font-size:20px}
+.card-header.green{background:var(--green-light);color:var(--green-dark)}
+.card-header.blue{background:var(--blue-light);color:var(--blue-dark)}
+.card-header.purple{background:var(--purple-light);color:var(--purple-dark)}
+.card-header.red{background:#ffebee;color:var(--red)}
+.card-body{padding:20px}
+
+/* ===== FORMS ===== */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-grid.cols3{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:600px){.form-grid,.form-grid.cols3{grid-template-columns:1fr}}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group label{font-size:13px;font-weight:600;color:var(--gray)}
+.form-group input,.form-group select,.form-group textarea{
+  padding:10px 12px;border:1.5px solid #ddd;border-radius:8px;
+  font-family:'Sarabun',sans-serif;font-size:14px;outline:none;transition:border .2s
+}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--green)}
+.form-group textarea{resize:vertical;min-height:80px}
+
+/* ===== BUTTONS ===== */
+.btn{
+  padding:10px 18px;border:none;border-radius:8px;cursor:pointer;
+  font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;transition:all .2s
+}
+.btn-primary{background:var(--green);color:var(--white)}
+.btn-primary:hover{background:var(--green-dark)}
+.btn-blue{background:var(--blue);color:var(--white)}
+.btn-blue:hover{background:var(--blue-dark)}
+.btn-purple{background:var(--purple);color:var(--white)}
+.btn-purple:hover{background:var(--purple-dark)}
+.btn-sm{padding:6px 12px;font-size:13px}
+.btn-outline{background:none;border:1.5px solid var(--green);color:var(--green)}
+.btn-outline:hover{background:var(--green-light)}
+.btn-danger{background:#ef5350;color:var(--white)}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+
+/* ===== TAGS / BADGES ===== */
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600}
+.badge-green{background:var(--green-light);color:var(--green-dark)}
+.badge-blue{background:var(--blue-light);color:var(--blue-dark)}
+.badge-purple{background:var(--purple-light);color:var(--purple-dark)}
+.badge-red{background:#ffebee;color:var(--red)}
+.badge-amber{background:#fff8e1;color:var(--amber)}
+
+/* ===== CONDITION TAGS ===== */
+.tag-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.tag{
+  padding:6px 14px;border-radius:20px;font-size:13px;cursor:pointer;
+  border:1.5px solid #ddd;background:var(--white);transition:all .2s
+}
+.tag.selected{background:var(--green);color:var(--white);border-color:var(--green)}
+
+/* ===== MEDICATION LIST ===== */
+.med-list{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.med-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;background:var(--gray-light);border-radius:8px
+}
+.med-item span{font-size:14px}
+.btn-remove{background:none;border:none;color:#ef5350;font-size:18px;cursor:pointer;padding:0 4px}
+
+/* ===== HEALTH SUBTABS ===== */
+.subtab-nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.subtab-btn{
+  padding:8px 14px;border-radius:20px;border:1.5px solid #ddd;
+  background:var(--white);cursor:pointer;font-family:'Sarabun',sans-serif;
+  font-size:13px;font-weight:500;transition:all .2s
+}
+.subtab-btn.active{background:var(--green);color:var(--white);border-color:var(--green)}
+.subtab-content{display:none}
+.subtab-content.active{display:block}
+
+/* ===== HEALTH STATS ===== */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:16px}
+.stat-box{
+  background:var(--gray-light);border-radius:10px;padding:14px;text-align:center;
+  border-left:4px solid var(--green)
+}
+.stat-box.blue-border{border-left-color:var(--blue)}
+.stat-box.red-border{border-left-color:var(--red)}
+.stat-box.purple-border{border-left-color:var(--purple)}
+.stat-label{font-size:11px;color:var(--gray);margin-bottom:4px}
+.stat-value{font-size:22px;font-weight:700;color:var(--green-dark)}
+.stat-value.blue{color:var(--blue-dark)}
+.stat-value.red{color:var(--red)}
+.stat-unit{font-size:11px;color:var(--gray)}
+
+/* ===== MINI CHART ===== */
+.mini-chart{margin:16px 0}
+.mini-chart-title{font-size:13px;font-weight:600;color:var(--gray);margin-bottom:8px}
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:80px;padding:0 4px}
+.bar-col{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
+.bar{border-radius:4px 4px 0 0;min-width:24px;transition:height .5s}
+.bar-label{font-size:10px;color:var(--gray);white-space:nowrap}
+.bar-val{font-size:10px;font-weight:600;color:var(--green-dark)}
+
+/* ===== RECORDS TABLE ===== */
+.records-table{width:100%;border-collapse:collapse;font-size:13px}
+.records-table th{background:var(--green-light);color:var(--green-dark);padding:10px 12px;text-align:left;font-weight:600;border-bottom:2px solid var(--green)}
+.records-table td{padding:10px 12px;border-bottom:1px solid var(--gray-light)}
+.records-table tr:hover td{background:var(--gray-light)}
+.table-wrap{overflow-x:auto}
+
+/* ===== PHQ/GAD SCALE ===== */
+.scale-group{margin-bottom:14px}
+.scale-question{font-size:14px;margin-bottom:8px;font-weight:500}
+.scale-options{display:flex;gap:8px;flex-wrap:wrap}
+.scale-opt{
+  padding:7px 14px;border-radius:20px;border:1.5px solid #ddd;
+  background:var(--white);cursor:pointer;font-size:13px;transition:all .2s
+}
+.scale-opt.selected{background:var(--blue);color:var(--white);border-color:var(--blue)}
+
+/* ===== PROGRESS BAR ===== */
+.progress-wrap{margin-bottom:12px}
+.progress-label{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px}
+.progress-bar{background:#ddd;border-radius:10px;height:10px;overflow:hidden}
+.progress-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--green),var(--blue));transition:width .8s}
+
+/* ===== LEARNING TIMELINE ===== */
+.timeline{position:relative;padding-left:30px}
+.timeline::before{content:'';position:absolute;left:12px;top:0;bottom:0;width:2px;background:linear-gradient(var(--green),var(--blue))}
+.timeline-item{position:relative;margin-bottom:20px}
+.timeline-dot{
+  position:absolute;left:-24px;top:4px;width:16px;height:16px;
+  border-radius:50%;background:var(--green);border:3px solid var(--white);
+  box-shadow:0 0 0 2px var(--green)
+}
+.timeline-dot.blue{background:var(--blue);box-shadow:0 0 0 2px var(--blue)}
+.timeline-dot.purple{background:var(--purple);box-shadow:0 0 0 2px var(--purple)}
+.timeline-card{
+  background:var(--white);border:1px solid var(--gray-light);border-radius:10px;
+  padding:14px;box-shadow:0 1px 6px rgba(0,0,0,.06)
+}
+.timeline-year{font-size:11px;color:var(--gray);margin-bottom:4px}
+.timeline-title{font-weight:600;font-size:14px;margin-bottom:4px}
+.timeline-sub{font-size:13px;color:var(--gray)}
+
+/* ===== AI CHAT ===== */
+.ai-greeting{
+  background:linear-gradient(135deg,var(--purple-light),var(--blue-light));
+  border-radius:var(--radius);padding:20px;margin-bottom:16px;text-align:center
+}
+.ai-greeting h3{font-size:20px;color:var(--purple-dark);margin-bottom:8px}
+.quick-summary{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+.qs-item{
+  background:var(--white);border-radius:10px;padding:10px 16px;
+  text-align:center;box-shadow:var(--shadow);min-width:100px
+}
+.qs-item .qs-label{font-size:11px;color:var(--gray)}
+.qs-item .qs-val{font-size:18px;font-weight:700;color:var(--purple-dark)}
+
+.quick-btns{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+.quick-btn{
+  padding:9px 16px;border-radius:20px;border:1.5px solid var(--purple);
+  background:var(--purple-light);color:var(--purple-dark);cursor:pointer;
+  font-family:'Sarabun',sans-serif;font-size:13px;font-weight:600;transition:all .2s
+}
+.quick-btn:hover{background:var(--purple);color:var(--white)}
+
+.chat-window{
+  background:var(--white);border-radius:var(--radius);border:1px solid var(--gray-light);
+  height:380px;overflow-y:auto;padding:16px;margin-bottom:12px;box-shadow:var(--shadow)
+}
+.chat-msg{margin-bottom:14px;display:flex;gap:10px;align-items:flex-start}
+.chat-msg.user{flex-direction:row-reverse}
+.chat-avatar{
+  width:36px;height:36px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:18px;flex-shrink:0
+}
+.chat-avatar.ai-avatar{background:var(--purple-light)}
+.chat-avatar.user-avatar{background:var(--blue-light)}
+.chat-bubble{
+  max-width:75%;padding:12px 16px;border-radius:16px;font-size:14px;line-height:1.6
+}
+.chat-bubble.ai{background:var(--purple-light);color:var(--purple-dark);border-radius:4px 16px 16px 16px}
+.chat-bubble.user{background:var(--blue);color:var(--white);border-radius:16px 4px 16px 16px}
+.chat-input-row{display:flex;gap:10px}
+.chat-input-row input{
+  flex:1;padding:12px 16px;border:1.5px solid #ddd;border-radius:25px;
+  font-family:'Sarabun',sans-serif;font-size:14px;outline:none;transition:border .2s
+}
+.chat-input-row input:focus{border-color:var(--purple)}
+.btn-send{
+  background:var(--purple);color:var(--white);border:none;border-radius:25px;
+  padding:12px 20px;cursor:pointer;font-size:16px
+}
+.btn-send:hover{background:var(--purple-dark)}
+.btn-send:disabled{opacity:.5;cursor:not-allowed}
+
+/* ===== ALERT ITEMS ===== */
+.alert-list{display:flex;flex-direction:column;gap:10px}
+.alert-item{
+  display:flex;align-items:flex-start;gap:12px;padding:12px 16px;
+  border-radius:10px;font-size:14px
+}
+.alert-item.red{background:#ffebee;border-left:4px solid var(--red);color:var(--red)}
+.alert-item.amber{background:#fff8e1;border-left:4px solid var(--amber);color:#795548}
+.alert-item.green{background:var(--green-light);border-left:4px solid var(--green);color:var(--green-dark)}
+.alert-item.blue{background:var(--blue-light);border-left:4px solid var(--blue);color:var(--blue-dark)}
+
+/* ===== LINE GUIDE ===== */
+.line-guide-card{
+  background:linear-gradient(135deg,#00C300 0%,#00B300 100%);
+  border-radius:var(--radius);padding:24px;color:var(--white);margin-bottom:16px;text-align:center
+}
+.line-guide-card h3{font-size:20px;font-weight:700;margin-bottom:8px}
+.line-guide-card p{font-size:14px;opacity:.9}
+.qr-placeholder{
+  width:200px;height:200px;background:rgba(255,255,255,.2);border-radius:12px;
+  display:flex;align-items:center;justify-content:center;margin:16px auto;
+  font-size:13px;border:2px dashed rgba(255,255,255,.5);text-align:center;padding:12px;color:var(--white)
+}
+.line-cmd-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+@media(max-width:600px){.line-cmd-grid{grid-template-columns:1fr}}
+.line-cmd-item{
+  background:var(--white);border-radius:10px;padding:12px 14px;
+  display:flex;align-items:flex-start;gap:10px
+}
+.line-cmd-item .cmd-code{
+  font-family:monospace;font-size:13px;font-weight:700;color:#00B300;
+  background:#e8f5e9;padding:3px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0
+}
+.line-cmd-item .cmd-desc{font-size:13px;color:var(--gray)}
+
+/* ===== WEARABLE SECTION ===== */
+.wearable-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:16px}
+.wearable-box{
+  background:linear-gradient(135deg,var(--blue-light),var(--green-light));
+  border-radius:10px;padding:14px;text-align:center;border:1px solid rgba(0,137,123,.2)
+}
+.wearable-icon{font-size:28px;margin-bottom:6px}
+.wearable-label{font-size:11px;color:var(--gray);margin-bottom:4px}
+.wearable-value{font-size:20px;font-weight:700;color:var(--blue-dark)}
+.wearable-unit{font-size:11px;color:var(--gray)}
+.wearable-trend{font-size:12px;margin-top:4px}
+.trend-up{color:var(--red)}
+.trend-down{color:var(--green)}
+.trend-stable{color:var(--gray)}
+
+/* ===== CLINICAL PORTAL ===== */
+.clinical-login{background:var(--blue-light);border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.clinical-login h4{font-size:16px;font-weight:600;color:var(--blue-dark);margin-bottom:14px}
+.clinical-panel{display:none}
+.clinical-panel.active{display:block}
+.clinician-badge{
+  background:var(--blue);color:var(--white);border-radius:10px;padding:12px 16px;
+  display:flex;align-items:center;gap:12px;margin-bottom:16px
+}
+.clinician-type-select{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.clinician-type-btn{
+  padding:8px 16px;border-radius:20px;border:1.5px solid var(--blue);
+  background:var(--white);cursor:pointer;font-family:'Sarabun',sans-serif;font-size:13px;transition:all .2s
+}
+.clinician-type-btn.active{background:var(--blue);color:var(--white);border-color:var(--blue)}
+
+/* ===== REPORTS ===== */
+.report-card{background:var(--white);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-bottom:16px}
+.report-section-title{font-size:16px;font-weight:700;color:var(--green-dark);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--green-light)}
+.skills-table{width:100%;border-collapse:collapse}
+.skills-table td{padding:8px 12px;font-size:13px}
+.skills-table tr:nth-child(even) td{background:var(--gray-light)}
+.skill-stars{color:#f57f17;font-size:16px}
+
+/* ===== VACCINE TABLE ===== */
+.vaccine-row{
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px;
+  padding:10px;border-bottom:1px solid var(--gray-light);font-size:13px;align-items:center
+}
+.vaccine-row.header{background:var(--green-light);color:var(--green-dark);font-weight:600;border-radius:8px 8px 0 0}
+
+/* ===== MOOD TRACKER ===== */
+.mood-grid{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+.mood-btn{
+  width:52px;height:52px;border-radius:50%;border:2px solid #ddd;
+  font-size:26px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all .2s;background:var(--white)
+}
+.mood-btn.selected{border-color:var(--green);box-shadow:0 0 0 3px var(--green-light)}
+
+/* ===== UTILITY ===== */
+.section-title{font-size:17px;font-weight:700;color:var(--green-dark);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.divider{border:none;border-top:1px solid var(--gray-light);margin:16px 0}
+.text-muted{color:var(--gray);font-size:13px}
+.mt-8{margin-top:8px}
+.mt-16{margin-top:16px}
+.flex-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.toast{
+  position:fixed;bottom:24px;right:24px;background:#333;color:#fff;
+  padding:12px 20px;border-radius:10px;font-size:14px;z-index:9998;
+  opacity:0;transition:opacity .3s;pointer-events:none
+}
+.toast.show{opacity:1}
+.empty-state{text-align:center;padding:40px;color:var(--gray)}
+.empty-state .empty-icon{font-size:48px;margin-bottom:12px}
+.typing{display:flex;gap:4px;padding:8px 12px}
+.typing-dot{width:8px;height:8px;border-radius:50%;background:var(--purple);animation:bounce .8s infinite}
+.typing-dot:nth-child(2){animation-delay:.2s}
+.typing-dot:nth-child(3){animation-delay:.4s}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-8px)}}
+.scroll-top{
+  position:fixed;bottom:24px;left:24px;width:44px;height:44px;
+  background:var(--green);color:var(--white);border:none;border-radius:50%;
+  font-size:20px;cursor:pointer;box-shadow:var(--shadow);z-index:98
+}
+</style>
+</head>
+<body>
+
+<!-- ============================
+     PDPA CONSENT OVERLAY
+============================= -->
+<div id="pdpaOverlay" style="display:none">
+  <div class="pdpa-card">
+    <div class="pdpa-icon">📋</div>
+    <div class="pdpa-title">ข้อตกลงการใช้ข้อมูลส่วนบุคคล (PDPA)</div>
+    <div class="pdpa-subtitle">กรุณาอ่านและยอมรับก่อนใช้งานระบบ AIตลอดชีวิต</div>
+    <ul class="pdpa-list">
+      <li>ข้อมูลอยู่ภายใต้ พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล พ.ศ.2562</li>
+      <li>ข้อมูลเป็นกรรมสิทธิ์ของคุณ 100%</li>
+      <li>ดาวน์โหลดหรือลบข้อมูลของคุณได้ตลอดเวลา</li>
+      <li>ไม่มีการขายข้อมูลให้บุคคลที่สาม</li>
+      <li>ข้อมูลสุขภาพถูกเข้ารหัสและเก็บอย่างปลอดภัย</li>
+      <li>บุคลากรทางการแพทย์เข้าถึงได้เฉพาะเมื่อได้รับอนุญาต</li>
+    </ul>
+    <div class="pdpa-btn-row">
+      <button class="pdpa-accept" onclick="acceptPdpa()">ยอมรับ — ใช้งานระบบ</button>
+      <button class="pdpa-reject" onclick="rejectPdpa()">ปฏิเสธ</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================
+     LOGIN SCREEN
+============================= -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">🤝</div>
+    <div class="login-title">AIตลอดชีวิต</div>
+    <div class="login-subtitle">ระบบดูแลสุขภาพและการเรียนรู้ตลอดชีวิต<br>โดย G2G Government AI Platform</div>
+    <input type="text" id="loginCitizenId" placeholder="เลขบัตรประชาชน 13 หลัก" maxlength="13">
+    <input type="text" id="loginName" placeholder="ชื่อ-นามสกุล">
+    <button class="btn-login" onclick="doLogin()">🔐 เข้าสู่ระบบ</button>
+    <div class="demo-hint">
+      <strong>ทดสอบระบบ:</strong><br>
+      เลขบัตร: <strong>3400100123456</strong><br>
+      ชื่อ: <strong>นายวิชัย สุขสมบูรณ์</strong>
+    </div>
+  </div>
+</div>
+
+<!-- ============================
+     MAIN APP
+============================= -->
+<div id="mainApp">
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <div class="top-bar-avatar">🤝</div>
+      <div>
+        <div class="top-bar-name" id="topBarName">-</div>
+        <div class="top-bar-id" id="topBarId">-</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="btn-logout" onclick="exportMyData()" title="ดาวน์โหลดข้อมูลของฉัน (PDPA)">📥 ข้อมูลของฉัน</button>
+      <button class="btn-logout" onclick="doLogout()">ออกจากระบบ</button>
+    </div>
+  </div>
+
+  <!-- Tab Navigation -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="showTab('profile')">👤 โปรไฟล์</button>
+    <button class="tab-btn" onclick="showTab('health')">🏥 สุขภาพ</button>
+    <button class="tab-btn" onclick="showTab('wearable')">⌚ Wearable</button>
+    <button class="tab-btn" onclick="showTab('learning')">🎓 การเรียนรู้</button>
+    <button class="tab-btn" onclick="showTab('ai')">🤖 AIตลอดชีวิต</button>
+    <button class="tab-btn" onclick="showTab('line')">📷 บันทึกผ่าน LINE</button>
+    <button class="tab-btn" onclick="showTab('clinical')">🏥 Clinical Portal</button>
+    <button class="tab-btn" onclick="showTab('report')">📊 รายงาน</button>
+  </div>
+
+  <!-- ======================== TAB: PROFILE ======================== -->
+  <div id="tab-profile" class="tab-content active">
+    <div class="card">
+      <div class="card-header green"><span class="icon">👤</span> ข้อมูลส่วนตัว</div>
+      <div class="card-body">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>ชื่อ-นามสกุล</label>
+            <input type="text" id="p_name" placeholder="ชื่อ นามสกุล">
+          </div>
+          <div class="form-group">
+            <label>เลขบัตรประชาชน</label>
+            <input type="text" id="p_citizenId" placeholder="1234567890123" maxlength="13" readonly>
+          </div>
+          <div class="form-group">
+            <label>วันเกิด</label>
+            <input type="date" id="p_dob">
+          </div>
+          <div class="form-group">
+            <label>เพศ</label>
+            <select id="p_gender">
+              <option value="ชาย">ชาย</option>
+              <option value="หญิง">หญิง</option>
+              <option value="อื่นๆ">อื่นๆ</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>กรุ๊ปเลือด</label>
+            <select id="p_bloodType">
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="AB">AB</option>
+              <option value="O">O</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>เบอร์โทรศัพท์</label>
+            <input type="text" id="p_phone" placeholder="081-234-5678">
+          </div>
+          <div class="form-group" style="grid-column:1/-1">
+            <label>ที่อยู่</label>
+            <textarea id="p_address" placeholder="บ้านเลขที่ ถนน แขวง/ตำบล เขต/อำเภอ จังหวัด รหัสไปรษณีย์"></textarea>
+          </div>
+          <div class="form-group" style="grid-column:1/-1">
+            <label>ผู้ติดต่อฉุกเฉิน</label>
+            <input type="text" id="p_emergency" placeholder="ชื่อ (ความสัมพันธ์) เบอร์โทร">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header green"><span class="icon">🏷️</span> โรคประจำตัว</div>
+      <div class="card-body">
+        <div class="text-muted">เลือกโรคประจำตัว (คลิกเลือกได้หลายรายการ)</div>
+        <div class="tag-list" id="conditionTags">
+          <span class="tag" onclick="toggleCondition(this,'เบาหวาน')">เบาหวาน</span>
+          <span class="tag" onclick="toggleCondition(this,'ความดันโลหิตสูง')">ความดันโลหิตสูง</span>
+          <span class="tag" onclick="toggleCondition(this,'ไขมันในเลือดสูง')">ไขมันในเลือดสูง</span>
+          <span class="tag" onclick="toggleCondition(this,'โรคหัวใจ')">โรคหัวใจ</span>
+          <span class="tag" onclick="toggleCondition(this,'ไทรอยด์')">ไทรอยด์</span>
+          <span class="tag" onclick="toggleCondition(this,'ภูมิแพ้')">ภูมิแพ้</span>
+          <span class="tag" onclick="toggleCondition(this,'หืด')">หืด</span>
+          <span class="tag" onclick="toggleCondition(this,'ไต')">ไต</span>
+          <span class="tag" onclick="toggleCondition(this,'ตับ')">ตับ</span>
+          <span class="tag" onclick="toggleCondition(this,'มะเร็ง')">มะเร็ง</span>
+        </div>
+        <div class="flex-row mt-8">
+          <input type="text" id="conditionCustom" placeholder="โรคอื่นๆ..." style="flex:1;padding:8px 12px;border:1.5px solid #ddd;border-radius:8px;font-family:'Sarabun',sans-serif">
+          <button class="btn btn-sm btn-outline" onclick="addCustomCondition()">+ เพิ่ม</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header green"><span class="icon">💊</span> ยาที่ใช้ประจำ</div>
+      <div class="card-body">
+        <div class="flex-row">
+          <input type="text" id="medInput" placeholder="ชื่อยา ขนาด วิธีใช้ เช่น Amlodipine 5mg (เช้า)" style="flex:1;padding:10px 12px;border:1.5px solid #ddd;border-radius:8px;font-family:'Sarabun',sans-serif">
+          <button class="btn btn-sm btn-primary" onclick="addMed()">+ เพิ่ม</button>
+        </div>
+        <div class="med-list" id="medList"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header green"><span class="icon">⚠️</span> ข้อมูลการแพ้</div>
+      <div class="card-body">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>แพ้ยา</label>
+            <input type="text" id="p_drugAllergy" placeholder="Penicillin, Sulfa...">
+          </div>
+          <div class="form-group">
+            <label>แพ้อาหาร</label>
+            <input type="text" id="p_foodAllergy" placeholder="อาหารทะเล, ถั่ว...">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="saveProfile()">💾 บันทึกโปรไฟล์</button>
+      <button class="btn btn-outline" onclick="loadProfile()">🔄 โหลดข้อมูล</button>
+      <button class="btn btn-danger" onclick="deleteMyData()" style="margin-left:auto">🗑️ ลบข้อมูลของฉัน (PDPA)</button>
+    </div>
+  </div>
+
+  <!-- ======================== TAB: HEALTH ======================== -->
+  <div id="tab-health" class="tab-content">
+    <div class="subtab-nav">
+      <button class="subtab-btn active" onclick="showHealthSub('physical')">💪 กายภาพ</button>
+      <button class="subtab-btn" onclick="showHealthSub('vitals')">❤️ สัญญาณชีพ</button>
+      <button class="subtab-btn" onclick="showHealthSub('mental')">🧠 จิตใจ</button>
+      <button class="subtab-btn" onclick="showHealthSub('dental')">🦷 ฟัน/ตา</button>
+      <button class="subtab-btn" onclick="showHealthSub('vaccine')">💉 วัคซีน</button>
+      <button class="subtab-btn" onclick="showHealthSub('chronic')">🩺 โรคเรื้อรัง</button>
+      <button class="subtab-btn" onclick="showHealthSub('lifestyle')">🌿 ไลฟ์สไตล์</button>
+      <button class="subtab-btn" onclick="showHealthSub('history')">📋 ประวัติรักษา</button>
+      <button class="subtab-btn" onclick="showHealthSub('genetics')">🧬 พันธุกรรม</button>
+    </div>
+
+    <!-- PHYSICAL -->
+    <div id="health-physical" class="subtab-content active">
+      <div class="card">
+        <div class="card-header green"><span class="icon">💪</span> ข้อมูลร่างกาย</div>
+        <div class="card-body">
+          <div class="stat-grid" id="physicalStats">
+            <div class="stat-box"><div class="stat-label">น้ำหนัก</div><div class="stat-value" id="sw_weight">--</div><div class="stat-unit">kg</div></div>
+            <div class="stat-box blue-border"><div class="stat-label">ส่วนสูง</div><div class="stat-value blue" id="sw_height">--</div><div class="stat-unit">cm</div></div>
+            <div class="stat-box red-border"><div class="stat-label">BMI</div><div class="stat-value red" id="sw_bmi">--</div><div class="stat-unit">kg/m²</div></div>
+            <div class="stat-box purple-border"><div class="stat-label">รอบเอว</div><div class="stat-value" style="color:var(--purple)" id="sw_waist">--</div><div class="stat-unit">cm</div></div>
+          </div>
+          <div class="mini-chart">
+            <div class="mini-chart-title">แนวโน้มน้ำหนัก (3 เดือนล่าสุด)</div>
+            <div class="bar-chart" id="weightChart"></div>
+          </div>
+          <hr class="divider">
+          <div class="section-title">📝 บันทึกใหม่</div>
+          <div class="form-grid cols3">
+            <div class="form-group"><label>น้ำหนัก (kg)</label><input type="number" id="h_weight" placeholder="78" step="0.1"></div>
+            <div class="form-group"><label>ส่วนสูง (cm)</label><input type="number" id="h_height" placeholder="172"></div>
+            <div class="form-group"><label>รอบเอว (cm)</label><input type="number" id="h_waist" placeholder="90"></div>
+            <div class="form-group"><label>วันที่บันทึก</label><input type="date" id="h_physDate"></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="savePhysical()">💾 บันทึก</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VITALS -->
+    <div id="health-vitals" class="subtab-content">
+      <div class="card">
+        <div class="card-header green"><span class="icon">❤️</span> สัญญาณชีพ</div>
+        <div class="card-body">
+          <div class="stat-grid">
+            <div class="stat-box red-border"><div class="stat-label">ความดันโลหิต</div><div class="stat-value red" id="sv_bp">--/--</div><div class="stat-unit">mmHg</div></div>
+            <div class="stat-box"><div class="stat-label">ชีพจร</div><div class="stat-value" id="sv_pulse">--</div><div class="stat-unit">bpm</div></div>
+            <div class="stat-box blue-border"><div class="stat-label">SpO2</div><div class="stat-value blue" id="sv_spo2">--</div><div class="stat-unit">%</div></div>
+            <div class="stat-box purple-border"><div class="stat-label">อุณหภูมิ</div><div class="stat-value" style="color:var(--purple)" id="sv_temp">--</div><div class="stat-unit">°C</div></div>
+            <div class="stat-box"><div class="stat-label">น้ำตาลในเลือด</div><div class="stat-value" id="sv_sugar">--</div><div class="stat-unit">mg/dL</div></div>
+            <div class="stat-box blue-border"><div class="stat-label">ไขมัน</div><div class="stat-value blue" id="sv_chol">--</div><div class="stat-unit">mg/dL</div></div>
+          </div>
+          <div class="mini-chart">
+            <div class="mini-chart-title">แนวโน้มความดัน (systolic)</div>
+            <div class="bar-chart" id="bpChart"></div>
+          </div>
+          <hr class="divider">
+          <div class="section-title">📝 บันทึกสัญญาณชีพ</div>
+          <div class="form-grid">
+            <div class="form-group"><label>ความดัน (SYS/DIA)</label><input type="text" id="h_bp" placeholder="120/80"></div>
+            <div class="form-group"><label>ชีพจร (bpm)</label><input type="number" id="h_pulse" placeholder="72"></div>
+            <div class="form-group"><label>ออกซิเจน (%)</label><input type="number" id="h_spo2" placeholder="98" max="100"></div>
+            <div class="form-group"><label>อุณหภูมิ (°C)</label><input type="number" id="h_temp" placeholder="36.5" step="0.1"></div>
+            <div class="form-group"><label>น้ำตาลในเลือด</label><input type="number" id="h_sugar" placeholder="100"></div>
+            <div class="form-group"><label>ไขมันรวม</label><input type="number" id="h_chol" placeholder="200"></div>
+            <div class="form-group"><label>วันที่</label><input type="date" id="h_vitalDate"></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="saveVitals()">💾 บันทึก</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MENTAL -->
+    <div id="health-mental" class="subtab-content">
+      <div class="card">
+        <div class="card-header purple"><span class="icon">🧠</span> ประเมินสุขภาพจิต (PHQ-4)</div>
+        <div class="card-body">
+          <div class="text-muted" style="margin-bottom:14px">ในช่วง 2 สัปดาห์ที่ผ่านมา คุณมีอาการต่อไปนี้บ่อยแค่ไหน?</div>
+          <div id="phqQuestions"></div>
+          <div class="btn-row">
+            <button class="btn btn-purple" onclick="calcPhq()">📊 คำนวณผล</button>
+          </div>
+          <div id="phqResult" style="margin-top:14px;display:none"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header purple"><span class="icon">😊</span> บันทึกอารมณ์วันนี้</div>
+        <div class="card-body">
+          <div class="text-muted">อารมณ์โดยรวมวันนี้เป็นอย่างไร?</div>
+          <div class="mood-grid">
+            <button class="mood-btn" onclick="selectMood(1,this)" title="แย่มาก">😞</button>
+            <button class="mood-btn" onclick="selectMood(2,this)" title="แย่">😕</button>
+            <button class="mood-btn" onclick="selectMood(3,this)" title="ปานกลาง">😐</button>
+            <button class="mood-btn" onclick="selectMood(4,this)" title="ดี">😊</button>
+            <button class="mood-btn" onclick="selectMood(5,this)" title="ดีมาก">😄</button>
+          </div>
+          <div class="form-group" style="margin-top:10px">
+            <label>บันทึกเพิ่มเติม</label>
+            <textarea id="moodNote" placeholder="บรรยายความรู้สึกในวันนี้..." style="min-height:60px"></textarea>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-purple" onclick="saveMood()">💾 บันทึกอารมณ์</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DENTAL -->
+    <div id="health-dental" class="subtab-content">
+      <div class="card">
+        <div class="card-header green"><span class="icon">🦷</span> สุขภาพช่องปากและสายตา</div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group"><label>ตรวจฟันล่าสุด</label><input type="date" id="h_dentalDate"></div>
+            <div class="form-group"><label>ทันตแพทย์</label><input type="text" id="h_dentist" placeholder="ชื่อทันตแพทย์ / คลินิก"></div>
+            <div class="form-group"><label>ค่าสายตาซ้าย</label><input type="text" id="h_eyeL" placeholder="-2.50"></div>
+            <div class="form-group"><label>ค่าสายตาขวา</label><input type="text" id="h_eyeR" placeholder="-2.00"></div>
+            <div class="form-group" style="grid-column:1/-1">
+              <label>บันทึก</label>
+              <textarea id="h_dentalNote" placeholder="อาการ, การรักษา, ยา..."></textarea>
+            </div>
+          </div>
+          <div class="btn-row"><button class="btn btn-primary" onclick="saveDental()">💾 บันทึก</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VACCINE -->
+    <div id="health-vaccine" class="subtab-content">
+      <div class="card">
+        <div class="card-header green"><span class="icon">💉</span> ประวัติวัคซีน</div>
+        <div class="card-body">
+          <div class="vaccine-row header">
+            <div>วัคซีน</div><div>วันที่ฉีด</div><div>เข็มที่</div><div>สถานที่</div>
+          </div>
+          <div id="vaccineList">
+            <div class="vaccine-row"><div>COVID-19 (Pfizer)</div><div>15/03/2566</div><div>3</div><div>รพ.จุฬาฯ</div></div>
+            <div class="vaccine-row"><div>ไข้หวัดใหญ่</div><div>01/11/2566</div><div>ประจำปี</div><div>คลินิกใกล้บ้าน</div></div>
+            <div class="vaccine-row"><div>ตับอักเสบ B</div><div>20/05/2565</div><div>3</div><div>รพ.ราษฎร์บูรณะ</div></div>
+          </div>
+          <hr class="divider">
+          <div class="section-title">📝 เพิ่มวัคซีนใหม่</div>
+          <div class="form-grid">
+            <div class="form-group"><label>ชื่อวัคซีน</label><input type="text" id="h_vacName" placeholder="COVID-19, ไข้หวัดใหญ่..."></div>
+            <div class="form-group"><label>วันที่</label><input type="date" id="h_vacDate"></div>
+            <div class="form-group"><label>เข็มที่</label><input type="text" id="h_vacDose" placeholder="1, 2, ประจำปี"></div>
+            <div class="form-group"><label>สถานที่</label><input type="text" id="h_vacPlace" placeholder="โรงพยาบาล / คลินิก"></div>
+          </div>
+          <div class="btn-row"><button class="btn btn-primary" onclick="addVaccine()">+ เพิ่มวัคซีน</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHRONIC -->
+    <div id="health-chronic" class="subtab-content">
+      <div class="card">
+        <div class="card-header red"><span class="icon">🩺</span> ติดตามโรคเรื้อรัง</div>
+        <div class="card-body">
+          <div class="text-muted" style="margin-bottom:14px">บันทึกค่าติดตามโรคประจำตัว HbA1c, LDL, Creatinine ฯลฯ</div>
+          <div class="form-grid">
+            <div class="form-group"><label>HbA1c (%)</label><input type="number" id="h_hba1c" placeholder="5.7" step="0.1"></div>
+            <div class="form-group"><label>LDL (mg/dL)</label><input type="number" id="h_ldl" placeholder="100"></div>
+            <div class="form-group"><label>HDL (mg/dL)</label><input type="number" id="h_hdl" placeholder="60"></div>
+            <div class="form-group"><label>Creatinine</label><input type="number" id="h_creatinine" placeholder="0.9" step="0.01"></div>
+            <div class="form-group"><label>eGFR</label><input type="number" id="h_egfr" placeholder="90"></div>
+            <div class="form-group"><label>Uric Acid</label><input type="number" id="h_uric" placeholder="6.0" step="0.1"></div>
+            <div class="form-group"><label>วันที่ตรวจ</label><input type="date" id="h_chronicDate"></div>
+          </div>
+          <div class="btn-row"><button class="btn btn-primary" onclick="saveChronic()">💾 บันทึก</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIFESTYLE -->
+    <div id="health-lifestyle" class="subtab-content">
+      <div class="card">
+        <div class="card-header green"><span class="icon">🌿</span> บันทึกไลฟ์สไตล์ประจำวัน</div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group"><label>ก้าวเดิน (steps)</label><input type="number" id="h_steps" placeholder="8500"></div>
+            <div class="form-group"><label>นอนหลับ (ชั่วโมง)</label><input type="number" id="h_sleep" placeholder="7.5" step="0.5"></div>
+            <div class="form-group"><label>ดื่มน้ำ (แก้ว)</label><input type="number" id="h_water" placeholder="8"></div>
+            <div class="form-group"><label>แคลอรี่ที่เผา</label><input type="number" id="h_calories" placeholder="450"></div>
+            <div class="form-group"><label>ออกกำลังกาย (นาที)</label><input type="number" id="h_exercise" placeholder="30"></div>
+            <div class="form-group"><label>วันที่</label><input type="date" id="h_lifeDate"></div>
+          </div>
+          <div class="btn-row"><button class="btn btn-primary" onclick="saveLifestyle()">💾 บันทึก</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HISTORY -->
+    <div id="health-history" class="subtab-content">
+      <div class="card">
+        <div class="card-header blue"><span class="icon">📋</span> ประวัติการรักษา</div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group"><label>วันที่</label><input type="date" id="h_histDate"></div>
+            <div class="form-group"><label>โรงพยาบาล / คลินิก</label><input type="text" id="h_histPlace" placeholder="รพ.จุฬาฯ"></div>
+            <div class="form-group"><label>แพทย์</label><input type="text" id="h_histDoctor" placeholder="นพ.สมชาย"></div>
+            <div class="form-group"><label>OPD/IPD</label>
+              <select id="h_histType"><option value="OPD">OPD (ผู้ป่วยนอก)</option><option value="IPD">IPD (ผู้ป่วยใน)</option><option value="ER">ER (ฉุกเฉิน)</option></select>
+            </div>
+            <div class="form-group" style="grid-column:1/-1">
+              <label>การวินิจฉัย / บันทึก</label>
+              <textarea id="h_histNote" placeholder="โรค, การรักษา, ยาที่ได้รับ..."></textarea>
+            </div>
+          </div>
+          <div class="btn-row"><button class="btn btn-primary" onclick="saveHistory()">💾 บันทึก</button></div>
+          <div class="mt-16">
+            <div class="section-title">📜 ประวัติล่าสุด</div>
+            <div id="historyList" class="timeline"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GENETICS -->
+    <div id="health-genetics" class="subtab-content">
+      <div class="card">
+        <div class="card-header purple"><span class="icon">🧬</span> ข้อมูลพันธุกรรมและประวัติครอบครัว</div>
+        <div class="card-body">
+          <div class="text-muted" style="margin-bottom:14px">โรคที่มีในครอบครัว (ปัจจัยเสี่ยงทางพันธุกรรม)</div>
+          <div class="tag-list" id="geneticTags">
+            <span class="tag" onclick="toggleGenetic(this,'เบาหวาน')">เบาหวาน</span>
+            <span class="tag" onclick="toggleGenetic(this,'ความดัน')">ความดัน</span>
+            <span class="tag" onclick="toggleGenetic(this,'หัวใจ')">หัวใจ</span>
+            <span class="tag" onclick="toggleGenetic(this,'มะเร็งเต้านม')">มะเร็งเต้านม</span>
+            <span class="tag" onclick="toggleGenetic(this,'มะเร็งลำไส้')">มะเร็งลำไส้</span>
+            <span class="tag" onclick="toggleGenetic(this,'อัลไซเมอร์')">อัลไซเมอร์</span>
+            <span class="tag" onclick="toggleGenetic(this,'โรคไต')">โรคไต</span>
+            <span class="tag" onclick="toggleGenetic(this,'หลอดเลือด')">หลอดเลือด</span>
+          </div>
+          <div class="form-group mt-16">
+            <label>บันทึกเพิ่มเติม</label>
+            <textarea id="p_geneticNote" placeholder="รายละเอียดเพิ่มเติมเกี่ยวกับประวัติครอบครัว..."></textarea>
+          </div>
+          <div class="btn-row"><button class="btn btn-purple" onclick="saveGenetics()">💾 บันทึก</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== TAB: WEARABLE ======================== -->
+  <div id="tab-wearable" class="tab-content">
+    <div class="card">
+      <div class="card-header blue"><span class="icon">⌚</span> ข้อมูลจาก Wearable Device</div>
+      <div class="card-body">
+        <div id="wearableStats">
+          <div class="wearable-grid">
+            <div class="wearable-box"><div class="wearable-icon">👟</div><div class="wearable-label">ก้าวเดิน (วันนี้)</div><div class="wearable-value" id="w_steps">--</div><div class="wearable-unit">steps</div><div class="wearable-trend" id="w_steps_trend"></div></div>
+            <div class="wearable-box"><div class="wearable-icon">❤️</div><div class="wearable-label">ชีพจร (เฉลี่ย 24h)</div><div class="wearable-value" id="w_hr">--</div><div class="wearable-unit">bpm</div><div class="wearable-trend" id="w_hr_trend"></div></div>
+            <div class="wearable-box"><div class="wearable-icon">🌙</div><div class="wearable-label">การนอนคืนที่แล้ว</div><div class="wearable-value" id="w_sleep">--</div><div class="wearable-unit">ชั่วโมง</div><div class="wearable-trend" id="w_sleep_trend"></div></div>
+            <div class="wearable-box"><div class="wearable-icon">🔥</div><div class="wearable-label">แคลอรี่ (วันนี้)</div><div class="wearable-value" id="w_cal">--</div><div class="wearable-unit">kcal</div><div class="wearable-trend" id="w_cal_trend"></div></div>
+            <div class="wearable-box"><div class="wearable-icon">🫁</div><div class="wearable-label">SpO2 (ล่าสุด)</div><div class="wearable-value" id="w_spo2">--</div><div class="wearable-unit">%</div><div class="wearable-trend" id="w_spo2_trend"></div></div>
+            <div class="wearable-box"><div class="wearable-icon">🧘</div><div class="wearable-label">Stress Score</div><div class="wearable-value" id="w_stress">--</div><div class="wearable-unit">/100</div><div class="wearable-trend" id="w_stress_trend"></div></div>
+          </div>
+        </div>
+        <div class="mini-chart">
+          <div class="mini-chart-title">ก้าวเดิน 7 วันที่ผ่านมา</div>
+          <div class="bar-chart" id="stepsChart"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header blue"><span class="icon">🔗</span> เชื่อมต่ออุปกรณ์</div>
+      <div class="card-body">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px">
+          <div style="border:1.5px solid #ddd;border-radius:10px;padding:14px;text-align:center">
+            <div style="font-size:28px;margin-bottom:6px">⌚</div>
+            <div style="font-weight:600;margin-bottom:4px">Apple Watch</div>
+            <div style="font-size:12px;color:var(--gray);margin-bottom:10px">Health Kit API</div>
+            <button class="btn btn-sm btn-blue" onclick="connectDevice('apple_watch')">เชื่อมต่อ</button>
+          </div>
+          <div style="border:1.5px solid #ddd;border-radius:10px;padding:14px;text-align:center">
+            <div style="font-size:28px;margin-bottom:6px">🏃</div>
+            <div style="font-weight:600;margin-bottom:4px">Garmin</div>
+            <div style="font-size:12px;color:var(--gray);margin-bottom:10px">Connect API</div>
+            <button class="btn btn-sm btn-blue" onclick="connectDevice('garmin')">เชื่อมต่อ</button>
+          </div>
+          <div style="border:1.5px solid #ddd;border-radius:10px;padding:14px;text-align:center">
+            <div style="font-size:28px;margin-bottom:6px">💪</div>
+            <div style="font-weight:600;margin-bottom:4px">Fitbit</div>
+            <div style="font-size:12px;color:var(--gray);margin-bottom:10px">Fitbit API</div>
+            <button class="btn btn-sm btn-blue" onclick="connectDevice('fitbit')">เชื่อมต่อ</button>
+          </div>
+          <div style="border:1.5px solid #ddd;border-radius:10px;padding:14px;text-align:center">
+            <div style="font-size:28px;margin-bottom:6px">🩺</div>
+            <div style="font-weight:600;margin-bottom:4px">เครื่องวัดความดัน</div>
+            <div style="font-size:12px;color:var(--gray);margin-bottom:10px">Bluetooth LE</div>
+            <button class="btn btn-sm btn-blue" onclick="connectDevice('bp_meter')">เชื่อมต่อ</button>
+          </div>
+          <div style="border:1.5px solid #ddd;border-radius:10px;padding:14px;text-align:center">
+            <div style="font-size:28px;margin-bottom:6px">🩸</div>
+            <div style="font-weight:600;margin-bottom:4px">Glucometer</div>
+            <div style="font-size:12px;color:var(--gray);margin-bottom:10px">Bluetooth LE</div>
+            <button class="btn btn-sm btn-blue" onclick="connectDevice('glucometer')">เชื่อมต่อ</button>
+          </div>
+          <div style="border:1.5px solid #ddd;border-radius:10px;padding:14px;text-align:center">
+            <div style="font-size:28px;margin-bottom:6px">📱</div>
+            <div style="font-weight:600;margin-bottom:4px">บันทึกด้วยตนเอง</div>
+            <div style="font-size:12px;color:var(--gray);margin-bottom:10px">Manual Entry</div>
+            <button class="btn btn-sm btn-primary" onclick="manualWearableEntry()">บันทึก</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header blue"><span class="icon">📝</span> บันทึก Wearable ด้วยตนเอง</div>
+      <div class="card-body" id="manualWearableForm" style="display:none">
+        <div class="form-grid">
+          <div class="form-group"><label>ประเภทอุปกรณ์</label>
+            <select id="w_deviceType">
+              <option value="apple_watch">Apple Watch</option>
+              <option value="garmin">Garmin</option>
+              <option value="fitbit">Fitbit</option>
+              <option value="manual">บันทึกมือ</option>
+            </select>
+          </div>
+          <div class="form-group"><label>ก้าวเดิน</label><input type="number" id="w_mSteps" placeholder="8500"></div>
+          <div class="form-group"><label>ชีพจรเฉลี่ย (bpm)</label><input type="number" id="w_mHr" placeholder="72"></div>
+          <div class="form-group"><label>การนอน (ชั่วโมง)</label><input type="number" id="w_mSleep" placeholder="7.5" step="0.5"></div>
+          <div class="form-group"><label>แคลอรี่ (kcal)</label><input type="number" id="w_mCal" placeholder="450"></div>
+          <div class="form-group"><label>SpO2 (%)</label><input type="number" id="w_mSpo2" placeholder="98"></div>
+          <div class="form-group"><label>วันที่</label><input type="date" id="w_mDate"></div>
+        </div>
+        <div class="btn-row"><button class="btn btn-blue" onclick="saveWearableManual()">💾 บันทึก Wearable</button></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header blue"><span class="icon">📜</span> ประวัติ Wearable (100 รายการล่าสุด)</div>
+      <div class="card-body">
+        <div class="table-wrap">
+          <table class="records-table">
+            <thead><tr><th>วันที่</th><th>อุปกรณ์</th><th>ก้าว</th><th>HR</th><th>นอน</th><th>แคลอรี่</th></tr></thead>
+            <tbody id="wearableHistory"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== TAB: LEARNING ======================== -->
+  <div id="tab-learning" class="tab-content">
+    <div class="card">
+      <div class="card-header blue"><span class="icon">🎓</span> การเรียนรู้ตลอดชีวิต</div>
+      <div class="card-body">
+        <div class="section-title">📚 บันทึกการเรียนรู้</div>
+        <div class="form-grid">
+          <div class="form-group"><label>ประเภท</label>
+            <select id="l_type">
+              <option value="course">คอร์สออนไลน์</option>
+              <option value="book">หนังสือ</option>
+              <option value="seminar">สัมมนา/อบรม</option>
+              <option value="skill">ทักษะใหม่</option>
+              <option value="certificate">ใบรับรอง</option>
+              <option value="degree">ปริญญา</option>
+            </select>
+          </div>
+          <div class="form-group"><label>ชื่อหลักสูตร/หนังสือ</label><input type="text" id="l_title" placeholder="Python for Beginners"></div>
+          <div class="form-group"><label>ผู้สอน/สำนักพิมพ์</label><input type="text" id="l_provider" placeholder="Coursera, Udemy..."></div>
+          <div class="form-group"><label>วันที่เสร็จ</label><input type="date" id="l_date"></div>
+          <div class="form-group"><label>ชั่วโมงเรียน</label><input type="number" id="l_hours" placeholder="20"></div>
+          <div class="form-group"><label>คะแนน/เกรด</label><input type="text" id="l_score" placeholder="95/100 หรือ A"></div>
+        </div>
+        <div class="btn-row"><button class="btn btn-blue" onclick="saveLearning()">💾 บันทึกการเรียนรู้</button></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header blue"><span class="icon">⏳</span> เส้นทางการเรียนรู้ของฉัน</div>
+      <div class="card-body">
+        <div id="learningTimeline" class="timeline"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== TAB: AI ======================== -->
+  <div id="tab-ai" class="tab-content">
+    <div class="ai-greeting">
+      <h3>🤖 AIตลอดชีวิต — ผู้ช่วยสุขภาพส่วนตัวของคุณ</h3>
+      <p style="font-size:14px;color:var(--purple-dark)">วิเคราะห์ข้อมูลสุขภาพ แนะนำแบบเฉพาะบุคคล ตลอด 24 ชั่วโมง</p>
+      <div class="quick-summary">
+        <div class="qs-item"><div class="qs-label">BMI</div><div class="qs-val" id="ai_bmi">--</div></div>
+        <div class="qs-item"><div class="qs-label">ความดัน</div><div class="qs-val" id="ai_bp">--</div></div>
+        <div class="qs-item"><div class="qs-label">บันทึกสุขภาพ</div><div class="qs-val" id="ai_records">0</div></div>
+        <div class="qs-item"><div class="qs-label">ก้าวเดิน</div><div class="qs-val" id="ai_steps">--</div></div>
+      </div>
+    </div>
+
+    <!-- Proactive Alerts -->
+    <div class="card" id="alertCard">
+      <div class="card-header red"><span class="icon">🔴</span> แจ้งเตือนสุขภาพ</div>
+      <div class="card-body">
+        <div class="alert-list" id="healthAlerts"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header purple"><span class="icon">📊</span> AI วิเคราะห์แนวโน้มสุขภาพ</div>
+      <div class="card-body" id="aiTrendAnalysis">
+        <div class="text-muted">กำลังวิเคราะห์ข้อมูล...</div>
+      </div>
+    </div>
+
+    <div class="quick-btns" id="quickBtns">
+      <button class="quick-btn" onclick="askQuick('วิเคราะห์สุขภาพโดยรวมของฉัน')">📊 วิเคราะห์สุขภาพ</button>
+      <button class="quick-btn" onclick="askQuick('แนะนำแผนอาหารที่เหมาะกับฉัน')">🥗 แผนอาหาร</button>
+      <button class="quick-btn" onclick="askQuick('แนะนำการออกกำลังกายที่เหมาะสม')">🏃 ออกกำลังกาย</button>
+      <button class="quick-btn" onclick="askQuick('วิเคราะห์แนวโน้มความดันโลหิตของฉัน')">❤️ วิเคราะห์ความดัน</button>
+      <button class="quick-btn" onclick="askQuick('ฉันควรพักผ่อนวันละกี่ชั่วโมง')">😴 คุณภาพการนอน</button>
+      <button class="quick-btn" onclick="askQuick('ความเสี่ยงสุขภาพของฉันมีอะไรบ้าง')">⚠️ ความเสี่ยง</button>
+    </div>
+
+    <div class="card">
+      <div class="card-header purple"><span class="icon">💬</span> สนทนากับ AIตลอดชีวิต</div>
+      <div class="card-body" style="padding:0">
+        <div class="chat-window" id="chatWindow"></div>
+        <div style="padding:12px 16px;border-top:1px solid var(--gray-light)">
+          <div class="chat-input-row">
+            <input type="text" id="chatInput" placeholder="ถามเรื่องสุขภาพ การเรียนรู้ หรือขอคำแนะนำ..." onkeydown="chatOnEnter(event)">
+            <button class="btn-send" id="btnSend" onclick="sendChat()">➤</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== TAB: LINE ======================== -->
+  <div id="tab-line" class="tab-content">
+    <div class="line-guide-card">
+      <h3>📱 AIตลอดชีวิต บน LINE</h3>
+      <p>บันทึกสุขภาพง่ายๆ ผ่าน LINE — พิมพ์ข้อความหรือส่งรูปผลแล็บ</p>
+      <div class="qr-placeholder">
+        <div>
+          <div style="font-size:32px;margin-bottom:8px">📱</div>
+          <div style="font-weight:600">สแกน QR</div>
+          <div style="font-size:11px;margin-top:4px">เพิ่มเพื่อน AIตลอดชีวิต</div>
+        </div>
+      </div>
+      <div style="font-size:13px;opacity:.9">หรือค้นหา LINE ID: @aitlodchivit</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header green"><span class="icon">📝</span> วิธีพิมพ์บันทึกข้อมูลสุขภาพ</div>
+      <div class="card-body">
+        <div class="line-cmd-grid">
+          <div class="line-cmd-item">
+            <span class="cmd-code">น้ำหนัก 70 กก</span>
+            <span class="cmd-desc">บันทึกน้ำหนัก 70 กิโลกรัม</span>
+          </div>
+          <div class="line-cmd-item">
+            <span class="cmd-code">ความดัน 120/80</span>
+            <span class="cmd-desc">บันทึกความดันโลหิต</span>
+          </div>
+          <div class="line-cmd-item">
+            <span class="cmd-code">น้ำตาล 105</span>
+            <span class="cmd-desc">บันทึกน้ำตาลในเลือด mg/dL</span>
+          </div>
+          <div class="line-cmd-item">
+            <span class="cmd-code">ชีพจร 75</span>
+            <span class="cmd-desc">บันทึกอัตราชีพจร bpm</span>
+          </div>
+          <div class="line-cmd-item">
+            <span class="cmd-code">ก้าว 8500</span>
+            <span class="cmd-desc">บันทึกก้าวเดินวันนี้</span>
+          </div>
+          <div class="line-cmd-item">
+            <span class="cmd-code">นอน 7 ชม</span>
+            <span class="cmd-desc">บันทึกชั่วโมงการนอน</span>
+          </div>
+          <div class="line-cmd-item">
+            <span class="cmd-code">อุณหภูมิ 36.5</span>
+            <span class="cmd-desc">บันทึกอุณหภูมิร่างกาย °C</span>
+          </div>
+          <div class="line-cmd-item">
+            <span class="cmd-code">ออกซิเจน 98</span>
+            <span class="cmd-desc">บันทึก SpO2 %</span>
+          </div>
+          <div class="line-cmd-item">
+            <span class="cmd-code">น้ำ 8 แก้ว</span>
+            <span class="cmd-desc">บันทึกการดื่มน้ำ</span>
+          </div>
+          <div class="line-cmd-item">
+            <span class="cmd-code">อารมณ์ 4</span>
+            <span class="cmd-desc">บันทึกอารมณ์วันนี้ (1-5)</span>
+          </div>
+          <div class="line-cmd-item">
+            <span class="cmd-code">ไขมัน 185</span>
+            <span class="cmd-desc">บันทึกคอเลสเตอรอล mg/dL</span>
+          </div>
+          <div class="line-cmd-item">
+            <span class="cmd-code">หรือถามอะไรก็ได้</span>
+            <span class="cmd-desc">AIตลอดชีวิต ตอบทุกคำถามสุขภาพ</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header blue"><span class="icon">📷</span> ส่งรูปภาพเพื่อบันทึก</div>
+      <div class="card-body">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px">
+          <div style="border:1.5px solid #ddd;border-radius:10px;padding:14px;text-align:center">
+            <div style="font-size:32px;margin-bottom:8px">🧪</div>
+            <div style="font-weight:600;font-size:14px">ผลแล็บ</div>
+            <div style="font-size:12px;color:var(--gray);margin-top:4px">AI อ่านและบันทึกค่าอัตโนมัติ</div>
+          </div>
+          <div style="border:1.5px solid #ddd;border-radius:10px;padding:14px;text-align:center">
+            <div style="font-size:32px;margin-bottom:8px">💊</div>
+            <div style="font-weight:600;font-size:14px">ใบสั่งยา</div>
+            <div style="font-size:12px;color:var(--gray);margin-top:4px">บันทึกชื่อยาและขนาด</div>
+          </div>
+          <div style="border:1.5px solid #ddd;border-radius:10px;padding:14px;text-align:center">
+            <div style="font-size:32px;margin-bottom:8px">🩺</div>
+            <div style="font-weight:600;font-size:14px">มิเตอร์วัดความดัน</div>
+            <div style="font-size:12px;color:var(--gray);margin-top:4px">อ่านค่าและบันทึกทันที</div>
+          </div>
+          <div style="border:1.5px solid #ddd;border-radius:10px;padding:14px;text-align:center">
+            <div style="font-size:32px;margin-bottom:8px">🩸</div>
+            <div style="font-weight:600;font-size:14px">Glucose Meter</div>
+            <div style="font-size:12px;color:var(--gray);margin-top:4px">อ่านค่าน้ำตาลในเลือด</div>
+          </div>
+        </div>
+        <div class="alert-item green mt-16" style="border-radius:10px">
+          <span style="font-size:20px">💡</span>
+          <span>ส่งรูปภาพที่ชัดเจน ตัวเลขต้องอ่านได้ AIตลอดชีวิต จะอ่านและบันทึกข้อมูลให้โดยอัตโนมัติ พร้อมแจ้งเตือนถ้าพบค่าผิดปกติ</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header blue"><span class="icon">⌚</span> เชื่อมต่ออุปกรณ์อัตโนมัติ</div>
+      <div class="card-body">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div class="alert-item blue" style="border-radius:10px">
+            <span style="font-size:20px">⌚</span>
+            <span><strong>Garmin, Fitbit, Apple Watch</strong> — ข้อมูลซิงค์อัตโนมัติทุกวัน ผ่าน API</span>
+          </div>
+          <div class="alert-item blue" style="border-radius:10px">
+            <span style="font-size:20px">🩺</span>
+            <span><strong>เครื่องวัดความดัน Bluetooth</strong> — เชื่อมต่อและส่งข้อมูลผ่านแอป LINE</span>
+          </div>
+          <div class="alert-item blue" style="border-radius:10px">
+            <span style="font-size:20px">🩸</span>
+            <span><strong>Glucometer</strong> — ส่งผลวัดน้ำตาลตรงจากเครื่องสู่ระบบ</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header purple"><span class="icon">🧪</span> ทดสอบ LINE Health API</div>
+      <div class="card-body">
+        <div class="text-muted" style="margin-bottom:14px">จำลองการส่งข้อมูลจาก LINE มาที่ API</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>ข้อความทดสอบ</label>
+            <input type="text" id="lineTestMsg" placeholder="น้ำหนัก 72 กก หรือ ความดัน 125/82">
+          </div>
+          <div class="form-group">
+            <label>ประเภท</label>
+            <select id="lineTestType">
+              <option value="text">ข้อความ</option>
+              <option value="image">รูปภาพ (จำลอง)</option>
+            </select>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-purple" onclick="testLineApi()">📤 ทดสอบ API</button>
+        </div>
+        <div id="lineTestResult" style="margin-top:14px;display:none"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== TAB: CLINICAL PORTAL ======================== -->
+  <div id="tab-clinical" class="tab-content">
+    <div class="card">
+      <div class="card-header blue"><span class="icon">🏥</span> Clinical Portal — สำหรับบุคลากรทางการแพทย์</div>
+      <div class="card-body">
+        <div class="alert-item amber" style="border-radius:10px;margin-bottom:16px">
+          <span>⚠️</span>
+          <span>ระบบนี้สำหรับบุคลากรทางการแพทย์ที่ได้รับอนุญาต การเข้าถึงข้อมูลผู้ป่วยถูกบันทึกทุกครั้งตาม PDPA</span>
+        </div>
+
+        <!-- Login Panel -->
+        <div id="clinicalLoginPanel">
+          <div class="clinical-login">
+            <h4>🔐 เข้าสู่ระบบ Clinical Portal</h4>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>รหัสบุคลากร</label>
+                <input type="text" id="cl_id" placeholder="MD-12345 หรือ RN-67890">
+              </div>
+              <div class="form-group">
+                <label>รหัสสถานพยาบาล</label>
+                <input type="text" id="cl_facility" placeholder="11001 (รพ.จุฬาฯ)">
+              </div>
+            </div>
+            <div style="margin-bottom:14px">
+              <label style="font-size:13px;font-weight:600;color:var(--gray);display:block;margin-bottom:8px">ประเภทบุคลากร</label>
+              <div class="clinician-type-select">
+                <button class="clinician-type-btn active" onclick="selectClinicianType(this,'doctor')">👨‍⚕️ แพทย์</button>
+                <button class="clinician-type-btn" onclick="selectClinicianType(this,'nurse')">👩‍⚕️ พยาบาล</button>
+                <button class="clinician-type-btn" onclick="selectClinicianType(this,'pharmacist')">💊 เภสัชกร</button>
+                <button class="clinician-type-btn" onclick="selectClinicianType(this,'physio')">🦿 นักกายภาพ</button>
+                <button class="clinician-type-btn" onclick="selectClinicianType(this,'other')">👤 อื่นๆ</button>
+              </div>
+            </div>
+            <button class="btn btn-blue" onclick="clinicalLogin()">🔐 เข้าสู่ระบบ</button>
+          </div>
+        </div>
+
+        <!-- Clinical Work Panel -->
+        <div id="clinicalWorkPanel" class="clinical-panel">
+          <div class="clinician-badge">
+            <span style="font-size:24px">👨‍⚕️</span>
+            <div>
+              <div style="font-weight:600" id="cl_badgeName">-</div>
+              <div style="font-size:12px;opacity:.8" id="cl_badgeInfo">-</div>
+            </div>
+            <button class="btn btn-sm" style="margin-left:auto;background:rgba(255,255,255,.2);color:var(--white);border:none" onclick="clinicalLogout()">ออกจากระบบ</button>
+          </div>
+
+          <div class="section-title">🔍 ค้นหาผู้ป่วย</div>
+          <div class="flex-row" style="margin-bottom:16px">
+            <input type="text" id="cl_searchId" placeholder="เลขบัตรประชาชน 13 หลัก" style="flex:1;padding:12px 16px;border:1.5px solid #ddd;border-radius:8px;font-family:'Sarabun',sans-serif;font-size:14px;outline:none">
+            <button class="btn btn-blue" onclick="searchPatient()">🔍 ค้นหา</button>
+          </div>
+          <div id="patientInfo" style="display:none"></div>
+          <div id="clinicalRecordForm" style="display:none">
+            <div class="card" style="border:2px solid var(--blue)">
+              <div class="card-header blue"><span class="icon">📋</span> บันทึกข้อมูลทางการแพทย์</div>
+              <div class="card-body">
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label>ประเภทบันทึก</label>
+                    <select id="cl_recordType">
+                      <option value="diagnosis">การวินิจฉัย (Diagnosis)</option>
+                      <option value="vital">Vital Signs</option>
+                      <option value="lab">ผลแล็บ (Lab Results)</option>
+                      <option value="medication">การสั่งยา</option>
+                      <option value="procedure">หัตถการ</option>
+                      <option value="discharge">สรุปการรักษา</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>วันที่</label>
+                    <input type="date" id="cl_date">
+                  </div>
+                  <div class="form-group" style="grid-column:1/-1">
+                    <label>รายละเอียด</label>
+                    <textarea id="cl_data" placeholder="ICD-10, ค่าต่างๆ, ชื่อยา/ขนาด, รายละเอียดหัตถการ..." style="min-height:120px"></textarea>
+                  </div>
+                </div>
+                <div class="btn-row">
+                  <button class="btn btn-blue" onclick="saveClinicalRecord()">💾 บันทึกข้อมูล</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== TAB: REPORT ======================== -->
+  <div id="tab-report" class="tab-content">
+    <div class="report-card">
+      <div class="report-section-title">📊 สรุปสุขภาพส่วนตัว</div>
+      <div class="stat-grid" id="reportStats"></div>
+    </div>
+
+    <div class="report-card">
+      <div class="report-section-title">📈 แนวโน้มสุขภาพ 3 เดือน</div>
+      <div id="trendSummary"></div>
+    </div>
+
+    <div class="report-card">
+      <div class="report-section-title">🎓 สรุปการเรียนรู้</div>
+      <div id="learningSummary"></div>
+    </div>
+
+    <div class="report-card">
+      <div class="report-section-title">🛡️ ข้อมูลส่วนตัว & PDPA</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="alert-item green" style="border-radius:10px">
+          <span>✅</span>
+          <span>ข้อมูลของคุณถูกเก็บตาม PDPA พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล พ.ศ.2562</span>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-blue" onclick="exportMyData()">📥 ดาวน์โหลดข้อมูลทั้งหมด</button>
+          <button class="btn btn-danger" onclick="deleteMyData()">🗑️ ลบข้อมูลทั้งหมด (สิทธิ์ลืม)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /mainApp -->
+
+<div id="toast" class="toast"></div>
+<button class="scroll-top" onclick="scrollToTop()" title="กลับขึ้นบน">↑</button>
+
+<script>
+// ==================== CONSTANTS ====================
+const API = '';
+const DEMO_CITIZEN = '3400100123456';
+const DEMO_NAME = 'นายวิชัย สุขสมบูรณ์';
+
+// ==================== STATE ====================
+let currentCitizenId = '';
+let currentName = '';
+let myConditions = [];
+let myMeds = [];
+let myGeneticRisks = [];
+let chatHistory = [];
+let selectedMood = 0;
+let phqAnswers = {};
+let clinicianType = 'doctor';
+let clinicianLoggedIn = false;
+let currentPatientId = '';
+let pdpaAccepted = false;
+
+// ==================== SEED DATA (DEMO) ====================
+const DEMO_HEALTH_SEED = [
+  { id:'H001', category:'physical', data:{ weight:78, height:172, waist:88, bmi:26.4 }, timestamp:'2025-01-15T08:00:00Z' },
+  { id:'H002', category:'physical', data:{ weight:77.5, height:172, waist:87, bmi:26.2 }, timestamp:'2025-02-15T08:00:00Z' },
+  { id:'H003', category:'physical', data:{ weight:76.8, height:172, waist:86, bmi:25.9 }, timestamp:'2025-03-15T08:00:00Z' },
+  { id:'H004', category:'vital', data:{ bp:'128/82', pulse:75, spo2:98, temp:36.5, sugar:105, chol:190 }, timestamp:'2025-03-01T08:00:00Z' },
+  { id:'H005', category:'vital', data:{ bp:'125/80', pulse:72, spo2:99, temp:36.4, sugar:98, chol:185 }, timestamp:'2025-04-01T08:00:00Z' },
+  { id:'H006', category:'vital', data:{ bp:'130/85', pulse:78, spo2:97, temp:36.6, sugar:112, chol:195 }, timestamp:'2025-05-01T08:00:00Z' },
+  { id:'W001', category:'wearable', source:'garmin', data:{ steps:9234, heartRate:71, sleep:7.2, calories:512, spo2:98 }, timestamp:'2025-05-23T23:59:00Z' },
+  { id:'W002', category:'wearable', source:'garmin', data:{ steps:7820, heartRate:73, sleep:6.8, calories:448, spo2:97 }, timestamp:'2025-05-24T23:59:00Z' },
+  { id:'C001', category:'clinical', source:'clinical', clinicianId:'MD-00123', clinicianType:'doctor', facilityCode:'11001', verified:true, data:{ diagnosis:'ความดันโลหิตสูงระดับ 1 (ICD I10)', treatment:'ปรับพฤติกรรม ลดเกลือ ออกกำลังกาย', medication:'ยังไม่สั่งยา' }, timestamp:'2025-03-10T10:00:00Z' },
+  { id:'H007', category:'lifestyle', data:{ steps:8500, sleep:7.5, water:8, calories:480, exercise:35 }, timestamp:'2025-05-25T00:00:00Z' },
+];
+
+// ==================== PDPA ====================
+function checkPdpa() {
+  const accepted = localStorage.getItem('pdpa_accepted');
+  if (!accepted) {
+    document.getElementById('pdpaOverlay').style.display = 'flex';
+  } else {
+    pdpaAccepted = true;
+  }
+}
+
+function acceptPdpa() {
+  localStorage.setItem('pdpa_accepted', 'true');
+  pdpaAccepted = true;
+  document.getElementById('pdpaOverlay').style.display = 'none';
+}
+
+function rejectPdpa() {
+  document.getElementById('pdpaOverlay').style.display = 'none';
+  document.getElementById('loginScreen').innerHTML = '<div style="text-align:center;padding:60px;color:#fff"><div style="font-size:48px;margin-bottom:16px">🔒</div><div style="font-size:20px;font-weight:600">ไม่สามารถใช้งานได้</div><div style="margin-top:12px;opacity:.8">กรุณายอมรับข้อตกลง PDPA เพื่อใช้งานระบบ</div><button onclick="location.reload()" style="margin-top:20px;padding:12px 24px;border-radius:8px;border:2px solid #fff;background:transparent;color:#fff;font-size:15px;cursor:pointer">ลองใหม่</button></div>';
+}
+
+// ==================== LOGIN / LOGOUT ====================
+function doLogin() {
+  const cId = document.getElementById('loginCitizenId').value.trim();
+  const name = document.getElementById('loginName').value.trim();
+  if (cId.length < 10 || !name) { showToast('กรุณากรอกข้อมูลให้ครบ'); return; }
+  if (!pdpaAccepted) { checkPdpa(); return; }
+  currentCitizenId = cId;
+  currentName = name;
+  document.getElementById('topBarName').textContent = name;
+  document.getElementById('topBarId').textContent = 'บัตรประชาชน: ' + cId;
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('mainApp').style.display = 'block';
+  initApp();
+}
+
+function doLogout() {
+  if (!confirm('ออกจากระบบ?')) return;
+  currentCitizenId = '';
+  currentName = '';
+  chatHistory = [];
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('mainApp').style.display = 'none';
+  document.getElementById('loginCitizenId').value = '';
+  document.getElementById('loginName').value = '';
+}
+
+// ==================== INIT ====================
+function initApp() {
+  const today = new Date().toISOString().split('T')[0];
+  ['h_physDate','h_vitalDate','h_dentalDate','h_lifeDate','h_histDate','h_vacDate','h_chronicDate','cl_date','w_mDate','l_date'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = today;
+  });
+  document.getElementById('p_citizenId').value = currentCitizenId;
+  if (currentCitizenId === DEMO_CITIZEN) {
+    seedDemoData();
+    document.getElementById('p_name').value = DEMO_NAME;
+    document.getElementById('p_dob').value = '1975-06-15';
+    document.getElementById('p_phone').value = '081-234-5678';
+    myConditions = ['ความดันโลหิตสูง'];
+    myMeds = ['Amlodipine 5mg (เช้า)', 'Atorvastatin 10mg (ก่อนนอน)'];
+    renderConditionTags();
+    renderMeds();
+  }
+  loadProfile();
+  renderPhqQuestions();
+  renderLearningTimeline();
+  buildWeightChart();
+  buildBpChart();
+  buildStepsChart();
+  loadWearableData();
+  updateAiSummary();
+  generateHealthAlerts();
+  generateTrendAnalysis();
+  generateReport();
+  document.getElementById('manualWearableForm').style.display = 'none';
+  addChatMsg('ai', 'สวัสดีครับ! ผม AIตลอดชีวิต ผู้ช่วยสุขภาพส่วนตัวของคุณ 🤖\nวันนี้สุขภาพเป็นอย่างไรบ้าง? ถามเรื่องสุขภาพ การออกกำลังกาย อาหาร หรือบันทึกข้อมูลได้เลยครับ');
+}
+
+function seedDemoData() {
+  const key = 'health_' + DEMO_CITIZEN;
+  if (!localStorage.getItem(key)) {
+    localStorage.setItem(key, JSON.stringify(DEMO_HEALTH_SEED));
+    postHealth(DEMO_HEALTH_SEED);
+  }
+}
+
+async function postHealth(records) {
+  for (const r of records) {
+    try {
+      await fetch(API + '/api/lifelong/health', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ citizenId: DEMO_CITIZEN, category: r.category, data: r.data })
+      });
+    } catch(e) {}
+  }
+}
+
+// ==================== TABS ====================
+function showTab(name) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    if (btn.textContent.toLowerCase().includes(name) || btn.getAttribute('onclick').includes("'" + name + "'")) btn.classList.add('active');
+  });
+  if (name === 'wearable') loadWearableData();
+  if (name === 'ai') updateAiSummary();
+  if (name === 'report') generateReport();
+}
+
+function showHealthSub(name) {
+  document.querySelectorAll('.subtab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.subtab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('health-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ==================== PROFILE ====================
+function toggleCondition(el, val) {
+  el.classList.toggle('selected');
+  if (el.classList.contains('selected')) { if (!myConditions.includes(val)) myConditions.push(val); }
+  else { myConditions = myConditions.filter(c => c !== val); }
+}
+
+function addCustomCondition() {
+  const val = document.getElementById('conditionCustom').value.trim();
+  if (!val) return;
+  if (!myConditions.includes(val)) myConditions.push(val);
+  const span = document.createElement('span');
+  span.className = 'tag selected';
+  span.textContent = val;
+  span.onclick = function() { toggleCondition(this, val); };
+  document.getElementById('conditionTags').appendChild(span);
+  document.getElementById('conditionCustom').value = '';
+}
+
+function renderConditionTags() {
+  document.querySelectorAll('#conditionTags .tag').forEach(tag => {
+    if (myConditions.includes(tag.textContent)) tag.classList.add('selected');
+  });
+}
+
+function addMed() {
+  const val = document.getElementById('medInput').value.trim();
+  if (!val) return;
+  myMeds.push(val);
+  document.getElementById('medInput').value = '';
+  renderMeds();
+}
+
+function renderMeds() {
+  const list = document.getElementById('medList');
+  list.innerHTML = myMeds.map((m, i) => "<div class='med-item'><span>" + m + "</span><button class='btn-remove' onclick='removeMed(" + i + ")'>✕</button></div>").join('');
+}
+
+function removeMed(i) { myMeds.splice(i, 1); renderMeds(); }
+
+function toggleGenetic(el, val) {
+  el.classList.toggle('selected');
+  if (el.classList.contains('selected')) { if (!myGeneticRisks.includes(val)) myGeneticRisks.push(val); }
+  else { myGeneticRisks = myGeneticRisks.filter(g => g !== val); }
+}
+
+async function saveProfile() {
+  const profile = {
+    citizenId: currentCitizenId,
+    name: document.getElementById('p_name').value,
+    dob: document.getElementById('p_dob').value,
+    gender: document.getElementById('p_gender').value,
+    bloodType: document.getElementById('p_bloodType').value,
+    phone: document.getElementById('p_phone').value,
+    address: document.getElementById('p_address').value,
+    emergency: document.getElementById('p_emergency').value,
+    conditions: myConditions,
+    medications: myMeds,
+    drugAllergy: document.getElementById('p_drugAllergy').value,
+    foodAllergy: document.getElementById('p_foodAllergy').value,
+    geneticRisks: myGeneticRisks,
+    age: calcAge(document.getElementById('p_dob').value)
+  };
+  localStorage.setItem('profile_' + currentCitizenId, JSON.stringify(profile));
+  try {
+    await fetch(API + '/api/lifelong/profile', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(profile) });
+  } catch(e) {}
+  showToast('บันทึกโปรไฟล์เรียบร้อย ✅');
+}
+
+function calcAge(dob) {
+  if (!dob) return null;
+  const diff = Date.now() - new Date(dob).getTime();
+  return Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+}
+
+function loadProfile() {
+  const saved = localStorage.getItem('profile_' + currentCitizenId);
+  if (!saved) return;
+  const p = JSON.parse(saved);
+  ['name','dob','gender','bloodType','phone','address','emergency','drugAllergy','foodAllergy'].forEach(k => {
+    const el = document.getElementById('p_' + k);
+    if (el && p[k]) el.value = p[k];
+  });
+  if (p.conditions) { myConditions = p.conditions; renderConditionTags(); }
+  if (p.medications) { myMeds = p.medications; renderMeds(); }
+}
+
+function saveGenetics() { showToast('บันทึกข้อมูลพันธุกรรมแล้ว ✅'); }
+
+// ==================== HEALTH RECORDS ====================
+function getLocalHealth() {
+  return JSON.parse(localStorage.getItem('health_' + currentCitizenId) || '[]');
+}
+function saveLocalHealth(records) {
+  localStorage.setItem('health_' + currentCitizenId, JSON.stringify(records));
+}
+function addHealthRecord(record) {
+  const records = getLocalHealth();
+  records.push(record);
+  saveLocalHealth(records);
+  return record;
+}
+
+async function postRecord(category, data) {
+  addHealthRecord({ id:'H'+Date.now(), category, data, timestamp: new Date().toISOString() });
+  try {
+    await fetch(API + '/api/lifelong/health', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ citizenId: currentCitizenId, category, data }) });
+  } catch(e) {}
+}
+
+function savePhysical() {
+  const w = parseFloat(document.getElementById('h_weight').value);
+  const h = parseFloat(document.getElementById('h_height').value);
+  const waist = parseFloat(document.getElementById('h_waist').value);
+  if (!w) { showToast('กรอกน้ำหนักด้วย'); return; }
+  const bmi = h ? +(w / (h/100)**2).toFixed(1) : null;
+  postRecord('physical', { weight:w, height:h, waist, bmi, date: document.getElementById('h_physDate').value });
+  document.getElementById('sw_weight').textContent = w;
+  document.getElementById('sw_height').textContent = h || '--';
+  document.getElementById('sw_bmi').textContent = bmi || '--';
+  document.getElementById('sw_waist').textContent = waist || '--';
+  buildWeightChart();
+  showToast('บันทึกข้อมูลร่างกายแล้ว ✅');
+}
+
+function saveVitals() {
+  const bp = document.getElementById('h_bp').value;
+  const pulse = document.getElementById('h_pulse').value;
+  const spo2 = document.getElementById('h_spo2').value;
+  const temp = document.getElementById('h_temp').value;
+  const sugar = document.getElementById('h_sugar').value;
+  const chol = document.getElementById('h_chol').value;
+  if (!bp && !pulse) { showToast('กรอกข้อมูลอย่างน้อย 1 รายการ'); return; }
+  postRecord('vital', { bp, pulse: +pulse, spo2: +spo2, temp: +temp, sugar: +sugar, chol: +chol, date: document.getElementById('h_vitalDate').value });
+  if (bp) document.getElementById('sv_bp').textContent = bp;
+  if (pulse) document.getElementById('sv_pulse').textContent = pulse;
+  if (spo2) document.getElementById('sv_spo2').textContent = spo2;
+  if (temp) document.getElementById('sv_temp').textContent = temp;
+  if (sugar) document.getElementById('sv_sugar').textContent = sugar;
+  if (chol) document.getElementById('sv_chol').textContent = chol;
+  buildBpChart();
+  generateHealthAlerts();
+  showToast('บันทึกสัญญาณชีพแล้ว ✅');
+}
+
+function saveLifestyle() {
+  postRecord('lifestyle', {
+    steps: +document.getElementById('h_steps').value,
+    sleep: +document.getElementById('h_sleep').value,
+    water: +document.getElementById('h_water').value,
+    calories: +document.getElementById('h_calories').value,
+    exercise: +document.getElementById('h_exercise').value,
+    date: document.getElementById('h_lifeDate').value
+  });
+  showToast('บันทึกไลฟ์สไตล์แล้ว ✅');
+}
+
+function saveDental() {
+  postRecord('dental', {
+    dentalDate: document.getElementById('h_dentalDate').value,
+    dentist: document.getElementById('h_dentist').value,
+    eyeL: document.getElementById('h_eyeL').value,
+    eyeR: document.getElementById('h_eyeR').value,
+    note: document.getElementById('h_dentalNote').value
+  });
+  showToast('บันทึกข้อมูลฟัน/ตาแล้ว ✅');
+}
+
+function saveChronic() {
+  postRecord('chronic', {
+    hba1c: +document.getElementById('h_hba1c').value,
+    ldl: +document.getElementById('h_ldl').value,
+    hdl: +document.getElementById('h_hdl').value,
+    creatinine: +document.getElementById('h_creatinine').value,
+    egfr: +document.getElementById('h_egfr').value,
+    uric: +document.getElementById('h_uric').value,
+    date: document.getElementById('h_chronicDate').value
+  });
+  showToast('บันทึกข้อมูลโรคเรื้อรังแล้ว ✅');
+}
+
+function addVaccine() {
+  const name = document.getElementById('h_vacName').value.trim();
+  if (!name) { showToast('กรอกชื่อวัคซีน'); return; }
+  const date = document.getElementById('h_vacDate').value;
+  const dose = document.getElementById('h_vacDose').value;
+  const place = document.getElementById('h_vacPlace').value;
+  const row = document.createElement('div');
+  row.className = 'vaccine-row';
+  row.innerHTML = "<div>" + name + "</div><div>" + date + "</div><div>" + dose + "</div><div>" + place + "</div>";
+  document.getElementById('vaccineList').appendChild(row);
+  postRecord('vaccine', { name, date, dose, place });
+  showToast('เพิ่มวัคซีนแล้ว ✅');
+}
+
+function saveHistory() {
+  const note = document.getElementById('h_histNote').value.trim();
+  if (!note) { showToast('กรอกบันทึก'); return; }
+  const record = {
+    date: document.getElementById('h_histDate').value,
+    place: document.getElementById('h_histPlace').value,
+    doctor: document.getElementById('h_histDoctor').value,
+    type: document.getElementById('h_histType').value,
+    note
+  };
+  postRecord('history', record);
+  renderHistoryList();
+  showToast('บันทึกประวัติการรักษาแล้ว ✅');
+}
+
+function renderHistoryList() {
+  const records = getLocalHealth().filter(r => r.category === 'history' || r.category === 'clinical').sort((a,b) => new Date(b.timestamp)-new Date(a.timestamp));
+  const container = document.getElementById('historyList');
+  if (!container) return;
+  if (!records.length) { container.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div>ยังไม่มีประวัติการรักษา</div>'; return; }
+  container.innerHTML = records.slice(0,10).map(r => {
+    const d = r.data || {};
+    const label = r.source === 'clinical' ? '🏥 ' + (d.diagnosis || d.recordType || 'Clinical') : (d.type||'OPD') + ' — ' + (d.place||'');
+    return "<div class='timeline-item'><div class='timeline-dot " + (r.source==='clinical'?'blue':'') + "'></div><div class='timeline-card'><div class='timeline-year'>" + (d.date || r.timestamp.split('T')[0]) + "</div><div class='timeline-title'>" + label + "</div><div class='timeline-sub'>" + (d.note || d.treatment || d.doctor || '') + "</div>" + (r.verified ? "<span class='badge badge-blue' style='margin-top:6px'>✅ ยืนยันโดยแพทย์</span>" : '') + "</div></div>";
+  }).join('');
+}
+</script>
+
+<script>
+// ==================== MENTAL HEALTH ====================
+const PHQ_QUESTIONS = [
+  'รู้สึกหดหู่ เบื่อหน่าย หรือสิ้นหวัง',
+  'รู้สึกว่าทำกิจกรรมที่เคยชอบได้น้อยลง',
+  'รู้สึกกังวล ประหม่า หรือตึงเครียด',
+  'ไม่สามารถหยุดหรือควบคุมความกังวลได้'
+];
+const PHQ_OPTS = ['ไม่เลย (0)','บางครั้ง (1)','บ่อยครั้ง (2)','บ่อยมาก (3)'];
+
+function renderPhqQuestions() {
+  const container = document.getElementById('phqQuestions');
+  if (!container) return;
+  container.innerHTML = PHQ_QUESTIONS.map((q,i) => {
+    const opts = PHQ_OPTS.map((o,j) => "<span class='scale-opt' data-q='" + i + "' data-v='" + j + "' onclick='selectPhq(this," + i + "," + j + ")'>" + o + "</span>").join('');
+    return "<div class='scale-group'><div class='scale-question'>" + (i+1) + ". " + q + "</div><div class='scale-options'>" + opts + "</div></div>";
+  }).join('');
+}
+
+function selectPhq(el, q, v) {
+  document.querySelectorAll('[data-q="' + q + '"]').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+  phqAnswers[q] = v;
+}
+
+function calcPhq() {
+  if (Object.keys(phqAnswers).length < 4) { showToast('กรุณาตอบทุกข้อ'); return; }
+  const total = Object.values(phqAnswers).reduce((s,v) => s+v, 0);
+  const result = document.getElementById('phqResult');
+  let level, color, advice;
+  if (total <= 2) { level='ปกติ'; color='var(--green)'; advice='สุขภาพจิตดี รักษาระดับนี้ไว้'; }
+  else if (total <= 5) { level='เบา'; color='var(--amber)'; advice='อาจมีความเครียดเล็กน้อย ลองพักผ่อนและออกกำลังกาย'; }
+  else if (total <= 8) { level='ปานกลาง'; color='var(--orange)'; advice='ควรพูดคุยกับผู้ใกล้ชิดหรือผู้เชี่ยวชาญ'; }
+  else { level='มาก'; color='var(--red)'; advice='ควรพบจิตแพทย์หรือนักจิตวิทยาโดยเร็ว โทร 1323'; }
+  result.style.display = 'block';
+  result.innerHTML = "<div class='alert-item' style='border-radius:10px;border-left:4px solid " + color + ";background:" + color + "18'><div><div style='font-size:18px;font-weight:700;color:" + color + "'>คะแนน " + total + "/12 — " + level + "</div><div style='margin-top:6px'>" + advice + "</div></div></div>";
+  postRecord('mental_phq', { score: total, level, date: new Date().toISOString().split('T')[0] });
+}
+
+function selectMood(v, el) {
+  selectedMood = v;
+  document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function saveMood() {
+  if (!selectedMood) { showToast('เลือกอารมณ์ก่อน'); return; }
+  const moods = ['😞','😕','😐','😊','😄'];
+  postRecord('mood', { score: selectedMood, emoji: moods[selectedMood-1], note: document.getElementById('moodNote').value, date: new Date().toISOString().split('T')[0] });
+  showToast('บันทึกอารมณ์แล้ว ✅ (' + moods[selectedMood-1] + ' ' + selectedMood + '/5)');
+}
+
+// ==================== CHARTS ====================
+function buildBarChart(containerId, labels, values, color, maxH) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const max = Math.max(...values, 1);
+  container.innerHTML = values.map((v, i) => {
+    const h = Math.round((v / max) * (maxH || 70));
+    return "<div class='bar-col'><div class='bar-val'>" + v + "</div><div class='bar' style='height:" + h + "px;background:" + (color||'var(--green)') + "'></div><div class='bar-label'>" + (labels[i]||'') + "</div></div>";
+  }).join('');
+}
+
+function buildWeightChart() {
+  const records = getLocalHealth().filter(r => r.category === 'physical' && r.data.weight).sort((a,b) => new Date(a.timestamp)-new Date(b.timestamp)).slice(-6);
+  if (!records.length) return;
+  buildBarChart('weightChart', records.map(r => r.timestamp.split('T')[0].slice(5)), records.map(r => r.data.weight), 'var(--green)', 70);
+  const latest = records[records.length-1].data;
+  if (latest.weight) document.getElementById('sw_weight').textContent = latest.weight;
+  if (latest.height) document.getElementById('sw_height').textContent = latest.height;
+  if (latest.bmi) document.getElementById('sw_bmi').textContent = latest.bmi;
+  if (latest.waist) document.getElementById('sw_waist').textContent = latest.waist;
+}
+
+function buildBpChart() {
+  const records = getLocalHealth().filter(r => r.category === 'vital' && r.data.bp).sort((a,b) => new Date(a.timestamp)-new Date(b.timestamp)).slice(-6);
+  if (!records.length) return;
+  const systolics = records.map(r => { const parts = (r.data.bp||'').split('/'); return +parts[0]||0; });
+  buildBarChart('bpChart', records.map(r => r.timestamp.split('T')[0].slice(5)), systolics, 'var(--red)', 70);
+  const latest = records[records.length-1].data;
+  if (latest.bp) document.getElementById('sv_bp').textContent = latest.bp;
+  if (latest.pulse) document.getElementById('sv_pulse').textContent = latest.pulse;
+  if (latest.spo2) document.getElementById('sv_spo2').textContent = latest.spo2;
+  if (latest.temp) document.getElementById('sv_temp').textContent = latest.temp;
+  if (latest.sugar) document.getElementById('sv_sugar').textContent = latest.sugar;
+  if (latest.chol) document.getElementById('sv_chol').textContent = latest.chol;
+}
+
+function buildStepsChart() {
+  const records = getLocalHealth().filter(r => (r.category === 'wearable' || r.category === 'lifestyle') && r.data.steps).sort((a,b) => new Date(a.timestamp)-new Date(b.timestamp)).slice(-7);
+  if (!records.length) { buildBarChart('stepsChart', ['ไม่มีข้อมูล'], [0], 'var(--blue)', 70); return; }
+  buildBarChart('stepsChart', records.map(r => r.timestamp.split('T')[0].slice(5)), records.map(r => r.data.steps||0), 'var(--blue)', 70);
+}
+
+// ==================== WEARABLE ====================
+function loadWearableData() {
+  const records = getLocalHealth().filter(r => r.category === 'wearable').sort((a,b) => new Date(b.timestamp)-new Date(a.timestamp));
+  const latest = records[0];
+  if (latest) {
+    const d = latest.data || {};
+    document.getElementById('w_steps').textContent = d.steps ? d.steps.toLocaleString() : '--';
+    document.getElementById('w_hr').textContent = d.heartRate || '--';
+    document.getElementById('w_sleep').textContent = d.sleep || '--';
+    document.getElementById('w_cal').textContent = d.calories || '--';
+    document.getElementById('w_spo2').textContent = d.spo2 || '--';
+    document.getElementById('w_stress').textContent = d.stress || '--';
+    const prev = records[1];
+    if (prev) {
+      const pd = prev.data || {};
+      setTrend('w_steps_trend', d.steps, pd.steps, 'ก้าว');
+      setTrend('w_hr_trend', d.heartRate, pd.heartRate, 'bpm', true);
+      setTrend('w_sleep_trend', d.sleep, pd.sleep, 'ชม');
+      setTrend('w_cal_trend', d.calories, pd.calories, 'kcal');
+    }
+  }
+  buildStepsChart();
+  const tbody = document.getElementById('wearableHistory');
+  if (tbody) {
+    tbody.innerHTML = records.slice(0,20).map(r => {
+      const d = r.data || {};
+      return "<tr><td>" + r.timestamp.split('T')[0] + "</td><td>" + (r.source||'manual') + "</td><td>" + (d.steps||'--') + "</td><td>" + (d.heartRate||'--') + "</td><td>" + (d.sleep||'--') + "</td><td>" + (d.calories||'--') + "</td></tr>";
+    }).join('');
+  }
+}
+
+function setTrend(elId, curr, prev, unit, lowerIsBetter) {
+  const el = document.getElementById(elId);
+  if (!el || !curr || !prev) return;
+  const diff = curr - prev;
+  if (Math.abs(diff) < 1) { el.textContent = '→ คงที่'; el.className = 'wearable-trend trend-stable'; return; }
+  const up = diff > 0;
+  const good = lowerIsBetter ? !up : up;
+  el.textContent = (up ? '↑' : '↓') + ' ' + Math.abs(diff).toFixed(0) + ' ' + unit;
+  el.className = 'wearable-trend ' + (good ? 'trend-up' : 'trend-down');
+}
+
+function connectDevice(type) {
+  showToast('🔗 กำลังเชื่อมต่อ ' + type + '... (ฟีเจอร์นี้ต้องการการตั้งค่า API)');
+}
+
+function manualWearableEntry() {
+  const form = document.getElementById('manualWearableForm');
+  form.style.display = form.style.display === 'none' ? 'block' : 'none';
+}
+
+async function saveWearableManual() {
+  const metrics = {
+    steps: +document.getElementById('w_mSteps').value || null,
+    heartRate: +document.getElementById('w_mHr').value || null,
+    sleep: +document.getElementById('w_mSleep').value || null,
+    calories: +document.getElementById('w_mCal').value || null,
+    spo2: +document.getElementById('w_mSpo2').value || null
+  };
+  const deviceType = document.getElementById('w_deviceType').value;
+  const timestamp = document.getElementById('w_mDate').value ? document.getElementById('w_mDate').value + 'T12:00:00Z' : new Date().toISOString();
+  addHealthRecord({ id:'W'+Date.now(), category:'wearable', source:deviceType, data:metrics, timestamp });
+  try {
+    await fetch(API + '/api/lifelong/wearable', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ citizenId: currentCitizenId, deviceType, metrics, timestamp })
+    });
+  } catch(e) {}
+  loadWearableData();
+  showToast('บันทึก Wearable data แล้ว ✅');
+}
+
+// ==================== LEARNING ====================
+async function saveLearning() {
+  const title = document.getElementById('l_title').value.trim();
+  if (!title) { showToast('กรอกชื่อหลักสูตร'); return; }
+  const data = {
+    type: document.getElementById('l_type').value,
+    title, provider: document.getElementById('l_provider').value,
+    date: document.getElementById('l_date').value,
+    hours: +document.getElementById('l_hours').value,
+    score: document.getElementById('l_score').value
+  };
+  try {
+    await fetch(API + '/api/lifelong/learning', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ citizenId: currentCitizenId, type: data.type, data }) });
+  } catch(e) {}
+  const saved = JSON.parse(localStorage.getItem('learning_' + currentCitizenId) || '[]');
+  saved.push({ id:'L'+Date.now(), ...data, timestamp: new Date().toISOString() });
+  localStorage.setItem('learning_' + currentCitizenId, JSON.stringify(saved));
+  renderLearningTimeline();
+  showToast('บันทึกการเรียนรู้แล้ว ✅');
+}
+
+function renderLearningTimeline() {
+  const records = JSON.parse(localStorage.getItem('learning_' + currentCitizenId) || '[]').sort((a,b) => new Date(b.timestamp)-new Date(a.timestamp));
+  const container = document.getElementById('learningTimeline');
+  if (!container) return;
+  if (!records.length) {
+    container.innerHTML = "<div class='empty-state'><div class='empty-icon'>📚</div>ยังไม่มีบันทึกการเรียนรู้</div>";
+    return;
+  }
+  const icons = { course:'💻', book:'📖', seminar:'🎤', skill:'⚡', certificate:'🏆', degree:'🎓' };
+  container.innerHTML = records.slice(0,15).map(r => {
+    const dot = r.type === 'certificate' || r.type === 'degree' ? 'purple' : (r.type === 'course' ? 'blue' : '');
+    return "<div class='timeline-item'><div class='timeline-dot " + dot + "'></div><div class='timeline-card'><div class='timeline-year'>" + (r.date||'') + " | " + (r.hours||0) + " ชั่วโมง</div><div class='timeline-title'>" + (icons[r.type]||'📚') + " " + r.title + "</div><div class='timeline-sub'>" + (r.provider||'') + (r.score ? " | คะแนน: " + r.score : '') + "</div></div></div>";
+  }).join('');
+}
+
+// ==================== AI CHAT ====================
+function updateAiSummary() {
+  const records = getLocalHealth();
+  const vital = records.filter(r => r.category === 'vital').sort((a,b) => new Date(b.timestamp)-new Date(a.timestamp))[0];
+  const physical = records.filter(r => r.category === 'physical').sort((a,b) => new Date(b.timestamp)-new Date(a.timestamp))[0];
+  const wear = records.filter(r => r.category === 'wearable').sort((a,b) => new Date(b.timestamp)-new Date(a.timestamp))[0];
+  if (physical?.data?.bmi) document.getElementById('ai_bmi').textContent = physical.data.bmi;
+  if (vital?.data?.bp) document.getElementById('ai_bp').textContent = vital.data.bp;
+  document.getElementById('ai_records').textContent = records.length;
+  if (wear?.data?.steps) document.getElementById('ai_steps').textContent = wear.data.steps.toLocaleString();
+  else if (records.filter(r=>r.category==='lifestyle').length) {
+    const ls = records.filter(r=>r.category==='lifestyle').sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp))[0];
+    if (ls?.data?.steps) document.getElementById('ai_steps').textContent = ls.data.steps.toLocaleString();
+  }
+}
+
+function generateHealthAlerts() {
+  const records = getLocalHealth();
+  const alerts = [];
+  const vitals = records.filter(r => r.category === 'vital').sort((a,b) => new Date(b.timestamp)-new Date(a.timestamp)).slice(0,3);
+  const physical = records.filter(r => r.category === 'physical').sort((a,b) => new Date(b.timestamp)-new Date(a.timestamp))[0];
+
+  // BP check
+  const highBp = vitals.filter(r => { const sys = +(r.data.bp||'').split('/')[0]; return sys >= 140; });
+  if (highBp.length >= 2) alerts.push({ type:'red', icon:'🔴', msg:'ความดันโลหิตสูงกว่า 140 mmHg ติดต่อกัน 2 ครั้งขึ้นไป — ควรพบแพทย์โดยด่วน' });
+  else if (vitals.length && (+(vitals[0].data.bp||'').split('/')[0] > 130)) alerts.push({ type:'amber', icon:'⚠️', msg:'ความดัน ' + vitals[0].data.bp + ' สูงกว่าเกณฑ์ปกติเล็กน้อย ควรติดตาม' });
+
+  // Sugar check
+  const latestSugar = vitals.find(r => r.data.sugar > 0);
+  if (latestSugar) {
+    if (latestSugar.data.sugar > 200) alerts.push({ type:'red', icon:'🩸', msg:'น้ำตาลในเลือดสูงมาก (' + latestSugar.data.sugar + ' mg/dL) — เสี่ยงเบาหวาน ควรพบแพทย์ทันที' });
+    else if (latestSugar.data.sugar > 125) alerts.push({ type:'amber', icon:'🩸', msg:'น้ำตาลสูงกว่าปกติ (' + latestSugar.data.sugar + ' mg/dL) — ควรติดตามและปรับอาหาร' });
+  }
+
+  // BMI check
+  if (physical?.data?.bmi > 30) alerts.push({ type:'amber', icon:'⚖️', msg:'BMI ' + physical.data.bmi + ' อยู่ในระดับอ้วน — แนะนำปรับพฤติกรรมและออกกำลังกาย' });
+  else if (physical?.data?.bmi > 25) alerts.push({ type:'amber', icon:'⚖️', msg:'BMI ' + physical.data.bmi + ' น้ำหนักเกินเกณฑ์เล็กน้อย ควรควบคุมอาหาร' });
+
+  // SPO2
+  const lowSpo2 = vitals.find(r => r.data.spo2 > 0 && r.data.spo2 < 95);
+  if (lowSpo2) alerts.push({ type:'red', icon:'🫁', msg:'ออกซิเจนในเลือดต่ำ (' + lowSpo2.data.spo2 + '%) — ควรพบแพทย์หรือโทร 1669' });
+
+  if (!alerts.length) alerts.push({ type:'green', icon:'✅', msg:'ไม่พบค่าสุขภาพที่น่าเป็นห่วง สุขภาพโดยรวมดี' });
+
+  const container = document.getElementById('healthAlerts');
+  if (container) container.innerHTML = alerts.map(a => "<div class='alert-item " + a.type + "'><span style='font-size:20px'>" + a.icon + "</span><span>" + a.msg + "</span></div>").join('');
+  const card = document.getElementById('alertCard');
+  if (card) card.querySelector('.card-header').classList.toggle('red', alerts.some(a => a.type === 'red'));
+}
+
+function generateTrendAnalysis() {
+  const records = getLocalHealth();
+  const vitals = records.filter(r => r.category === 'vital').sort((a,b) => new Date(a.timestamp)-new Date(b.timestamp));
+  const container = document.getElementById('aiTrendAnalysis');
+  if (!container) return;
+  if (vitals.length < 2) { container.innerHTML = "<div class='text-muted'>ต้องการข้อมูลอย่างน้อย 2 ครั้งเพื่อวิเคราะห์แนวโน้ม</div>"; return; }
+
+  const first = vitals[0].data;
+  const last = vitals[vitals.length-1].data;
+  const bpFirst = +(first.bp||'').split('/')[0];
+  const bpLast = +(last.bp||'').split('/')[0];
+  const bpTrend = bpLast > bpFirst + 5 ? '⬆️ เพิ่มขึ้น' : (bpLast < bpFirst - 5 ? '⬇️ ลดลงดี' : '→ คงที่');
+
+  container.innerHTML = [
+    "<div class='progress-wrap'><div class='progress-label'><span>ความดัน (แนวโน้ม " + bpTrend + ")</span><span>" + bpFirst + " → " + bpLast + " mmHg</span></div><div class='progress-bar'><div class='progress-fill' style='width:" + Math.min(100,bpLast/180*100) + "%;background:" + (bpLast>140?'var(--red)':'var(--green)') + "'></div></div></div>",
+    last.sugar ? "<div class='progress-wrap'><div class='progress-label'><span>น้ำตาลในเลือด</span><span>" + last.sugar + " mg/dL</span></div><div class='progress-bar'><div class='progress-fill' style='width:" + Math.min(100,last.sugar/200*100) + "%;background:" + (last.sugar>125?'var(--amber)':'var(--green)') + "'></div></div></div>" : '',
+    "<div class='alert-item green' style='border-radius:8px;margin-top:12px'><span>💡</span><span>ข้อมูลจาก " + vitals.length + " ครั้ง ช่วง " + vitals[0].timestamp.split('T')[0] + " ถึง " + vitals[vitals.length-1].timestamp.split('T')[0] + " ถามAI เพื่อวิเคราะห์เชิงลึก</span></div>"
+  ].join('');
+}
+
+function addChatMsg(role, text) {
+  const win = document.getElementById('chatWindow');
+  if (!win) return;
+  const isAi = role === 'ai';
+  const avatar = isAi ? '🤖' : '👤';
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + (isAi ? '' : 'user');
+  div.innerHTML = "<div class='chat-avatar " + (isAi ? 'ai-avatar' : 'user-avatar') + "'>" + avatar + "</div><div class='chat-bubble " + (isAi ? 'ai' : 'user') + "'>" + text.replace(/\n/g, '<br>') + "</div>";
+  win.appendChild(div);
+  win.scrollTop = win.scrollHeight;
+}
+
+function askQuick(q) {
+  document.getElementById('chatInput').value = q;
+  sendChat();
+}
+
+function chatOnEnter(e) { if (e.key === 'Enter') sendChat(); }
+
+async function sendChat() {
+  const input = document.getElementById('chatInput');
+  const btn = document.getElementById('btnSend');
+  const q = input.value.trim();
+  if (!q) return;
+  addChatMsg('user', q);
+  input.value = '';
+  btn.disabled = true;
+  chatHistory.push({ role:'user', content:q });
+
+  // Typing indicator
+  const win = document.getElementById('chatWindow');
+  const typingDiv = document.createElement('div');
+  typingDiv.className = 'chat-msg';
+  typingDiv.innerHTML = "<div class='chat-avatar ai-avatar'>🤖</div><div class='chat-bubble ai'><div class='typing'><div class='typing-dot'></div><div class='typing-dot'></div><div class='typing-dot'></div></div></div>";
+  win.appendChild(typingDiv);
+  win.scrollTop = win.scrollHeight;
+
+  const records = getLocalHealth();
+  const profile = JSON.parse(localStorage.getItem('profile_' + currentCitizenId) || '{}');
+  const vital = records.filter(r => r.category === 'vital').sort((a,b) => new Date(b.timestamp)-new Date(a.timestamp)).slice(0,3);
+  const physical = records.filter(r => r.category === 'physical').sort((a,b) => new Date(b.timestamp)-new Date(a.timestamp))[0];
+
+  try {
+    const r = await fetch(API + '/api/lifelong/ai-advice', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        citizenId: currentCitizenId, question: q, category:'general',
+        profile: { ...profile, conditions: myConditions, medications: myMeds },
+        recentHealth: vital.map(v => v.data),
+        recentLearning: JSON.parse(localStorage.getItem('learning_' + currentCitizenId) || '[]').slice(0,3)
+      })
+    });
+    const data = await r.json();
+    typingDiv.remove();
+    const reply = data.reply || 'ขออภัย ไม่สามารถตอบได้ในขณะนี้';
+    addChatMsg('ai', reply);
+    chatHistory.push({ role:'assistant', content:reply });
+  } catch(e) {
+    typingDiv.remove();
+    addChatMsg('ai', 'ขออภัย เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่ภายหลัง');
+  }
+  btn.disabled = false;
+  input.focus();
+}
+
+// ==================== LINE API TEST ====================
+async function testLineApi() {
+  const msg = document.getElementById('lineTestMsg').value.trim();
+  const type = document.getElementById('lineTestType').value;
+  if (!msg && type === 'text') { showToast('กรอกข้อความทดสอบก่อน'); return; }
+  const resultDiv = document.getElementById('lineTestResult');
+  resultDiv.style.display = 'block';
+  resultDiv.innerHTML = "<div class='text-muted'>กำลังส่ง...</div>";
+  try {
+    const r = await fetch(API + '/api/lifelong/line-health', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ citizenId: currentCitizenId, messageType: type, text: msg })
+    });
+    const data = await r.json();
+    resultDiv.innerHTML = "<div class='alert-item green' style='border-radius:8px'><div><strong>✅ API Response:</strong><br>" + (data.reply || JSON.stringify(data)).replace(/\n/g,'<br>') + "</div></div>";
+  } catch(e) {
+    resultDiv.innerHTML = "<div class='alert-item red' style='border-radius:8px'>❌ Error: " + e.message + "</div>";
+  }
+}
+
+// ==================== CLINICAL PORTAL ====================
+function selectClinicianType(btn, type) {
+  clinicianType = type;
+  document.querySelectorAll('.clinician-type-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function clinicalLogin() {
+  const id = document.getElementById('cl_id').value.trim();
+  const facility = document.getElementById('cl_facility').value.trim();
+  if (!id || !facility) { showToast('กรอกรหัสบุคลากรและรหัสสถานพยาบาล'); return; }
+  clinicianLoggedIn = true;
+  document.getElementById('clinicalLoginPanel').style.display = 'none';
+  document.getElementById('clinicalWorkPanel').classList.add('active');
+  const types = { doctor:'แพทย์', nurse:'พยาบาล', pharmacist:'เภสัชกร', physio:'นักกายภาพ', other:'บุคลากร' };
+  document.getElementById('cl_badgeName').textContent = id + ' (' + (types[clinicianType]||'บุคลากร') + ')';
+  document.getElementById('cl_badgeInfo').textContent = 'สถานพยาบาล: ' + facility + ' | เข้าสู่ระบบ: ' + new Date().toLocaleTimeString('th-TH');
+  showToast('เข้าสู่ระบบ Clinical Portal แล้ว ✅');
+}
+
+function clinicalLogout() {
+  clinicianLoggedIn = false;
+  currentPatientId = '';
+  document.getElementById('clinicalLoginPanel').style.display = 'block';
+  document.getElementById('clinicalWorkPanel').classList.remove('active');
+  document.getElementById('patientInfo').style.display = 'none';
+  document.getElementById('clinicalRecordForm').style.display = 'none';
+}
+
+async function searchPatient() {
+  const searchId = document.getElementById('cl_searchId').value.trim();
+  if (searchId.length < 10) { showToast('กรอกเลขบัตรประชาชน 10-13 หลัก'); return; }
+  currentPatientId = searchId;
+  const infoDiv = document.getElementById('patientInfo');
+  infoDiv.style.display = 'block';
+  infoDiv.innerHTML = "<div class='text-muted'>กำลังค้นหา...</div>";
+  try {
+    const r = await fetch(API + '/api/lifelong/profile/' + searchId);
+    const data = await r.json();
+    const p = data.profile || {};
+    if (p.name) {
+      infoDiv.innerHTML = "<div class='alert-item blue' style='border-radius:10px;margin-bottom:14px'><div style='width:100%'><div style='font-weight:600;font-size:16px'>👤 " + p.name + "</div><div style='font-size:13px;margin-top:4px'>อายุ " + (p.age||'?') + " ปี | เพศ" + (p.gender||'?') + " | กรุ๊ปเลือด " + (p.bloodType||'?') + "</div><div style='font-size:13px;margin-top:2px'>โรคประจำตัว: " + ((p.conditions||[]).join(', ')||'ไม่มี') + "</div><div style='font-size:13px;margin-top:2px'>แพ้ยา: " + (p.drugAllergy||'ไม่มี') + "</div></div></div>";
+      document.getElementById('clinicalRecordForm').style.display = 'block';
+    } else {
+      infoDiv.innerHTML = "<div class='alert-item amber' style='border-radius:10px'>⚠️ ไม่พบข้อมูลผู้ป่วยในระบบ (เลขบัตร: " + searchId + ") — ผู้ป่วยอาจยังไม่ลงทะเบียน</div>";
+    }
+  } catch(e) {
+    infoDiv.innerHTML = "<div class='alert-item red' style='border-radius:10px'>❌ ไม่สามารถเชื่อมต่อระบบได้</div>";
+  }
+}
+
+async function saveClinicalRecord() {
+  if (!currentPatientId) { showToast('ค้นหาผู้ป่วยก่อน'); return; }
+  const dataText = document.getElementById('cl_data').value.trim();
+  if (!dataText) { showToast('กรอกรายละเอียดก่อน'); return; }
+  const clinicianId = document.getElementById('cl_id').value;
+  const facilityCode = document.getElementById('cl_facility').value;
+  const recordType = document.getElementById('cl_recordType').value;
+  const date = document.getElementById('cl_date').value;
+  try {
+    const r = await fetch(API + '/api/lifelong/clinical', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ citizenId: currentPatientId, clinicianId, clinicianType, recordType, facilityCode, data:{ date, recordType, note: dataText, treatment: dataText } })
+    });
+    const result = await r.json();
+    showToast('บันทึกข้อมูลทางการแพทย์แล้ว ✅ (ID: ' + result.recorded + ')');
+    document.getElementById('cl_data').value = '';
+  } catch(e) {
+    showToast('เกิดข้อผิดพลาด: ' + e.message);
+  }
+}
+
+// ==================== REPORT ====================
+function generateReport() {
+  const records = getLocalHealth();
+  const physical = records.filter(r => r.category === 'physical').sort((a,b) => new Date(b.timestamp)-new Date(a.timestamp))[0];
+  const vital = records.filter(r => r.category === 'vital').sort((a,b) => new Date(b.timestamp)-new Date(a.timestamp))[0];
+  const learning = JSON.parse(localStorage.getItem('learning_' + currentCitizenId) || '[]');
+  const stats = document.getElementById('reportStats');
+  if (stats) {
+    stats.innerHTML = [
+      "<div class='stat-box'><div class='stat-label'>น้ำหนัก</div><div class='stat-value'>" + (physical?.data?.weight||'--') + "</div><div class='stat-unit'>kg</div></div>",
+      "<div class='stat-box blue-border'><div class='stat-label'>BMI</div><div class='stat-value blue'>" + (physical?.data?.bmi||'--') + "</div><div class='stat-unit'>kg/m²</div></div>",
+      "<div class='stat-box red-border'><div class='stat-label'>ความดัน</div><div class='stat-value red'>" + (vital?.data?.bp||'--') + "</div><div class='stat-unit'>mmHg</div></div>",
+      "<div class='stat-box purple-border'><div class='stat-label'>น้ำตาล</div><div class='stat-value' style='color:var(--purple)'>" + (vital?.data?.sugar||'--') + "</div><div class='stat-unit'>mg/dL</div></div>",
+      "<div class='stat-box'><div class='stat-label'>บันทึกสุขภาพ</div><div class='stat-value'>" + records.length + "</div><div class='stat-unit'>ครั้ง</div></div>",
+      "<div class='stat-box blue-border'><div class='stat-label'>การเรียนรู้</div><div class='stat-value blue'>" + learning.length + "</div><div class='stat-unit'>รายการ</div></div>"
+    ].join('');
+  }
+  const trendDiv = document.getElementById('trendSummary');
+  if (trendDiv) {
+    const vitals = records.filter(r => r.category === 'vital');
+    trendDiv.innerHTML = vitals.length > 0
+      ? "<div class='text-muted' style='margin-bottom:10px'>มีข้อมูลสัญญาณชีพ " + vitals.length + " ครั้ง</div><div class='progress-wrap'><div class='progress-label'><span>จำนวนบันทึกสุขภาพ</span><span>" + records.length + " รายการ</span></div><div class='progress-bar'><div class='progress-fill' style='width:" + Math.min(100,records.length/20*100) + "%'></div></div></div>"
+      : "<div class='empty-state'><div class='empty-icon'>📊</div>ยังไม่มีข้อมูลเพียงพอสำหรับวิเคราะห์</div>";
+  }
+  const learnDiv = document.getElementById('learningSummary');
+  if (learnDiv) {
+    const totalHours = learning.reduce((s,l) => s + (l.hours||0), 0);
+    learnDiv.innerHTML = "<div class='stat-grid'><div class='stat-box'><div class='stat-label'>รายการทั้งหมด</div><div class='stat-value'>" + learning.length + "</div><div class='stat-unit'>รายการ</div></div><div class='stat-box blue-border'><div class='stat-label'>ชั่วโมงเรียน</div><div class='stat-value blue'>" + totalHours + "</div><div class='stat-unit'>ชั่วโมง</div></div></div>";
+  }
+}
+
+// ==================== PDPA DATA ACTIONS ====================
+async function exportMyData() {
+  try {
+    const r = await fetch(API + '/api/lifelong/export/' + currentCitizenId);
+    const data = await r.json();
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type:'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'health-data-' + currentCitizenId + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('ดาวน์โหลดข้อมูลเรียบร้อย ✅');
+  } catch(e) {
+    const localData = { profile: JSON.parse(localStorage.getItem('profile_' + currentCitizenId)||'{}'), healthRecords: getLocalHealth(), learningRecords: JSON.parse(localStorage.getItem('learning_' + currentCitizenId)||'[]'), exportedAt: new Date().toISOString(), dataOwner: currentCitizenId };
+    const blob = new Blob([JSON.stringify(localData, null, 2)], { type:'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'health-data-' + currentCitizenId + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('ดาวน์โหลดข้อมูลเรียบร้อย (local) ✅');
+  }
+}
+
+async function deleteMyData() {
+  if (!confirm('คุณต้องการลบข้อมูลทั้งหมดของคุณ?\nการกระทำนี้ไม่สามารถยกเลิกได้')) return;
+  localStorage.removeItem('health_' + currentCitizenId);
+  localStorage.removeItem('profile_' + currentCitizenId);
+  localStorage.removeItem('learning_' + currentCitizenId);
+  try {
+    await fetch(API + '/api/lifelong/profile/' + currentCitizenId, { method:'DELETE' });
+  } catch(e) {}
+  showToast('ลบข้อมูลทั้งหมดเรียบร้อยแล้ว ตาม PDPA 🗑️');
+  setTimeout(doLogout, 1500);
+}
+
+// ==================== UTILITIES ====================
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2800);
+}
+
+function scrollToTop() { window.scrollTo({ top: 0, behavior:'smooth' }); }
+
+// ==================== INIT ON LOAD ====================
+document.addEventListener('DOMContentLoaded', function() {
+  checkPdpa();
+  // Keyboard shortcut: Enter on login
+  document.getElementById('loginCitizenId').addEventListener('keydown', function(e) { if(e.key==='Enter') document.getElementById('loginName').focus(); });
+  document.getElementById('loginName').addEventListener('keydown', function(e) { if(e.key==='Enter') doLogin(); });
+});
+</script>
+<script src="/access-bar.js"></script>
+</body>
+</html>

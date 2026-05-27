@@ -3,301 +3,329 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>G2G Team Bot Setup — 8 คน</title>
+<title>🤖 G2G Team Bot Setup — 8 คน 8 Bot</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Sarabun', sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; padding: 20px; }
-  h1 { text-align: center; font-size: 1.6rem; color: #38bdf8; margin-bottom: 6px; }
-  .sub { text-align: center; color: #64748b; font-size: .85rem; margin-bottom: 24px; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
-  .card { background: #1e293b; border-radius: 12px; padding: 16px; border: 1px solid #334155; }
-  .card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-  .avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: bold; color: white; flex-shrink: 0; }
-  .card-title { font-weight: 700; font-size: 1rem; }
-  .card-role { color: #94a3b8; font-size: .75rem; }
-  .status { display: inline-flex; align-items: center; gap: 5px; font-size: .7rem; padding: 2px 8px; border-radius: 20px; margin-bottom: 10px; }
-  .status.pending { background: #1e3a5f; color: #60a5fa; }
-  .status.active { background: #14532d; color: #4ade80; }
-  .status.partial { background: #431407; color: #fb923c; }
-  .field-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
-  label { font-size: .7rem; color: #64748b; text-transform: uppercase; letter-spacing: .05em; }
-  input { background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 6px 10px; font-size: .8rem; color: #e2e8f0; width: 100%; font-family: monospace; }
-  input:focus { outline: none; border-color: #38bdf8; }
-  input.filled { border-color: #4ade80; }
-  .btn { background: #0ea5e9; color: white; border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: .8rem; width: 100%; margin-top: 4px; transition: background .2s; }
-  .btn:hover { background: #0284c7; }
-  .btn.generate { background: #7c3aed; }
-  .btn.generate:hover { background: #6d28d9; }
-  .btn-group { display: flex; gap: 6px; }
-  .step-badge { display: inline-block; background: #334155; color: #94a3b8; border-radius: 4px; font-size: .65rem; padding: 1px 6px; margin-right: 4px; }
-  .how-to { background: #0f172a; border-radius: 8px; padding: 12px; margin-bottom: 12px; font-size: .78rem; color: #94a3b8; line-height: 1.7; }
-  .how-to a { color: #38bdf8; text-decoration: none; }
-  .copy-cmd { background: #0f172a; border: 1px dashed #334155; border-radius: 6px; padding: 8px 10px; font-family: monospace; font-size: .72rem; color: #86efac; margin-top: 8px; cursor: pointer; position: relative; }
-  .copy-cmd:hover { border-color: #4ade80; }
-  .copy-hint { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-size: .65rem; color: #475569; }
-  .section-title { color: #475569; font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid #1e293b; }
-  .progress-bar { background: #1e293b; border-radius: 99px; height: 6px; margin-bottom: 20px; overflow: hidden; }
-  .progress-fill { background: linear-gradient(90deg, #0ea5e9, #7c3aed); height: 100%; border-radius: 99px; transition: width .3s; }
-  .progress-text { text-align: center; font-size: .75rem; color: #64748b; margin-bottom: 6px; }
-  .cmd-block { background: #0f172a; border-radius: 8px; padding: 14px; margin-top: 20px; }
-  .cmd-block h3 { color: #38bdf8; font-size: .85rem; margin-bottom: 10px; }
-  pre { font-size: .72rem; color: #86efac; white-space: pre-wrap; word-break: break-all; line-height: 1.6; }
-  .tabs { display: flex; gap: 4px; margin-bottom: 20px; }
-  .tab { padding: 6px 14px; border-radius: 8px; font-size: .78rem; cursor: pointer; border: 1px solid #334155; color: #64748b; background: transparent; }
-  .tab.active { background: #1e293b; color: #38bdf8; border-color: #38bdf8; }
-  .panel { display: none; }
-  .panel.active { display: block; }
-  .webhook-url { font-family: monospace; font-size: .75rem; color: #fbbf24; background: #1c1917; padding: 6px 10px; border-radius: 4px; word-break: break-all; }
-  footer { text-align: center; margin-top: 30px; font-size: .7rem; color: #334155; }
+  body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
+  .header { background: linear-gradient(135deg, #1e3a5f, #0a4f3e); padding: 2rem; text-align: center; }
+  .header h1 { font-size: 2rem; color: #00dc82; margin-bottom: 0.5rem; }
+  .header p { color: #94a3b8; font-size: 1.1rem; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+
+  .status-bar { background: #1e293b; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .status-item { text-align: center; }
+  .status-item .label { font-size: 0.8rem; color: #64748b; margin-bottom: 0.25rem; }
+  .status-item .value { font-size: 1.3rem; font-weight: bold; }
+  .done { color: #00dc82; }
+
+  .section { background: #1e293b; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+  .section h2 { color: #00dc82; font-size: 1.2rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+  .step-num { background: #00dc82; color: #0f172a; border-radius: 50%; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem; flex-shrink: 0; }
+
+  .bot-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+  .bot-card { background: #0f172a; border: 1px solid #334155; border-radius: 10px; padding: 1rem; position: relative; }
+  .bot-name { font-size: 1.1rem; font-weight: bold; color: #e2e8f0; margin-bottom: 0.25rem; }
+  .bot-role { font-size: 0.85rem; color: #64748b; margin-bottom: 0.75rem; }
+  .oa-id { font-size: 0.8rem; background: #1e293b; padding: 0.25rem 0.5rem; border-radius: 4px; color: #94a3b8; font-family: monospace; display: inline-block; margin-bottom: 0.75rem; }
+  .btn-link { display: block; background: #0ea5e9; color: white; text-align: center; padding: 0.5rem 1rem; border-radius: 6px; text-decoration: none; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem; }
+  .btn-link.green { background: #059669; }
+
+  .status-badge { position: absolute; top: 0.75rem; right: 0.75rem; font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 20px; background: #78350f; color: #fbbf24; }
+
+  .instructions { background: #0f172a; border-radius: 8px; padding: 1rem; margin-top: 0.75rem; }
+  .instructions ol { padding-left: 1.2rem; }
+  .instructions li { margin-bottom: 0.5rem; font-size: 0.9rem; color: #94a3b8; line-height: 1.5; }
+  .instructions li strong { color: #e2e8f0; }
+
+  .code-block { background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 1rem; font-family: monospace; font-size: 0.85rem; color: #00dc82; white-space: pre-wrap; word-break: break-all; position: relative; margin-top: 0.75rem; }
+  .copy-btn { position: absolute; top: 0.5rem; right: 0.5rem; background: #334155; color: #e2e8f0; border: none; padding: 0.3rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.75rem; }
+
+  .highlight-box { background: #1e3a5f; border-left: 4px solid #00dc82; padding: 1rem 1.25rem; border-radius: 0 8px 8px 0; margin: 1rem 0; }
+  .highlight-box p { color: #93c5fd; font-size: 0.95rem; line-height: 1.6; }
+
+  .cred-form { display: grid; gap: 0.5rem; margin-top: 0.5rem; }
+  .cred-row { display: grid; grid-template-columns: 100px 1fr; gap: 0.5rem; align-items: center; }
+  .cred-row label { font-size: 0.8rem; color: #94a3b8; text-align: right; }
+  .cred-row input { background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 0.35rem 0.6rem; color: #e2e8f0; font-size: 0.8rem; font-family: monospace; }
+  .generate-btn { background: #00dc82; color: #0f172a; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1rem; margin-top: 1rem; width: 100%; }
+
+  .timeline { position: relative; padding-left: 2rem; }
+  .timeline::before { content: ''; position: absolute; left: 10px; top: 0; bottom: 0; width: 2px; background: #334155; }
+  .timeline-item { position: relative; margin-bottom: 1.25rem; }
+  .timeline-item::before { content: ''; position: absolute; left: -1.65rem; top: 4px; width: 12px; height: 12px; border-radius: 50%; background: #334155; border: 2px solid #64748b; }
+  .timeline-item.done::before { background: #00dc82; border-color: #00dc82; }
+  .timeline-title { font-weight: 600; color: #e2e8f0; margin-bottom: 0.2rem; }
+  .timeline-desc { font-size: 0.82rem; color: #64748b; }
+  .timeline-item.done .timeline-title { color: #00dc82; }
 </style>
 </head>
 <body>
 
-<h1>🤖 G2G Team Bot Setup</h1>
-<p class="sub">ผู้ช่วย AI ประจำตัว 8 คน — ใส่ Token แล้ว Active ทันที</p>
-
-<div class="progress-text">ความคืบหน้า: <span id="done-count">0</span>/8 บัญชี</div>
-<div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
-
-<div class="tabs">
-  <button class="tab active" onclick="switchTab('setup')">⚙️ Setup</button>
-  <button class="tab" onclick="switchTab('guide')">📖 วิธีดึง Token</button>
-  <button class="tab" onclick="switchTab('commands')">💻 คำสั่ง Terminal</button>
-  <button class="tab" onclick="switchTab('find')">🔍 หา OA ที่ว่าง</button>
+<div class="header">
+  <h1>🤖 G2G Team Bot Setup</h1>
+  <p>ระบบ AI ส่วนตัว 8 คน — ต้องการ 5 นาทีจากคุณเพื่อ activate</p>
 </div>
 
-<!-- SETUP TAB -->
-<div id="panel-setup" class="panel active">
-<div class="grid" id="bot-grid"></div>
-</div>
+<div class="container">
 
-<!-- GUIDE TAB -->
-<div id="panel-guide" class="panel">
-<div style="max-width:640px;margin:0 auto">
-  <div class="how-to">
-    <div class="section-title">วิธีดึง Channel ID + Secret + Token (ต่อ 1 bot)</div>
-    <p><span class="step-badge">1</span>เปิด <a href="https://developers.line.biz/console/" target="_blank">developers.line.biz/console</a></p>
-    <p><span class="step-badge">2</span>เลือก Provider → เลือก Channel ของ bot นั้น</p>
-    <p><span class="step-badge">3</span>แท็บ <strong>Basic settings</strong> → คัดลอก <strong>Channel ID</strong></p>
-    <p><span class="step-badge">4</span>แท็บ <strong>Basic settings</strong> → คัดลอก <strong>Channel secret</strong></p>
-    <p><span class="step-badge">5</span>แท็บ <strong>Messaging API</strong> → กด <strong>Issue</strong> (Channel access token) → คัดลอก</p>
-    <p><span class="step-badge">6</span>นำค่ามาใส่ใน Setup tab ด้านซ้าย</p>
-
-    <div class="section-title" style="margin-top:16px">ตั้งค่า LINE OA Manager (ต่อ 1 bot)</div>
-    <p><span class="step-badge">1</span>เปิด <a href="https://manager.line.biz/" target="_blank">manager.line.biz</a> → เลือก OA</p>
-    <p><span class="step-badge">2</span>⚙️ ตั้งค่า → ตั้งค่าการตอบกลับ</p>
-    <p><span class="step-badge">3</span>แชท → <strong>ปิด</strong></p>
-    <p><span class="step-badge">4</span>Webhook → <strong>เปิด</strong></p>
-    <p><span class="step-badge">5</span>ตอบกลับอัตโนมัติ → <strong>ปิด</strong></p>
+  <div class="status-bar">
+    <div class="status-item">
+      <div class="label">เสร็จแล้ว</div>
+      <div class="value done">✅ 3/5 ขั้นตอน</div>
+    </div>
+    <div class="status-item">
+      <div class="label">รอ Activate</div>
+      <div class="value" style="color:#f59e0b;">⏳ 8 คน</div>
+    </div>
+    <div class="status-item">
+      <div class="label">เวลาที่ต้องการ</div>
+      <div class="value">~5 นาที</div>
+    </div>
   </div>
-  <div class="how-to">
-    <div class="section-title">เปลี่ยนชื่อ OA (เลือกบัญชีที่ว่าง)</div>
-    <p><span class="step-badge">1</span>เปิด <a href="https://manager.line.biz/" target="_blank">manager.line.biz</a> → เลือก OA ที่ว่าง</p>
-    <p><span class="step-badge">2</span>⚙️ ตั้งค่า → ข้อมูลบัญชี</p>
-    <p><span class="step-badge">3</span>เปลี่ยนชื่อเป็น: <strong>AI เกมส์ - G2G</strong>, <strong>AI วรรณ - G2G</strong> ฯลฯ</p>
+
+  <!-- Progress -->
+  <div class="section">
+    <h2><span class="step-num">✓</span> สิ่งที่เสร็จแล้ว</h2>
+    <div class="timeline">
+      <div class="timeline-item done">
+        <div class="timeline-title">✅ System Prompts 8 คนพร้อมแล้วใน server.js</div>
+        <div class="timeline-desc">เกมส์, วรรณ, ใบแพร, ส้ม, ชาดา, พิมลรัตน์, พรรณี, ภูวษา — AI personality ครบ</div>
+      </div>
+      <div class="timeline-item done">
+        <div class="timeline-title">✅ Server.js Deploy แล้วบน Fly.io</div>
+        <div class="timeline-desc">Webhook route: /webhook/line/mt พร้อมรับ message</div>
+      </div>
+      <div class="timeline-item done">
+        <div class="timeline-title">✅ Admin Ice ลงทะเบียน LINE Developer แล้ว</div>
+        <div class="timeline-desc">developers.line.biz พร้อมสร้าง Provider และ Channel</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-title">⏳ เปิด Messaging API 8 บัญชี (ขั้นที่ 1)</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-title">⏳ กรอก Credentials + รัน Script (ขั้นที่ 2-3)</div>
+      </div>
+    </div>
   </div>
-</div>
-</div>
 
-<!-- COMMANDS TAB -->
-<div id="panel-commands" class="panel">
-<div class="cmd-block">
-  <h3>📋 คำสั่ง fly secrets — paste ใน Terminal</h3>
-  <p style="color:#64748b;font-size:.75rem;margin-bottom:10px">แก้ XXXX เป็นค่าจริง แล้ว paste ทีเดียวได้เลย</p>
-  <pre id="fly-commands">กรุณาใส่ข้อมูลใน Setup tab ก่อน</pre>
-  <button class="btn" onclick="copyCommands()" style="margin-top:10px">📋 Copy คำสั่ง</button>
-</div>
-<div class="cmd-block" style="margin-top:16px">
-  <h3>🔗 Webhook URL (เดียวกันทุก bot)</h3>
-  <div class="webhook-url">https://g2g-ai-pool.fly.dev/webhook/line/mt</div>
-  <p style="color:#64748b;font-size:.75rem;margin-top:8px">ใส่ URL นี้ใน LINE Developers Console → Messaging API → Webhook URL ทุก bot</p>
-</div>
-</div>
+  <!-- Step 1 -->
+  <div class="section" id="step1">
+    <h2><span class="step-num">1</span> เปิด Messaging API — คลิก 8 ครั้ง (~4 นาที)</h2>
+    <div class="highlight-box">
+      <p>คลิกลิงก์ <strong>"🔧 เปิด Messaging API"</strong> ของแต่ละบัญชี → หน้าเปิด LINE Manager → กดปุ่มสีฟ้า <strong>"ใช้ Messaging API"</strong> → เลือก Provider (สร้างใหม่ชื่อ "G2G AgriTech")</p>
+    </div>
 
-<!-- FIND TAB -->
-<div id="panel-find" class="panel">
-<div style="max-width:640px;margin:0 auto">
-  <div class="how-to">
-    <div class="section-title">🔍 วิธีหา LINE OA ที่ว่าง (ไม่ได้ใช้งาน)</div>
-    <p>เปิด <a href="https://manager.line.biz/" target="_blank">manager.line.biz</a> → ดูรายชื่อบัญชีทั้งหมด</p>
-    <br>
-    <p><strong>สัญญาณที่บอกว่า "ว่าง":</strong></p>
-    <p>• มีเพื่อน <strong>1 คน</strong> (แค่เจ้าของ)</p>
-    <p>• รูปโปรไฟล์เป็น <strong>ไอคอนสีเทา default</strong> ไม่มีรูป</p>
-    <p>• ไม่มี dot สีเขียว (webhook ยังไม่ได้เปิด)</p>
-    <br>
-    <p><strong>บัญชีที่เห็นแล้วว่าว่าง (จากหน้า 2):</strong></p>
-    <p>• <strong>"woravat"</strong> (1 เพื่อน, ไม่มีรูป) → เปลี่ยนชื่อเป็น AI เกมส์ - G2G</p>
-    <br>
-    <p><strong>ถ้าหาไม่ครบ 8 ตัว:</strong> กด "สร้างใหม่" ใน LINE Manager → ตั้งชื่อตามตาราง → เลือกประเภท ธุรกิจทั่วไป</p>
-    <br>
-    <div class="section-title">ชื่อที่ต้องใช้ (8 บัญชี)</div>
-    <table style="width:100%;border-collapse:collapse;font-size:.8rem">
-      <tr style="color:#64748b;border-bottom:1px solid #1e293b"><td style="padding:4px">ชื่อ OA</td><td>สำหรับ</td><td>Slug</td></tr>
-      <tr><td style="padding:4px">AI เกมส์ - G2G</td><td>เกมส์</td><td>GAME_G2G</td></tr>
-      <tr><td>AI วรรณ - G2G</td><td>วรรณ</td><td>WANNA_G2G</td></tr>
-      <tr><td>AI ใบแพร - G2G</td><td>ใบแพร</td><td>BAIPARE_G2G</td></tr>
-      <tr><td>AI ส้ม - G2G</td><td>ส้ม</td><td>SOM_G2G</td></tr>
-      <tr><td>AI ชาดา - G2G</td><td>ชาดา</td><td>CHADA_G2G</td></tr>
-      <tr><td>AI พิมลรัตน์ - G2G</td><td>พิมลรัตน์</td><td>PIMONRAT_G2G</td></tr>
-      <tr><td>AI พรรณี - G2G</td><td>พรรณี</td><td>PANNEE_G2G</td></tr>
-      <tr><td>AI ภูวษา - G2G</td><td>ภูวษา</td><td>PUWASA_G2G</td></tr>
-    </table>
+    <div class="bot-grid">
+      <div class="bot-card">
+        <span class="status-badge">⏳</span>
+        <div class="bot-name">เกมส์A — AI เกมส์</div>
+        <div class="bot-role">🏛️ Government Relations</div>
+        <div class="oa-id">@yyj1761e (Thaidelicious)</div>
+        <a class="btn-link" href="https://manager.line.biz/account/@yyj1761e/setting/messaging-api" target="_blank">🔧 เปิด Messaging API</a>
+        <a class="btn-link green" href="https://developers.line.biz/console/" target="_blank">🔑 ดู Credentials</a>
+      </div>
+      <div class="bot-card">
+        <span class="status-badge">⏳</span>
+        <div class="bot-name">วรรณA — AI วรรณ</div>
+        <div class="bot-role">⚙️ Operations</div>
+        <div class="oa-id">@507jdsru (Covid Safe Food)</div>
+        <a class="btn-link" href="https://manager.line.biz/account/@507jdsru/setting/messaging-api" target="_blank">🔧 เปิด Messaging API</a>
+        <a class="btn-link green" href="https://developers.line.biz/console/" target="_blank">🔑 ดู Credentials</a>
+      </div>
+      <div class="bot-card">
+        <span class="status-badge">⏳</span>
+        <div class="bot-name">ใบแพรA — AI ใบแพร</div>
+        <div class="bot-role">🎨 Creative & Social</div>
+        <div class="oa-id">@481grtxq (Pheuthai Delicious)</div>
+        <a class="btn-link" href="https://manager.line.biz/account/@481grtxq/setting/messaging-api" target="_blank">🔧 เปิด Messaging API</a>
+        <a class="btn-link green" href="https://developers.line.biz/console/" target="_blank">🔑 ดู Credentials</a>
+      </div>
+      <div class="bot-card">
+        <span class="status-badge">⏳</span>
+        <div class="bot-name">ส้มA — AI ส้ม</div>
+        <div class="bot-role">💎 อัญมณี</div>
+        <div class="oa-id">@507myxvj (ตู้ต้านโกง)</div>
+        <a class="btn-link" href="https://manager.line.biz/account/@507myxvj/setting/messaging-api" target="_blank">🔧 เปิด Messaging API</a>
+        <a class="btn-link green" href="https://developers.line.biz/console/" target="_blank">🔑 ดู Credentials</a>
+      </div>
+      <div class="bot-card">
+        <span class="status-badge">⏳</span>
+        <div class="bot-name">ชาดาA — AI ชาดา</div>
+        <div class="bot-role">📰 ข่าวและสื่อสาร</div>
+        <div class="oa-id">@016dvrwv (ลำไยส่งออก)</div>
+        <a class="btn-link" href="https://manager.line.biz/account/@016dvrwv/setting/messaging-api" target="_blank">🔧 เปิด Messaging API</a>
+        <a class="btn-link green" href="https://developers.line.biz/console/" target="_blank">🔑 ดู Credentials</a>
+      </div>
+      <div class="bot-card">
+        <span class="status-badge">⏳</span>
+        <div class="bot-name">พิมลรัตน์A — AI พิมลรัตน์</div>
+        <div class="bot-role">💻 IT & Data Center</div>
+        <div class="oa-id">@288axowg (อาสาสมัคร AcTT)</div>
+        <a class="btn-link" href="https://manager.line.biz/account/@288axowg/setting/messaging-api" target="_blank">🔧 เปิด Messaging API</a>
+        <a class="btn-link green" href="https://developers.line.biz/console/" target="_blank">🔑 ดู Credentials</a>
+      </div>
+      <div class="bot-card">
+        <span class="status-badge">⏳</span>
+        <div class="bot-name">พรรณีA — AI พรรณี</div>
+        <div class="bot-role">🌾 มวลชนแพร่</div>
+        <div class="oa-id">@771fgzbm (Kinthai)</div>
+        <a class="btn-link" href="https://manager.line.biz/account/@771fgzbm/setting/messaging-api" target="_blank">🔧 เปิด Messaging API</a>
+        <a class="btn-link green" href="https://developers.line.biz/console/" target="_blank">🔑 ดู Credentials</a>
+      </div>
+      <div class="bot-card">
+        <span class="status-badge">⏳</span>
+        <div class="bot-name">ภูวษาA — AI ภูวษา</div>
+        <div class="bot-role">🤝 Business Coordination</div>
+        <div class="oa-id">@yjl6519x (ตัวอย่าง)</div>
+        <a class="btn-link" href="https://manager.line.biz/account/@yjl6519x/setting/messaging-api" target="_blank">🔧 เปิด Messaging API</a>
+        <a class="btn-link green" href="https://developers.line.biz/console/" target="_blank">🔑 ดู Credentials</a>
+      </div>
+    </div>
   </div>
-</div>
-</div>
 
-<footer>G2G Gov2Global · AI Team Bot Setup v1.0 · g2g-ai-pool.fly.dev</footer>
+  <!-- Step 2 -->
+  <div class="section" id="step2">
+    <h2><span class="step-num">2</span> กรอก Credentials → Generate Script</h2>
+    <div class="highlight-box">
+      <p>หลังเปิด Messaging API → ไปที่ <a href="https://developers.line.biz/console/" target="_blank" style="color:#00dc82;">developers.line.biz/console</a> → เลือก Channel → Basic settings = Channel Secret | Messaging API tab = Issue Token</p>
+    </div>
 
-<script>
-const BOTS = [
-  { slug: 'GAME_G2G',    name: 'เกมส์',    role: 'Government Relations', emoji: '🏛️', color: '#1a237e' },
-  { slug: 'WANNA_G2G',   name: 'วรรณ',     role: 'Operations', emoji: '⚙️', color: '#4a148c' },
-  { slug: 'BAIPARE_G2G', name: 'ใบแพร',   role: 'Creative & Social', emoji: '🎨', color: '#880e4f' },
-  { slug: 'SOM_G2G',     name: 'ส้ม',      role: 'อัญมณี', emoji: '💎', color: '#e65100' },
-  { slug: 'CHADA_G2G',   name: 'ชาดา',    role: 'ข่าวและการสื่อสาร', emoji: '📰', color: '#006064' },
-  { slug: 'PIMONRAT_G2G',name: 'พิมลรัตน์', role: 'IT & Data Center', emoji: '💻', color: '#1b5e20' },
-  { slug: 'PANNEE_G2G',  name: 'พรรณี',   role: 'มวลชนแพร่', emoji: '🌾', color: '#33691e' },
-  { slug: 'PUWASA_G2G',  name: 'ภูวษา',   role: 'หัวหน้าธุรกิจ', emoji: '💼', color: '#b71c1c' },
-];
+    <div style="background: #0f172a; border-radius: 10px; padding: 1.25rem; margin-top: 1rem;">
 
-const SAVED_KEY = 'g2g_team_bot_tokens';
-
-function loadSaved() {
-  try { return JSON.parse(localStorage.getItem(SAVED_KEY) || '{}'); } catch { return {}; }
-}
-function save(slug, field, val) {
-  const d = loadSaved();
-  if (!d[slug]) d[slug] = {};
-  d[slug][field] = val;
-  localStorage.setItem(SAVED_KEY, JSON.stringify(d));
-}
-function getVal(slug, field) {
-  return loadSaved()[slug]?.[field] || '';
-}
-
-function buildGrid() {
-  const saved = loadSaved();
-  const grid = document.getElementById('bot-grid');
-  grid.innerHTML = '';
-  BOTS.forEach(bot => {
-    const cid = getVal(bot.slug, 'cid');
-    const sec = getVal(bot.slug, 'sec');
-    const tok = getVal(bot.slug, 'tok');
-    const filled = [cid,sec,tok].filter(Boolean).length;
-    const statusClass = filled === 3 ? 'active' : filled > 0 ? 'partial' : 'pending';
-    const statusText = filled === 3 ? '✅ พร้อม Active' : filled > 0 ? `⏳ ${filled}/3 ครบ` : '⏸ รอ Token';
-
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = `
-      <div class="card-header">
-        <div class="avatar" style="background:${bot.color}">${bot.emoji}</div>
-        <div>
-          <div class="card-title">AI ${bot.name}</div>
-          <div class="card-role">${bot.role}</div>
+      <div id="credSections">
+        <div class="bot-cred" style="margin-bottom: 1rem; padding: 1rem; background: #1e293b; border-radius: 8px;">
+          <div style="font-weight:600; margin-bottom:0.5rem;">1. เกมส์ (@yyj1761e)</div>
+          <div class="cred-form">
+            <div class="cred-row"><label>Channel ID</label><input id="g_cid" placeholder="2xxxxxxxxx"></div>
+            <div class="cred-row"><label>Secret</label><input id="g_sec" placeholder="32 chars"></div>
+            <div class="cred-row"><label>Token</label><input id="g_tok" placeholder="long token..."></div>
+          </div>
+        </div>
+        <div class="bot-cred" style="margin-bottom: 1rem; padding: 1rem; background: #1e293b; border-radius: 8px;">
+          <div style="font-weight:600; margin-bottom:0.5rem;">2. วรรณ (@507jdsru)</div>
+          <div class="cred-form">
+            <div class="cred-row"><label>Channel ID</label><input id="w_cid" placeholder="2xxxxxxxxx"></div>
+            <div class="cred-row"><label>Secret</label><input id="w_sec" placeholder="32 chars"></div>
+            <div class="cred-row"><label>Token</label><input id="w_tok" placeholder="long token..."></div>
+          </div>
+        </div>
+        <div class="bot-cred" style="margin-bottom: 1rem; padding: 1rem; background: #1e293b; border-radius: 8px;">
+          <div style="font-weight:600; margin-bottom:0.5rem;">3. ใบแพร (@481grtxq)</div>
+          <div class="cred-form">
+            <div class="cred-row"><label>Channel ID</label><input id="b_cid" placeholder="2xxxxxxxxx"></div>
+            <div class="cred-row"><label>Secret</label><input id="b_sec" placeholder="32 chars"></div>
+            <div class="cred-row"><label>Token</label><input id="b_tok" placeholder="long token..."></div>
+          </div>
+        </div>
+        <div class="bot-cred" style="margin-bottom: 1rem; padding: 1rem; background: #1e293b; border-radius: 8px;">
+          <div style="font-weight:600; margin-bottom:0.5rem;">4. ส้ม (@507myxvj)</div>
+          <div class="cred-form">
+            <div class="cred-row"><label>Channel ID</label><input id="s_cid" placeholder="2xxxxxxxxx"></div>
+            <div class="cred-row"><label>Secret</label><input id="s_sec" placeholder="32 chars"></div>
+            <div class="cred-row"><label>Token</label><input id="s_tok" placeholder="long token..."></div>
+          </div>
+        </div>
+        <div class="bot-cred" style="margin-bottom: 1rem; padding: 1rem; background: #1e293b; border-radius: 8px;">
+          <div style="font-weight:600; margin-bottom:0.5rem;">5. ชาดา (@016dvrwv)</div>
+          <div class="cred-form">
+            <div class="cred-row"><label>Channel ID</label><input id="c_cid" placeholder="2xxxxxxxxx"></div>
+            <div class="cred-row"><label>Secret</label><input id="c_sec" placeholder="32 chars"></div>
+            <div class="cred-row"><label>Token</label><input id="c_tok" placeholder="long token..."></div>
+          </div>
+        </div>
+        <div class="bot-cred" style="margin-bottom: 1rem; padding: 1rem; background: #1e293b; border-radius: 8px;">
+          <div style="font-weight:600; margin-bottom:0.5rem;">6. พิมลรัตน์ (@288axowg)</div>
+          <div class="cred-form">
+            <div class="cred-row"><label>Channel ID</label><input id="p_cid" placeholder="2xxxxxxxxx"></div>
+            <div class="cred-row"><label>Secret</label><input id="p_sec" placeholder="32 chars"></div>
+            <div class="cred-row"><label>Token</label><input id="p_tok" placeholder="long token..."></div>
+          </div>
+        </div>
+        <div class="bot-cred" style="margin-bottom: 1rem; padding: 1rem; background: #1e293b; border-radius: 8px;">
+          <div style="font-weight:600; margin-bottom:0.5rem;">7. พรรณี (@771fgzbm)</div>
+          <div class="cred-form">
+            <div class="cred-row"><label>Channel ID</label><input id="pn_cid" placeholder="2xxxxxxxxx"></div>
+            <div class="cred-row"><label>Secret</label><input id="pn_sec" placeholder="32 chars"></div>
+            <div class="cred-row"><label>Token</label><input id="pn_tok" placeholder="long token..."></div>
+          </div>
+        </div>
+        <div class="bot-cred" style="margin-bottom: 1rem; padding: 1rem; background: #1e293b; border-radius: 8px;">
+          <div style="font-weight:600; margin-bottom:0.5rem;">8. ภูวษา (@yjl6519x)</div>
+          <div class="cred-form">
+            <div class="cred-row"><label>Channel ID</label><input id="ph_cid" placeholder="2xxxxxxxxx"></div>
+            <div class="cred-row"><label>Secret</label><input id="ph_sec" placeholder="32 chars"></div>
+            <div class="cred-row"><label>Token</label><input id="ph_tok" placeholder="long token..."></div>
+          </div>
         </div>
       </div>
-      <span class="status ${statusClass}">${statusText}</span>
-      <div class="field-group">
-        <label>Channel ID</label>
-        <input type="text" placeholder="2xxxxxxxxx" value="${cid}"
-          class="${cid?'filled':''}"
-          oninput="save('${bot.slug}','cid',this.value);this.classList.toggle('filled',!!this.value);updateAll()"
-          id="${bot.slug}_cid">
+
+      <button class="generate-btn" onclick="gen()">⚡ Generate Script พร้อม Run</button>
+
+      <div id="out" style="display:none; margin-top:1rem;">
+        <h3 style="color:#00dc82; margin-bottom:0.5rem;">✅ Copy ไปรันใน Terminal</h3>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(document.getElementById('sc').textContent); this.textContent='Copied!'; setTimeout(()=>this.textContent='Copy',2000)">Copy</button>
+          <div id="sc"></div>
+        </div>
       </div>
-      <div class="field-group">
-        <label>Channel Secret</label>
-        <input type="text" placeholder="abc123..." value="${sec}"
-          class="${sec?'filled':''}"
-          oninput="save('${bot.slug}','sec',this.value);this.classList.toggle('filled',!!this.value);updateAll()"
-          id="${bot.slug}_sec">
-      </div>
-      <div class="field-group">
-        <label>Channel Access Token</label>
-        <input type="text" placeholder="eyJ..." value="${tok}"
-          class="${tok?'filled':''}"
-          oninput="save('${bot.slug}','tok',this.value);this.classList.toggle('filled',!!this.value);updateAll()"
-          id="${bot.slug}_tok">
-      </div>
-      <div class="copy-cmd" onclick="copySingle('${bot.slug}')" title="คลิกเพื่อ copy">
-        <span id="cmd_${bot.slug}">fly secrets set LINE_CHANNELID_${bot.slug}=<ID> LINE_SECRET_${bot.slug}=<SECRET> LINE_TOKEN_${bot.slug}=<TOKEN> -a g2g-ai-pool</span>
-        <span class="copy-hint">copy</span>
-      </div>
-    `;
-    grid.appendChild(card);
+    </div>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="section" id="step3">
+    <h2><span class="step-num">3</span> หลัง Activate — ตั้ง Webhook + Response Settings</h2>
+    <div class="instructions">
+      <ol>
+        <li>ใน LINE Developers Console → แต่ละ Channel → Messaging API tab → Webhook URL:<br>
+          <div class="code-block" style="margin:0.5rem 0;">https://g2g-ai-pool.fly.dev/webhook/line/mt</div>
+          → กด Verify → กด Update
+        </li>
+        <li>ใน LINE Manager → แต่ละบัญชี → ตั้งค่าการตอบกลับ:<br>
+          <strong>Chat: OFF | Webhook: ON | Auto-response: OFF</strong>
+        </li>
+        <li>ทดสอบ: DM แต่ละบอท พิมพ์ "ทดสอบ" → ต้องได้รับการตอบกลับจาก AI</li>
+      </ol>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function v(id) { return (document.getElementById(id)||{}).value||''; }
+function gen() {
+  var bots = [
+    {n:'เกมส์', sl:'GAME_G2G', cid:v('g_cid'), sec:v('g_sec'), tok:v('g_tok')},
+    {n:'วรรณ', sl:'WANNA_G2G', cid:v('w_cid'), sec:v('w_sec'), tok:v('w_tok')},
+    {n:'ใบแพร', sl:'BAIPARE_G2G', cid:v('b_cid'), sec:v('b_sec'), tok:v('b_tok')},
+    {n:'ส้ม', sl:'SOM_G2G', cid:v('s_cid'), sec:v('s_sec'), tok:v('s_tok')},
+    {n:'ชาดา', sl:'CHADA_G2G', cid:v('c_cid'), sec:v('c_sec'), tok:v('c_tok')},
+    {n:'พิมลรัตน์', sl:'PIMONRAT_G2G', cid:v('p_cid'), sec:v('p_sec'), tok:v('p_tok')},
+    {n:'พรรณี', sl:'PANNEE_G2G', cid:v('pn_cid'), sec:v('pn_sec'), tok:v('pn_tok')},
+    {n:'ภูวษา', sl:'PUWASA_G2G', cid:v('ph_cid'), sec:v('ph_sec'), tok:v('ph_tok')}
+  ];
+  var L = ['#!/bin/bash','APP="g2g-ai-pool"',''];
+  bots.forEach(function(b){
+    if(!b.cid && !b.sec && !b.tok) return;
+    L.push('# '+b.n);
+    if(b.cid) L.push('fly secrets set LINE_CHANNELID_'+b.sl+'="'+b.cid+'" -a $APP --stage');
+    if(b.sec) L.push('fly secrets set LINE_SECRET_'+b.sl+'="'+b.sec+'" -a $APP --stage');
+    if(b.tok) L.push('fly secrets set LINE_TOKEN_'+b.sl+'="'+b.tok+'" -a $APP --stage');
+    L.push('');
   });
-  updateProgress();
-  updateCommands();
-}
-
-function updateAll() {
-  updateProgress();
-  updateCommands();
-  BOTS.forEach(bot => {
-    const cid = document.getElementById(bot.slug+'_cid')?.value||'';
-    const sec = document.getElementById(bot.slug+'_sec')?.value||'';
-    const tok = document.getElementById(bot.slug+'_tok')?.value||'';
-    const cmd = document.getElementById('cmd_'+bot.slug);
-    if (cmd) {
-      const cidV = cid||'<ID>', secV = sec||'<SECRET>', tokV = tok?tok.substring(0,20)+'...':'<TOKEN>';
-      cmd.textContent = `fly secrets set LINE_CHANNELID_${bot.slug}=${cidV} LINE_SECRET_${bot.slug}=${secV} LINE_TOKEN_${bot.slug}=${tokV} -a g2g-ai-pool`;
-    }
+  L.push('fly secrets deploy -a $APP','');
+  bots.forEach(function(b){
+    if(!b.tok) return;
+    L.push('curl -s -X POST "https://api.line.me/v2/bot/channel/webhook/endpoint" \\');
+    L.push('  -H "Authorization: Bearer '+b.tok+'" \\');
+    L.push('  -H "Content-Type: application/json" \\');
+    L.push('  -d \'{"webhookEndpointUrl":"https://g2g-ai-pool.fly.dev/webhook/line/mt"}\'');
+    L.push('echo "✅ Webhook: '+b.n+'"','');
   });
+  L.push('echo "🎉 Done! ทดสอบ DM แต่ละบอทพิมพ์: ทดสอบ"');
+  document.getElementById('sc').textContent = L.join('\n');
+  document.getElementById('out').style.display='block';
+  document.getElementById('out').scrollIntoView({behavior:'smooth'});
 }
-
-function updateProgress() {
-  let done = 0;
-  BOTS.forEach(bot => {
-    const cid = document.getElementById(bot.slug+'_cid')?.value||'';
-    const sec = document.getElementById(bot.slug+'_sec')?.value||'';
-    const tok = document.getElementById(bot.slug+'_tok')?.value||'';
-    if (cid && sec && tok) done++;
-  });
-  document.getElementById('done-count').textContent = done;
-  document.getElementById('progress-fill').style.width = (done/8*100)+'%';
-}
-
-function updateCommands() {
-  const lines = ['#!/bin/bash', '# G2G Team Bot — fly secrets set', '# paste ใน Terminal แล้วกด Enter', ''];
-  let hasAny = false;
-  BOTS.forEach(bot => {
-    const cid = document.getElementById(bot.slug+'_cid')?.value || getVal(bot.slug,'cid') || '<ID>';
-    const sec = document.getElementById(bot.slug+'_sec')?.value || getVal(bot.slug,'sec') || '<SECRET>';
-    const tok = document.getElementById(bot.slug+'_tok')?.value || getVal(bot.slug,'tok') || '<TOKEN>';
-    if (cid !== '<ID>') hasAny = true;
-    lines.push(`# ${bot.name} — ${bot.role}`);
-    lines.push(`fly secrets set LINE_CHANNELID_${bot.slug}="${cid}" LINE_SECRET_${bot.slug}="${sec}" LINE_TOKEN_${bot.slug}="${tok}" -a g2g-ai-pool`);
-    lines.push('');
-  });
-  lines.push('# Deploy ให้ secrets มีผล');
-  lines.push('fly secrets deploy -a g2g-ai-pool');
-  document.getElementById('fly-commands').textContent = hasAny ? lines.join('\n') : 'กรุณาใส่ข้อมูลใน Setup tab ก่อน';
-}
-
-function copyCommands() {
-  const text = document.getElementById('fly-commands').textContent;
-  navigator.clipboard.writeText(text).then(()=>alert('คัดลอกแล้ว!'));
-}
-
-function copySingle(slug) {
-  const cmd = document.getElementById('cmd_'+slug)?.textContent;
-  if (cmd) navigator.clipboard.writeText(cmd).then(()=>{
-    const el = document.getElementById('cmd_'+slug);
-    const orig = el.parentElement.querySelector('.copy-hint').textContent;
-    el.parentElement.querySelector('.copy-hint').textContent = '✅ copied';
-    setTimeout(()=>el.parentElement.querySelector('.copy-hint').textContent=orig, 1500);
-  });
-}
-
-function switchTab(name) {
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.querySelector(`.tab[onclick*="${name}"]`).classList.add('active');
-  document.getElementById('panel-'+name).classList.add('active');
-}
-
-buildGrid();
 </script>
 </body>
 </html>

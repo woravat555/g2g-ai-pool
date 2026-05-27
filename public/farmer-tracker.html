@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>G2G AgriTech — Farmer Activity Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0b1f3a;--navy3:#1e3d68;--navy4:#2a5298;
+  --gold:#c9a227;--gold2:#e8c55a;
+  --green:#1a7a3a;--green2:#2ea855;--red:#c0392b;--orange:#d35400;
+  --bg:#eef2f7;--surface:#fff;--border:#dde3ec;
+  --text:#1a202c;--text2:#4a5568;--text3:#718096;
+}
+body{font-family:'Sarabun','Inter',sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.5}
+a{text-decoration:none;color:inherit}
+
+.topbar{background:linear-gradient(135deg,var(--navy),var(--navy3));color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,.3);position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:10px}
+.tb-l{display:flex;align-items:center;gap:14px}
+.tb-logo{font-size:30px}
+.tb-titles .t1{font-size:16px;font-weight:800}
+.tb-titles .t2{font-size:11px;color:#94a8c0;margin-top:3px;letter-spacing:.04em}
+.tb-r{display:flex;gap:8px;flex-wrap:wrap}
+.tb-link{font-size:11px;color:#cfd6e0;padding:6px 12px;border-radius:7px;border:1px solid rgba(255,255,255,.15)}
+.tb-link:hover{background:rgba(255,255,255,.1);color:#fff}
+.tb-link.gold{background:rgba(201,162,39,.15);border-color:var(--gold);color:var(--gold2);font-weight:700}
+
+.hero{background:linear-gradient(135deg,var(--navy3),var(--navy4),var(--navy3));color:#fff;padding:24px;position:relative}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 30%,rgba(201,162,39,.15) 0%,transparent 50%)}
+.hero-inner{max-width:1320px;margin:0 auto;position:relative;z-index:2}
+.hero-eyebrow{font-size:11px;letter-spacing:.2em;color:var(--gold2);font-weight:700;text-transform:uppercase;margin-bottom:6px}
+.hero-title{font-size:24px;font-weight:800;margin-bottom:6px}
+.hero-sub{font-size:12px;color:#cfd6e0;max-width:780px}
+
+.main{max-width:1320px;margin:0 auto;padding:18px}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:18px}
+.kpi{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px;border-left:4px solid var(--navy3)}
+.kpi.warn{border-left-color:var(--orange);background:linear-gradient(to right,#fff7ed,#fff)}
+.kpi.ok{border-left-color:var(--green2);background:linear-gradient(to right,#f0fdf4,#fff)}
+.kpi.gold{border-left-color:var(--gold);background:linear-gradient(to right,#fffbeb,#fff)}
+.kpi .lab{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:6px}
+.kpi .val{font-size:30px;font-weight:800;color:var(--navy);font-family:'Inter','Sarabun',sans-serif;line-height:1}
+.kpi .sub{font-size:11px;color:var(--text3);margin-top:4px}
+.kpi .ic{position:absolute;right:18px;top:18px;font-size:24px;opacity:.3}
+.kpi{position:relative}
+
+.filter-bar{background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.filter-bar label{font-size:11px;color:var(--text3);font-weight:700;text-transform:uppercase}
+.filter-bar select,.filter-bar input{padding:7px 12px;border:1px solid var(--border);border-radius:7px;font-family:inherit;font-size:12px;background:#fff}
+.filter-bar button{padding:7px 14px;border:0;background:linear-gradient(135deg,var(--navy),var(--navy3));color:#fff;border-radius:7px;font-weight:600;cursor:pointer;font-size:12px}
+
+.table-wrap{background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{background:linear-gradient(135deg,var(--navy),var(--navy3));color:#fff;text-align:left;padding:10px 12px;font-size:10px;text-transform:uppercase;letter-spacing:.05em;font-weight:700;white-space:nowrap}
+tbody tr{border-bottom:1px solid #f1f5f9}
+tbody tr:hover{background:#f8fafc}
+tbody td{padding:10px 12px;color:var(--text);vertical-align:top}
+tbody td.ts{font-family:'Inter','Sarabun',sans-serif;font-size:11px;color:var(--text3);white-space:nowrap}
+tbody td.farmer{font-weight:600;color:var(--navy)}
+tbody td.crop{font-weight:600}
+tbody td.msg{font-size:11px;color:var(--text2);max-width:280px}
+.tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700}
+.tag-fert{background:#dbeafe;color:#1e40af}
+.tag-spray{background:#fef3c7;color:#92400e}
+.tag-harvest{background:#dcfce7;color:#166534}
+.tag-water{background:#cffafe;color:#155e75}
+.tag-prune{background:#e9d5ff;color:#6b21a8}
+.tag-plant{background:#fce7f3;color:#9d174d}
+.tag-other{background:#e5e7eb;color:#374151}
+.status-ok{display:inline-flex;align-items:center;gap:4px;color:var(--green);font-weight:700;font-size:11px}
+.status-late{display:inline-flex;align-items:center;gap:4px;color:var(--orange);font-weight:700;font-size:11px}
+.status-early{display:inline-flex;align-items:center;gap:4px;color:var(--red);font-weight:700;font-size:11px}
+
+footer{margin-top:30px;padding:20px;text-align:center;font-size:11px;color:var(--text3);border-top:1px solid var(--border)}
+
+@media(max-width:768px){
+  .hero-title{font-size:18px}
+  table{font-size:11px}
+  thead th{padding:8px;font-size:9px}
+  tbody td{padding:7px 8px}
+  tbody td.msg{max-width:160px}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="tb-l">
+    <div class="tb-logo">📱</div>
+    <div class="tb-titles">
+      <div class="t1">Farmer Activity Tracker</div>
+      <div class="t2">G2G AgriTech · LINE BOT LOG VIEWER</div>
+    </div>
+  </div>
+  <div class="tb-r">
+    <a href="ministry-agriculture.html" class="tb-link">กระทรวงเกษตร</a>
+    <a href="crop-calendar-v2.html" class="tb-link">ปฏิทินเพาะปลูก</a>
+    <a href="production-dashboard.html" class="tb-link">Production</a>
+    <a href="farmer-advisory.html" class="tb-link gold">ที่ปรึกษาเกษตรกร</a>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Admin View · LINE Bot Activity Logs</div>
+    <h1 class="hero-title">เกษตรกรในระบบ · บันทึกกิจกรรมแปลง</h1>
+    <p class="hero-sub">ระบบ admin สำหรับดูข้อมูลที่เกษตรกรพิมพ์เข้า LINE bot น้องผลไม้ (@phrae555) ตรวจสอบความสอดคล้องกับปฏิทินเพาะปลูก แจ้งเตือนผิดช่วงเวลา</p>
+  </div>
+</div>
+
+<div class="main">
+  <div class="kpi-grid">
+    <div class="kpi ok">
+      <div class="ic">👨‍🌾</div>
+      <div class="lab">เกษตรกร Active</div>
+      <div class="val">1,247</div>
+      <div class="sub">+38 จากเดือนที่แล้ว</div>
+    </div>
+    <div class="kpi gold">
+      <div class="ic">📝</div>
+      <div class="lab">บันทึกกิจกรรมวันนี้</div>
+      <div class="val">89</div>
+      <div class="sub">เฉลี่ย 92/วัน รอบ 7 วัน</div>
+    </div>
+    <div class="kpi">
+      <div class="ic">🌾</div>
+      <div class="lab">แปลงในระบบ</div>
+      <div class="val">2,156</div>
+      <div class="sub">รวม 18,432 ไร่</div>
+    </div>
+    <div class="kpi warn">
+      <div class="ic">⚠️</div>
+      <div class="lab">แจ้งเตือนผิดช่วงเวลา</div>
+      <div class="val">12</div>
+      <div class="sub">งานที่ทำเร็ว/ช้ากว่าปฏิทิน</div>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <label>พืช:</label>
+    <select id="fCrop"><option value="">ทั้งหมด</option></select>
+    <label>จังหวัด:</label>
+    <select id="fProv"><option value="">ทั้งหมด</option></select>
+    <label>กิจกรรม:</label>
+    <select id="fAct"><option value="">ทั้งหมด</option></select>
+    <input type="text" id="fSearch" placeholder="ค้นหาชื่อเกษตรกร / ข้อความ" style="flex:1;min-width:200px">
+    <button onclick="applyFilter()">ใช้ตัวกรอง</button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>เวลา</th>
+          <th>เกษตรกร</th>
+          <th>พืช</th>
+          <th>แปลง</th>
+          <th>จังหวัด</th>
+          <th>กิจกรรม</th>
+          <th>ตรงปฏิทิน?</th>
+          <th>ข้อความที่ส่งเข้า LINE</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+  <footer>
+    G2G AgriTech Farmer Tracker v1.0 · Backed by Airtable [tbl_plot_activities] · LINE Webhook log
+    · API endpoint: <code>/api/farmer/activities?limit=50</code>
+  </footer>
+</div>
+
+<script>
+const FARMERS = [
+  ['นายสมชาย ใจดี','แพร่'],['นางสาวพิมพ์ใจ ทองสุข','เชียงใหม่'],['นายวิชัย ก้าวหน้า','เชียงราย'],
+  ['นายประยุทธ์ สวยงาม','น่าน'],['นางสมหญิง แดงสง่า','พิจิตร'],['นายธีระ ดวงดี','จันทบุรี'],
+  ['นางพรพรรณ ขำคม','ระยอง'],['นายเอกชัย รุ่งเรือง','ตราด'],['นายสำราญ มั่นคง','ชุมพร'],
+  ['นางกัลยา สวัสดี','นครศรีธรรมราช'],['นายธวัช อยู่ดี','สุราษฎร์ธานี'],['นายมานพ สมบูรณ์','ฉะเชิงเทรา'],
+  ['นางวันเพ็ญ ใจกล้า','นครปฐม'],['นายสุชาติ ก้าวไกล','สมุทรสาคร'],['นายอำนวย เจริญสุข','นครสวรรค์'],
+  ['นางสุภาพ จ้าวเรือง','สุพรรณบุรี'],['นายมงคล โชคดี','พระนครศรีอยุธยา'],['นายไพศาล แสงทอง','ขอนแก่น'],
+  ['นางจินดา รักเรียน','ร้อยเอ็ด'],['นายสมพร สุดยอด','อุดรธานี'],['นายทวีศักดิ์ ตั้งใจ','นครราชสีมา'],
+  ['นายเชาว์ ฉลาดล้ำ','กำแพงเพชร'],['นางพรทิพย์ ขยัน','ชัยภูมิ'],['นายอนุชา จริงใจ','สระแก้ว'],
+  ['นางวารี ไกรเลิศ','ปราจีนบุรี'],['นายมานะ พากเพียร','กาญจนบุรี'],['นางสุจิตรา รุ่งเรือง','ราชบุรี'],
+  ['นายอดิศักดิ์ ดีงาม','ประจวบคีรีขันธ์'],['นายชัยวัฒน์ มงคล','เพชรบุรี'],['นางบุญมา หอมหวาน','สงขลา']
+];
+const CROPS_TH = ['ทุเรียน','ส้มโอ','ส้มเขียวหวาน','ลำไย','มะม่วง','มังคุด','กล้วย','ข้าว','มันสำปะหลัง','ยางพารา','อ้อย','มะพร้าว'];
+const ACT_TYPES = [
+  ['ใส่ปุ๋ย','tag-fert','fert'],['ฉีดยา','tag-spray','spray'],['เก็บเกี่ยว','tag-harvest','harvest'],
+  ['รดน้ำ','tag-water','water'],['ตัดแต่ง','tag-prune','prune'],['ปลูก','tag-plant','plant'],
+  ['อื่นๆ','tag-other','other']
+];
+
+const MSG_TEMPLATES = {
+  fert: [
+    'ใส่ปุ๋ย 16-16-16 ในแปลง {plot} จำนวน {n} กก.',
+    'ใส่ปุ๋ย 15-15-15 อัตรา 2 กก./ต้น แปลง {plot}',
+    'ใส่ปุ๋ยอินทรีย์ {n} กก. คลุมโคนทุกต้น แปลง {plot}',
+    'ใส่ปุ๋ย 13-13-21 รอบ 2 ในแปลง {plot}',
+    'ใส่ปุ๋ย 25-7-7 เน้น N กระตุ้นใบใหม่ แปลง {plot}'
+  ],
+  spray: [
+    'ฉีดป้องกันเพลี้ยไฟ + Anthracnose แปลง {plot}',
+    'ฉีด Bacillus subtilis ป้องกันราดำ แปลง {plot}',
+    'ฉีดป้องกันแมลงวันผลไม้ด้วย Methyl Eugenol แปลง {plot}',
+    'ฉีดแคลเซียม-โบรอน ทาง foliar แปลง {plot}',
+    'ฉีดป้องกันโรครากเน่า Phytophthora แปลง {plot}'
+  ],
+  harvest: [
+    'เก็บเกี่ยวทุเรียนหมอนทอง {n} กก. จากแปลง {plot}',
+    'เก็บส้มโอ {n} กก. คัด AA-A-B แปลง {plot}',
+    'เก็บลำไย {n} กก. ส่งล้ง แปลง {plot}',
+    'เก็บมะม่วง {n} กก. คัด AAA-AA แปลง {plot}',
+    'เก็บกล้วย {n} เครือ แปลง {plot}',
+    'ขุดมัน {n} กก. ส่งโรงแป้ง แปลง {plot}'
+  ],
+  water: [
+    'รดน้ำสม่ำเสมอ 200 ลิตร/ต้น แปลง {plot}',
+    'เปิดสปริงเกอร์ 30 นาที แปลง {plot}',
+    'ให้น้ำผ่านระบบน้ำหยด แปลง {plot}'
+  ],
+  prune: [
+    'ตัดแต่งกิ่งหลังเก็บเกี่ยว แปลง {plot}',
+    'ตัดกิ่งกระโดง-กิ่งบังลม แปลง {plot}',
+    'ตัดผลส่วนเกิน เหลือ 3-5 ผล/ช่อ แปลง {plot}',
+    'ทาแผลตัดด้วยปูนขาว แปลง {plot}'
+  ],
+  plant: [
+    'ปลูกหน่อกล้วยใหม่ {n} หน่อ แปลง {plot}',
+    'ปลูกท่อนพันธุ์มันสำปะหลัง แปลง {plot}',
+    'หว่านข้าวงอก {n} กก./ไร่ แปลง {plot}'
+  ],
+  other: [
+    'ตรวจ pH ดิน ค่า 6.2 แปลง {plot}',
+    'กำจัดวัชพืชรอบโคน แปลง {plot}',
+    'ตรวจเพลี้ยแป้ง พบเล็กน้อย แปลง {plot}',
+    'ทดสอบ Brix ค่า 11.2% แปลง {plot}'
+  ]
+};
+
+function makeSeed(){
+  const rows = [];
+  const now = new Date('2026-05-26T16:00:00');
+  for(let i=0;i<50;i++){
+    const farmer = FARMERS[i%FARMERS.length];
+    const crop = CROPS_TH[Math.floor(Math.random()*CROPS_TH.length)];
+    const act = ACT_TYPES[Math.floor(Math.random()*ACT_TYPES.length)];
+    const plot = `แปลง ${(i%6)+1}`;
+    const tmpl = MSG_TEMPLATES[act[2]];
+    const msg = tmpl[Math.floor(Math.random()*tmpl.length)]
+      .replace('{plot}',plot)
+      .replace('{n}', [50,80,120,150,180,200,250,300,400,500,1000,2000,5000][Math.floor(Math.random()*13)]);
+    const ago = i * 23 * 60 * 1000 + Math.floor(Math.random()*45*60*1000);
+    const t = new Date(now.getTime() - ago);
+    const ts = t.toLocaleString('th-TH',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+    const status = Math.random()<0.84 ? 'ok' : (Math.random()<0.5?'late':'early');
+    rows.push({ts,farmer:farmer[0],prov:farmer[1],crop,plot,actName:act[0],actClass:act[1],actCode:act[2],msg,status});
+  }
+  return rows;
+}
+
+let DATA = [];
+
+async function loadData(){
+  try{
+    const r = await fetch('/api/farmer/activities?limit=50');
+    if(r.ok){
+      const j = await r.json();
+      if(j.activities) DATA = j.activities;
+      else DATA = makeSeed();
+    } else DATA = makeSeed();
+  }catch(e){
+    DATA = makeSeed();
+  }
+  populateFilters();
+  render();
+}
+
+function populateFilters(){
+  const cs = new Set(DATA.map(d=>d.crop));
+  const ps = new Set(DATA.map(d=>d.prov));
+  const as = new Set(DATA.map(d=>d.actName));
+  const fc = document.getElementById('fCrop');
+  cs.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;fc.appendChild(o);});
+  const fp = document.getElementById('fProv');
+  ps.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;fp.appendChild(o);});
+  const fa = document.getElementById('fAct');
+  as.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;fa.appendChild(o);});
+}
+
+function render(){
+  const tbody = document.getElementById('tbody');
+  const fc = document.getElementById('fCrop').value;
+  const fp = document.getElementById('fProv').value;
+  const fa = document.getElementById('fAct').value;
+  const fs = document.getElementById('fSearch').value.toLowerCase().trim();
+  const filtered = DATA.filter(d=>
+    (!fc||d.crop===fc)&&(!fp||d.prov===fp)&&(!fa||d.actName===fa)&&
+    (!fs||d.farmer.toLowerCase().includes(fs)||d.msg.toLowerCase().includes(fs))
+  );
+  tbody.innerHTML = filtered.map(d=>{
+    const statusHtml = d.status==='ok' ? `<span class="status-ok">✓ ตรง</span>` :
+      d.status==='late' ? `<span class="status-late">⚠ ช้า</span>` :
+      `<span class="status-early">⚠ เร็ว</span>`;
+    return `<tr>
+      <td class="ts">${d.ts}</td>
+      <td class="farmer">${d.farmer}</td>
+      <td class="crop">${d.crop}</td>
+      <td>${d.plot}</td>
+      <td>${d.prov}</td>
+      <td><span class="tag ${d.actClass}">${d.actName}</span></td>
+      <td>${statusHtml}</td>
+      <td class="msg">${d.msg}</td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="8" style="padding:30px;text-align:center;color:var(--text3)">ไม่มีรายการตามตัวกรอง</td></tr>';
+}
+
+function applyFilter(){render();}
+document.getElementById('fSearch').addEventListener('input',()=>{render();});
+
+loadData();
+</script>
+</body>
+</html>

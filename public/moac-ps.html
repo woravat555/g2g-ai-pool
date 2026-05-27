@@ -1,0 +1,338 @@
+<!DOCTYPE html><html lang="th"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>แพลตฟอร์ม ปลัดกระทรวงเกษตรและสหกรณ์</title>
+<script>
+  // Role bootstrap — read by /moac-app.js
+  window.MOAC_ROLE_HINTS = window.MOAC_ROLE_HINTS || {};
+  window.MOAC_ROLE_HINTS.bootedAt = Date.now();
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Sarabun',sans-serif}
+:root{--p1:#0b3d2e;--p2:#1b4332;--p3:#2d6a4f;--p4:#b7e4c7;--p5:#e6f4ea;--gold:#c9a227;--gold2:#e8c55a;
+     --gray:#f6f8f6;--border:#cfe3d4;--sub:#56707a;--red:#dc2626;--blue:#1e40af;--orange:#ea580c}
+body{background:var(--p5);color:#1e293b;height:100vh;overflow:hidden;display:flex;flex-direction:column}
+#login{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,var(--p1) 0%,var(--p2) 55%,var(--p3) 100%)}
+.lc{background:#fff;border-radius:16px;padding:36px 40px;width:min(720px,96vw);box-shadow:0 20px 60px rgba(0,0,0,.4);border-top:5px solid var(--gold)}
+.lc-badge{display:flex;align-items:center;gap:14px;margin-bottom:18px;padding-bottom:14px;border-bottom:2px solid var(--p4)}
+.lc-crest{font-size:44px}.t1{font-size:18px;font-weight:800;color:var(--p1)}.t2{font-size:11px;color:var(--sub);margin-top:2px}
+.lc-title{font-size:17px;font-weight:700;color:var(--p1);margin-bottom:4px}
+.lc-sub{font-size:12px;color:var(--sub);margin-bottom:18px}
+.lc-btn{width:100%;padding:13px;background:linear-gradient(135deg,var(--p1),var(--p3));color:#fff;border:2px solid var(--gold);border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+#app{display:none;flex-direction:column;height:100vh;overflow:hidden}
+.topbar{background:var(--p1);color:#fff;padding:0 20px;height:54px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px;border-bottom:2px solid var(--gold)}
+.tb-left{display:flex;align-items:center;gap:12px}
+.tb-logo{font-size:26px}.tb-t1{font-size:14px;font-weight:800}.tb-t2{font-size:10px;opacity:.75}
+.tb-st{display:flex;gap:6px;font-size:11px}
+.tb-s{background:rgba(255,255,255,.18);padding:3px 9px;border-radius:11px;border:1px solid rgba(201,162,39,.4)}
+.tb-logout{background:rgba(255,255,255,.15);border:none;color:#fff;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-family:inherit}
+.app-body{display:flex;flex:1;overflow:hidden}
+.sidebar{width:220px;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0}
+.sb-sec{padding:10px 12px 4px;font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.7px}
+.sb-item{display:flex;align-items:center;gap:8px;padding:9px 14px;font-size:13px;color:#1e293b;cursor:pointer;transition:.15s}
+.sb-item:hover{background:var(--p5)}
+.sb-item.active{background:var(--p5);color:var(--p1);font-weight:700;border-left:3px solid var(--gold)}
+.main{flex:1;overflow-y:auto;padding:20px;background:var(--gray)}
+.page{display:none}.page.active{display:block}
+.card{background:#fff;border-radius:12px;padding:18px 20px;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:16px}
+.card-h{font-size:15px;font-weight:700;color:var(--p1);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--gold);display:flex;align-items:center;gap:8px}
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px}
+.kpi-card{background:#fff;border-radius:10px;padding:14px 16px;border-top:3px solid var(--gold);text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.kpi-v{font-size:22px;font-weight:800;color:var(--p1)}
+.kpi-l{font-size:11px;color:var(--sub);margin-top:2px}
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{background:var(--p1);color:#fff;padding:9px 10px;text-align:left;font-weight:600}
+.tbl td{padding:8px 10px;border-bottom:1px solid var(--border)}
+.tbl tr:hover td{background:var(--p5)}
+.tag{display:inline-block;font-size:11px;padding:2px 9px;border-radius:10px;font-weight:600}
+.tag-ok{background:#dcfce7;color:#166534}.tag-warn{background:#fef9c3;color:#854d0e}
+.tag-err{background:#fee2e2;color:#991b1b}.tag-blue{background:#dbeafe;color:#1e40af}.tag-gold{background:#fff8db;color:#8a6d1f}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.alert{background:#fff7ed;border-left:4px solid #f97316;border-radius:8px;padding:11px 14px;margin-bottom:9px}
+.alert-t{font-size:13px;font-weight:700;color:#c2410c}.alert-s{font-size:11px;color:#9a3412;margin-top:2px}
+.page-title{font-size:20px;font-weight:800;color:var(--p1);margin-bottom:4px}
+.page-sub{font-size:12px;color:var(--sub);margin-bottom:14px}
+.pf{background:#e6f4ea;border-radius:8px;height:8px;margin-top:6px;overflow:hidden}
+.pfb{height:100%;background:linear-gradient(90deg,var(--p1),var(--gold))}
+</style></head><body data-role="moac-ps" data-level="ps">
+
+<div id="login">
+  <div class="lc">
+    <div class="lc-badge">
+      <div class="lc-crest">⚙️</div>
+      <div><div class="t1">ปลัดกระทรวงเกษตรและสหกรณ์</div><div class="t2">Permanent Secretary · MOAC · G2G AI Platform</div></div>
+    </div>
+    <div class="lc-title">ปลัด กษ. — นายวิณะโรจน์ ทรัพย์ส่งสุข</div>
+    <div class="lc-sub">บริหารราชการกระทรวง · บูรณาการ 15 กรม · 32,500 บุคลากร · งบรวม 154,800M</div>
+    <button class="lc-btn" onclick="doLogin()">🔐 เข้าสู่ระบบ ปลัด กษ.</button>
+    <div style="text-align:center;font-size:11px;color:var(--sub);margin-top:12px">
+      <a href="/moac-minister.html" style="color:var(--p1)">← รมว.</a> ·
+      <a href="/moac-hub.html" style="color:var(--p1)">Hub กษ.</a>
+    </div>
+  </div>
+</div>
+
+<div id="app">
+<div class="topbar">
+  <div class="tb-left">
+    <div class="tb-logo">⚙️</div>
+    <div><div class="tb-t1">ปลัดกระทรวงเกษตรและสหกรณ์</div><div class="tb-t2">Permanent Secretary · MOAC</div></div>
+  </div>
+  <div class="tb-st">
+    <span class="tb-s">💰 154,800M</span>
+    <span class="tb-s">🏛️ 15 กรม</span>
+    <span class="tb-s">👥 32,500</span>
+    <span class="tb-s">📊 72% เบิก</span>
+  </div>
+  <button class="tb-logout" onclick="doLogout()">ออกระบบ</button>
+</div>
+
+<div class="app-body">
+<div class="sidebar">
+  <div class="sb-sec">บริหารราชการ</div>
+  <div class="sb-item active" onclick="show(0,this)">🏛️ บริหารราชการกระทรวง</div>
+  <div class="sb-item" onclick="show(1,this)">📊 15 กรม Status</div>
+  <div class="sb-item" onclick="show(2,this)">⚙️ ระบบงาน + IT</div>
+  <div class="sb-sec">บุคลากร & งบ</div>
+  <div class="sb-item" onclick="show(3,this)">👥 บุคลากร 32,500</div>
+  <div class="sb-item" onclick="show(4,this)">💰 งบประมาณภาพรวม</div>
+  <div class="sb-sec">นโยบาย</div>
+  <div class="sb-item" onclick="show(5,this)">📋 นโยบาย รมว. มอบหมาย</div>
+  <div style="flex:1"></div>
+  <div style="padding:10px 14px;font-size:11px;color:var(--sub);border-top:1px solid var(--border)">
+    <a href="/moac-minister.html" style="color:var(--p1);text-decoration:none">← รมว.</a> ·
+    <a href="/moac-hub.html" style="color:var(--p1);text-decoration:none">Hub</a> ·
+    <a href="/moac-org.html" style="color:var(--p1);text-decoration:none">Org</a>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- TAB 0: บริหารราชการกระทรวง -->
+<div class="page active" id="t0">
+<div class="page-title">🏛️ บริหารราชการกระทรวง — ปลัด กษ.</div>
+<div class="page-sub">ภาพรวมการบริหาร 15 กรม · บูรณาการนโยบาย · ระบบงาน · บุคลากร</div>
+<div class="kpi-row">
+  <div class="kpi-card"><div class="kpi-v">15</div><div class="kpi-l">หน่วยงาน</div></div>
+  <div class="kpi-card"><div class="kpi-v">32,500</div><div class="kpi-l">บุคลากร</div></div>
+  <div class="kpi-card"><div class="kpi-v">154,800M</div><div class="kpi-l">งบรวม</div></div>
+  <div class="kpi-card"><div class="kpi-v">72%</div><div class="kpi-l">% เบิก</div></div>
+  <div class="kpi-card"><div class="kpi-v">76</div><div class="kpi-l">จังหวัด</div></div>
+</div>
+
+<div class="card"><div class="card-h">⚠️ วาระเร่งด่วน — ปลัดต้องเร่งแก้</div>
+  <div class="alert"><div class="alert-t">🔴 ชป. เบิกจ่ายต่ำกว่าเป้า 16%</div>
+    <div class="alert-s">68,400M งบ ชป. เบิกได้ 64% — โครงการก่อสร้างขนาดใหญ่ล่าช้า ต้องเร่งรัด TOR + ทบทวน LGP</div></div>
+  <div class="alert"><div class="alert-t">🟠 ตัวเลขข้าราชการเกษียณ 2568 = 1,820 คน</div>
+    <div class="alert-s">ต้องเสริม Smart Officer 600 ตำแหน่ง · ขาดวิศวกร ชป. + นักวิชาการเกษตรปฏิบัติ</div></div>
+  <div class="alert"><div class="alert-t">🟡 ระบบ e-Operation 15 กรม ใช้งานไม่ถึง 80%</div>
+    <div class="alert-s">CIO รายงาน 11/15 กรม ใช้งานครบ · ต้องเร่ง 4 กรมที่ค้าง: ALRO, QSDS, CAD, OAE</div></div>
+</div>
+
+<div class="g2">
+  <div class="card"><div class="card-h">📅 กำหนดการสำคัญ</div>
+  <table class="tbl"><tr><th>วัน</th><th>วาระ</th><th>ผู้เข้าร่วม</th></tr>
+  <tr><td>26 พ.ค.</td><td>ประชุมผู้บริหารกระทรวง รายสัปดาห์</td><td>15 หัวหน้ากรม</td></tr>
+  <tr><td>28 พ.ค.</td><td>ประชุมงบประมาณ 2569</td><td>สำนักงบประมาณ + 15 กรม</td></tr>
+  <tr><td>5 มิ.ย.</td><td>ตรวจราชการ จ.พิษณุโลก</td><td>ปลัด + รองปลัด สาย 2</td></tr>
+  <tr><td>10 มิ.ย.</td><td>ครม. รับทราบรายงาน 8 นโยบาย</td><td>OPS</td></tr>
+  </table></div>
+  <div class="card"><div class="card-h">📊 สรุปการบริหารงาน 30 วันล่าสุด</div>
+  <table class="tbl"><tr><th>หมวด</th><th>จำนวน</th></tr>
+  <tr><td>คำสั่งกระทรวงที่ลงนาม</td><td>148 ฉบับ</td></tr>
+  <tr><td>หนังสือเวียนกรม</td><td>52 ฉบับ</td></tr>
+  <tr><td>การประชุมที่เข้าร่วม</td><td>87 ครั้ง</td></tr>
+  <tr><td>ตรวจราชการต่างจังหวัด</td><td>6 จังหวัด</td></tr>
+  <tr><td>รายงาน รมว.</td><td>22 ฉบับ</td></tr>
+  </table></div>
+</div>
+</div>
+
+<!-- TAB 1: 15 กรม Status -->
+<div class="page" id="t1">
+<div class="page-title">📊 สถานะ 15 กรม</div>
+<div class="page-sub">ภาพรวมการดำเนินงาน + KPI หลักแต่ละกรม</div>
+<div class="card"><div class="card-h">🏛️ Dashboard 15 กรม</div>
+<table class="tbl">
+<tr><th>กรม</th><th>หัวหน้า</th><th>งบ (M)</th><th>%เบิก</th><th>คน</th><th>KPI หลัก</th><th>สถานะ</th></tr>
+<tr><td>OPS / สป.</td><td>ปลัด</td><td>8,400</td><td>78%</td><td>3,800</td><td>บูรณาการ G2G</td><td><span class="tag tag-ok">ดี</span></td></tr>
+<tr><td>DOAE / กสก.</td><td>อธิบดี</td><td>22,400</td><td>80%</td><td>8,200</td><td>Smart Farmer 220K</td><td><span class="tag tag-ok">ดี</span></td></tr>
+<tr><td>CPD / กสส.</td><td>อธิบดี</td><td>3,800</td><td>96%</td><td>2,400</td><td>สหกรณ์ 7.2K</td><td><span class="tag tag-ok">ดีมาก</span></td></tr>
+<tr><td>CAD / กตส.</td><td>อธิบดี</td><td>1,400</td><td>92%</td><td>1,800</td><td>ตรวจบัญชี</td><td><span class="tag tag-ok">ดี</span></td></tr>
+<tr><td>DLD / ปศ.</td><td>อธิบดี</td><td>8,200</td><td>75%</td><td>4,800</td><td>ASF + e-NID</td><td><span class="tag tag-warn">ติดตาม</span></td></tr>
+<tr><td>DOF / ปม.</td><td>อธิบดี</td><td>5,400</td><td>82%</td><td>2,800</td><td>IUU + เพาะเลี้ยง</td><td><span class="tag tag-ok">ดี</span></td></tr>
+<tr><td>RD / กข.</td><td>อธิบดี</td><td>6,200</td><td>78%</td><td>2,100</td><td>นาแปลงใหญ่</td><td><span class="tag tag-warn">ติดตาม</span></td></tr>
+<tr><td>DOA / กวก.</td><td>อธิบดี</td><td>4,800</td><td>92%</td><td>3,200</td><td>GAP 165K</td><td><span class="tag tag-ok">ดี</span></td></tr>
+<tr><td>LDD / พด.</td><td>อธิบดี</td><td>4,200</td><td>85%</td><td>2,600</td><td>วิเคราะห์ดิน 76 สถานี</td><td><span class="tag tag-ok">ดี</span></td></tr>
+<tr><td>RID / ชป.</td><td>อธิบดี</td><td>68,400</td><td>64%</td><td>11,200</td><td>พื้นที่ชลประทาน</td><td><span class="tag tag-err">เร่งรัด</span></td></tr>
+<tr><td>ALRO / ส.ป.ก.</td><td>เลขาฯ</td><td>2,400</td><td>88%</td><td>1,400</td><td>ส.ป.ก. 4-01</td><td><span class="tag tag-ok">ดี</span></td></tr>
+<tr><td>RAOT / กยท.</td><td>ผู้ว่าฯ</td><td>5,800</td><td>95%</td><td>1,900</td><td>ราคายาง</td><td><span class="tag tag-warn">ติดตาม</span></td></tr>
+<tr><td>QSDS / มม.</td><td>อธิบดี</td><td>680</td><td>90%</td><td>420</td><td>หม่อนไหม</td><td><span class="tag tag-ok">ดี</span></td></tr>
+<tr><td>OAE / สศก.</td><td>เลขาฯ</td><td>1,200</td><td>92%</td><td>820</td><td>พยากรณ์</td><td><span class="tag tag-ok">ดี</span></td></tr>
+<tr><td>ACFS / มกอช.</td><td>เลขาฯ</td><td>820</td><td>92%</td><td>480</td><td>มาตรฐาน GAP</td><td><span class="tag tag-ok">ดี</span></td></tr>
+<tr style="font-weight:700;background:var(--p5)"><td>รวม</td><td>—</td><td>154,800</td><td>72%</td><td>32,500</td><td>—</td><td>—</td></tr>
+</table></div>
+</div>
+
+<!-- TAB 2: ระบบงาน -->
+<div class="page" id="t2">
+<div class="page-title">⚙️ ระบบงานและ IT</div>
+<div class="page-sub">ระบบบริหารงานภาครัฐ + Digital Transformation</div>
+<div class="kpi-row">
+  <div class="kpi-card"><div class="kpi-v">11/15</div><div class="kpi-l">กรมใช้ e-Operation</div></div>
+  <div class="kpi-card"><div class="kpi-v">73%</div><div class="kpi-l">DGA Score</div></div>
+  <div class="kpi-card"><div class="kpi-v">120K</div><div class="kpi-l">บัญชี e-Filing</div></div>
+  <div class="kpi-card"><div class="kpi-v">3</div><div class="kpi-l">จว. G2G AgriTech</div></div>
+  <div class="kpi-card"><div class="kpi-v">88%</div><div class="kpi-l">Uptime ระบบ</div></div>
+</div>
+<div class="card"><div class="card-h">🖥️ ระบบหลักของกระทรวง</div>
+<table class="tbl">
+<tr><th>ระบบ</th><th>เจ้าของ</th><th>ผู้ใช้</th><th>สถานะ</th><th>หมายเหตุ</th></tr>
+<tr><td>ทะเบียนเกษตรกร (DOAE Registration)</td><td>กสก.</td><td>8.2M เกษตรกร</td><td><span class="tag tag-ok">Online</span></td><td>เชื่อม ธ.ก.ส.</td></tr>
+<tr><td>e-NID ปศุสัตว์</td><td>ปศ.</td><td>2.1M ฟาร์ม</td><td><span class="tag tag-ok">Online</span></td><td>ติดตามโรค ASF</td></tr>
+<tr><td>e-GAP รับรองมาตรฐาน</td><td>มกอช.</td><td>165K ฟาร์ม</td><td><span class="tag tag-ok">Online</span></td><td>ส่งออก-ขายในประเทศ</td></tr>
+<tr><td>One Map ที่ดิน-น้ำ</td><td>พด. + ชป.</td><td>76 จังหวัด</td><td><span class="tag tag-warn">เบต้า</span></td><td>เปิดต้นปี 2569</td></tr>
+<tr><td>G2G AgriTech Platform</td><td>OPS + DOAE</td><td>152K เกษตรกร</td><td><span class="tag tag-ok">Online</span></td><td>นำร่อง 3 จว.</td></tr>
+<tr><td>ระบบเตือนภัยพืช (Pest Alert)</td><td>กวก.</td><td>2.4M เกษตรกร</td><td><span class="tag tag-ok">Online</span></td><td>SMS + LINE Notify</td></tr>
+<tr><td>ระบบราคาพืชผล (OAE)</td><td>สศก.</td><td>สาธารณะ</td><td><span class="tag tag-ok">Online</span></td><td>oae.go.th</td></tr>
+</table></div>
+</div>
+
+<!-- TAB 3: บุคลากร -->
+<div class="page" id="t3">
+<div class="page-title">👥 บุคลากร 32,500 คน</div>
+<div class="page-sub">ภาพรวมข้าราชการ + ลูกจ้าง · 15 หน่วยงาน · 76 จังหวัด</div>
+<div class="kpi-row">
+  <div class="kpi-card"><div class="kpi-v">32,500</div><div class="kpi-l">บุคลากรทั้งหมด</div></div>
+  <div class="kpi-card"><div class="kpi-v">24,800</div><div class="kpi-l">ข้าราชการ</div></div>
+  <div class="kpi-card"><div class="kpi-v">7,700</div><div class="kpi-l">พนง./ลูกจ้าง</div></div>
+  <div class="kpi-card"><div class="kpi-v">1,820</div><div class="kpi-l">เกษียณ 2568</div></div>
+  <div class="kpi-card"><div class="kpi-v">600</div><div class="kpi-l">ตำแหน่งต้องการ</div></div>
+</div>
+<div class="card"><div class="card-h">📊 บุคลากรตามกรม</div>
+<table class="tbl">
+<tr><th>กรม</th><th>ข้าราชการ</th><th>พนง.</th><th>รวม</th><th>เกษียณ 2568</th></tr>
+<tr><td>RID / ชป.</td><td>8,600</td><td>2,600</td><td>11,200</td><td>620</td></tr>
+<tr><td>DOAE / กสก.</td><td>6,400</td><td>1,800</td><td>8,200</td><td>410</td></tr>
+<tr><td>DLD / ปศ.</td><td>3,600</td><td>1,200</td><td>4,800</td><td>240</td></tr>
+<tr><td>OPS / สป.</td><td>3,000</td><td>800</td><td>3,800</td><td>180</td></tr>
+<tr><td>DOA / กวก.</td><td>2,400</td><td>800</td><td>3,200</td><td>150</td></tr>
+<tr><td>DOF / ปม.</td><td>2,200</td><td>600</td><td>2,800</td><td>120</td></tr>
+<tr><td>LDD / พด.</td><td>2,000</td><td>600</td><td>2,600</td><td>110</td></tr>
+<tr><td>CPD / กสส.</td><td>1,800</td><td>600</td><td>2,400</td><td>90</td></tr>
+<tr><td>RD / กข.</td><td>1,600</td><td>500</td><td>2,100</td><td>80</td></tr>
+<tr><td>RAOT / กยท.</td><td>1,400</td><td>500</td><td>1,900</td><td>60</td></tr>
+<tr><td>CAD / กตส.</td><td>1,400</td><td>400</td><td>1,800</td><td>60</td></tr>
+<tr><td>ALRO / ส.ป.ก.</td><td>1,100</td><td>300</td><td>1,400</td><td>50</td></tr>
+<tr><td>OAE / สศก.</td><td>650</td><td>170</td><td>820</td><td>30</td></tr>
+<tr><td>ACFS / มกอช.</td><td>360</td><td>120</td><td>480</td><td>20</td></tr>
+<tr><td>QSDS / มม.</td><td>320</td><td>100</td><td>420</td><td>10</td></tr>
+<tr style="font-weight:700;background:var(--p5)"><td>รวม</td><td>24,830</td><td>7,670</td><td>32,500</td><td>2,230</td></tr>
+</table></div>
+</div>
+
+<!-- TAB 4: งบประมาณ -->
+<div class="page" id="t4">
+<div class="page-title">💰 งบประมาณภาพรวม กษ. 154,800M</div>
+<div class="page-sub">ปี 2568 · 15 หน่วยงาน · ภาพรวมระดับปลัด</div>
+<div class="kpi-row">
+  <div class="kpi-card"><div class="kpi-v">154,800M</div><div class="kpi-l">งบรวม</div></div>
+  <div class="kpi-card"><div class="kpi-v">111,456M</div><div class="kpi-l">เบิกจ่ายแล้ว</div></div>
+  <div class="kpi-card"><div class="kpi-v">72%</div><div class="kpi-l">% เบิกจ่าย</div></div>
+  <div class="kpi-card"><div class="kpi-v">43,344M</div><div class="kpi-l">คงเหลือ</div></div>
+  <div class="kpi-card"><div class="kpi-v">3</div><div class="kpi-l">กรมเร่งรัด</div></div>
+</div>
+<div class="g2">
+  <div class="card"><div class="card-h">📊 งบตามประเภท</div>
+  <table class="tbl"><tr><th>ประเภท</th><th>งบ (M)</th><th>%</th></tr>
+  <tr><td>งบลงทุน (โครงการก่อสร้าง)</td><td>78,200</td><td>51%</td></tr>
+  <tr><td>งบดำเนินงาน</td><td>42,800</td><td>28%</td></tr>
+  <tr><td>งบบุคลากร</td><td>22,400</td><td>14%</td></tr>
+  <tr><td>เงินอุดหนุน</td><td>11,400</td><td>7%</td></tr>
+  </table></div>
+  <div class="card"><div class="card-h">🚨 กรมที่ต้องเร่งรัด</div>
+  <table class="tbl"><tr><th>กรม</th><th>%เบิก</th><th>เหตุผล</th></tr>
+  <tr><td>RID / ชป.</td><td>64%</td><td>โครงการก่อสร้างล่าช้า · TOR + LGP</td></tr>
+  <tr><td>DLD / ปศ.</td><td>75%</td><td>จัดซื้อวัคซีนล่าช้า · ASF response</td></tr>
+  <tr><td>RD / กข.</td><td>78%</td><td>โครงการเมล็ดพันธุ์ล่าช้า</td></tr>
+  </table></div>
+</div>
+</div>
+
+<!-- TAB 5: นโยบาย รมว. มอบหมาย -->
+<div class="page" id="t5">
+<div class="page-title">📋 นโยบายที่ รมว. มอบหมายให้ปลัดติดตาม</div>
+<div class="page-sub">8 นโยบายหลัก · ปลัดบูรณาการ + รายงาน รมว. ทุกเดือน</div>
+<div class="card"><div class="card-h">📊 ความก้าวหน้านโยบาย</div>
+<table class="tbl">
+<tr><th>นโยบาย</th><th>กรมหลัก</th><th>เป้าหมาย</th><th>ปัจจุบัน</th><th>%</th></tr>
+<tr><td>ลดต้นทุน เพิ่มผลผลิต</td><td>DOAE</td><td>2M เกษตรกร</td><td>1.16M</td><td>58%</td></tr>
+<tr><td>Smart Farmer / YSF</td><td>DOAE</td><td>250K</td><td>220K</td><td>88%</td></tr>
+<tr><td>Organic + GAP/GI ส่งออก</td><td>ACFS + DOA</td><td>1.5M ไร่ Organic</td><td>850K</td><td>57%</td></tr>
+<tr><td>บูรณาการน้ำ (One Map)</td><td>RID + LDD</td><td>2.5M ไร่ ชลประทาน</td><td>1.05M</td><td>42%</td></tr>
+<tr><td>Rice Transformation</td><td>RD</td><td>5M ไร่ GAP</td><td>2.4M</td><td>48%</td></tr>
+<tr><td>ราคายาง ≥65 บ./กก.</td><td>RAOT</td><td>≥65</td><td>62</td><td>95%</td></tr>
+<tr><td>Bio-Economy (BCG)</td><td>DOA + DOAE</td><td>50,000M มูลค่า</td><td>19,000M</td><td>38%</td></tr>
+<tr><td>G2G AgriTech 76 จว.</td><td>OPS + DOAE</td><td>5M เกษตรกร AI</td><td>152K</td><td>18%</td></tr>
+</table></div>
+
+<div class="card"><div class="card-h">📅 ปลัดต้องรายงาน รมว. รายเดือน</div>
+<table class="tbl">
+<tr><th>รายงาน</th><th>กำหนด</th><th>สถานะ</th></tr>
+<tr><td>รายงานความก้าวหน้า 8 นโยบาย</td><td>วันที่ 5 ของเดือน</td><td><span class="tag tag-ok">ส่งแล้ว</span></td></tr>
+<tr><td>รายงานงบเบิกจ่าย</td><td>วันที่ 10</td><td><span class="tag tag-ok">ส่งแล้ว</span></td></tr>
+<tr><td>รายงานสถานะวิกฤต (ASF/ภัยแล้ง/ราคา)</td><td>ทันที</td><td><span class="tag tag-warn">รออัปเดต</span></td></tr>
+<tr><td>รายงาน G2G AgriTech</td><td>วันที่ 15</td><td><span class="tag tag-ok">ส่งแล้ว</span></td></tr>
+</table></div>
+</div>
+
+</div>
+</div>
+</div>
+
+<script>
+function doLogin(){document.getElementById('login').style.display='none';document.getElementById('app').style.display='flex';}
+function doLogout(){document.getElementById('login').style.display='flex';document.getElementById('app').style.display='none';}
+function show(i,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('t'+i).classList.add('active');
+  el.classList.add('active');
+}
+</script>
+<script src="/moac-delegate.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  var orig = doLogin;
+  doLogin = function(){
+    orig();
+    MoacDelegate.init({
+      myId: 'ps',
+      roleName: 'ปลัดกระทรวง กษ.',
+      level: 'ps',
+      reportsTo: 'minister',
+      canAssignTo: [
+        {id:'deputy-ps', name:'รองปลัด กษ.'},
+        {id:'doae', name:'อธิบดี กสก.'},
+        {id:'cpd', name:'อธิบดี กสส.'},
+        {id:'dld', name:'อธิบดี ปศ.'},
+        {id:'dof', name:'อธิบดี ปม.'},
+        {id:'rd', name:'อธิบดี กข.'},
+        {id:'doa', name:'อธิบดี กวก.'},
+        {id:'ldd', name:'อธิบดี พด.'},
+        {id:'rid', name:'อธิบดี ชป.'},
+        {id:'alro', name:'เลขาธิการ ส.ป.ก.'},
+        {id:'raot', name:'ผู้ว่าการ กยท.'},
+        {id:'qsds', name:'อธิบดี มม.'},
+        {id:'oae', name:'เลขาธิการ สศก.'},
+        {id:'acfs', name:'เลขาธิการ มกอช.'},
+        {id:'cad', name:'อธิบดี กตส.'}
+      ]
+    });
+  };
+});
+</script>
+<script src="/moac-delegate.js"></script>
+<script src="/moac-app.js?v=20260526"></script>
+</body></html>

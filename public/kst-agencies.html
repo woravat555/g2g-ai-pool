@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ระบบบริหารงานหน่วยงานเกษตร จังหวัดแพร่ — กรมส่งเสริมการเกษตร</title>
+  <style>
+    :root {
+      --gov-blue: #2d7a2d;
+      --gov-blue-dark: #1a5c1a;
+      --gov-green: #1f7a4d;
+      --gov-gold: #c8991e;
+      --bg: #f0f4f8;
+      --card: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --shadow: 0 2px 12px rgba(26,79,138,0.10);
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Sarabun', 'Noto Sans Thai', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; }
+
+    .header {
+      background: linear-gradient(135deg, var(--gov-blue-dark) 0%, var(--gov-blue) 70%, #3d9a3d 100%);
+      color: #fff;
+      padding: 32px;
+      text-align: center;
+    }
+    .header-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 20px;
+      padding: 4px 16px;
+      font-size: 12px;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
+    }
+    .header h1 { font-size: 28px; font-weight: 800; margin-bottom: 6px; }
+    .header p { font-size: 15px; opacity: 0.85; }
+    .header-links { margin-top: 20px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .header-links a {
+      padding: 8px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      border: 1.5px solid rgba(255,255,255,0.5);
+      color: #fff;
+      transition: background 0.15s;
+    }
+    .header-links a:hover { background: rgba(255,255,255,0.15); }
+    .header-links a.primary { background: #fff; color: var(--gov-blue); border-color: #fff; }
+
+    .main { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--gov-blue);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 2px;
+      background: var(--border);
+    }
+
+    .agency-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .agency-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      transition: transform 0.15s, box-shadow 0.15s;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+    }
+    .agency-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(26,79,138,0.15);
+    }
+    .agency-card-header {
+      padding: 20px 20px 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .agency-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      flex-shrink: 0;
+    }
+    .agency-id-badge {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: var(--bg);
+      padding: 2px 8px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      display: inline-block;
+      margin-bottom: 4px;
+    }
+    .agency-name { font-size: 15px; font-weight: 700; color: var(--gov-blue); line-height: 1.3; }
+    .agency-dept { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+    .agency-card-body { padding: 16px 20px; flex: 1; }
+    .agency-mandate { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+    .agency-card-footer {
+      padding: 12px 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .agency-stats { display: flex; gap: 14px; }
+    .stat-item { text-align: center; }
+    .stat-num { font-size: 17px; font-weight: 800; color: var(--gov-blue); }
+    .stat-label { font-size: 11px; color: var(--text-muted); }
+    .btn-enter {
+      padding: 8px 18px;
+      background: var(--gov-blue);
+      color: #fff;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+    .btn-enter:hover { background: var(--gov-blue-dark); }
+
+    .info-box {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 32px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .info-box-icon { font-size: 24px; flex-shrink: 0; }
+    .info-box h3 { font-size: 15px; font-weight: 700; color: var(--gov-blue); margin-bottom: 6px; }
+    .info-box p { font-size: 13px; color: #1e40af; line-height: 1.6; }
+
+    @media (max-width: 640px) {
+      .header { padding: 24px 16px; }
+      .header h1 { font-size: 22px; }
+      .main { padding: 20px 16px; }
+      .agency-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-badge">🌾 กรมส่งเสริมการเกษตร — กระทรวงเกษตรและสหกรณ์</div>
+  <h1>ระบบบริหารงานหน่วยงานเกษตร จังหวัดแพร่</h1>
+  <p>กระทรวงเกษตรและสหกรณ์ — ปีงบประมาณ 2568</p>
+  <div class="header-links">
+    <a href="/satkj.html" class="primary">สกจ. ศูนย์ประสานงาน</a>
+    <a href="/management.html">ภาพรวมจังหวัด</a>
+    <a href="/phrae.html">แพลตฟอร์มเกษตร</a>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- DOAE Central Banner -->
+  <div class="info-box" style="background:#f0fdf0;border-color:#86efac;margin-bottom:20px;">
+    <div class="info-box-icon">🏛️</div>
+    <div>
+      <h3>
+        <a href="/doae-central.html" style="color:#1a5c1a;text-decoration:none;">
+          กรมส่งเสริมการเกษตร — ระบบบริหารส่วนกลาง (77 จังหวัด) →
+        </a>
+      </h3>
+      <p style="color:#166534;">
+        ระบบส่วนกลางที่เชื่อมโยงข้อมูลจาก <strong>77 จังหวัดทั่วประเทศ</strong>
+        ภาพรวมประเทศ · นโยบาย · บุคลากรส่วนกลาง · งบประมาณ · ระบบสื่อสาร
+        (<a href="/doae-central.html" style="color:#1a5c1a;">เปิดระบบส่วนกลาง</a>)
+      </p>
+    </div>
+  </div>
+
+  <!-- สกจ. Coordinator Banner -->
+  <div class="info-box" style="background:#eff6ff;border-color:#bfdbfe;margin-bottom:20px;">
+    <div class="info-box-icon">🌾</div>
+    <div>
+      <h3>
+        <a href="/satkj.html" style="color:var(--gov-blue);text-decoration:none;">
+          สำนักงานเกษตรและสหกรณ์จังหวัดแพร่ (สกจ.) — ศูนย์ประสานงาน →
+        </a>
+      </h3>
+      <p>
+        สกจ. ทำหน้าที่ <strong>ประสานงานภาพรวม</strong> ระหว่างหน่วยงาน กษ. ทั้ง 8 แห่งในจังหวัดแพร่
+        ภายใต้สำนักงานปลัดกระทรวงเกษตรและสหกรณ์ — <strong>ไม่มีอำนาจสั่งการรายกรม</strong>
+        สกจ. รับรายงานสรุปจากหน่วยงาน และประสานงานคำขอจากส่วนกลางเท่านั้น
+        (<a href="/satkj.html" style="color:var(--gov-blue);">เปิดแดชบอร์ด สกจ.</a>)
+      </p>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <div class="info-box-icon">ℹ️</div>
+    <div>
+      <h3>หลักการแยกข้อมูลตามหน่วยงาน</h3>
+      <p>ตามหลักกฎหมายการบริหารราชการไทย แต่ละกรม/หน่วยงานในสังกัดกระทรวงเกษตรและสหกรณ์
+        มีสายบังคับบัญชาและการรายงานแยกต่างหากจากกัน ระบบนี้แสดงเฉพาะข้อมูลของหน่วยงานตนเอง
+        การขอดูข้อมูลข้ามหน่วยงานต้องผ่านกระบวนการขออนุมัติตามระเบียบ</p>
+    </div>
+  </div>
+
+  <div class="section-title">8 หน่วยงานในจังหวัดแพร่</div>
+
+  <div class="agency-grid" id="agencyGrid">
+    <!-- Rendered by JS -->
+  </div>
+
+</main>
+
+<script>
+  const AGENCIES = [
+    {
+      id: 'KST-54-001',
+      name: 'สำนักงานเกษตรจังหวัดแพร่',
+      dept: 'กรมส่งเสริมการเกษตร',
+      icon: '🌾',
+      iconBg: '#dbeafe',
+      mandate: 'ส่งเสริมการเกษตรแบบแปลงใหญ่ ลำไย กาแฟ และพืชเศรษฐกิจ — ทำหน้าที่เป็นศูนย์กลางประสานงานด้านการเกษตรของจังหวัด',
+      personnel: 4, budget: '28.3', projects: 2, contracts: 3,
+    },
+    {
+      id: 'KST-54-002',
+      name: 'สำนักงานปศุสัตว์จังหวัดแพร่',
+      dept: 'กรมปศุสัตว์',
+      icon: '🐄',
+      iconBg: '#dcfce7',
+      mandate: 'ส่งเสริมการเลี้ยงสัตว์เศรษฐกิจ โคเนื้อคุณภาพ ไก่พื้นเมือง ควบคุมโรคระบาดสัตว์และตรวจสุขภาพสัตว์ทั่วจังหวัด',
+      personnel: 3, budget: '20.7', projects: 2, contracts: 2,
+    },
+    {
+      id: 'KST-54-003',
+      name: 'สำนักงานประมงจังหวัดแพร่',
+      dept: 'กรมประมง',
+      icon: '🐟',
+      iconBg: '#e0f2fe',
+      mandate: 'ส่งเสริมการเพาะเลี้ยงสัตว์น้ำในแม่น้ำยม ปล่อยพันธุ์ปลาฟื้นฟูทรัพยากร และพัฒนาอาชีพประมงน้ำจืด',
+      personnel: 3, budget: '10.5', projects: 2, contracts: 2,
+    },
+    {
+      id: 'KST-54-004',
+      name: 'การยางแห่งประเทศไทย จ.แพร่',
+      dept: 'การยางแห่งประเทศไทย (กยท.)',
+      icon: '🌿',
+      iconBg: '#d1fae5',
+      mandate: 'ส่งเสริมการปลูกและแปรรูปยางพารา บริหารกองทุนพัฒนายาง เชื่อมตลาดยางพาราภาคเหนือ',
+      personnel: 3, budget: '20.7', projects: 2, contracts: 2,
+    },
+    {
+      id: 'KST-54-005',
+      name: 'ศูนย์วิจัยข้าวแพร่',
+      dept: 'กรมการข้าว',
+      icon: '🔬',
+      iconBg: '#fef9c3',
+      mandate: 'วิจัยและพัฒนาพันธุ์ข้าวเหนียวแพร่ ผลิตเมล็ดพันธุ์ข้าวคุณภาพดี ส่งเสริมมาตรฐาน GAP สำหรับเกษตรกรข้าว',
+      personnel: 4, budget: '21.5', projects: 2, contracts: 2,
+    },
+    {
+      id: 'KST-54-006',
+      name: 'สำนักงานสหกรณ์จังหวัดแพร่',
+      dept: 'กรมส่งเสริมสหกรณ์',
+      icon: '🤝',
+      iconBg: '#ede9fe',
+      mandate: 'พัฒนาและส่งเสริมสหกรณ์การเกษตรและกลุ่มเกษตรกรให้มีความเข้มแข็ง บริหารจัดการงบอุดหนุนสหกรณ์',
+      personnel: 3, budget: '26.6', projects: 2, contracts: 2,
+    },
+    {
+      id: 'KST-54-007',
+      name: 'สำนักงานตรวจบัญชีสหกรณ์แพร่',
+      dept: 'กรมตรวจบัญชีสหกรณ์',
+      icon: '📊',
+      iconBg: '#fce7f3',
+      mandate: 'ตรวจสอบบัญชีสหกรณ์และกลุ่มเกษตรกรประจำปี พัฒนาระบบบัญชีอิเล็กทรอนิกส์ ส่งเสริมธรรมาภิบาลองค์กรสหกรณ์',
+      personnel: 3, budget: '8.6', projects: 2, contracts: 1,
+    },
+    {
+      id: 'KST-54-008',
+      name: 'สำนักงาน ส.ป.ก.จังหวัดแพร่',
+      dept: 'สำนักงานการปฏิรูปที่ดินเพื่อเกษตรกรรม',
+      icon: '🗺️',
+      iconBg: '#fef3c7',
+      mandate: 'จัดสรรที่ดิน ส.ป.ก. และออกเอกสารสิทธิ์ คทช. ให้เกษตรกรไร้ที่ดิน สำรวจรังวัดที่ดินในเขตปฏิรูปที่ดิน',
+      personnel: 3, budget: '14.7', projects: 2, contracts: 2,
+    },
+  ];
+
+  function renderAgencies() {
+    const grid = document.getElementById('agencyGrid');
+    grid.innerHTML = AGENCIES.map(a => `
+      <a class="agency-card" href="/agency-platform.html?agency=${a.id}">
+        <div class="agency-card-header">
+          <div class="agency-icon" style="background:${a.iconBg}">${a.icon}</div>
+          <div style="flex:1;min-width:0">
+            <div class="agency-id-badge">${a.id}</div>
+            <div class="agency-name">${a.name}</div>
+            <div class="agency-dept">${a.dept}</div>
+          </div>
+        </div>
+        <div class="agency-card-body">
+          <div class="agency-mandate">${a.mandate}</div>
+        </div>
+        <div class="agency-card-footer">
+          <div class="agency-stats">
+            <div class="stat-item">
+              <div class="stat-num">${a.personnel}</div>
+              <div class="stat-label">บุคลากร</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-num">${a.budget}</div>
+              <div class="stat-label">ล้านบาท</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-num">${a.projects}</div>
+              <div class="stat-label">โครงการ</div>
+            </div>
+          </div>
+          <span class="btn-enter">เปิดระบบ →</span>
+        </div>
+      </a>
+    `).join('');
+  }
+
+  renderAgencies();
+</script>
+<footer style="background:#1a5c1a;color:#fff;text-align:center;padding:16px 24px;font-size:13px;margin-top:32px;">
+  © กรมส่งเสริมการเกษตร กระทรวงเกษตรและสหกรณ์
+</footer>
+<script src="/access-bar.js"></script>
+</body>
+</html>

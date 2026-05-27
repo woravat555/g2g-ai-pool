@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>กระทรวงเกษตรและสหกรณ์ — PLAT Ministry Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0b1f3a;--navy2:#152d4f;--navy3:#1e3d68;--navy4:#2a5298;
+  --gold:#c9a227;--gold2:#e8c55a;
+  --green:#1a7a3a;--green2:#2ea855;--accent:#34c785;
+  --red:#c0392b;--orange:#d35400;--blue:#2980b9;--purple:#7d3c98;--teal:#0e7490;
+  --bg:#eef2f7;--surface:#fff;--border:#dde3ec;
+  --text:#1a202c;--text2:#4a5568;--text3:#718096;
+}
+body{font-family:'Sarabun','Inter',sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.55}
+a{text-decoration:none;color:inherit}
+
+.topbar{background:linear-gradient(135deg,var(--navy) 0%,var(--navy3) 100%);color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,.3);position:sticky;top:0;z-index:100}
+.tb-l{display:flex;align-items:center;gap:14px}
+.tb-logo{font-size:34px}
+.tb-titles .t1{font-size:16px;font-weight:800}
+.tb-titles .t2{font-size:11px;color:#94a8c0;margin-top:3px;letter-spacing:.04em}
+.tb-r{display:flex;align-items:center;gap:10px}
+.tb-link{font-size:11px;color:#cfd6e0;padding:6px 12px;border-radius:7px;border:1px solid rgba(255,255,255,.15)}
+.tb-link:hover{background:rgba(255,255,255,.1);color:#fff}
+.tb-link.gold{background:rgba(201,162,39,.15);border-color:var(--gold);color:var(--gold2);font-weight:700}
+
+.hero{background:linear-gradient(135deg,var(--navy3) 0%,var(--navy4) 50%,var(--navy3) 100%);color:#fff;padding:40px 28px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 30%,rgba(201,162,39,.15) 0%,transparent 50%)}
+.hero-inner{max-width:1320px;margin:0 auto;position:relative;z-index:2;display:grid;grid-template-columns:2fr 1fr;gap:30px}
+@media(max-width:900px){.hero-inner{grid-template-columns:1fr}}
+.hero-eyebrow{font-size:11px;letter-spacing:.2em;color:var(--gold2);font-weight:700;margin-bottom:10px;text-transform:uppercase}
+.hero-title{font-size:34px;font-weight:800;line-height:1.2;margin-bottom:10px}
+.hero-sub{font-size:14px;color:#cfd6e0;line-height:1.7;max-width:680px}
+.hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hero-stat{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:12px 14px}
+.hs-lab{font-size:10px;color:#94a8c0;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.hs-val{font-size:20px;font-weight:800;color:var(--gold2);font-family:'Inter','Sarabun',sans-serif}
+.hs-sub{font-size:10px;color:#94a8c0;margin-top:2px}
+
+.main{max-width:1320px;margin:0 auto;padding:24px}
+
+.section{margin-top:24px}
+.sec-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:14px;gap:14px;flex-wrap:wrap}
+.sec-title{font-size:20px;font-weight:800;color:var(--navy)}
+.sec-sub{font-size:11px;color:var(--text3);max-width:600px}
+
+.card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+
+/* DEPT GRID */
+.dept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:12px}
+.dept-card{background:#fff;border:1px solid var(--border);border-radius:11px;padding:14px;border-left:4px solid var(--navy3)}
+.dept-card.special{border-left-color:var(--gold);background:linear-gradient(to right,#fffbeb 0%,#fff 50%)}
+.dept-card.warn{border-left-color:var(--orange);background:#fff7ed}
+.dept-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.dept-icon{font-size:26px}
+.dept-code{font-size:9px;font-weight:700;color:var(--gold);letter-spacing:.06em;text-transform:uppercase}
+.dept-name{font-size:14px;font-weight:800;color:var(--navy);line-height:1.3;margin-top:2px}
+.dept-head-pos{font-size:10px;color:var(--text3);margin-top:1px}
+.dept-fn{font-size:11px;color:var(--text2);line-height:1.55;margin:6px 0}
+.dept-presence{font-size:10px;color:var(--text3);background:#f7f9fc;padding:6px 8px;border-radius:6px;margin-top:6px}
+.dept-progs{margin-top:8px}
+.dept-progs-lab{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.dept-progs ul{padding-left:18px;font-size:10px;color:var(--text2);line-height:1.7}
+.dept-note{font-size:10px;color:var(--orange);font-style:italic;margin-top:6px;padding-top:6px;border-top:1px dashed #fed7aa}
+
+/* POLICY */
+.policy-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:11px}
+.policy-card{background:linear-gradient(135deg,#fef3c7 0%,#fffbeb 100%);border:1px solid #fde68a;border-left:5px solid var(--gold);border-radius:11px;padding:14px}
+.pol-name{font-size:13px;font-weight:800;color:var(--navy);margin-bottom:5px}
+.pol-meta{font-size:10px;color:var(--text2);margin-bottom:6px;line-height:1.6}
+.pol-meta b{color:var(--navy)}
+.pol-kpi{background:rgba(255,255,255,.85);border-radius:7px;padding:7px 10px;font-size:10px;color:var(--text);margin-top:6px;border-left:3px solid var(--green2);font-weight:600}
+.pol-note{font-size:10px;color:var(--navy3);margin-top:5px;font-style:italic}
+
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:11px}
+.kpi-card{background:linear-gradient(135deg,#fff 0%,#f0fdf4 100%);border:1px solid #bbf7d0;border-radius:11px;padding:14px 16px;text-align:center}
+.kpi-lab{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;font-weight:700;margin-bottom:8px}
+.kpi-val{font-size:26px;font-weight:800;color:var(--green);font-family:'Inter','Sarabun',sans-serif}
+.kpi-unit{font-size:11px;color:var(--text3);margin-top:2px}
+
+/* PROVINCE ROLLOUT */
+.rollout{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px}
+.phase-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:11px;margin-top:14px}
+.phase-card{padding:14px;border-radius:10px;text-align:center}
+.ph-1{background:linear-gradient(135deg,#d1fae5 0%,#a7f3d0 100%);border:2px solid var(--green2)}
+.ph-2{background:linear-gradient(135deg,#dbeafe 0%,#bfdbfe 100%);border:2px solid var(--navy4)}
+.ph-3{background:linear-gradient(135deg,#fef3c7 0%,#fde68a 100%);border:2px solid var(--gold)}
+.ph-4{background:linear-gradient(135deg,#e9d5ff 0%,#d8b4fe 100%);border:2px solid var(--purple)}
+.ph-label{font-size:11px;font-weight:800;color:var(--navy);margin-bottom:6px;text-transform:uppercase;letter-spacing:.07em}
+.ph-name{font-size:13px;font-weight:700;color:var(--navy);line-height:1.5}
+.ph-status{display:inline-block;background:rgba(255,255,255,.7);padding:3px 9px;border-radius:5px;font-size:9px;font-weight:700;color:var(--navy);margin-top:6px}
+.ph-link{display:inline-block;margin-top:7px;font-size:11px;color:var(--navy);font-weight:700;text-decoration:underline}
+
+/* FOOTER */
+footer{margin-top:36px;padding:24px;text-align:center;font-size:11px;color:var(--text3);border-top:1px solid var(--border)}
+.sources{background:#f8fafc;border:1px dashed var(--border);border-radius:8px;padding:12px 16px;font-size:10px;color:var(--text3);margin-top:14px;text-align:left}
+.sources b{color:var(--navy)}
+.sources ul{margin-top:6px;padding-left:18px;line-height:1.7}
+
+.loader{padding:80px 20px;text-align:center;color:var(--text3)}
+.loader .sp{display:inline-block;width:40px;height:40px;border:3px solid #cbd5e0;border-top-color:var(--navy3);border-radius:50%;animation:sp .9s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+.lined-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:8px}
+.lined-table th{text-align:left;padding:7px;background:#f1f5f9;font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase}
+.lined-table td{padding:8px;border-bottom:1px solid #ebeef3;color:var(--text2)}
+
+/* 76-Province Grid */
+.region-block{margin-top:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px 16px;backdrop-filter:blur(8px)}
+.region-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.region-dot{width:10px;height:10px;border-radius:50%}
+.region-name{font-size:13px;font-weight:800;color:#fff;letter-spacing:.02em}
+.region-count{font-size:10px;color:#94a8c0;margin-left:auto;background:rgba(255,255,255,.07);padding:3px 9px;border-radius:10px;font-weight:700}
+.prov-grid-76{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:7px}
+.pchip{display:flex;align-items:center;gap:6px;padding:8px 11px;border-radius:8px;font-size:11px;cursor:pointer;transition:.15s;text-decoration:none;position:relative;overflow:hidden}
+.pchip-code{background:rgba(0,0,0,.25);padding:2px 5px;border-radius:4px;font-size:9px;font-weight:800;font-family:Inter,Sarabun,sans-serif;flex-shrink:0}
+.pchip-name{font-weight:700;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pchip-badge{background:#34c785;color:#000;font-size:8px;font-weight:800;padding:1px 5px;border-radius:3px;letter-spacing:.04em;animation:pulse 2s infinite;flex-shrink:0}
+.pchip-status{font-size:8px;opacity:.55;background:rgba(255,255,255,.08);padding:1px 5px;border-radius:3px;font-weight:600;flex-shrink:0}
+.pchip-active{background:linear-gradient(135deg,rgba(46,168,85,.25),rgba(26,122,58,.35));color:#fff;border:1px solid rgba(46,168,85,.5);box-shadow:0 4px 14px rgba(46,168,85,.15)}
+.pchip-active:hover{background:linear-gradient(135deg,rgba(46,168,85,.4),rgba(26,122,58,.5));border-color:#34c785;transform:translateY(-2px);box-shadow:0 8px 20px rgba(46,168,85,.3)}
+.pchip-soon{background:rgba(255,255,255,.05);color:#6b7e96;border:1px solid rgba(255,255,255,.08);cursor:not-allowed;opacity:.65}
+.pchip-soon:hover{opacity:.85;background:rgba(255,255,255,.07)}
+
+</style>
+</head>
+<body>
+<script>
+/* Self-contained inline data */
+window.MINISTRY_INLINE_DATA = {"ministry_code": "MOAC", "ministry_code_th": "กษ.", "ministry_name_th": "กระทรวงเกษตรและสหกรณ์", "ministry_name_en": "Ministry of Agriculture and Cooperatives", "ministry_abbr": "MOAC / กษ.", "established": "พ.ศ. 2435 (รัชกาลที่ 5)", "current_minister_position": "รัฐมนตรีว่าการกระทรวงเกษตรและสหกรณ์", "law_basis": "พ.ร.บ.ปรับปรุงกระทรวง ทบวง กรม พ.ศ.2545 และที่แก้ไขเพิ่มเติม", "headquarters": "เขตพระนคร กรุงเทพมหานคร", "mission": "พัฒนาภาคเกษตรไทยให้มีความเข้มแข็ง ยั่งยืน เพิ่มขีดความสามารถในการแข่งขัน และยกระดับคุณภาพชีวิตเกษตรกร", "vision": "ภาคเกษตรของไทยมั่งคั่ง สามารถแข่งขันในตลาดโลกได้ เกษตรกรมีความสุข และมีรายได้ที่ดี", "fiscal_year_2568_budget_baht": 154800000000, "personnel_count_total": 32500, "thai_farmer_count_total": 12000000, "departments": [{"code": "OPS", "name_th": "สำนักงานปลัดกระทรวงเกษตรและสหกรณ์", "name_en": "Office of the Permanent Secretary", "head_position": "ปลัดกระทรวง", "icon": "🏛️", "function": "อำนวยการ ประสานนโยบาย บริหารทั่วไป", "province_presence": "สำนักงานเกษตรและสหกรณ์จังหวัด 76 จังหวัด"}, {"code": "DOAE", "name_th": "กรมส่งเสริมการเกษตร", "name_en": "Department of Agricultural Extension", "head_position": "อธิบดี", "icon": "🌾", "function": "ส่งเสริมและพัฒนาเกษตรกร — แปลงใหญ่, Smart Farmer, Young Smart Farmer, ศพก.", "province_presence": "สำนักงานเกษตรจังหวัด 76 จังหวัด + เกษตรอำเภอ 882 อำเภอ", "key_programs": ["ระบบส่งเสริมการเกษตรแบบแปลงใหญ่ (Big Plot)", "ศพก. ศูนย์เรียนรู้การเพิ่มประสิทธิภาพการผลิตสินค้าเกษตร 882 ศูนย์", "Young Smart Farmer / Smart Farmer", "ทะเบียนเกษตรกร (เกษตรกร 8.2 ล้านคน)"]}, {"code": "CPD", "name_th": "กรมส่งเสริมสหกรณ์", "name_en": "Cooperative Promotion Department", "head_position": "อธิบดี", "icon": "🤝", "function": "ส่งเสริมและพัฒนาสหกรณ์การเกษตร กลุ่มเกษตรกร", "province_presence": "สำนักงานสหกรณ์จังหวัด 76 จังหวัด", "key_programs": ["สหกรณ์การเกษตรเข้มแข็ง 7,000+ สหกรณ์", "กลุ่มเกษตรกร 4,500+ กลุ่ม", "ตลาดสหกรณ์เพื่อเกษตรกร"]}, {"code": "CAD", "name_th": "กรมตรวจบัญชีสหกรณ์", "name_en": "Cooperative Auditing Department", "head_position": "อธิบดี", "icon": "📊", "function": "ตรวจสอบบัญชีสหกรณ์ + ส่งเสริมการทำบัญชีฟาร์มของเกษตรกร", "province_presence": "สำนักงานตรวจบัญชีสหกรณ์ (สตท.) 76 จังหวัด"}, {"code": "DLD", "name_th": "กรมปศุสัตว์", "name_en": "Department of Livestock Development", "head_position": "อธิบดี", "icon": "🐄", "function": "พัฒนาด้านปศุสัตว์ — โค กระบือ สุกร ไก่ — รวมถึงควบคุมโรคระบาดสัตว์", "province_presence": "สำนักงานปศุสัตว์จังหวัด 76 จังหวัด + ปศุสัตว์อำเภอ 882 อำเภอ", "key_programs": ["ระบบทะเบียนสัตว์เลี้ยง (e-NID)", "ควบคุมโรคปากเท้าเปื่อย ASF อหิวาต์", "โคขุน-โครามา ยกระดับคุณภาพเนื้อ Beef Premium", "วัคซีนสัตว์ฟรีในพื้นที่เสี่ยง"]}, {"code": "DOF", "name_th": "กรมประมง", "name_en": "Department of Fisheries", "head_position": "อธิบดี", "icon": "🐟", "function": "ส่งเสริมประมงน้ำจืด ประมงทะเล เพาะเลี้ยงสัตว์น้ำ ควบคุม IUU", "province_presence": "สำนักงานประมงจังหวัด 76 จังหวัด"}, {"code": "RD", "name_th": "กรมการข้าว", "name_en": "Rice Department", "head_position": "อธิบดี", "icon": "🌾", "function": "ส่งเสริมการผลิตข้าว วิจัยพันธุ์ข้าว ระบบนาแปลงใหญ่ ข้าว GAP/GI", "province_presence": "ศูนย์วิจัยข้าว + ศูนย์เมล็ดพันธุ์ข้าว", "key_programs": ["ข้าวหอมมะลิทุ่งกุลาฯ GI", "เมล็ดพันธุ์ข้าวคุณภาพดี Distribution", "นาแปลงใหญ่ข้าว GAP", "ข้าวเหนียวเขี้ยวงูเชียงราย/แพร่ GI"]}, {"code": "DOA", "name_th": "กรมวิชาการเกษตร", "name_en": "Department of Agriculture", "head_position": "อธิบดี", "icon": "🔬", "function": "วิจัยและพัฒนาพันธุ์พืช ปัจจัยการผลิต กำกับมาตรฐาน GAP ขึ้นทะเบียนปุ๋ย/สารเคมีเกษตร", "province_presence": "ศูนย์วิจัยและพัฒนาการเกษตร + สถานีทดลอง"}, {"code": "LDD", "name_th": "กรมพัฒนาที่ดิน", "name_en": "Land Development Department", "head_position": "อธิบดี", "icon": "🌱", "function": "พัฒนาคุณภาพดิน วิเคราะห์ดิน ส่งเสริมการใช้ปุ๋ยพืชสด อนุรักษ์ดินและน้ำ", "province_presence": "สถานีพัฒนาที่ดิน (สพด.) 76 จังหวัด"}, {"code": "RID", "name_th": "กรมชลประทาน", "name_en": "Royal Irrigation Department", "head_position": "อธิบดี", "icon": "💧", "function": "พัฒนาและบริหารจัดการน้ำเพื่อการเกษตร — เขื่อน อ่าง คลองส่งน้ำ", "province_presence": "โครงการชลประทาน 76 จังหวัด"}, {"code": "ALRO", "name_th": "สำนักงานการปฏิรูปที่ดินเพื่อเกษตรกรรม (ส.ป.ก.)", "name_en": "Agricultural Land Reform Office", "head_position": "เลขาธิการ", "icon": "📐", "function": "จัดสรรที่ดินทำกินแก่เกษตรกร — ส.ป.ก. 4-01", "province_presence": "สำนักงาน ส.ป.ก.จังหวัด 70 จังหวัด"}, {"code": "RAOT", "name_th": "การยางแห่งประเทศไทย (กยท.)", "name_en": "Rubber Authority of Thailand", "head_position": "ผู้ว่าการ", "icon": "🌳", "function": "ส่งเสริม รับซื้อ แปรรูปยางพารา + กำหนดราคาอ้างอิง", "province_presence": "การยางแห่งประเทศไทย 19 จังหวัดยางหลัก"}, {"code": "QSDS", "name_th": "กรมหม่อนไหม", "name_en": "Queen Sirikit Department of Sericulture", "head_position": "อธิบดี", "icon": "🧵", "function": "ส่งเสริมและพัฒนาหม่อนไหม + ผ้าไหมไทย", "province_presence": "ศูนย์หม่อนไหมเฉลิมพระเกียรติฯ 24 จังหวัด"}, {"code": "OAE", "name_th": "สำนักงานเศรษฐกิจการเกษตร", "name_en": "Office of Agricultural Economics", "head_position": "เลขาธิการ", "icon": "📈", "function": "วิเคราะห์เศรษฐกิจการเกษตร พยากรณ์ผลผลิต ราคา และจัดทำข้อมูลสถิติเกษตร", "province_presence": "สศก. 12 เขตทั่วประเทศ"}, {"code": "ACFS", "name_th": "สำนักงานมาตรฐานสินค้าเกษตรและอาหารแห่งชาติ (มกอช.)", "name_en": "National Bureau of Agricultural Commodity and Food Standards", "head_position": "เลขาธิการ", "icon": "✅", "function": "กำหนดและรับรองมาตรฐาน GAP, Organic, GMP — สำหรับสินค้าส่งออก"}, {"code": "BAAC", "name_th": "ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร (ธ.ก.ส.)", "name_en": "Bank for Agriculture and Agricultural Cooperatives", "head_position": "ผู้จัดการ", "icon": "🏦", "function": "สถาบันการเงินเฉพาะกิจของรัฐ ภายใต้การกำกับของ กษ. (สถานะ: รัฐวิสาหกิจ ไม่ใช่กรมในกระทรวง — IRON RULE: ห้ามใส่เข้าโครงสร้างกรมของ กษ.)", "is_state_enterprise": true, "note": "⚠️ ธ.ก.ส. เป็นรัฐวิสาหกิจ ไม่ใช่กรมในกระทรวง"}], "policy_priorities_2568": [{"name": "นโยบายลดต้นทุน เพิ่มผลผลิต", "lead_dept": "DOAE", "kpi": "ลดต้นทุน 10-20% / เพิ่มผลผลิต 15% ต่อไร่", "target_farmer": 2000000}, {"name": "Smart Farmer / Young Smart Farmer", "lead_dept": "DOAE", "kpi": "Smart Farmer ใหม่ 50,000 ราย / Young Smart Farmer 5,000 ราย ต่อปี", "target_farmer": 50000}, {"name": "เกษตรอินทรีย์ + GAP/GI ส่งออก", "lead_dept": "ACFS + DOA", "kpi": "พื้นที่ Organic 1.5 ล้านไร่ภายในปี 2570", "target_area_rai": 1500000}, {"name": "บูรณาการน้ำเพื่อเกษตร (One Map)", "lead_dept": "RID + LDD", "kpi": "พื้นที่ชลประทานเพิ่ม 2.5 ล้านไร่", "target_area_rai": 2500000}, {"name": "พลิกโฉมข้าวไทย (Rice Transformation)", "lead_dept": "RD", "kpi": "นาแปลงใหญ่ GAP 5 ล้านไร่ ภายในปี 2570"}, {"name": "ราคายางมั่นคง 65+ บาท/กก.", "lead_dept": "RAOT", "kpi": "ราคาเฉลี่ยน้ำยางสด ≥ 65 บ./กก. ตลอดปี"}, {"name": "Bio-Economy (BCG)", "lead_dept": "DOA + DOAE", "kpi": "มูลค่าเพิ่มจาก Bio-Sugar, Bio-Plastic, Bio-Ethanol 50,000 ล้านบาท"}, {"name": "AI for AgriTech (PLAT ขยาย 76 จว.)", "lead_dept": "OPS + DOAE", "kpi": "เกษตรกรในระบบ AI Advisory 5 ล้านคน ภายในปี 2570", "target_farmer": 5000000, "note": "เริ่มจังหวัดนำร่อง: แพร่ → เชียงราย → อุดรธานี → ขยาย 76 จว."}], "key_kpi_2568": {"gdp_agriculture_pct": 8.5, "agricultural_export_baht": 1450000000000, "rice_export_million_ton": 8.2, "rubber_export_million_ton": 4.5, "registered_farmer_count": 8200000, "smart_farmer_count": 220000, "young_smart_farmer_count": 18500, "cooperative_count": 7200, "GAP_certified_farms": 165000, "organic_certified_rai": 850000}, "g2g_agritech_provincial_rollout": {"phase_1_complete": ["แพร่ (54)"], "phase_2_in_progress": ["เชียงราย (57)", "อุดรธานี (41)"], "phase_3_planned": ["เชียงใหม่ (50)", "ขอนแก่น (40)", "นครราชสีมา (30)", "พิษณุโลก (65)"], "phase_4_national": "ครบ 76 จังหวัด ภายในปี 2570", "target_farmer_in_system": 5000000, "current_pilot_url": "https://g2g-ai-pool.fly.dev/phrae.html"}, "_data_sources": ["กระทรวงเกษตรและสหกรณ์ — opsmoac.go.th", "สำนักงานเศรษฐกิจการเกษตร — oae.go.th", "พ.ร.บ.ปรับปรุงกระทรวง ทบวง กรม พ.ศ.2545", "เอกสารงบประมาณรายจ่ายประจำปี 2568 — กระทรวงเกษตรและสหกรณ์"], "_version": "1.0", "_updated": "2026-05-25"};
+</script>
+
+
+<div class="topbar">
+  <div class="tb-l">
+    <div class="tb-logo"><img class="ministry-logo-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Emblem_of_the_Ministry_of_Agriculture_and_Cooperatives.svg/250px-Emblem_of_the_Ministry_of_Agriculture_and_Cooperatives.svg.png" style="width:60px;height:60px;object-fit:contain;vertical-align:middle;margin-right:8px;" onerror="this.style.display='none'" alt="ตรากระทรวงเกษตรและสหกรณ์">🌾</div>
+    <div class="tb-titles">
+      <div class="t1">กระทรวงเกษตรและสหกรณ์</div>
+      <div class="t2">MINISTRY OF AGRICULTURE AND COOPERATIVES · PLAT Thailand</div>
+    </div>
+  </div>
+  <div class="tb-r">
+    <a href="/phrae.html" class="tb-link">🏔️ แพร่</a>
+    <a href="/chiangrai.html" class="tb-link">🏔️ เชียงราย</a>
+    <a href="/management-chiangrai.html" class="tb-link">📊 Mgmt CR</a>
+    <a href="/udonthani.html" class="tb-link">🌾 อุดรธานี</a>
+    <a href="/management-udonthani.html" class="tb-link">📊 Mgmt UD</a>
+    <a href="/management-moac.html" class="tb-link gold">📊 กษ. Management</a>
+    <a href="/ministry-mhesi.html" class="tb-link">🔬 อว.</a>
+    <a href="/ministry-moi.html" class="tb-link">🏛️ มท.</a>
+  </div>
+</div>
+
+<div id="content">
+  <div class="loader"><div class="sp"></div><p style="margin-top:14px">กำลังโหลดข้อมูลกระทรวง…</p></div>
+</div>
+
+<footer>
+  ⚙️ <b>ministry-agriculture.html</b> · ข้อมูลจาก <code>/ministry-data/agriculture.json</code> ·
+  <a href="/management.html" style="color:var(--navy);font-weight:700">Management Dashboard</a> ·
+  <a href="https://g2g-ai-pool.fly.dev" style="color:var(--navy);font-weight:700">PLAT Thailand</a>
+</footer>
+
+<script>
+const FORMAT = {
+  num: n => (n==null) ? '—' : n.toLocaleString('th-TH'),
+  baht: n => (n==null) ? '—' : n.toLocaleString('th-TH') + ' บาท',
+  millionBaht: n => (n==null) ? '—' : (n/1000000).toLocaleString('th-TH',{maximumFractionDigits:1}) + ' ล้านบาท',
+  billionBaht: n => (n==null) ? '—' : (n/1000000000).toLocaleString('th-TH',{maximumFractionDigits:2}) + ' พันล้านบาท',
+};
+
+async function load() {
+  try {
+    let d;
+    if (window.MINISTRY_INLINE_DATA) {
+      d = window.MINISTRY_INLINE_DATA;
+    } else {
+      const r = await fetch('ministry-data/agriculture.json');
+      if (!r.ok) throw new Error('Cannot load ministry data: ' + r.status);
+      d = await r.json();
+    }
+    document.title = d.ministry_name_th + ' — PLAT Thailand';
+    render(d);
+    setTimeout(loadMoacLive, 100);
+  } catch(e) {
+    const isFile = location.protocol === 'file:';
+    document.getElementById('content').innerHTML =
+      '<div style="padding:40px;text-align:center;color:#c0392b">⚠️ ' + e.message + '</div>' +
+      (isFile ? '<div style="padding:20px;text-align:center;background:#fef3c7;margin:20px"><b>💡 เปิดแบบ file://</b> — browser block fetch()<br>' +
+       '✅ ใช้: <a href="https://g2g-ai-pool.fly.dev/ministry-agriculture.html">g2g-ai-pool.fly.dev/ministry-agriculture.html</a></div>' : '');
+  }
+}
+
+function render(d) {
+  document.getElementById('content').innerHTML =
+    renderHero(d) +
+    '<div id="moac-live-panel"><div style="padding:16px;text-align:center;color:#888;font-size:13px">📡 กำลังโหลดข้อมูล Live จาก MOAC API…</div></div>' +
+    '<div class="main">' +
+      renderKPIs(d) +
+      renderPolicies(d) +
+      renderDepartments(d) +
+      renderRollout(d) +
+      render76Provinces() +
+      renderSources(d) +
+    '</div>';
+}
+
+function renderHero(d) {
+  return '<div class="hero"><div class="hero-inner">' +
+    '<div>' +
+      '<div class="hero-eyebrow">PLAT · กระทรวงเกษตรและสหกรณ์</div>' +
+      '<div class="hero-title">🌾 ' + d.ministry_name_th + '</div>' +
+      '<div class="hero-sub"><b>วิสัยทัศน์:</b> ' + (d.vision||'') + '</div>' +
+      '<div class="hero-sub" style="margin-top:8px"><b>พันธกิจ:</b> ' + (d.mission||'') + '</div>' +
+      '<div class="hero-sub" style="margin-top:10px;font-size:11px;opacity:.85">📜 ' + (d.law_basis||'') + ' · 🏛️ ' + (d.headquarters||'') + ' · 📅 จัดตั้ง ' + (d.established||'') + '</div>' +
+    '</div>' +
+    '<div class="hero-stats">' +
+      '<div class="hero-stat"><div class="hs-lab">งบประมาณปี 2568</div><div class="hs-val">' + FORMAT.billionBaht(d.fiscal_year_2568_budget_baht) + '</div></div>' +
+      '<div class="hero-stat"><div class="hs-lab">บุคลากร</div><div class="hs-val">' + FORMAT.num(d.personnel_count_total) + '</div><div class="hs-sub">ทุกตำแหน่งทั้งกระทรวง</div></div>' +
+      '<div class="hero-stat"><div class="hs-lab">เกษตรกรไทย</div><div class="hs-val">' + FORMAT.num(d.thai_farmer_count_total) + '</div><div class="hs-sub">ทั่วประเทศ</div></div>' +
+      '<div class="hero-stat"><div class="hs-lab">กรม/หน่วยงาน</div><div class="hs-val">' + (d.departments||[]).length + '</div><div class="hs-sub">รวมรัฐวิสาหกิจ ธ.ก.ส.</div></div>' +
+    '</div>' +
+  '</div></div>';
+}
+
+function renderKPIs(d) {
+  const k = d.key_kpi_2568 || {};
+  const items = [
+    { lab: 'GDP ภาคเกษตร', val: k.gdp_agriculture_pct + '%', sub: 'ของ GDP รวมประเทศ' },
+    { lab: 'มูลค่าส่งออก', val: FORMAT.billionBaht(k.agricultural_export_baht), sub: 'สินค้าเกษตรทั้งหมด' },
+    { lab: 'ข้าวส่งออก', val: k.rice_export_million_ton + ' ล้านตัน', sub: 'ปี 2568' },
+    { lab: 'ยางพาราส่งออก', val: k.rubber_export_million_ton + ' ล้านตัน', sub: 'ปี 2568' },
+    { lab: 'เกษตรกรลงทะเบียน', val: FORMAT.num(k.registered_farmer_count), sub: 'ผู้มีสิทธิ์ทบก.' },
+    { lab: 'Smart Farmer', val: FORMAT.num(k.smart_farmer_count), sub: 'พร้อมขยาย 5M ปี 2570' },
+    { lab: 'Young Smart Farmer', val: FORMAT.num(k.young_smart_farmer_count), sub: 'รุ่นใหม่' },
+    { lab: 'สหกรณ์', val: FORMAT.num(k.cooperative_count), sub: 'ทั่วประเทศ' },
+    { lab: 'GAP Farms', val: FORMAT.num(k.GAP_certified_farms), sub: 'แปลงรับรอง' },
+    { lab: 'Organic Area', val: FORMAT.num(k.organic_certified_rai) + ' ไร่', sub: 'เป้า 1.5M ไร่ 2570' },
+  ];
+  return '<div class="section"><div class="sec-head">' +
+    '<div><div class="sec-title">📊 ตัวชี้วัดสำคัญ ปีงบประมาณ 2568</div>' +
+    '<div class="sec-sub">ข้อมูลจากเอกสารงบประมาณรายจ่ายประจำปี และ สศก.</div></div></div>' +
+    '<div class="kpi-grid">' +
+      items.map(i => '<div class="kpi-card">' +
+        '<div class="kpi-lab">' + i.lab + '</div>' +
+        '<div class="kpi-val">' + i.val + '</div>' +
+        '<div class="kpi-unit">' + i.sub + '</div>' +
+      '</div>').join('') +
+    '</div></div>';
+}
+
+function renderPolicies(d) {
+  const pols = d.policy_priorities_2568 || [];
+  return '<div class="section"><div class="sec-head">' +
+    '<div><div class="sec-title">🎯 นโยบายเร่งด่วน ปี 2568</div>' +
+    '<div class="sec-sub">' + pols.length + ' นโยบายหลัก — ขับเคลื่อนโดยกรมต่างๆ และ PLAT</div></div></div>' +
+    '<div class="policy-grid">' +
+      pols.map(p => '<div class="policy-card">' +
+        '<div class="pol-name">' + p.name + '</div>' +
+        '<div class="pol-meta">🏛️ <b>หน่วยรับผิดชอบ:</b> ' + p.lead_dept + '</div>' +
+        (p.target_farmer ? '<div class="pol-meta">👥 <b>เป้าหมาย:</b> ' + FORMAT.num(p.target_farmer) + ' ราย</div>' : '') +
+        (p.target_area_rai ? '<div class="pol-meta">🌾 <b>พื้นที่เป้าหมาย:</b> ' + FORMAT.num(p.target_area_rai) + ' ไร่</div>' : '') +
+        '<div class="pol-kpi">📈 KPI: ' + p.kpi + '</div>' +
+        (p.note ? '<div class="pol-note">💡 ' + p.note + '</div>' : '') +
+      '</div>').join('') +
+    '</div></div>';
+}
+
+function renderDepartments(d) {
+  const deps = d.departments || [];
+  return '<div class="section"><div class="sec-head">' +
+    '<div><div class="sec-title">🏛️ กรม / หน่วยงานในกระทรวง</div>' +
+    '<div class="sec-sub">' + deps.length + ' กรม/หน่วยงาน (รวมรัฐวิสาหกิจที่ขึ้นกำกับโดย กษ.)</div></div></div>' +
+    '<div class="dept-grid">' +
+      deps.map(dep => {
+        const cls = dep.is_state_enterprise ? 'dept-card warn' : (dep.code==='OPS' ? 'dept-card special' : 'dept-card');
+        const programs = (dep.key_programs||[]).length ?
+          '<div class="dept-progs"><div class="dept-progs-lab">โครงการสำคัญ</div><ul>' +
+          dep.key_programs.map(p=>'<li>' + p + '</li>').join('') + '</ul></div>' : '';
+        return '<div class="' + cls + '">' +
+          '<div class="dept-head">' +
+            '<div class="dept-icon">' + (dep.icon||'🏢') + '</div>' +
+            '<div>' +
+              '<div class="dept-code">' + dep.code + '</div>' +
+              '<div class="dept-name">' + dep.name_th + '</div>' +
+              '<div class="dept-head-pos">↳ ' + (dep.head_position||'') + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="dept-fn">' + (dep.function||'') + '</div>' +
+          (dep.province_presence ? '<div class="dept-presence">📍 ' + dep.province_presence + '</div>' : '') +
+          programs +
+          (dep.note ? '<div class="dept-note">⚠️ ' + dep.note + '</div>' : '') +
+        '</div>';
+      }).join('') +
+    '</div></div>';
+}
+
+function renderRollout(d) {
+  const r = d.g2g_agritech_provincial_rollout || {};
+  return '<div class="section"><div class="sec-head">' +
+    '<div><div class="sec-title">🗺️ การขยาย PLAT ครอบคลุม 76 จังหวัด</div>' +
+    '<div class="sec-sub">เป้าหมาย: เกษตรกร ' + FORMAT.num(r.target_farmer_in_system) + ' รายในระบบ AI Advisory ภายในปี 2570</div></div></div>' +
+    '<div class="rollout">' +
+      '<div class="phase-grid">' +
+        '<div class="phase-card ph-1">' +
+          '<div class="ph-label">Phase 1 ✅ COMPLETE</div>' +
+          '<div class="ph-name">' + (r.phase_1_complete||[]).join(' · ') + '</div>' +
+          '<div class="ph-status">LIVE</div>' +
+          '<br><a href="/phrae.html" class="ph-link">→ เข้าหน้าจังหวัด</a>' +
+        '</div>' +
+        '<div class="phase-card ph-2">' +
+          '<div class="ph-label">Phase 2 🚀 IN PROGRESS</div>' +
+          '<div class="ph-name">' + (r.phase_2_in_progress||[]).join(' · ') + '</div>' +
+          '<div class="ph-status">ขยายผล</div>' +
+          '<br><a href="/chiangrai.html" class="ph-link">→ เชียงราย</a>&nbsp;·&nbsp;' +
+          '<a href="/udonthani.html" class="ph-link">→ อุดรธานี</a>' +
+        '</div>' +
+        '<div class="phase-card ph-3">' +
+          '<div class="ph-label">Phase 3 📋 PLANNED</div>' +
+          '<div class="ph-name">' + (r.phase_3_planned||[]).join(' · ') + '</div>' +
+          '<div class="ph-status">วางแผน ปี 2569</div>' +
+        '</div>' +
+        '<div class="phase-card ph-4">' +
+          '<div class="ph-label">Phase 4 🌐 NATIONAL</div>' +
+          '<div class="ph-name">' + (r.phase_4_national||'') + '</div>' +
+          '<div class="ph-status">ครบ 76 จว.</div>' +
+        '</div>' +
+      '</div>' +
+    '</div></div>';
+}
+
+function renderSources(d) {
+  if (!d._data_sources?.length) return '';
+  return '<div class="section"><div class="sources">' +
+    '<b>📚 แหล่งข้อมูล:</b>' +
+    '<ul>' + d._data_sources.map(s=>'<li>' + s + '</li>').join('') + '</ul>' +
+    '<div style="margin-top:8px;font-size:9px;color:var(--text3)">Version ' + (d._version||'1.0') + ' · Last updated: ' + (d._updated||'—') + '</div>' +
+  '</div></div>';
+}
+
+
+function render76Provinces() {
+  return `
+<div class="section"><div class="sec-head">
+<div><div class="sec-title">🇹🇭 76 จังหวัด — สถานะการขยายระบบ</div>
+<div class="sec-sub">ครอบคลุมทุกจังหวัดของไทย · เปิดใช้งานแล้ว 3 จังหวัด · ที่เหลือรอ Phase 3-4</div></div></div>
+<div style="background:#0b1f3a;border-radius:14px;padding:18px">
+
+        <div class="region-block">
+          <div class="region-head">
+            <span class="region-dot" style="background:#1a7a3a"></span>
+            <span class="region-name">ภาคเหนือ</span>
+            <span class="region-count">9 จังหวัด</span>
+          </div>
+          <div class="prov-grid-76">
+<div class="pchip pchip-soon" title="เชียงใหม่ — PHASE 3 (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">50</span><span class="pchip-name">เชียงใหม่</span><span class="pchip-status">PHASE 3</span></div>
+<a href="/chiangrai.html" class="pchip pchip-active" title="คลิกเพื่อเข้า เชียงราย (LIVE)"><span class="pchip-code">57</span><span class="pchip-name">เชียงราย</span><span class="pchip-badge">●LIVE</span></a>
+<div class="pchip pchip-soon" title="ลำพูน — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">51</span><span class="pchip-name">ลำพูน</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="ลำปาง — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">52</span><span class="pchip-name">ลำปาง</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="อุตรดิตถ์ — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">53</span><span class="pchip-name">อุตรดิตถ์</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<a href="/phrae.html" class="pchip pchip-active" title="คลิกเพื่อเข้า แพร่ (LIVE)"><span class="pchip-code">54</span><span class="pchip-name">แพร่</span><span class="pchip-badge">●LIVE</span></a>
+<div class="pchip pchip-soon" title="น่าน — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">55</span><span class="pchip-name">น่าน</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="พะเยา — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">56</span><span class="pchip-name">พะเยา</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="แม่ฮ่องสอน — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">58</span><span class="pchip-name">แม่ฮ่องสอน</span><span class="pchip-status">เร็วๆ นี้</span></div>
+</div></div>
+
+        <div class="region-block">
+          <div class="region-head">
+            <span class="region-dot" style="background:#d35400"></span>
+            <span class="region-name">ภาคตะวันออกเฉียงเหนือ (อีสาน)</span>
+            <span class="region-count">20 จังหวัด</span>
+          </div>
+          <div class="prov-grid-76">
+<a href="/udonthani.html" class="pchip pchip-active" title="คลิกเพื่อเข้า อุดรธานี (LIVE)"><span class="pchip-code">41</span><span class="pchip-name">อุดรธานี</span><span class="pchip-badge">●LIVE</span></a>
+<div class="pchip pchip-soon" title="ขอนแก่น — PHASE 3 (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">40</span><span class="pchip-name">ขอนแก่น</span><span class="pchip-status">PHASE 3</span></div>
+<div class="pchip pchip-soon" title="นครราชสีมา — PHASE 3 (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">30</span><span class="pchip-name">นครราชสีมา</span><span class="pchip-status">PHASE 3</span></div>
+<div class="pchip pchip-soon" title="อุบลราชธานี — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">34</span><span class="pchip-name">อุบลราชธานี</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="บุรีรัมย์ — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">31</span><span class="pchip-name">บุรีรัมย์</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="สุรินทร์ — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">32</span><span class="pchip-name">สุรินทร์</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="ศรีสะเกษ — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">33</span><span class="pchip-name">ศรีสะเกษ</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="ยโสธร — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">35</span><span class="pchip-name">ยโสธร</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="ชัยภูมิ — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">36</span><span class="pchip-name">ชัยภูมิ</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="อำนาจเจริญ — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">37</span><span class="pchip-name">อำนาจเจริญ</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="บึงกาฬ — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">38</span><span class="pchip-name">บึงกาฬ</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="หนองบัวลำภู — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">39</span><span class="pchip-name">หนองบัวลำภู</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="เลย — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">42</span><span class="pchip-name">เลย</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="หนองคาย — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">43</span><span class="pchip-name">หนองคาย</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="มหาสารคาม — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">44</span><span class="pchip-name">มหาสารคาม</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="ร้อยเอ็ด — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">45</span><span class="pchip-name">ร้อยเอ็ด</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="กาฬสินธุ์ — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">46</span><span class="pchip-name">กาฬสินธุ์</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="สกลนคร — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">47</span><span class="pchip-name">สกลนคร</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="นครพนม — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">48</span><span class="pchip-name">นครพนม</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="มุกดาหาร — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">49</span><span class="pchip-name">มุกดาหาร</span><span class="pchip-status">เร็วๆ นี้</span></div>
+</div></div>
+
+        <div class="region-block">
+          <div class="region-head">
+            <span class="region-dot" style="background:#2980b9"></span>
+            <span class="region-name">ภาคกลาง</span>
+            <span class="region-count">27 จังหวัด</span>
+          </div>
+          <div class="prov-grid-76">
+<div class="pchip pchip-soon" title="กรุงเทพมหานคร — PHASE 4 (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">10</span><span class="pchip-name">กรุงเทพมหานคร</span><span class="pchip-status">PHASE 4</span></div>
+<div class="pchip pchip-soon" title="สมุทรปราการ — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">11</span><span class="pchip-name">สมุทรปราการ</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="นนทบุรี — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">12</span><span class="pchip-name">นนทบุรี</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="ปทุมธานี — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">13</span><span class="pchip-name">ปทุมธานี</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="พระนครศรีอยุธยา — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">14</span><span class="pchip-name">พระนครศรีอยุธยา</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="อ่างทอง — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">15</span><span class="pchip-name">อ่างทอง</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="ลพบุรี — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">16</span><span class="pchip-name">ลพบุรี</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="สิงห์บุรี — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">17</span><span class="pchip-name">สิงห์บุรี</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="ชัยนาท — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">18</span><span class="pchip-name">ชัยนาท</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="สระบุรี — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">19</span><span class="pchip-name">สระบุรี</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="นครนายก — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">26</span><span class="pchip-name">นครนายก</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="สมุทรสาคร — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">74</span><span class="pchip-name">สมุทรสาคร</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="สมุทรสงคราม — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">75</span><span class="pchip-name">สมุทรสงคราม</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="นครปฐม — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">73</span><span class="pchip-name">นครปฐม</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="กาญจนบุรี — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">71</span><span class="pchip-name">กาญจนบุรี</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="ราชบุรี — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">70</span><span class="pchip-name">ราชบุรี</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="สุพรรณบุรี — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">72</span><span class="pchip-name">สุพรรณบุรี</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="เพชรบุรี — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">76</span><span class="pchip-name">เพชรบุรี</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="ประจวบคีรีขันธ์ — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">77</span><span class="pchip-name">ประจวบคีรีขันธ์</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="สุโขทัย — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">64</span><span class="pchip-name">สุโขทัย</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="พิษณุโลก — PHASE 3 (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">65</span><span class="pchip-name">พิษณุโลก</span><span class="pchip-status">PHASE 3</span></div>
+<div class="pchip pchip-soon" title="พิจิตร — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">66</span><span class="pchip-name">พิจิตร</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="กำแพงเพชร — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">62</span><span class="pchip-name">กำแพงเพชร</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="ตาก — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">63</span><span class="pchip-name">ตาก</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="เพชรบูรณ์ — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">67</span><span class="pchip-name">เพชรบูรณ์</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="นครสวรรค์ — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">60</span><span class="pchip-name">นครสวรรค์</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="อุทัยธานี — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">61</span><span class="pchip-name">อุทัยธานี</span><span class="pchip-status">เร็วๆ นี้</span></div>
+</div></div>
+
+        <div class="region-block">
+          <div class="region-head">
+            <span class="region-dot" style="background:#7d3c98"></span>
+            <span class="region-name">ภาคตะวันออก</span>
+            <span class="region-count">7 จังหวัด</span>
+          </div>
+          <div class="prov-grid-76">
+<div class="pchip pchip-soon" title="ชลบุรี — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">20</span><span class="pchip-name">ชลบุรี</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="ระยอง — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">21</span><span class="pchip-name">ระยอง</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="จันทบุรี — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">22</span><span class="pchip-name">จันทบุรี</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="ตราด — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">23</span><span class="pchip-name">ตราด</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="ฉะเชิงเทรา — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">24</span><span class="pchip-name">ฉะเชิงเทรา</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="ปราจีนบุรี — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">25</span><span class="pchip-name">ปราจีนบุรี</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="สระแก้ว — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">27</span><span class="pchip-name">สระแก้ว</span><span class="pchip-status">เร็วๆ นี้</span></div>
+</div></div>
+
+        <div class="region-block">
+          <div class="region-head">
+            <span class="region-dot" style="background:#0891b2"></span>
+            <span class="region-name">ภาคใต้</span>
+            <span class="region-count">14 จังหวัด</span>
+          </div>
+          <div class="prov-grid-76">
+<div class="pchip pchip-soon" title="นครศรีธรรมราช — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">80</span><span class="pchip-name">นครศรีธรรมราช</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="กระบี่ — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">81</span><span class="pchip-name">กระบี่</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="พังงา — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">82</span><span class="pchip-name">พังงา</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="ภูเก็ต — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">83</span><span class="pchip-name">ภูเก็ต</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="สุราษฎร์ธานี — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">84</span><span class="pchip-name">สุราษฎร์ธานี</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="ระนอง — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">85</span><span class="pchip-name">ระนอง</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="ชุมพร — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">86</span><span class="pchip-name">ชุมพร</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="สงขลา — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">90</span><span class="pchip-name">สงขลา</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="สตูล — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">91</span><span class="pchip-name">สตูล</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="ตรัง — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">92</span><span class="pchip-name">ตรัง</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="พัทลุง — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">93</span><span class="pchip-name">พัทลุง</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="ปัตตานี — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">94</span><span class="pchip-name">ปัตตานี</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="ยะลา — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">95</span><span class="pchip-name">ยะลา</span><span class="pchip-status">เร็วๆ นี้</span></div>
+<div class="pchip pchip-soon" title="นราธิวาส — เร็วๆ นี้ (ยังไม่เปิดให้ใช้งาน)"><span class="pchip-code">96</span><span class="pchip-name">นราธิวาส</span><span class="pchip-status">เร็วๆ นี้</span></div>
+</div></div>
+</div></div>
+`;
+}
+
+
+/* === MOAC LIVE DATA === */
+async function loadMoacLive() {
+  const BASE = 'https://g2g-ai-pool.fly.dev/api/moac';
+  const el = document.getElementById('moac-live-panel');
+  if (!el) return;
+
+  try {
+    const [ovRes, pvRes, kpiRes] = await Promise.allSettled([
+      fetch(BASE + '/overview').then(r=>r.json()),
+      fetch(BASE + '/province-rollout').then(r=>r.json()),
+      fetch(BASE + '/kpis').then(r=>r.json()),
+    ]);
+
+    const ov  = ovRes.status  === 'fulfilled' ? ovRes.value  : null;
+    const pv  = pvRes.status  === 'fulfilled' ? pvRes.value  : null;
+    const kpi = kpiRes.status === 'fulfilled' ? kpiRes.value : null;
+
+    let h = '<div class="section">';
+    h += '<div class="sec-head"><div><div class="sec-title">📡 ข้อมูล Live จาก PLAT API</div>';
+    h += '<div class="sec-sub">อัปเดตอัตโนมัติ · ' + new Date().toLocaleString("th-TH") + '</div></div>';
+    h += '<button onclick="loadMoacLive()" style="background:#1e6640;color:#fff;border:none;border-radius:6px;padding:6px 14px;cursor:pointer;font-size:13px">🔄 รีเฟรช</button>';
+    h += '</div>';
+
+    /* Province Rollout */
+    if (pv && pv.ok) {
+      const pvs = pv.provinces || pv.rollout || [];
+      h += '<div class="card"><div class="card-head"><div class="card-title">🗺️ สถานะ PLAT Rollout รายจังหวัด (Live)</div></div>';
+      if (pvs.length) {
+        h += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px">';
+        pvs.forEach(p => {
+          const pct = p.progress_pct || p.completion_pct || p.progress || 0;
+          const statusColor = pct >= 80 ? '#388e3c' : (pct >= 50 ? '#f57c00' : '#1565c0');
+          const statusText  = pct >= 80 ? 'ดำเนินการดี' : (pct >= 50 ? 'กำลังดำเนินการ' : 'เริ่มต้น');
+          h += '<div style="background:#f7f9fc;border-radius:10px;padding:14px;border-top:4px solid ' + statusColor + '">';
+          h += '<div style="font-weight:700;font-size:14px">' + (p.province||p.name) + '</div>';
+          h += '<div style="font-size:12px;color:#555;margin:4px 0">' + (p.note||statusText) + '</div>';
+          h += '<div style="font-size:24px;font-weight:800;color:' + statusColor + ';font-family:Inter,Sarabun,sans-serif">' + pct + '%</div>';
+          h += '<div style="background:#e0e0e0;border-radius:99px;height:8px;margin-top:6px"><div style="background:' + statusColor + ';width:' + pct + '%;height:100%;border-radius:99px"></div></div>';
+          if (p.farmers_enrolled) h += '<div style="font-size:11px;color:var(--text3);margin-top:4px">เกษตรกร: ' + p.farmers_enrolled.toLocaleString('th-TH') + ' ราย</div>';
+          h += '</div>';
+        });
+        h += '</div>';
+      }
+      h += '</div>';
+    }
+
+    /* KPIs */
+    if (kpi && kpi.ok) {
+      const kpis = kpi.kpis || [];
+      h += '<div class="card"><div class="card-head"><div class="card-title">📊 KPI กระทรวงเกษตรฯ ปีงบ 2568</div></div>';
+      if (kpis.length) {
+        h += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px">';
+        kpis.forEach(k => {
+          const pct = k.achievement_pct || k.progress || 0;
+          const c = pct >= 100 ? '#388e3c' : (pct >= 70 ? '#f57c00' : '#1565c0');
+          h += '<div style="background:#f7f9fc;border-radius:10px;padding:12px;border-left:4px solid ' + c + '">';
+          h += '<div style="font-size:12px;color:var(--text3)">' + (k.name||k.indicator) + '</div>';
+          h += '<div style="font-size:16px;font-weight:700;color:var(--navy);margin:4px 0">' + (k.value||k.current||'—') + '</div>';
+          if (k.target) h += '<div style="font-size:11px;color:#888">เป้า: ' + k.target + '</div>';
+          if (pct) {
+            h += '<div style="background:#e0e0e0;border-radius:99px;height:6px;margin-top:6px"><div style="background:' + c + ';width:' + Math.min(pct,100) + '%;height:100%;border-radius:99px"></div></div>';
+            h += '<div style="font-size:11px;color:' + c + ';font-weight:700">' + pct + '%</div>';
+          }
+          h += '</div>';
+        });
+        h += '</div>';
+      }
+      h += '</div>';
+    }
+
+    /* Overview stats */
+    if (ov && ov.ok) {
+      h += '<div class="card"><div class="card-head"><div class="card-title">📋 ข้อมูลพื้นฐานกระทรวง (Live)</div></div>';
+      h += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px">';
+      const items = [
+        {lab:'งบประมาณ 2568', val: (ov.fiscal_year_2568_budget_baht/1e9).toFixed(1) + ' พันล้านบาท'},
+        {lab:'เกษตรกรในระบบ', val: (ov.thai_farmer_count_total/1e6).toFixed(1) + ' ล้านคน'},
+        {lab:'บุคลากร', val: (ov.personnel_count_total||0).toLocaleString('th-TH') + ' คน'},
+        {lab:'กรม/หน่วยงาน', val: (ov.departments_count||16) + ' กรม'},
+      ];
+      items.forEach(i => {
+        h += '<div style="background:#e8f5e9;border-radius:10px;padding:12px;text-align:center">';
+        h += '<div style="font-size:11px;color:#555;margin-bottom:4px">' + i.lab + '</div>';
+        h += '<div style="font-size:18px;font-weight:800;color:#1e6640;font-family:Inter,Sarabun,sans-serif">' + i.val + '</div>';
+        h += '</div>';
+      });
+      h += '</div></div>';
+    }
+
+    h += '</div>';
+    el.innerHTML = h;
+  } catch(e) {
+    document.getElementById('moac-live-panel').innerHTML =
+      '<div style="padding:12px;color:var(--text3);font-size:13px">⚠️ ไม่สามารถโหลด Live data: ' + e.message + '</div>';
+  }
+}
+
+load();
+loadMoacLive();
+</script>
+<script src="/access-bar.js"></script>
+</body>
+</html>

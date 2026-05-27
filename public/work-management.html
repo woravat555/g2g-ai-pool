@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AiBoss Command Center — G2G AgriTech</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #080f1a;
+      --surface: #0d1b2a;
+      --surface2: #122338;
+      --surface3: #162d47;
+      --border: rgba(255,255,255,0.08);
+      --border2: rgba(255,255,255,0.14);
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --blue: #2e6db8;
+      --blue-light: #60cdff;
+      --blue-dark: #1a4f8a;
+      --green: #27a263;
+      --green-light: #4ade80;
+      --red: #c0392b;
+      --red-light: #f87171;
+      --gold: #c8991e;
+      --gold-light: #fbbf24;
+      --purple: #7c3aed;
+      --purple-light: #a78bfa;
+      --orange: #fb923c;
+      --radius: 10px;
+      --shadow: 0 2px 16px rgba(0,0,0,0.5);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Sarabun', 'Noto Sans Thai', sans-serif;
+      background: var(--bg); color: var(--text);
+      font-size: 15px; line-height: 1.6; min-height: 100vh;
+      display: flex; flex-direction: column;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: linear-gradient(135deg, #050d1a 0%, #0a1f3f 50%, #0f1530 100%);
+      border-bottom: 1px solid var(--border2);
+      padding: 16px 28px; display: flex; align-items: center; gap: 14px;
+      flex-shrink: 0;
+    }
+    .header-icon { font-size: 30px; }
+    .header-titles { flex: 1; }
+    .header-title { font-size: 20px; font-weight: 800; color: #fff; line-height: 1.2; }
+    .header-sub { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+    .header-badge {
+      background: rgba(96,205,255,0.15); border: 1px solid rgba(96,205,255,0.35);
+      color: var(--blue-light); padding: 4px 12px; border-radius: 20px;
+      font-size: 11px; font-weight: 700; letter-spacing: 1px;
+    }
+    .header-links { display: flex; gap: 8px; }
+    .header-link {
+      background: rgba(255,255,255,0.07); border: 1px solid var(--border2);
+      color: var(--text-muted); border-radius: 7px; padding: 6px 12px;
+      cursor: pointer; font-family: 'Sarabun', sans-serif; font-size: 12px;
+      text-decoration: none; display: flex; align-items: center; gap: 5px;
+      transition: background 0.15s; white-space: nowrap;
+    }
+    .header-link:hover { background: rgba(255,255,255,0.13); color: #fff; }
+    .header-refresh {
+      background: rgba(255,255,255,0.07); border: 1px solid var(--border2);
+      color: var(--text-muted); border-radius: 7px; padding: 6px 14px;
+      cursor: pointer; font-family: 'Sarabun', sans-serif; font-size: 12px;
+      transition: background 0.15s; min-height: 34px;
+    }
+    .header-refresh:hover { background: rgba(255,255,255,0.13); color: #fff; }
+
+    /* ── 3-Panel Layout ── */
+    .main-wrap {
+      display: grid;
+      grid-template-columns: 300px 1fr 240px;
+      gap: 0;
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    /* ── Panel shared ── */
+    .panel {
+      overflow-y: auto;
+      padding: 20px 16px 24px;
+      border-right: 1px solid var(--border);
+    }
+    .panel:last-child { border-right: none; }
+    .panel-title {
+      font-size: 14px; font-weight: 800; color: #fff;
+      margin-bottom: 14px; display: flex; align-items: center; gap: 7px;
+      padding-bottom: 10px; border-bottom: 1px solid var(--border);
+    }
+
+    /* ── Panel 1: Create Task ── */
+    .panel-create { background: var(--surface); }
+
+    .form-row { margin-bottom: 12px; }
+    .form-label {
+      font-size: 11px; font-weight: 700; color: var(--text-muted);
+      margin-bottom: 5px; display: block; letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    .form-input, .form-select, .form-textarea {
+      width: 100%; background: rgba(255,255,255,0.05); border: 1.5px solid var(--border2);
+      border-radius: 8px; color: #fff; padding: 9px 11px;
+      font-family: 'Sarabun', sans-serif; font-size: 13px; outline: none;
+      transition: border-color 0.15s;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: var(--blue); background: rgba(46,109,184,0.08);
+    }
+    .form-input::placeholder { color: rgba(255,255,255,0.25); }
+    .form-textarea { resize: vertical; min-height: 72px; }
+    .form-select option { background: #0d1b2a; color: #fff; }
+
+    .btn-create {
+      width: 100%; background: var(--blue-dark); color: #fff; border: none;
+      border-radius: 9px; padding: 12px; cursor: pointer;
+      font-family: 'Sarabun', sans-serif; font-size: 15px; font-weight: 700;
+      min-height: 46px; transition: opacity 0.15s; margin-top: 4px;
+    }
+    .btn-create:hover { opacity: 0.85; }
+    .btn-create:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .create-feedback {
+      margin-top: 10px; font-size: 12px; min-height: 18px;
+      padding: 8px 10px; border-radius: 7px; display: none;
+    }
+    .create-feedback.show { display: block; }
+    .create-feedback.ok { background: rgba(39,162,99,0.15); color: var(--green-light); }
+    .create-feedback.err { background: rgba(192,57,43,0.15); color: var(--red-light); }
+    .create-feedback.info { background: rgba(46,109,184,0.15); color: var(--blue-light); }
+
+    /* ── Panel 2: Task Board ── */
+    .panel-board { background: var(--bg); padding: 20px 20px 24px; }
+    .board-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border);
+    }
+    .board-title { font-size: 14px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 7px; }
+    .board-meta { font-size: 11px; color: var(--text-muted); }
+
+    .kanban {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .k-col {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column;
+    }
+    .k-col-head {
+      padding: 9px 12px; border-bottom: 1px solid var(--border);
+      font-size: 12px; font-weight: 700;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .k-col-label { display: flex; align-items: center; gap: 6px; }
+    .k-col-count {
+      background: rgba(255,255,255,0.1); border-radius: 10px;
+      padding: 1px 7px; font-size: 10px; color: #fff;
+    }
+    .k-col-body {
+      padding: 10px; display: flex; flex-direction: column; gap: 8px;
+      min-height: 120px; flex: 1; overflow-y: auto; max-height: 420px;
+    }
+
+    .task-card {
+      background: var(--surface2); border-radius: 8px; padding: 10px 11px;
+      border-left: 3px solid transparent; cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .task-card:hover { background: var(--surface3); transform: translateY(-1px); }
+    .task-card.expanded { background: var(--surface3); border-color: var(--blue); }
+    .task-card-id { font-size: 10px; color: var(--text-muted); font-family: monospace; margin-bottom: 3px; }
+    .task-card-title { font-size: 12px; font-weight: 700; color: #fff; margin-bottom: 6px; line-height: 1.4; }
+    .task-card-meta { display: flex; flex-wrap: wrap; gap: 4px; }
+    .badge {
+      font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 10px;
+      display: inline-flex; align-items: center; gap: 3px;
+    }
+    .badge-agent-aiboss { background: rgba(96,205,255,0.15); color: var(--blue-light); }
+    .badge-agent-research { background: rgba(167,139,250,0.15); color: var(--purple-light); }
+    .badge-agent-build { background: rgba(52,211,153,0.15); color: var(--green-light); }
+    .badge-agent-review { background: rgba(251,191,36,0.15); color: var(--gold-light); }
+    .badge-agent-monitor { background: rgba(248,113,113,0.15); color: var(--red-light); }
+    .badge-agent-personal { background: rgba(251,146,60,0.15); color: var(--orange); }
+    .badge-agent-unknown { background: rgba(255,255,255,0.08); color: var(--text-muted); }
+
+    .badge-pri-urgent { background: rgba(192,57,43,0.2); color: var(--red-light); }
+    .badge-pri-high { background: rgba(200,153,30,0.2); color: var(--gold-light); }
+    .badge-pri-normal { background: rgba(46,109,184,0.15); color: var(--blue-light); }
+    .badge-pri-low { background: rgba(255,255,255,0.07); color: var(--text-muted); }
+
+    .task-card-detail {
+      display: none; margin-top: 8px; padding-top: 8px;
+      border-top: 1px solid var(--border); font-size: 11px; color: var(--text-muted);
+    }
+    .task-card.expanded .task-card-detail { display: block; }
+    .task-card-detail-row { margin-bottom: 5px; }
+    .task-card-detail-label { font-weight: 700; color: var(--text); }
+    .task-card-detail-val { color: var(--text-muted); word-break: break-word; }
+
+    /* Empty / loading */
+    .empty-col { font-size: 11px; color: var(--text-muted); text-align: center; padding: 16px 8px; }
+    .spin { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.12); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading { display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 12px; padding: 8px 0; }
+
+    /* ── Panel 3: Agent Status ── */
+    .panel-agents { background: var(--surface); }
+
+    .agent-mini {
+      background: var(--surface2); border-radius: 9px; padding: 12px;
+      margin-bottom: 10px; border-left: 3px solid transparent;
+      transition: background 0.15s;
+    }
+    .agent-mini:hover { background: var(--surface3); }
+    .agent-mini-head { display: flex; align-items: center; gap: 9px; margin-bottom: 7px; }
+    .agent-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .agent-mini-info { flex: 1; min-width: 0; }
+    .agent-mini-name { font-size: 12px; font-weight: 800; color: #fff; }
+    .agent-mini-role { font-size: 10px; color: var(--text-muted); }
+    .agent-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .agent-dot-on { background: var(--green-light); box-shadow: 0 0 6px var(--green-light); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .agent-mini-stats { display: flex; gap: 6px; margin-bottom: 8px; }
+    .stat-pill {
+      flex: 1; background: rgba(255,255,255,0.06); border-radius: 6px;
+      padding: 4px 6px; text-align: center;
+    }
+    .stat-pill-num { font-size: 13px; font-weight: 800; color: #fff; display: block; }
+    .stat-pill-lbl { font-size: 9px; color: var(--text-muted); }
+    .btn-quick-assign {
+      width: 100%; background: rgba(26,79,138,0.6); border: 1px solid rgba(46,109,184,0.4);
+      color: var(--blue-light); border-radius: 7px; padding: 5px 8px;
+      cursor: pointer; font-family: 'Sarabun', sans-serif; font-size: 11px; font-weight: 700;
+      transition: background 0.15s; min-height: 28px;
+    }
+    .btn-quick-assign:hover { background: var(--blue-dark); color: #fff; }
+
+    /* ── Bottom Bar: Activity Log ── */
+    .bottom-bar {
+      background: var(--surface); border-top: 1px solid var(--border2);
+      padding: 12px 24px; flex-shrink: 0;
+    }
+    .bottom-bar-title {
+      font-size: 11px; font-weight: 700; color: var(--text-muted);
+      letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;
+    }
+    .activity-log {
+      display: flex; gap: 12px; overflow-x: auto; padding-bottom: 4px;
+    }
+    .activity-log::-webkit-scrollbar { height: 4px; }
+    .activity-log::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 2px; }
+    .activity-log::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+    .log-item {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 8px; padding: 7px 12px; flex-shrink: 0;
+      min-width: 180px; max-width: 240px;
+    }
+    .log-item-id { font-size: 9px; color: var(--text-muted); font-family: monospace; }
+    .log-item-title { font-size: 11px; font-weight: 700; color: #fff; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .log-item-meta { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+
+    /* Toast notification */
+    .toast {
+      position: fixed; bottom: 24px; right: 24px; z-index: 999;
+      background: var(--surface2); border: 1px solid var(--border2);
+      border-radius: 10px; padding: 12px 18px; max-width: 320px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6); transition: opacity 0.3s;
+      display: none; font-size: 13px;
+    }
+    .toast.show { display: block; }
+    .toast.ok { border-color: rgba(74,222,128,0.4); }
+    .toast.err { border-color: rgba(248,113,113,0.4); }
+    .toast-title { font-weight: 800; color: #fff; margin-bottom: 3px; }
+    .toast-msg { color: var(--text-muted); }
+
+    /* Responsive */
+    @media (max-width: 1100px) {
+      .main-wrap { grid-template-columns: 280px 1fr 220px; }
+      .kanban { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 780px) {
+      .main-wrap { grid-template-columns: 1fr; grid-template-rows: auto; overflow: visible; }
+      .main-wrap { display: flex; flex-direction: column; }
+      .panel { border-right: none; border-bottom: 1px solid var(--border); }
+      .kanban { grid-template-columns: 1fr; }
+      .header-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<div class="header">
+  <div class="header-icon">🤖</div>
+  <div class="header-titles">
+    <div class="header-title">AiBoss Command Center</div>
+    <div class="header-sub">ระบบมอบหมายและติดตามงาน — G2G AgriTech Internal</div>
+  </div>
+  <div class="header-badge">AIBOSS</div>
+  <div class="header-links">
+    <a href="/agent-monitor.html" class="header-link">🤖 Monitor</a>
+    <a href="/agent-taskboard.html" class="header-link">📋 Task Board</a>
+    <a href="/g2g-oversight.html" class="header-link">🛡️ Oversight</a>
+  </div>
+  <button class="header-refresh" onclick="refreshAll()">🔄 รีเฟรช</button>
+</div>
+
+<!-- ── Main 3-Panel Layout ── -->
+<div class="main-wrap">
+
+  <!-- ── Panel 1: Create Task ── -->
+  <div class="panel panel-create">
+    <div class="panel-title">➕ สร้างงานใหม่</div>
+
+    <div class="form-row">
+      <label class="form-label">ชื่องาน *</label>
+      <input class="form-input" id="f-title" placeholder="ระบุชื่องาน..." />
+    </div>
+
+    <div class="form-row">
+      <label class="form-label">ประเภทงาน</label>
+      <select class="form-select" id="f-type">
+        <option value="research">🔬 Research</option>
+        <option value="build">⚙️ Build</option>
+        <option value="review">🔍 Review</option>
+        <option value="deploy">🚀 Deploy</option>
+        <option value="monitor">📡 Monitor</option>
+        <option value="policy">📜 Policy</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label class="form-label">มอบหมายให้</label>
+      <select class="form-select" id="f-agent">
+        <option value="research-agent">🔬 Research Agent</option>
+        <option value="build-agent">⚙️ Build Agent</option>
+        <option value="review-agent">🔍 Review Agent</option>
+        <option value="monitor-agent">📡 Monitor Agent</option>
+        <option value="personal-ai">🎯 Personal AI</option>
+        <option value="aiboss">👑 AiBoss</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label class="form-label">ความสำคัญ</label>
+      <select class="form-select" id="f-priority">
+        <option value="urgent">🔴 Urgent</option>
+        <option value="high">🟠 High</option>
+        <option value="normal" selected>🔵 Normal</option>
+        <option value="low">🟢 Low</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label class="form-label">รายละเอียด</label>
+      <textarea class="form-textarea" id="f-desc" placeholder="รายละเอียดงาน (optional)..."></textarea>
+    </div>
+
+    <div class="form-row">
+      <label class="form-label">Parent Task ID (optional)</label>
+      <input class="form-input" id="f-parent" placeholder="เช่น TASK-001" />
+    </div>
+
+    <button class="btn-create" id="btn-create" onclick="createTask()">
+      ✅ สร้างงาน
+    </button>
+
+    <div class="create-feedback" id="create-feedback"></div>
+  </div>
+
+  <!-- ── Panel 2: Task Board (Kanban) ── -->
+  <div class="panel panel-board">
+    <div class="board-header">
+      <div class="board-title">📋 Task Board</div>
+      <div class="board-meta" id="board-meta">กำลังโหลด...</div>
+    </div>
+    <div class="kanban" id="kanban">
+      <div class="loading" style="grid-column:1/-1;"><div class="spin"></div>กำลังโหลด Tasks...</div>
+    </div>
+  </div>
+
+  <!-- ── Panel 3: Agent Status ── -->
+  <div class="panel panel-agents">
+    <div class="panel-title">👥 Agent Status</div>
+    <div id="agent-status-list">
+      <div class="loading"><div class="spin"></div>กำลังโหลด...</div>
+    </div>
+  </div>
+
+</div><!-- /main-wrap -->
+
+<!-- ── Bottom Bar: Activity Log ── -->
+<div class="bottom-bar">
+  <div class="bottom-bar-title">📜 Activity Log — งาน 10 รายการล่าสุด</div>
+  <div class="activity-log" id="activity-log">
+    <div class="loading"><div class="spin"></div></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <div class="toast-title" id="toast-title"></div>
+  <div class="toast-msg" id="toast-msg"></div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────────
+// Agent config
+// ─────────────────────────────────────────────────────────────
+const AGENTS = [
+  { id: "aiboss",         name: "AiBoss",            role: "ผู้บริหาร AI ระดับสูงสุด",  icon: "👑", color: "#60cdff", cls: "aiboss"   },
+  { id: "research-agent", name: "Research Agent",     role: "นักวิจัยและวิเคราะห์",      icon: "🔬", color: "#a78bfa", cls: "research" },
+  { id: "build-agent",    name: "Build Agent",        role: "นักพัฒนาระบบ",              icon: "⚙️", color: "#34d399", cls: "build"    },
+  { id: "review-agent",   name: "Review Agent",       role: "ผู้ตรวจสอบคุณภาพ",         icon: "🔍", color: "#fbbf24", cls: "review"   },
+  { id: "monitor-agent",  name: "Monitor Agent",      role: "ผู้ดูแลระบบ 24/7",         icon: "📡", color: "#f87171", cls: "monitor"  },
+  { id: "personal-ai",    name: "Personal AI Engine", role: "AI ประจำตำแหน่ง",          icon: "🎯", color: "#fb923c", cls: "personal" },
+];
+
+const KANBAN_COLS = [
+  { key: "pending",     label: "Pending",     color: "#94a3b8", border: "#334155", dot: "⬜" },
+  { key: "in_progress", label: "In Progress", color: "#60cdff", border: "#1e4060", dot: "🔵" },
+  { key: "completed",   label: "Completed",   color: "#4ade80", border: "#14532d", dot: "✅" },
+  { key: "error",       label: "Error",       color: "#f87171", border: "#4c1e1e", dot: "❌" },
+];
+
+// Map non-standard statuses
+function normalizeStatus(s) {
+  const m = { "failed": "error", "blocked": "error", "in-progress": "in_progress" };
+  return m[(s||"").toLowerCase()] || (s||"pending").toLowerCase();
+}
+
+let allTasks = [];
+let refreshTimer = null;
+
+// ─────────────────────────────────────────────────────────────
+// Init
+// ─────────────────────────────────────────────────────────────
+async function init() {
+  await Promise.all([loadTasks()]);
+  // Auto-refresh every 30 seconds
+  refreshTimer = setInterval(loadTasks, 30000);
+}
+
+async function refreshAll() {
+  await loadTasks();
+  showToast("ok", "รีเฟรชแล้ว", "โหลดข้อมูลล่าสุดเรียบร้อย");
+}
+
+// ─────────────────────────────────────────────────────────────
+// Load Tasks
+// ─────────────────────────────────────────────────────────────
+async function loadTasks() {
+  try {
+    const d = await fetch("/api/tasks").then(r => r.json());
+    allTasks = d.tasks || [];
+    renderKanban();
+    renderAgentStatus();
+    renderActivityLog();
+    document.getElementById("board-meta").textContent =
+      `${allTasks.length} งานทั้งหมด · อัปเดต ${new Date().toLocaleTimeString("th-TH")}`;
+  } catch (e) {
+    document.getElementById("board-meta").textContent = `โหลดไม่ได้: ${e.message}`;
+    document.getElementById("kanban").innerHTML =
+      `<div style="color:var(--red-light);font-size:12px;grid-column:1/-1;padding:12px;">เกิดข้อผิดพลาด: ${e.message}</div>`;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// Render Kanban
+// ─────────────────────────────────────────────────────────────
+function renderKanban() {
+  const board = { pending: [], in_progress: [], completed: [], error: [] };
+  for (const t of allTasks) {
+    const col = normalizeStatus(t.Status);
+    if (board[col]) board[col].push(t);
+    else board.pending.push(t);
+  }
+
+  document.getElementById("kanban").innerHTML = KANBAN_COLS.map(col => {
+    const tasks = board[col.key] || [];
+    return `
+      <div class="k-col" style="border-top:3px solid ${col.border};">
+        <div class="k-col-head" style="color:${col.color};">
+          <div class="k-col-label">${col.dot} ${col.label}</div>
+          <span class="k-col-count">${tasks.length}</span>
+        </div>
+        <div class="k-col-body">
+          ${tasks.length === 0
+            ? `<div class="empty-col">ไม่มีงาน</div>`
+            : tasks.map(t => taskCardHtml(t, col.color)).join("")
+          }
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function taskCardHtml(t, borderColor) {
+  const id = t.TaskID || t.id || "—";
+  const title = t.Title || "(ไม่มีชื่อ)";
+  const agent = t.AssignedTo || "—";
+  const pri = (t.Priority || "normal").toLowerCase();
+  const createdAt = t.CreatedAt ? new Date(t.CreatedAt).toLocaleDateString("th-TH") : "—";
+  const agentCls = agentBadgeCls(agent);
+  const priCls = `badge-pri-${pri}`;
+  const result = t.Result || "";
+  const errLog = t.ErrorLog || "";
+
+  return `
+    <div class="task-card" style="border-left-color:${borderColor};" onclick="toggleCard(this)">
+      <div class="task-card-id">${id}</div>
+      <div class="task-card-title">${escHtml(title)}</div>
+      <div class="task-card-meta">
+        <span class="badge ${agentCls}">${agent}</span>
+        <span class="badge ${priCls}">${pri}</span>
+        ${t.Type ? `<span class="badge" style="background:rgba(255,255,255,0.07);color:var(--text-muted);">${t.Type}</span>` : ""}
+      </div>
+      <div class="task-card-detail">
+        <div class="task-card-detail-row">
+          <span class="task-card-detail-label">สร้างเมื่อ:</span>
+          <span class="task-card-detail-val"> ${createdAt}</span>
+        </div>
+        ${result ? `<div class="task-card-detail-row"><span class="task-card-detail-label">Result:</span><span class="task-card-detail-val"> ${escHtml(result)}</span></div>` : ""}
+        ${errLog ? `<div class="task-card-detail-row"><span class="task-card-detail-label" style="color:var(--red-light);">Error:</span><span class="task-card-detail-val" style="color:var(--red-light);"> ${escHtml(errLog)}</span></div>` : ""}
+        ${t.ParentTaskID ? `<div class="task-card-detail-row"><span class="task-card-detail-label">Parent:</span><span class="task-card-detail-val"> ${escHtml(t.ParentTaskID)}</span></div>` : ""}
+      </div>
+    </div>
+  `;
+}
+
+function toggleCard(el) {
+  el.classList.toggle("expanded");
+}
+
+function agentBadgeCls(agent) {
+  if (agent.includes("research")) return "badge badge-agent-research";
+  if (agent.includes("build")) return "badge badge-agent-build";
+  if (agent.includes("review")) return "badge badge-agent-review";
+  if (agent.includes("monitor")) return "badge badge-agent-monitor";
+  if (agent.includes("personal")) return "badge badge-agent-personal";
+  if (agent.includes("aiboss") || agent === "aiboss") return "badge badge-agent-aiboss";
+  return "badge badge-agent-unknown";
+}
+
+// ─────────────────────────────────────────────────────────────
+// Render Agent Status Panel
+// ─────────────────────────────────────────────────────────────
+function renderAgentStatus() {
+  const list = document.getElementById("agent-status-list");
+  list.innerHTML = AGENTS.map(agent => {
+    const inProg = allTasks.filter(t =>
+      t.AssignedTo === agent.id && normalizeStatus(t.Status) === "in_progress"
+    ).length;
+    const pending = allTasks.filter(t =>
+      t.AssignedTo === agent.id && normalizeStatus(t.Status) === "pending"
+    ).length;
+    const done = allTasks.filter(t =>
+      t.AssignedTo === agent.id && normalizeStatus(t.Status) === "completed"
+    ).length;
+
+    // Last activity: most recent task for this agent
+    const agentTasks = allTasks.filter(t => t.AssignedTo === agent.id);
+    let lastActivity = "—";
+    if (agentTasks.length > 0) {
+      const sorted = [...agentTasks].sort((a,b) => (b.CreatedAt||"").localeCompare(a.CreatedAt||""));
+      lastActivity = sorted[0].CreatedAt
+        ? new Date(sorted[0].CreatedAt).toLocaleDateString("th-TH")
+        : "—";
+    }
+
+    return `
+      <div class="agent-mini" style="border-left-color:${agent.color};">
+        <div class="agent-mini-head">
+          <div class="agent-icon" style="background:${agent.color}22;">${agent.icon}</div>
+          <div class="agent-mini-info">
+            <div class="agent-mini-name">${agent.name}</div>
+            <div class="agent-mini-role">${agent.role}</div>
+          </div>
+          <div class="agent-dot agent-dot-on" style="background:${agent.color};box-shadow:0 0 6px ${agent.color};"></div>
+        </div>
+        <div class="agent-mini-stats">
+          <div class="stat-pill">
+            <span class="stat-pill-num" style="color:var(--blue-light);">${inProg}</span>
+            <div class="stat-pill-lbl">กำลังทำ</div>
+          </div>
+          <div class="stat-pill">
+            <span class="stat-pill-num" style="color:var(--gold-light);">${pending}</span>
+            <div class="stat-pill-lbl">รอ</div>
+          </div>
+          <div class="stat-pill">
+            <span class="stat-pill-num" style="color:var(--green-light);">${done}</span>
+            <div class="stat-pill-lbl">เสร็จ</div>
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--text-muted);margin-bottom:6px;">กิจกรรมล่าสุด: ${lastActivity}</div>
+        <button class="btn-quick-assign" onclick="quickAssign('${agent.id}')">⚡ มอบหมายด่วน</button>
+      </div>
+    `;
+  }).join("");
+}
+
+// ─────────────────────────────────────────────────────────────
+// Render Activity Log
+// ─────────────────────────────────────────────────────────────
+function renderActivityLog() {
+  const log = document.getElementById("activity-log");
+  const recent = [...allTasks].slice(0, 10);
+  if (recent.length === 0) {
+    log.innerHTML = `<div style="font-size:12px;color:var(--text-muted);">ยังไม่มีกิจกรรม</div>`;
+    return;
+  }
+  log.innerHTML = recent.map(t => {
+    const statusColor = {
+      pending: "var(--text-muted)", in_progress: "var(--blue-light)",
+      completed: "var(--green-light)", error: "var(--red-light)"
+    }[normalizeStatus(t.Status)] || "var(--text-muted)";
+    return `
+      <div class="log-item">
+        <div class="log-item-id">${t.TaskID || t.id || "—"}</div>
+        <div class="log-item-title">${escHtml(t.Title || "(ไม่มีชื่อ)")}</div>
+        <div class="log-item-meta">
+          <span style="color:${statusColor};">${t.Status || "pending"}</span> ·
+          ${t.AssignedTo || "—"}
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+// ─────────────────────────────────────────────────────────────
+// Create Task
+// ─────────────────────────────────────────────────────────────
+async function createTask() {
+  const title = document.getElementById("f-title").value.trim();
+  const type = document.getElementById("f-type").value;
+  const agent = document.getElementById("f-agent").value;
+  const priority = document.getElementById("f-priority").value;
+  const desc = document.getElementById("f-desc").value.trim();
+  const parent = document.getElementById("f-parent").value.trim();
+
+  const fb = document.getElementById("create-feedback");
+  const btn = document.getElementById("btn-create");
+
+  if (!title) {
+    showFeedback("err", "❌ กรุณาระบุชื่องาน");
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = "⏳ กำลังสร้าง...";
+  showFeedback("info", "กำลังบันทึก...");
+
+  try {
+    const body = {
+      title,
+      type,
+      assigned_to: agent,
+      priority,
+      created_by: "aiboss",
+      description: desc,
+    };
+    if (parent) body.parent_task_id = parent;
+
+    const r = await fetch("/api/tasks", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    const d = await r.json();
+
+    if (d.ok || d.taskId || d.task_id) {
+      const taskId = d.taskId || d.task_id;
+      showFeedback("ok", `✅ สร้างเรียบร้อย — ${taskId}`);
+      showToast("ok", "สร้างงานสำเร็จ", `${taskId}: ${title}`);
+      // Reset form
+      document.getElementById("f-title").value = "";
+      document.getElementById("f-desc").value = "";
+      document.getElementById("f-parent").value = "";
+      document.getElementById("f-priority").value = "normal";
+      // Reload tasks
+      setTimeout(loadTasks, 800);
+    } else {
+      const errMsg = d.error?.message || d.error || JSON.stringify(d);
+      showFeedback("err", `❌ ผิดพลาด: ${errMsg}`);
+      showToast("err", "สร้างงานไม่สำเร็จ", errMsg);
+    }
+  } catch (e) {
+    showFeedback("err", `❌ เชื่อมต่อไม่ได้: ${e.message}`);
+    showToast("err", "Connection Error", e.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "✅ สร้างงาน";
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// Quick Assign — fill form and focus title
+// ─────────────────────────────────────────────────────────────
+function quickAssign(agentId) {
+  document.getElementById("f-agent").value = agentId;
+  document.getElementById("f-title").focus();
+  // Scroll to create panel
+  document.querySelector(".panel-create").scrollIntoView({ behavior: "smooth" });
+  showFeedback("info", `ℹ️ เลือก ${agentId} แล้ว — กรอกชื่องานด้านบน`);
+}
+
+// ─────────────────────────────────────────────────────────────
+// Helpers
+// ─────────────────────────────────────────────────────────────
+function showFeedback(type, msg) {
+  const fb = document.getElementById("create-feedback");
+  fb.className = `create-feedback show ${type}`;
+  fb.textContent = msg;
+}
+
+let toastTimer = null;
+function showToast(type, title, msg) {
+  const t = document.getElementById("toast");
+  document.getElementById("toast-title").textContent = title;
+  document.getElementById("toast-msg").textContent = msg;
+  t.className = `toast show ${type}`;
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.className = "toast"; }, 4000);
+}
+
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+// ─────────────────────────────────────────────────────────────
+// Start
+// ─────────────────────────────────────────────────────────────
+init();
+</script>
+<script src="/access-bar.js"></script>
+</body>
+</html>

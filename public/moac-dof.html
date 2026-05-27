@@ -1,0 +1,179 @@
+<!DOCTYPE html><html lang="th"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>แพลตฟอร์มอธิบดีกรมประมง</title>
+<script>
+  // Role bootstrap — read by /moac-app.js
+  window.MOAC_ROLE_HINTS = window.MOAC_ROLE_HINTS || {};
+  window.MOAC_ROLE_HINTS.bootedAt = Date.now();
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--p1:#1e6091;--p2:#1a759f;--p3:#168aad;--p4:#a9d6e5;--p5:#e0f2fe;--gray:#f8f9fa;--border:#e0e0e0;--sub:#666}
+body{font-family:'Sarabun',sans-serif;height:100vh;overflow:hidden;display:flex;flex-direction:column}
+#login{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#184e77 0%,#1e6091 55%,#a9d6e5 100%)}
+.lc{background:#fff;border-radius:20px;padding:38px;width:min(660px,96vw);box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.lb{width:68px;height:68px;background:linear-gradient(135deg,var(--p1),var(--p3));border-radius:14px;display:inline-flex;align-items:center;justify-content:center;font-size:26px;color:#fff;margin-bottom:8px}
+.lc-logo{text-align:center;margin-bottom:20px}
+.lc h1{font-size:19px;font-weight:700;color:var(--p1);text-align:center}
+.lc p{font-size:12px;color:var(--sub);text-align:center;margin-top:3px}
+.lb-btn{width:100%;padding:12px;background:linear-gradient(135deg,var(--p1),var(--p3));color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;margin-top:16px;font-family:'Sarabun',sans-serif}
+#app{display:none;flex-direction:column;height:100vh}
+.topbar{background:linear-gradient(90deg,var(--p1),var(--p2));color:#fff;padding:0 18px;height:52px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.tb-b{width:32px;height:32px;background:rgba(255,255,255,.2);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.tb-t{font-size:14px;font-weight:700;flex:1}.tb-u{font-size:11px;background:rgba(255,255,255,.18);padding:3px 10px;border-radius:18px}
+.tb-lo{background:rgba(255,255,255,.15);border:none;color:#fff;padding:5px 11px;border-radius:7px;cursor:pointer;font-size:11px;font-family:'Sarabun',sans-serif}
+.main{display:flex;flex:1;overflow:hidden}
+.sidebar{width:200px;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+.nav-item{padding:11px 14px;cursor:pointer;border-left:3px solid transparent;font-size:12px;color:var(--sub);transition:.15s}
+.nav-item:hover,.nav-item.active{background:var(--p5);color:var(--p1)}
+.nav-item.active{border-left-color:var(--p1);font-weight:600}
+.content{flex:1;overflow-y:auto;padding:16px;background:var(--gray)}
+.tab-pane{display:none}.tab-pane.active{display:block}
+.pt{font-size:18px;font-weight:700;color:var(--p1);margin-bottom:13px}
+.kr{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.kpi{background:#fff;border-radius:10px;padding:13px;border-left:4px solid var(--p3)}
+.kv{font-size:20px;font-weight:700;color:var(--p1)}.kl{font-size:11px;color:var(--sub);margin-top:1px}
+.card{background:#fff;border-radius:10px;padding:15px;margin-bottom:12px}
+.ct{font-size:14px;font-weight:700;color:var(--p1);margin-bottom:9px;padding-bottom:7px;border-bottom:2px solid var(--p4)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:var(--p1);color:#fff;padding:8px 9px;text-align:left}
+td{padding:7px 9px;border-bottom:1px solid var(--border)}
+tr:hover td{background:var(--p5)}
+.b{display:inline-block;padding:2px 7px;border-radius:9px;font-size:11px;font-weight:600}
+.bg{background:#dcfce7;color:#166534}.by{background:#fef9c3;color:#854d0e}
+.bb{background:#dbeafe;color:#1e40af}.br{background:#fee2e2;color:#991b1b}.bp{background:#f3e8ff;color:#6b21a8}
+.ob{background:linear-gradient(135deg,var(--p5),#fff);border:2px solid var(--p4);border-radius:10px;padding:18px;text-align:center}
+.oi{font-size:44px;margin-bottom:8px}.on{font-size:19px;font-weight:700;color:var(--p1)}
+.or{font-size:12px;color:var(--sub);margin-top:3px}
+.os{display:inline-flex;align-items:center;gap:5px;margin-top:10px;background:#dcfce7;padding:5px 13px;border-radius:18px;font-size:12px;color:#166534;font-weight:600}
+.od{width:7px;height:7px;background:#22c55e;border-radius:50%;animation:p 1.5s infinite}
+@keyframes p{0%,100%{opacity:1}50%{opacity:.4}}
+.og{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px;text-align:left}
+.oi2{background:#fff;padding:8px 12px;border-radius:7px;border:1px solid var(--border)}
+.ol{font-size:10px;color:var(--sub);margin-bottom:2px}.ov{font-size:12px;font-weight:600}
+.desc{background:var(--p5);border-left:4px solid var(--p3);padding:11px 15px;border-radius:0 8px 8px 0;margin-bottom:11px}
+.desc h3{font-size:14px;font-weight:700;color:var(--p1);margin-bottom:3px}
+.desc p{font-size:12px;color:var(--sub);line-height:1.5}
+</style></head><body data-role="moac-dof" data-level="dept-head">
+<div id="login"><div class="lc">
+  <div class="lc-logo"><div class="lb">🐟</div><h1>แพลตฟอร์มอธิบดีกรมประมง</h1><p>กรมประมง (DOF)</p></div>
+  <div style="text-align:center;margin-top:16px;padding:16px;background:var(--p5);border-radius:14px;border:2px solid var(--p4)">
+    <div style="font-size:36px;margin-bottom:6px">🐟</div>
+    <div style="font-size:16px;font-weight:700;color:var(--p1)">อธิบดีกรมประมง — นายบัญชา สุขแก้ว</div>
+    <div style="font-size:11px;color:var(--sub);margin-top:3px">ประมงน้ำจืด-ทะเล + IUU control + เพาะเลี้ยงสัตว์น้ำ</div>
+  </div>
+  <button class="lb-btn" onclick="login('อธิบดีกรมประมง')">🔐 เข้าสู่ระบบ อธิบดี DOF</button>
+  <div style="margin-top:12px;text-align:center;font-size:11px;color:var(--sub)"><a href="/moac-hub.html" style="color:var(--p1)">← Hub กษ.</a></div>
+</div></div>
+<div id="app">
+<div class="topbar"><div class="tb-b">🐟</div><div class="tb-t">ศูนย์บริหารกรมประมง (DOF)</div><div class="tb-u" id="ul">—</div><button class="tb-lo" onclick="logout()">ออกจากระบบ</button></div>
+<div class="main">
+  <div class="sidebar">
+    <div class="nav-item active" onclick="show(0,this)">📊 ภาพรวม</div>
+    <div class="nav-item" onclick="show(1,this)">💰 งบประมาณ</div>
+    <div class="nav-item" onclick="show(2,this)">👥 บุคลากรในกรม</div>
+    <div class="nav-item" onclick="show(3,this)">🎯 โครงการสำคัญ</div>
+    <div class="nav-item" onclick="show(4,this)">🗺️ 76 จังหวัด</div>
+    <div class="nav-item" onclick="show(5,this)">📤 รายงานต่อปลัด</div>
+    <div class="nav-item" onclick="show(6,this)">🤖 LINE AI</div>
+    <div style="flex:1"></div>
+    <div style="padding:10px 14px;font-size:11px;color:var(--sub);border-top:1px solid var(--border)"><a href="/moac-hub.html" style="color:var(--p3);text-decoration:none">← Hub กษ.</a></div>
+  </div>
+  <div class="content">
+<div class="tab-pane active" id="t0">
+<div class="pt">📊 ภาพรวมกรมประมง</div>
+<div class="kr">
+<div class="kpi"><div class="kv">5,200M</div><div class="kl">งบกรม ปี 2568 (ล้านบาท)</div></div>
+<div class="kpi"><div class="kv">3,800</div><div class="kl">บุคลากร</div></div>
+<div class="kpi"><div class="kv">450K</div><div class="kl">ฟาร์มเพาะเลี้ยงสัตว์น้ำ</div></div>
+<div class="kpi"><div class="kv">76 จว.</div><div class="kl">สนง.ประมงจังหวัด</div></div>
+</div>
+<div class="card"><div class="ct">พันธกิจกรมประมง</div>
+<div class="desc"><h3>กรมประมง (DOF)</h3><p>ส่งเสริมประมงน้ำจืด ประมงทะเล เพาะเลี้ยงสัตว์น้ำ และควบคุม IUU (การประมงผิดกฎหมาย)</p></div>
+<table><tr><th>โครงการสำคัญ</th><th>งบ (M)</th><th>%เบิก</th><th>สถานะ</th></tr>
+<tr><td>ควบคุม IUU + Port-in/Port-out</td><td>820</td><td>78%</td><td><span class="b bg">ปกติ</span></td></tr>
+<tr><td>เพาะเลี้ยงสัตว์น้ำเศรษฐกิจ (กุ้ง, ปลานิล)</td><td>1,250</td><td>72%</td><td><span class="b bg">ปกติ</span></td></tr>
+<tr><td>ประมงน้ำจืด/แม่น้ำ-อ่างเก็บน้ำ</td><td>680</td><td>74%</td><td><span class="b bg">ปกติ</span></td></tr>
+<tr><td>มาตรฐาน GAP ฟาร์มสัตว์น้ำ</td><td>420</td><td>65%</td><td><span class="b by">ติดตาม</span></td></tr>
+<tr><td>สนง.ประมงจังหวัด 76 จว.</td><td>950</td><td>72%</td><td><span class="b bg">ปกติ</span></td></tr>
+</table></div></div>
+<div class="tab-pane" id="t1">
+<div class="pt">💰 งบประมาณกรม ปี 2568</div>
+<div class="kr">
+<div class="kpi"><div class="kv">5,200M</div><div class="kl">งบรวม</div></div>
+<div class="kpi"><div class="kv">3,640M</div><div class="kl">เบิกจ่ายสะสม</div></div>
+<div class="kpi"><div class="kv">70%</div><div class="kl">%เบิกจ่าย</div></div>
+<div class="kpi"><div class="kv">1,560M</div><div class="kl">คงเหลือ</div></div>
+</div>
+<div class="card"><div class="ct">หมวดงบประมาณ</div>
+<table><tr><th>หมวด</th><th>งบ (M)</th><th>เบิก (M)</th><th>%</th><th>สถานะ</th></tr>
+<tr><td>งบบุคลากร</td><td>1,820</td><td>1,765</td><td>97%</td><td><span class="b bg">ปกติ</span></td></tr>
+<tr><td>งบดำเนินงาน</td><td>1,560</td><td>1,248</td><td>80%</td><td><span class="b bg">ปกติ</span></td></tr>
+<tr><td>งบลงทุน (ท่าเรือประมง/IUU)</td><td>1,040</td><td>520</td><td>50%</td><td><span class="b br">เร่งรัด</span></td></tr>
+<tr><td>งบอุดหนุนชาวประมง</td><td>780</td><td>624</td><td>80%</td><td><span class="b bg">ปกติ</span></td></tr>
+</table></div></div>
+<div class="tab-pane" id="t2">
+<div class="pt">👥 บุคลากรกรมประมง</div>
+<div class="card"><div class="ct">โครงสร้างบุคลากร</div>
+<table><tr><th>ประเภท</th><th>จำนวน</th><th>%</th><th>หมายเหตุ</th></tr>
+<tr><td>นักวิชาการประมง/ผู้ช่วยประมง</td><td>1,520</td><td>40%</td><td>ระดับจังหวัด/อำเภอ</td></tr>
+<tr><td>เจ้าหน้าที่ตรวจประมง (IUU)</td><td>950</td><td>25%</td><td>ท่าเรือ + ทะเล</td></tr>
+<tr><td>ผู้เชี่ยวชาญเพาะเลี้ยง</td><td>760</td><td>20%</td><td>ศูนย์วิจัยเพาะเลี้ยง</td></tr>
+<tr><td>บุคลากรสนับสนุน + จ้างเหมา</td><td>570</td><td>15%</td><td>IT/ห้องปฏิบัติการ</td></tr>
+</table></div></div>
+<div class="tab-pane" id="t3">
+<div class="pt">🎯 โครงการสำคัญ DOF</div>
+<div class="card"><div class="ct">โครงการเรือธง ปี 2568</div>
+<table><tr><th>โครงการ</th><th>เป้าหมาย</th><th>ผล</th><th>%</th><th>ประเมิน</th></tr>
+<tr><td>ตรวจเรือประมง Port-in</td><td>15,000 ครั้ง</td><td>14,200</td><td>95%</td><td><span class="b bg">ดี</span></td></tr>
+<tr><td>ผลผลิตเพาะเลี้ยงกุ้ง</td><td>320,000 ตัน</td><td>295,000</td><td>92%</td><td><span class="b bg">ดี</span></td></tr>
+<tr><td>ฟาร์ม GAP สัตว์น้ำ</td><td>5,000 ฟาร์ม</td><td>4,650</td><td>93%</td><td><span class="b bg">ดี</span></td></tr>
+<tr><td>ปล่อยพันธุ์สัตว์น้ำ</td><td>1,200 ล้านตัว</td><td>1,180 ล้าน</td><td>98%</td><td><span class="b bg">ดี</span></td></tr>
+</table></div></div>
+<div class="tab-pane" id="t4">
+<div class="pt">🗺️ ครอบคลุม 76 จังหวัด</div>
+<div class="card"><div class="ct">สำนักงานประมงจังหวัด</div>
+<table><tr><th>หน่วย</th><th>จำนวน</th><th>หมายเหตุ</th></tr>
+<tr><td>สำนักงานประมงจังหวัด</td><td>76 แห่ง</td><td>ครบทุกจังหวัด</td></tr>
+<tr><td>ศูนย์วิจัยและพัฒนาประมง</td><td>40 แห่ง</td><td>น้ำจืด+ทะเล+ชายฝั่ง</td></tr>
+<tr><td>หน่วยตรวจการประมง (IUU)</td><td>28 แห่ง</td><td>จังหวัดชายทะเล</td></tr>
+<tr><td>ท่าเรือประมงหลัก</td><td>22 ท่า</td><td>Port-in/Port-out</td></tr>
+</table></div></div>
+<div class="tab-pane" id="t5">
+<div class="pt">📤 รายงานต่อปลัดกระทรวง</div>
+<div class="card"><div class="ct">รายงานรายเดือน/รายไตรมาส</div>
+<table><tr><th>รายงาน</th><th>รอบ</th><th>กำหนด</th><th>สถานะ</th></tr>
+<tr><td>สรุปการควบคุม IUU</td><td>รายเดือน</td><td>5 ของเดือน</td><td><span class="b bg">ส่งแล้ว</span></td></tr>
+<tr><td>รายงานเพาะเลี้ยงสัตว์น้ำ Q2</td><td>รายไตรมาส</td><td>30 มิ.ย.</td><td><span class="b by">กำลังจัดทำ</span></td></tr>
+<tr><td>ปริมาณการจับสัตว์น้ำ</td><td>รายเดือน</td><td>10 ของเดือน</td><td><span class="b bg">ส่งแล้ว</span></td></tr>
+</table>
+<div style="margin-top:12px;text-align:center"><button onclick="alert('ส่งรายงานต่อปลัดกระทรวงเรียบร้อย')" style="background:var(--p1);color:#fff;border:none;padding:10px 24px;border-radius:8px;cursor:pointer;font-size:13px;font-family:Sarabun,sans-serif">📤 ส่งรายงานต่อปลัด</button></div>
+</div></div>
+<div class="tab-pane" id="t6">
+<div class="pt">🤖 LINE AI — DOF</div>
+<div class="ob"><div class="oi">🤖</div><div class="on">น้องประมง</div>
+<div class="or">AI Assistant สำหรับ DOF</div>
+<div class="os"><div class="od"></div>ออนไลน์</div>
+<div class="og">
+<div class="oi2"><div class="ol">AI Model</div><div class="ov">Claude Sonnet 4</div></div>
+<div class="oi2"><div class="ol">Channel</div><div class="ov">MOAC06</div></div>
+<div class="oi2"><div class="ol">บทบาท</div><div class="ov">ที่ปรึกษาอธิบดี DOF</div></div>
+<div class="oi2"><div class="ol">สถานะ</div><div class="ov">พร้อมใช้งาน</div></div>
+</div></div></div>
+  </div></div></div>
+<script>
+function login(r){document.getElementById('ul').textContent=r;document.getElementById('login').style.display='none';document.getElementById('app').style.display='flex';}
+function logout(){document.getElementById('login').style.display='flex';document.getElementById('app').style.display='none';}
+function show(i,el){document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById('t'+i).classList.add('active');el.classList.add('active');}
+</script>
+<script src="/moac-delegate.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  if(typeof MoacDelegate!=='undefined'){MoacDelegate.init({myId:'moac-dof',roleName:'อธิบดีกรมประมง',level:'dept-head',reportsTo:'moac-ops',canAssignTo:[{id:'dof-deputy',name:'รองอธิบดี DOF'},{id:'dof-staff',name:'นักวิชาการประมง'}]});}
+});
+</script>
+<script src="/moac-delegate.js"></script>
+<script src="/moac-app.js?v=20260526"></script>
+</body></html>

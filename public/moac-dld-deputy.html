@@ -1,0 +1,130 @@
+<!DOCTYPE html><html lang="th"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>แพลตฟอร์มรองอธิบดี DLD</title>
+<script>
+  // Role bootstrap — read by /moac-app.js
+  window.MOAC_ROLE_HINTS = window.MOAC_ROLE_HINTS || {};
+  window.MOAC_ROLE_HINTS.bootedAt = Date.now();
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--p1:#2d6a4f;--p2:#74c69d;--p3:#95d5b2;--p4:#b7e4c7;--p5:#d8f3dc;--gray:#f8f9fa;--border:#e0e0e0;--sub:#666}
+body{font-family:'Sarabun',sans-serif;height:100vh;overflow:hidden;display:flex;flex-direction:column}
+#login{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#2d6a4f 0%,#74c69d 60%,#d8f3dc 100%)}
+.lc{background:#fff;border-radius:20px;padding:36px;width:min(520px,96vw);box-shadow:0 20px 60px rgba(0,0,0,.3);text-align:center}
+.lc-logo{margin-bottom:18px}
+.lb{width:68px;height:68px;background:linear-gradient(135deg,var(--p1),var(--p2));border-radius:14px;display:inline-flex;align-items:center;justify-content:center;font-size:28px;color:#fff;margin-bottom:8px}
+.lc h1{font-size:18px;font-weight:700;color:var(--p1)}
+.lc p{font-size:12px;color:var(--sub);margin-top:3px}
+.role-display{margin:20px 0;padding:16px;background:var(--p5);border-radius:14px;border:2px solid var(--p4)}
+.rd-emoji{font-size:36px;margin-bottom:6px}.rd-name{font-size:16px;font-weight:700;color:var(--p1)}
+.rd-sub{font-size:11px;color:var(--sub);margin-top:3px}
+.lb-btn{width:100%;padding:13px;background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Sarabun',sans-serif}
+#app{display:none;flex-direction:column;height:100vh}
+.topbar{background:linear-gradient(90deg,var(--p1),var(--p2));color:#fff;padding:0 18px;height:52px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.tb-b{width:32px;height:32px;background:rgba(255,255,255,.2);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.tb-t{font-size:14px;font-weight:700;flex:1}.tb-u{font-size:11px;background:rgba(255,255,255,.18);padding:3px 10px;border-radius:18px}
+.tb-lo{background:rgba(255,255,255,.15);border:none;color:#fff;padding:5px 11px;border-radius:7px;cursor:pointer;font-size:11px;font-family:'Sarabun',sans-serif}
+.main{display:flex;flex:1;overflow:hidden}
+.sidebar{width:200px;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+.nav-item{padding:11px 14px;cursor:pointer;border-left:3px solid transparent;font-size:12px;color:var(--sub);transition:.15s}
+.nav-item:hover,.nav-item.active{background:var(--p5);color:var(--p1)}
+.nav-item.active{border-left-color:var(--p1);font-weight:600}
+.content{flex:1;overflow-y:auto;padding:16px;background:var(--gray)}
+.tab-pane{display:none}.tab-pane.active{display:block}
+.pt{font-size:18px;font-weight:700;color:var(--p1);margin-bottom:13px}
+.kr{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.kpi{background:#fff;border-radius:10px;padding:13px;border-left:4px solid var(--p1)}
+.kv{font-size:20px;font-weight:700;color:var(--p1)}.kl{font-size:11px;color:var(--sub);margin-top:1px}
+.card{background:#fff;border-radius:10px;padding:15px;margin-bottom:12px}
+.ct{font-size:14px;font-weight:700;color:var(--p1);margin-bottom:9px;padding-bottom:7px;border-bottom:2px solid var(--p4)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:var(--p1);color:#fff;padding:8px 9px;text-align:left}
+td{padding:7px 9px;border-bottom:1px solid var(--border)}
+tr:hover td{background:var(--p5)}
+.b{display:inline-block;padding:2px 7px;border-radius:9px;font-size:11px;font-weight:600}
+.bg{background:#dcfce7;color:#166534}.by{background:#fef9c3;color:#854d0e}
+.bb{background:#dbeafe;color:#1e40af}.br{background:#fee2e2;color:#991b1b}
+</style></head><body data-role="moac-dld-deputy" data-level="dept-deputy">
+<div id="login"><div class="lc">
+  <div class="lc-logo"><div class="lb">🐄</div><h1>รองอธิบดีกรมปศุสัตว์</h1><p>กรมปศุสัตว์ (DLD)</p></div>
+  <div class="role-display"><div class="rd-emoji">📊</div><div class="rd-name">รองอธิบดี DLD</div><div class="rd-sub">กำกับสายงานปศุสัตว์</div></div>
+  <button class="lb-btn" onclick="doLogin()">🔐 เข้าสู่ระบบ</button>
+  <div style="margin-top:12px;font-size:11px;color:var(--sub)"><a href="/moac-dld.html" style="color:var(--p1)">← อธิบดี DLD</a> &nbsp;|&nbsp; <a href="/moac-hub.html" style="color:var(--p1)">Hub กษ.</a></div>
+</div></div>
+<div id="app">
+<div class="topbar"><div class="tb-b">🐄</div><div class="tb-t">ศูนย์ปฏิบัติงาน DLD — รองอธิบดี</div><div class="tb-u">รองอธิบดี DLD</div><button class="tb-lo" onclick="doLogout()">ออกระบบ</button></div>
+<div class="main">
+<div class="sidebar">
+  <div class="nav-item active" onclick="show(0,this)">📊 ภาพรวมงาน</div>
+  <div class="nav-item" onclick="show(1,this)">📋 แผนสายงาน</div>
+  <div class="nav-item" onclick="show(2,this)">👥 บุคลากรในสาย</div>
+  <div class="nav-item" onclick="show(3,this)">📅 ตารางประชุม</div>
+  <div class="nav-item" onclick="show(4,this)">📤 รายงานถึงอธิบดี</div>
+  <div style="flex:1"></div>
+  <div style="padding:10px 14px;font-size:11px;color:var(--sub);border-top:1px solid var(--border)"><a href="/moac-dld.html" style="color:var(--p1);text-decoration:none">← อธิบดี</a> &nbsp;|&nbsp; <a href="/moac-hub.html" style="color:var(--p1);text-decoration:none">Hub กษ.</a></div>
+</div>
+<div class="content">
+<div class="tab-pane active" id="t0">
+<div class="pt">📊 ภาพรวมงาน รองอธิบดี DLD</div>
+<div class="kr">
+  <div class="kpi"><div class="kv">12</div><div class="kl">โครงการในสาย</div></div>
+  <div class="kpi"><div class="kv">84%</div><div class="kl">ความก้าวหน้ารวม</div></div>
+  <div class="kpi"><div class="kv">58</div><div class="kl">บุคลากรในสาย</div></div>
+  <div class="kpi"><div class="kv">3</div><div class="kl">ประเด็นต้องติดตาม</div></div>
+</div>
+<div class="card"><div class="ct">สถานะโครงการสายงาน</div>
+<table><tr><th>โครงการ</th><th>งบ (M)</th><th>%เบิก</th><th>สถานะ</th></tr>
+<tr><td>ฉีดวัคซีน FMD ภาคเหนือ/อีสาน</td><td>620</td><td>85%</td><td><span class="b bg">ปกติ</span></td></tr>
+<tr><td>เฝ้าระวัง ASF 17 จว.เสี่ยง</td><td>420</td><td>78%</td><td><span class="b by">ติดตาม</span></td></tr>
+<tr><td>e-NID ระบบทะเบียน</td><td>280</td><td>72%</td><td><span class="b bg">ปกติ</span></td></tr>
+</table></div></div>
+<div class="tab-pane" id="t1">
+<div class="pt">📋 แผนสายงาน รองอธิบดี DLD</div>
+<div class="card"><div class="ct">แผนปฏิบัติการไตรมาส 2/2568</div>
+<table><tr><th>งาน</th><th>กำหนดส่ง</th><th>ผู้รับผิดชอบ</th><th>สถานะ</th></tr>
+<tr><td>ทบทวนแผนฉีดวัคซีน FMD</td><td>31 พ.ค.</td><td>ฝ่ายควบคุมโรค</td><td><span class="b bb">กำลังดำเนินการ</span></td></tr>
+<tr><td>ลงพื้นที่ปศุสัตว์อำเภอ 8 อ.</td><td>15 มิ.ย.</td><td>รองอธิบดี</td><td><span class="b by">เตรียมการ</span></td></tr>
+<tr><td>รายงานถึงอธิบดี</td><td>30 มิ.ย.</td><td>รองอธิบดี</td><td><span class="b by">เริ่มต้น</span></td></tr>
+</table></div></div>
+<div class="tab-pane" id="t2">
+<div class="pt">👥 บุคลากรในสาย</div>
+<div class="card"><div class="ct">โครงสร้างบุคลากร</div>
+<table><tr><th>ฝ่าย</th><th>จำนวน</th><th>ตำแหน่งว่าง</th><th>หมายเหตุ</th></tr>
+<tr><td>ฝ่ายควบคุมโรคระบาด</td><td>22</td><td>2</td><td>กำลังสรรหา</td></tr>
+<tr><td>ฝ่ายพัฒนาฟาร์มมาตรฐาน</td><td>18</td><td>1</td><td>รอพิจารณา</td></tr>
+<tr><td>ฝ่ายทะเบียนสัตว์ e-NID</td><td>18</td><td>0</td><td>ครบ</td></tr>
+</table></div></div>
+<div class="tab-pane" id="t3">
+<div class="pt">📅 ตารางประชุม</div>
+<div class="card"><div class="ct">กำหนดการ พ.ค.–มิ.ย. 2568</div>
+<table><tr><th>วัน/เวลา</th><th>กิจกรรม</th><th>สถานที่</th><th>สถานะ</th></tr>
+<tr><td>28 พ.ค. 09:00</td><td>ประชุมรองอธิบดี DLD</td><td>กรมปศุสัตว์</td><td><span class="b bb">กำลังมา</span></td></tr>
+<tr><td>5 มิ.ย. 14:00</td><td>ติดตาม ASF</td><td>ออนไลน์</td><td><span class="b bb">กำลังมา</span></td></tr>
+</table></div></div>
+<div class="tab-pane" id="t4">
+<div class="pt">📤 รายงานถึงอธิบดี DLD</div>
+<div class="card"><div class="ct">รายงานสายงาน</div>
+<table><tr><th>รายงาน</th><th>กำหนด</th><th>สถานะ</th></tr>
+<tr><td>ผลฉีดวัคซีน FMD Q2</td><td>30 มิ.ย.</td><td><span class="b by">กำลังจัดทำ</span></td></tr>
+<tr><td>รายงานงบประมาณเดือน พ.ค.</td><td>10 มิ.ย.</td><td><span class="b bg">ส่งแล้ว</span></td></tr>
+</table>
+<div style="margin-top:12px;text-align:center"><button onclick="alert('ส่งรายงานถึงอธิบดี DLD เรียบร้อย')" style="background:var(--p1);color:#fff;border:none;padding:10px 24px;border-radius:8px;cursor:pointer;font-size:13px;font-family:Sarabun,sans-serif">📤 ส่งรายงานถึงอธิบดี</button></div>
+</div></div>
+</div></div></div>
+<script>
+function doLogin(){document.getElementById('login').style.display='none';document.getElementById('app').style.display='flex';}
+function doLogout(){document.getElementById('login').style.display='flex';document.getElementById('app').style.display='none';}
+function show(i,el){document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById('t'+i).classList.add('active');el.classList.add('active');}
+</script>
+<script src="/moac-delegate.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  if(typeof MoacDelegate!=='undefined'){MoacDelegate.init({myId:'dld-deputy',roleName:'รองอธิบดี DLD',level:'dept-deputy',reportsTo:'moac-dld',canAssignTo:[{id:'dld-staff',name:'นักวิชาการสัตวบาล/สัตวแพทย์'}]});}
+});
+</script>
+<script src="/moac-delegate.js"></script>
+<script src="/moac-app.js?v=20260526"></script>
+</body></html>

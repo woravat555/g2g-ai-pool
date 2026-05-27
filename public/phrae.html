@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AgriPhrae — ระบบบูรณาการเกษตรและสหกรณ์ จ.แพร่</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0b1f3a;--navy2:#152d4f;--navy3:#1e3d68;--navy4:#2a5298;
+  --gold:#c9a227;--gold2:#e8c55a;
+  --green:#1a7a3a;--green2:#2ea855;--accent:#34c785;
+  --red:#c0392b;--orange:#d35400;--blue:#2980b9;--purple:#7d3c98;--teal:#0e7490;
+  --bg:#eef2f7;--surface:#fff;--border:#dde3ec;
+  --text:#1a202c;--text2:#4a5568;--text3:#718096;
+  --topbar-h:52px;--agency-bar-h:42px;--level-bar-h:36px;--sidebar-w:228px;
+}
+body{font-family:'Sarabun','Inter',sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.5}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit;font-size:13px}
+
+/* LOGIN */
+#login{display:flex;align-items:center;justify-content:center;min-height:100vh;
+  background:linear-gradient(135deg,var(--navy) 0%,#0d3560 55%,#163f6e 100%);position:relative;overflow:hidden}
+#login::before{content:'';position:absolute;inset:0;
+  background-image:radial-gradient(rgba(201,162,39,.07) 1px,transparent 1px);background-size:30px 30px}
+.lc{background:rgba(255,255,255,.97);border-radius:18px;padding:34px 30px;width:500px;
+  box-shadow:0 28px 80px rgba(0,0,0,.45),0 0 0 1px rgba(201,162,39,.2);z-index:2;position:relative}
+.lc-badge{display:flex;align-items:center;gap:12px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.lc-crest{width:46px;height:46px;border-radius:10px;background:linear-gradient(135deg,var(--navy),var(--navy3));
+  display:flex;align-items:center;justify-content:center;font-size:22px}
+.lc-org .t1{font-size:13px;font-weight:800;color:var(--navy)}
+.lc-org .t2{font-size:9px;color:var(--text3);letter-spacing:.04em}
+.lc-title{font-size:15px;font-weight:800;color:var(--navy);margin-bottom:2px}
+.lc-sub{font-size:10px;color:var(--text3);margin-bottom:14px}
+.ministry-chain{display:flex;align-items:center;gap:3px;font-size:9px;margin-bottom:12px;flex-wrap:wrap;line-height:1.8}
+.mc-item{background:#eef2f7;padding:2px 7px;border-radius:8px;font-weight:700;color:var(--navy2)}
+.mc-arr{color:var(--text3);font-size:9px}
+.role-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:12px}
+.role-btn{border:1.5px solid var(--border);border-radius:8px;padding:10px 6px;cursor:pointer;text-align:center;background:#f8fafc;transition:.15s}
+.role-btn:hover,.role-btn.sel{border-color:var(--navy3);background:#eff6ff}
+.role-btn .ri{font-size:17px;margin-bottom:3px}
+.role-btn .rl{font-size:10px;font-weight:800;color:var(--navy);line-height:1.3}
+.role-btn .rs{font-size:9px;color:var(--text3);margin-top:1px}
+.sel-wrap{display:none;margin-bottom:8px}
+.sel-wrap label{font-size:10px;font-weight:700;color:var(--text2);display:block;margin-bottom:3px}
+.sel-wrap select{width:100%;padding:7px 10px;border:1.5px solid var(--border);border-radius:7px;background:#fff}
+.lc-btn{width:100%;background:linear-gradient(135deg,var(--navy),var(--navy3));color:#fff;
+  border:none;border-radius:8px;padding:11px;font-size:13px;font-weight:700;letter-spacing:.02em;margin-top:6px}
+.lc-btn:hover{opacity:.9}
+.lc-foot{margin-top:12px;text-align:center;font-size:9px;color:var(--text3)}
+.lc-foot span{color:var(--gold)}
+
+/* APP */
+#app{display:none;flex-direction:column;height:100vh;overflow:hidden}
+.topbar{height:var(--topbar-h);background:var(--navy);color:#fff;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 16px;flex-shrink:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.tb-left{display:flex;align-items:center;gap:10px}
+.tb-logo{font-size:20px}
+.tb-t1{font-size:13px;font-weight:800}
+.tb-t2{font-size:9px;color:#94a8c0}
+.tb-chain{display:flex;align-items:center;gap:3px;margin-left:12px;padding-left:12px;border-left:1px solid rgba(255,255,255,.12)}
+.tb-ci{font-size:9px;color:#94a8c0;padding:2px 7px;border-radius:8px;white-space:nowrap}
+.tb-ci.active{background:rgba(201,162,39,.2);color:var(--gold2)}
+.tb-ca{font-size:9px;color:#4a6080}
+.tb-right{display:flex;align-items:center;gap:8px}
+.tb-notif{background:var(--red);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;cursor:pointer}
+.tb-user{background:rgba(255,255,255,.1);border-radius:18px;padding:4px 11px;font-size:10px;cursor:pointer;display:flex;align-items:center;gap:5px}
+.tb-user .dot{width:6px;height:6px;border-radius:50%;background:#34c785}
+.tb-logout{background:transparent;border:1px solid rgba(255,255,255,.2);color:#fff;padding:4px 10px;border-radius:6px;font-size:10px}
+
+/* AGENCY BAR */
+.agency-bar{height:var(--agency-bar-h);background:var(--navy2);display:flex;align-items:stretch;overflow-x:auto;flex-shrink:0;border-bottom:2px solid rgba(201,162,39,.2);scrollbar-width:none}
+.agency-bar::-webkit-scrollbar{display:none}
+.agency-tab{display:flex;align-items:center;gap:5px;padding:0 13px;
+  font-size:10px;font-weight:700;color:#6b8aad;cursor:pointer;
+  border-bottom:2px solid transparent;white-space:nowrap;transition:.12s;flex-shrink:0}
+.agency-tab:hover{color:#fff;background:rgba(255,255,255,.04)}
+.agency-tab.active{color:var(--gold2);border-bottom-color:var(--gold);background:rgba(201,162,39,.07)}
+.agency-tab .ai{font-size:13px}
+/* Coordinator tab gets special styling */
+.agency-tab.coord-tab{border-right:1px solid rgba(255,255,255,.1);background:rgba(201,162,39,.04)}
+.agency-tab.coord-tab.active{background:rgba(201,162,39,.12)}
+
+/* LEVEL BAR */
+.level-bar{height:var(--level-bar-h);background:#f0f4fb;display:flex;align-items:center;padding:0 12px;gap:5px;border-bottom:1px solid #d1dced;flex-shrink:0;overflow-x:auto;scrollbar-width:none}
+.lv-item{padding:3px 9px;border-radius:10px;font-size:10px;font-weight:600;white-space:nowrap;cursor:pointer;transition:.12s;color:var(--navy3)}
+.lv-item:hover{background:#dce7ff}
+.lv-item.active{background:var(--navy3);color:#fff;cursor:default}
+.lv-item.dim{color:var(--text3);cursor:default}
+.lv-sep{color:#9aaccf;font-size:9px}
+.lv-info{margin-left:auto;font-size:9px;color:var(--text3);white-space:nowrap}
+
+/* BODY */
+.app-body{display:flex;flex:1;overflow:hidden}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar-w);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sb-ag{margin:8px 8px 4px;padding:8px 10px;border-radius:8px;background:linear-gradient(135deg,var(--navy),var(--navy3));color:#fff;font-size:10px}
+.sb-ag-name{font-weight:800;font-size:11px;margin-bottom:2px}
+.sb-ag-dept{color:#94a8c0;font-size:9px}
+.sb-sec{padding:10px 12px 3px;font-size:9px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.07em}
+.sb-item{display:flex;align-items:center;gap:7px;padding:7px 14px;cursor:pointer;color:var(--text2);font-size:11.5px;border-left:3px solid transparent;transition:.12s}
+.sb-item:hover{background:#f5f8ff;color:var(--navy)}
+.sb-item.active{background:#eef4ff;color:var(--navy);font-weight:700;border-left-color:var(--navy3)}
+.sb-item .si{font-size:14px;width:16px;text-align:center}
+.sb-badge{background:var(--red);color:#fff;border-radius:8px;padding:1px 5px;font-size:8px;margin-left:auto;font-weight:700}
+.sb-badge.ok{background:var(--green2)}.sb-badge.warn{background:var(--orange)}.sb-badge.bl{background:var(--blue)}
+.sb-divider{height:1px;background:var(--border);margin:3px 0}
+.sb-tree{display:flex;align-items:center;gap:6px;padding:5px 12px 5px 26px;cursor:pointer;color:var(--text2);font-size:11px;border-left:3px solid transparent;transition:.12s}
+.sb-tree:hover{background:#f5f8ff;color:var(--navy)}
+.sb-tree.active{background:#eef4ff;font-weight:700;border-left-color:var(--navy4);color:var(--navy)}
+
+/* MAIN */
+.main{flex:1;overflow-y:auto;padding:15px}
+.page{display:none}.page.active{display:block}
+.hidden{display:none!important}
+
+/* BREADCRUMB */
+.bc{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3);margin-bottom:8px;flex-wrap:wrap}
+.bc a{color:var(--navy4);cursor:pointer}.bc a:hover{text-decoration:underline}
+.bc-sep{color:var(--text3)}
+.bc-cur{color:var(--text2);font-weight:700}
+
+/* PAGE HEADER */
+.ph{margin-bottom:14px}
+.ph-title{font-size:16px;font-weight:800;color:var(--navy);display:flex;align-items:center;gap:7px}
+.ph-sub{font-size:10px;color:var(--text3);margin-top:2px}
+.ph-actions{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap}
+
+/* KPI */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:12px}
+.kpi-row.r5{grid-template-columns:repeat(5,1fr)}.kpi-row.r3{grid-template-columns:repeat(3,1fr)}
+.kpi{background:var(--surface);border-radius:9px;padding:12px;border-top:3px solid var(--accent)}
+.kpi.nv{border-top-color:var(--navy3)}.kpi.go{border-top-color:var(--gold)}.kpi.re{border-top-color:var(--red)}.kpi.or{border-top-color:var(--orange)}.kpi.te{border-top-color:var(--teal)}.kpi.pu{border-top-color:var(--purple)}
+.kpi-v{font-size:22px;font-weight:800;color:var(--navy)}
+.kpi.go .kpi-v{color:var(--gold)}.kpi.re .kpi-v{color:var(--red)}.kpi.or .kpi-v{color:var(--orange)}.kpi.te .kpi-v{color:var(--teal)}
+.kpi-l{font-size:10px;color:var(--text3);margin-top:2px}
+.kpi-s{font-size:10px;margin-top:3px;color:var(--text3)}.kpi-s.up{color:var(--green2)}.kpi-s.dn{color:var(--red)}
+
+.card{background:var(--surface);border-radius:9px;padding:13px;margin-bottom:11px;border:1px solid var(--border)}
+.card-head{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:9px;display:flex;align-items:center;justify-content:space-between}
+.ch-t{display:flex;align-items:center;gap:5px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:11px}
+.tbl th{background:#f1f5f9;padding:7px 9px;text-align:left;font-size:10px;font-weight:700;color:var(--text2);letter-spacing:.03em;position:sticky;top:0}
+.tbl td{padding:7px 9px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+.tbl tr:hover td{background:#fafcff}
+.tw{overflow-x:auto;border-radius:7px;border:1px solid var(--border)}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:8px;font-size:9px;font-weight:700}
+.bg-green{background:#dcfce7;color:#15803d}.bg-red{background:#fee2e2;color:#dc2626}
+.bg-orange{background:#ffedd5;color:#c2410c}.bg-blue{background:#dbeafe;color:#1d4ed8}
+.bg-gold{background:#fef3c7;color:#92400e}.bg-gray{background:#f3f4f6;color:#6b7280}
+.bg-navy{background:#dbeafe;color:var(--navy)}.bg-purple{background:#ede9fe;color:var(--purple)}
+.bg-teal{background:#ccfbf1;color:var(--teal)}
+
+/* FORMS */
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:7px}
+.fr.r3{grid-template-columns:1fr 1fr 1fr}
+.fg{margin-bottom:7px}
+.fg label{display:block;font-size:10px;font-weight:700;color:var(--text2);margin-bottom:3px}
+.fi{width:100%;padding:7px 9px;border:1.5px solid var(--border);border-radius:7px;font-size:12px;background:#fff;transition:.15s}
+.fi:focus{outline:none;border-color:var(--navy3)}
+.fi-a{min-height:60px;resize:vertical}
+
+/* BUTTONS */
+.btn{padding:6px 13px;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:.15s}
+.btn-p{background:var(--navy);color:#fff}.btn-p:hover{background:var(--navy3)}
+.btn-s{background:var(--green);color:#fff}.btn-s:hover{background:var(--green2)}
+.btn-g{background:var(--gold);color:var(--navy)}.btn-g:hover{background:var(--gold2)}
+.btn-o{background:#fff;border:1.5px solid var(--border);color:var(--text2)}.btn-o:hover{border-color:var(--navy3);color:var(--navy)}
+.btn-d{background:var(--red);color:#fff}
+.btn-t{background:var(--teal);color:#fff}
+.btn-sm{padding:3px 8px;font-size:10px}
+.btn-group{display:flex;gap:5px;flex-wrap:wrap}
+
+/* PROGRESS */
+.pb{height:7px;background:#e2e8f0;border-radius:4px;overflow:hidden}
+.pf{height:100%;border-radius:4px;background:var(--navy3);transition:width .5s}
+.pf.go{background:var(--gold)}.pf.gr{background:var(--green2)}.pf.re{background:var(--red)}.pf.or{background:var(--orange)}
+.pl{display:flex;justify-content:space-between;font-size:10px;margin-bottom:3px;color:var(--text2)}
+
+/* ORG TREE */
+.org-node{background:#fff;border:1px solid var(--border);border-radius:8px;padding:8px 12px;margin-bottom:4px}
+.org-node-t{font-weight:700;color:var(--navy);font-size:12px}
+.org-node-s{color:var(--text3);font-size:10px;margin-top:1px}
+.org-l0{border-left:4px solid var(--gold)}
+.org-l1{border-left:4px solid var(--navy3);margin-left:18px}
+.org-l2{border-left:4px solid var(--teal);margin-left:36px}
+.org-l3{border-left:4px solid var(--green2);margin-left:54px}
+.org-l4{border-left:4px solid var(--orange);margin-left:72px}
+.org-l5{border-left:4px solid var(--purple);margin-left:90px}
+.org-conn{border-left:1px dashed #ccd8ea;margin-left:22px;padding-left:12px}
+
+/* DOC + APPROVAL */
+.doc-item{display:flex;align-items:center;gap:9px;padding:8px;border-radius:8px;border:1px solid var(--border);margin-bottom:6px;background:#fff;cursor:pointer;transition:.12s}
+.doc-item:hover{border-color:var(--navy3)}
+.doc-icon{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.doc-icon.pdf{background:#fee2e2}.doc-icon.xls{background:#dcfce7}.doc-icon.word{background:#dbeafe}.doc-icon.gen{background:#ede9fe}
+.doc-info{flex:1}.dn{font-size:11px;font-weight:600;color:var(--navy)}.dm{font-size:10px;color:var(--text3);margin-top:1px}
+.ap-step{display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:7px;border:1px solid var(--border);margin-bottom:5px}
+.ap-num{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0}
+.ap-done{background:#dcfce7;color:#15803d}.ap-cur{background:var(--navy);color:#fff}.ap-wait{background:#f1f5f9;color:var(--text3)}
+.ap-info{flex:1}.ap-name{font-size:11px;font-weight:700}.ap-role{font-size:10px;color:var(--text3)}
+
+/* CALENDAR */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cal-head{font-size:9px;font-weight:700;color:var(--text3);text-align:center;padding:3px 0}
+.cal-day{min-height:42px;padding:3px;border-radius:5px;cursor:pointer;border:1px solid transparent;transition:.1s;position:relative}
+.cal-day:hover{background:#f0f4f8;border-color:var(--border)}
+.cal-day.today{background:#eef4ff;border-color:var(--navy3)}
+.cal-day.other-m{opacity:.25}
+.cal-num{font-size:10px;font-weight:600}
+.cal-day.today .cal-num{color:var(--navy);font-weight:800}
+.cal-ev{font-size:7px;padding:1px 3px;border-radius:3px;margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ev-meet{background:#dbeafe;color:#1d4ed8}.ev-field{background:#dcfce7;color:#15803d}
+.ev-dead{background:#fee2e2;color:#dc2626}.ev-train{background:#ede9fe;color:#7c3aed}
+
+/* DISTRICT CARD */
+.dist-card{background:#fff;border-radius:10px;border:1px solid var(--border);padding:13px;cursor:pointer;transition:.15s;display:flex;align-items:center;gap:11px;margin-bottom:9px}
+.dist-card:hover{border-color:var(--navy3);box-shadow:0 3px 12px rgba(11,31,58,.1)}
+.dist-icon{width:42px;height:42px;border-radius:9px;background:linear-gradient(135deg,var(--navy),var(--navy3));display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.dist-info{flex:1}.dist-name{font-size:13px;font-weight:800;color:var(--navy)}.dist-meta{font-size:10px;color:var(--text3);margin-top:2px}
+.dist-stats{display:flex;gap:14px;margin-top:5px}
+.dst-s .sv{font-size:15px;font-weight:800;color:var(--navy3)}.dst-s .sl{font-size:9px;color:var(--text3)}
+
+/* VOLUNTEER */
+.vol-card{background:#fff;border-radius:8px;border:1px solid var(--border);padding:9px 12px;margin-bottom:6px;display:flex;align-items:center;gap:9px}
+.vol-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--teal));display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;flex-shrink:0}
+.vol-n{font-size:12px;font-weight:700;color:var(--navy)}.vol-m{font-size:10px;color:var(--text3)}
+
+/* PROJ */
+.proj-card{background:#fff;border-radius:9px;border:1px solid var(--border);padding:11px;margin-bottom:8px}
+.proj-head{display:flex;justify-content:space-between;align-items:start;margin-bottom:5px}
+.proj-name{font-size:12px;font-weight:700;color:var(--navy)}
+.proj-meta{font-size:10px;color:var(--text3);margin-bottom:6px}
+
+/* LINE CHAT */
+.line-msg{margin-bottom:5px}
+.line-bub{display:inline-block;max-width:85%;padding:7px 11px;font-size:11px;line-height:1.6;border-radius:10px}
+.line-bub.out{background:#06c755;color:#fff;border-radius:10px 10px 0 10px;float:right}
+.line-bub.in{background:#f1f5f9;color:var(--text);border-radius:10px 10px 10px 0}
+.line-time{font-size:9px;color:var(--text3);display:block;margin-top:1px;clear:both}
+
+/* NOTIF */
+.notif-item{display:flex;gap:9px;padding:8px 12px;border-bottom:1px solid #f1f5f9}
+.notif-icon{font-size:16px;flex-shrink:0}
+.notif-text{font-size:11px;color:var(--text)}.notif-time{font-size:9px;color:var(--text3);margin-top:1px}
+.notif-item.unread{background:#f8faff}
+
+/* KPI GAUGE */
+.gauge-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.gauge-box{background:#fff;border-radius:9px;padding:12px;text-align:center;border:1px solid var(--border)}
+.gauge-v{font-size:24px;font-weight:800;color:var(--navy)}
+.gauge-l{font-size:10px;color:var(--text3);margin-top:2px}
+.gauge-t{font-size:9px;color:var(--text3);margin-top:2px}
+
+.spinner{text-align:center;padding:22px;color:var(--text3);font-size:12px}
+.tabs{display:flex;border-bottom:2px solid var(--border);margin-bottom:11px}
+.tab{padding:7px 13px;font-size:11px;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px}
+.tab.active{color:var(--navy);font-weight:700;border-bottom-color:var(--navy3)}
+@media(max-width:900px){.sidebar{display:none}.kpi-row{grid-template-columns:1fr 1fr}.g2,.g3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- ══════ LOGIN ══════ -->
+<div id="login">
+<div class="lc">
+  <div class="lc-badge">
+    <div class="lc-crest">🏛️</div>
+    <div class="lc-org">
+      <div class="t1">กระทรวงเกษตรและสหกรณ์ — จังหวัดแพร่</div>
+      <div class="t2">MINISTRY OF AGRICULTURE AND COOPERATIVES · PHRAE PROVINCE · AI SYSTEM</div>
+    </div>
+  </div>
+  <!-- สายบังคับบัญชาที่แท้จริง -->
+  <div class="ministry-chain">
+    <span class="mc-item">รัฐมนตรีว่าการ</span><span class="mc-arr">›</span>
+    <span class="mc-item">รัฐมนตรีช่วย</span><span class="mc-arr">›</span>
+    <span class="mc-item">ปลัดกระทรวง</span><span class="mc-arr">›</span>
+    <span class="mc-item">เกษตรและสหกรณ์จังหวัด</span><span class="mc-arr">·</span>
+    <span class="mc-item">อธิบดี/เลขาธิการ</span><span class="mc-arr">›</span>
+    <span class="mc-item">หัวหน้าส่วนราชการจังหวัด</span><span class="mc-arr">›</span>
+    <span class="mc-item">เกษตรอำเภอ</span><span class="mc-arr">›</span>
+    <span class="mc-item">เกษตรตำบล</span><span class="mc-arr">›</span>
+    <span class="mc-item">อกม.</span><span class="mc-arr">›</span>
+    <span class="mc-item">เกษตรกร</span>
+  </div>
+  <div class="lc-title">เลือกระดับการเข้าใช้งาน</div>
+  <div class="lc-sub">ตามโครงสร้างกระทรวงเกษตรและสหกรณ์ พ.ร.บ.ปรับปรุงกระทรวงฯ 2545</div>
+  <div class="role-grid">
+    <div class="role-btn" onclick="selRole('coord')" id="r-coord"><div class="ri">🏛️</div><div class="rl">เกษตรและสหกรณ์จังหวัด</div><div class="rs">ภาพรวมทุกหน่วยงาน</div></div>
+    <div class="role-btn" onclick="selRole('head')" id="r-head"><div class="ri">🌾</div><div class="rl">หัวหน้าส่วนราชการจังหวัด</div><div class="rs">เกษตรจว./สหกรณ์จว./ปศุสัตว์ ฯลฯ</div></div>
+    <div class="role-btn" onclick="selRole('district')" id="r-district"><div class="ri">🏘️</div><div class="rl">เกษตรอำเภอ</div><div class="rs">8 อำเภอ · ดูแลตำบล + อกม.</div></div>
+    <div class="role-btn" onclick="selRole('subdistrict')" id="r-subdistrict"><div class="ri">🌱</div><div class="rl">เกษตรตำบล</div><div class="rs">นักวิชาการส่งเสริมการเกษตร</div></div>
+    <div class="role-btn" onclick="selRole('volunteer')" id="r-volunteer"><div class="ri">🤝</div><div class="rl">อาสาสมัครเกษตร (อกม.)</div><div class="rs">ระดับหมู่บ้าน</div></div>
+    <div class="role-btn" onclick="selRole('farmer')" id="r-farmer"><div class="ri">🧑‍🌾</div><div class="rl">เกษตรกร</div><div class="rs">สมาชิก / ผู้รับบริการ</div></div>
+  </div>
+  <div class="sel-wrap" id="sw-agency">
+    <label>เลือกหน่วยงาน (สายบังคับบัญชาของกระทรวงเกษตรและสหกรณ์)</label>
+    <select id="selAgency">
+      <option value="agri">สำนักงานเกษตรจังหวัด — กรมส่งเสริมการเกษตร</option>
+      <option value="coop">สำนักงานสหกรณ์จังหวัด — กรมส่งเสริมสหกรณ์</option>
+      <option value="cad">สำนักงานตรวจบัญชีสหกรณ์จังหวัด — กรมตรวจบัญชีสหกรณ์</option>
+      <option value="live">สำนักงานปศุสัตว์จังหวัด — กรมปศุสัตว์</option>
+      <option value="fish">สำนักงานประมงจังหวัด — กรมประมง</option>
+      <option value="land">สำนักงาน สปก. จังหวัด — สำนักงานการปฏิรูปที่ดินฯ</option>
+      <option value="irri">โครงการชลประทานจังหวัด — กรมชลประทาน</option>
+      <option value="ldd">สถานีพัฒนาที่ดินแพร่ — กรมพัฒนาที่ดิน</option>
+      <option value="doa">ศูนย์วิจัยและพัฒนาการเกษตรแพร่ — กรมวิชาการเกษตร</option>
+    </select>
+  </div>
+  <div class="sel-wrap" id="sw-district">
+    <label>เลือกอำเภอ (สำนักงานเกษตรอำเภอ)</label>
+    <select id="selDistrict">
+      <option value="mueang">อำเภอเมืองแพร่ (25 ตำบล)</option>
+      <option value="rongkwang">อำเภอร้องกวาง (12 ตำบล)</option>
+      <option value="long">อำเภอลอง (11 ตำบล)</option>
+      <option value="sungmen">อำเภอสูงเม่น (12 ตำบล)</option>
+      <option value="denchai">อำเภอเด่นชัย (5 ตำบล)</option>
+      <option value="song">อำเภอสอง (12 ตำบล)</option>
+      <option value="wangchin">อำเภอวังชิ้น (8 ตำบล)</option>
+      <option value="nongmuangkhai">อำเภอหนองม่วงไข่ (6 ตำบล)</option>
+    </select>
+  </div>
+  <div class="sel-wrap" id="sw-sub">
+    <label>เลือกตำบล</label>
+    <select id="selSubdistrict">
+      <option>ตำบลในเวียง</option><option>ตำบลนาจักร</option>
+      <option>ตำบลน้ำชำ</option><option>ตำบลป่าแดง</option>
+    </select>
+  </div>
+  <button class="lc-btn" onclick="doLogin()">🔐 เข้าสู่ระบบ</button>
+  <div class="lc-foot">ระบบเชื่อมต่อ LINE AI · Airtable · Fly.io · <span>PLAT แพร่ © 2026</span></div>
+</div>
+</div>
+
+<!-- ══════ APP SHELL ══════ -->
+<div id="app">
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="tb-left">
+    <div class="tb-logo">🏛️</div>
+    <div><div class="tb-t1">ระบบบูรณาการเกษตรและสหกรณ์ จ.แพร่</div><div class="tb-t2">กระทรวงเกษตรและสหกรณ์ · AI-Powered Platform</div></div>
+    <div class="tb-chain">
+      <span class="tb-ci">กระทรวงเกษตรและสหกรณ์</span>
+      <span class="tb-ca">›</span>
+      <span class="tb-ci active" id="tbDept">เกษตรและสหกรณ์จังหวัดแพร่</span>
+      <span class="tb-ca" id="tbArrow2" style="display:none">›</span>
+      <span class="tb-ci" id="tbLevel2" style="display:none"></span>
+    </div>
+  </div>
+  <div class="tb-right">
+    <div class="tb-notif" onclick="showPage('notif')" id="notifBadge">3</div>
+    <div class="tb-user"><div class="dot"></div><span id="tbUser">เกษตรและสหกรณ์จังหวัด</span></div>
+    <button class="tb-logout" onclick="doLogout()">ออกระบบ</button>
+  </div>
+</div>
+
+<!-- AGENCY BAR — เฉพาะหน่วยงานสังกัดกระทรวงเกษตรและสหกรณ์ -->
+<div class="agency-bar" id="agencyBar">
+  <div class="agency-tab coord-tab active" onclick="switchAgency('coord')" data-ag="coord"><span class="ai">🏛️</span>เกษตรและสหกรณ์จว.</div>
+  <div class="agency-tab" onclick="switchAgency('agri')" data-ag="agri"><span class="ai">🌾</span>เกษตรจังหวัด</div>
+  <div class="agency-tab" onclick="switchAgency('coop')" data-ag="coop"><span class="ai">🤝</span>สหกรณ์จังหวัด</div>
+  <div class="agency-tab" onclick="switchAgency('cad')" data-ag="cad"><span class="ai">📊</span>ตรวจบัญชีสหกรณ์</div>
+  <div class="agency-tab" onclick="switchAgency('live')" data-ag="live"><span class="ai">🐄</span>ปศุสัตว์จังหวัด</div>
+  <div class="agency-tab" onclick="switchAgency('fish')" data-ag="fish"><span class="ai">🐟</span>ประมงจังหวัด</div>
+  <div class="agency-tab" onclick="switchAgency('land')" data-ag="land"><span class="ai">📐</span>สปก.แพร่</div>
+  <div class="agency-tab" onclick="switchAgency('irri')" data-ag="irri"><span class="ai">💧</span>ชลประทาน</div>
+  <div class="agency-tab" onclick="switchAgency('ldd')" data-ag="ldd"><span class="ai">🌱</span>พัฒนาที่ดิน</div>
+  <div class="agency-tab" onclick="switchAgency('doa')" data-ag="doa"><span class="ai">🔬</span>วิชาการเกษตร</div>
+</div>
+
+<!-- LEVEL BAR -->
+<div class="level-bar" id="levelBar">
+  <span class="lv-item active" id="lv0" onclick="goLevel(0)">🗺️ จ.แพร่</span>
+  <span class="lv-sep" id="lvsep1" style="display:none">›</span>
+  <span class="lv-item" id="lv1" style="display:none" onclick="goLevel(1)"></span>
+  <span class="lv-sep" id="lvsep2" style="display:none">›</span>
+  <span class="lv-item" id="lv2" style="display:none" onclick="goLevel(2)"></span>
+  <span class="lv-sep" id="lvsep3" style="display:none">›</span>
+  <span class="lv-item" id="lv3" style="display:none"></span>
+  <span class="lv-info" id="lvInfo">8 อำเภอ · 77 ตำบล · 641 หมู่บ้าน</span>
+</div>
+
+<div class="app-body">
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <div class="sb-ag">
+    <div class="sb-ag-name" id="sbName">เกษตรและสหกรณ์จังหวัดแพร่</div>
+    <div class="sb-ag-dept" id="sbDept">สำนักงานปลัดกระทรวงเกษตรและสหกรณ์</div>
+  </div>
+
+  <!-- COORD (เกษตรและสหกรณ์จังหวัด — ภาพรวม) -->
+  <div id="sb-coord">
+    <div class="sb-sec">ภาพรวมบูรณาการจังหวัด</div>
+    <div class="sb-item active" onclick="showPage('portal')"><span class="si">📊</span>แดชบอร์ดจังหวัด</div>
+    <div class="sb-item" onclick="showPage('orgchart')"><span class="si">🏗️</span>โครงสร้างองค์กร</div>
+    <div class="sb-item" onclick="showPage('agency-status')"><span class="si">🏢</span>สถานะ 9 หน่วยงาน</div>
+    <div class="sb-item" onclick="showPage('calendar')"><span class="si">📅</span>ปฏิทินงาน</div>
+    <div class="sb-item" onclick="showPage('documents')"><span class="si">📁</span>เอกสาร + อนุมัติ</div>
+    <div class="sb-divider"></div>
+    <div class="sb-sec">ข้อมูลเกษตร</div>
+    <div class="sb-item" onclick="showPage('farmers')"><span class="si">🧑‍🌾</span>ทะเบียนเกษตรกร<span class="sb-badge ok" id="fCount">—</span></div>
+    <div class="sb-item" onclick="showPage('weather')"><span class="si">🌤️</span>สภาพอากาศ</div>
+    <div class="sb-item" onclick="showPage('prices')"><span class="si">💰</span>ราคาตลาด</div>
+    <div class="sb-item" onclick="showPage('pest')"><span class="si">🐛</span>แจ้งเตือนศัตรูพืช<span class="sb-badge warn" id="pestCount">—</span></div>
+    <div class="sb-divider"></div>
+    <div class="sb-sec">การสื่อสาร</div>
+    <div class="sb-item" onclick="showPage('broadcast')"><span class="si">📢</span>LINE Broadcast</div>
+    <div class="sb-item" onclick="showPage('aireport')"><span class="si">📋</span>รายงาน AI</div>
+    <div class="sb-item" onclick="showPage('aichat')"><span class="si">🤖</span>ผู้ช่วย AI</div>
+    <div class="sb-item" onclick="showPage('notif')"><span class="si">🔔</span>การแจ้งเตือน<span class="sb-badge" id="notifCountSb">3</span></div>
+  </div>
+
+  <!-- AGRI (เกษตรจังหวัด + drill-down อำเภอ) -->
+  <div id="sb-agri" class="hidden">
+    <div class="sb-sec">สนง.เกษตรจังหวัด</div>
+    <div class="sb-item active" onclick="showPage('dept-home')"><span class="si">🏠</span>ภาพรวมหน่วยงาน</div>
+    <div class="sb-item" onclick="showPage('calendar')"><span class="si">📅</span>ปฏิทินงาน</div>
+    <div class="sb-item" onclick="showPage('documents')"><span class="si">📁</span>เอกสาร + อนุมัติ</div>
+    <div class="sb-item" onclick="showPage('budget')"><span class="si">💼</span>งบประมาณ</div>
+    <div class="sb-item" onclick="showPage('projects')"><span class="si">🎯</span>โครงการ + KPI</div>
+    <div class="sb-divider"></div>
+    <div class="sb-sec">บริหารอำเภอ (8 แห่ง)</div>
+    <div class="sb-item" onclick="showPage('district-list')"><span class="si">🗺️</span>รายการอำเภอ</div>
+    <div class="sb-tree" onclick="drillDistrict('mueang')"><span>📍</span>เมืองแพร่<span class="sb-badge bl" style="margin-left:auto">25ต.</span></div>
+    <div class="sb-tree" onclick="drillDistrict('rongkwang')"><span>📍</span>ร้องกวาง<span class="sb-badge bl" style="margin-left:auto">12ต.</span></div>
+    <div class="sb-tree" onclick="drillDistrict('long')"><span>📍</span>ลอง<span class="sb-badge bl" style="margin-left:auto">11ต.</span></div>
+    <div class="sb-tree" onclick="drillDistrict('sungmen')"><span>📍</span>สูงเม่น<span class="sb-badge bl" style="margin-left:auto">12ต.</span></div>
+    <div class="sb-tree" onclick="drillDistrict('denchai')"><span>📍</span>เด่นชัย<span class="sb-badge bl" style="margin-left:auto">5ต.</span></div>
+    <div class="sb-tree" onclick="drillDistrict('song')"><span>📍</span>สอง<span class="sb-badge bl" style="margin-left:auto">12ต.</span></div>
+    <div class="sb-tree" onclick="drillDistrict('wangchin')"><span>📍</span>วังชิ้น<span class="sb-badge bl" style="margin-left:auto">8ต.</span></div>
+    <div class="sb-tree" onclick="drillDistrict('nongmuangkhai')"><span>📍</span>หนองม่วงไข่<span class="sb-badge bl" style="margin-left:auto">6ต.</span></div>
+    <div class="sb-divider"></div>
+    <div class="sb-item" onclick="showPage('farmers')"><span class="si">🧑‍🌾</span>ทะเบียนเกษตรกร</div>
+    <div class="sb-item" onclick="showPage('broadcast')"><span class="si">📢</span>ส่งข้อความ LINE</div>
+    <div class="sb-item" onclick="showPage('aichat')"><span class="si">🤖</span>ผู้ช่วย AI</div>
+  </div>
+
+  <!-- GENERIC sidebar (หน่วยงานอื่นๆ) -->
+  <div id="sb-generic" class="hidden">
+    <div class="sb-sec" id="sbGenericSec">งานหน่วยงาน</div>
+    <div class="sb-item active" onclick="showPage('dept-home')"><span class="si">🏠</span>ภาพรวมหน่วยงาน</div>
+    <div class="sb-item" onclick="showPage('calendar')"><span class="si">📅</span>ปฏิทินงาน</div>
+    <div class="sb-item" onclick="showPage('documents')"><span class="si">📁</span>เอกสาร + อนุมัติ</div>
+    <div class="sb-item" onclick="showPage('budget')"><span class="si">💼</span>งบประมาณ</div>
+    <div class="sb-item" onclick="showPage('projects')"><span class="si">🎯</span>โครงการ + KPI</div>
+    <div class="sb-divider"></div>
+    <div class="sb-item" onclick="showPage('farmers')"><span class="si">🧑‍🌾</span>ข้อมูลเกษตรกร</div>
+    <div class="sb-item" onclick="showPage('broadcast')"><span class="si">📢</span>ส่งข้อความ</div>
+    <div class="sb-item" onclick="showPage('aichat')"><span class="si">🤖</span>ผู้ช่วย AI</div>
+  </div>
+
+  <!-- DISTRICT sidebar (เกษตรอำเภอ) -->
+  <div id="sb-district" class="hidden">
+    <div class="sb-sec" id="sbDistSec">สนง.เกษตรอำเภอ</div>
+    <div class="sb-item active" onclick="showPage('district-home')"><span class="si">🏠</span>ภาพรวมอำเภอ</div>
+    <div class="sb-item" onclick="showPage('subdistrict-list')"><span class="si">🗺️</span>รายการตำบล</div>
+    <div class="sb-item" onclick="showPage('volunteers')"><span class="si">🤝</span>อกม. ในอำเภอ</div>
+    <div class="sb-item" onclick="showPage('farmers')"><span class="si">🧑‍🌾</span>เกษตรกรในอำเภอ</div>
+    <div class="sb-item" onclick="showPage('calendar')"><span class="si">📅</span>ปฏิทินงาน</div>
+    <div class="sb-item" onclick="showPage('documents')"><span class="si">📁</span>เอกสาร</div>
+    <div class="sb-item" onclick="showPage('pest')"><span class="si">🐛</span>แจ้งเตือนพื้นที่</div>
+    <div class="sb-item" onclick="showPage('broadcast')"><span class="si">📢</span>ส่งข้อความ</div>
+  </div>
+</div><!-- /sidebar -->
+
+<div class="main" id="mainContent">
+
+<!-- ══ PAGE: PORTAL ══ -->
+<div class="page active" id="page-portal">
+<div class="ph"><div class="ph-title">📊 แดชบอร์ดภาพรวมจังหวัดแพร่</div>
+<div class="ph-sub">สำนักงานเกษตรและสหกรณ์จังหวัดแพร่ · บูรณาการข้อมูล 9 หน่วยงาน · <span id="lastUpdate">กำลังโหลด...</span></div></div>
+<div class="kpi-row r5">
+  <div class="kpi nv"><div class="kpi-v" id="kFarmer">—</div><div class="kpi-l">เกษตรกรในระบบ</div><div class="kpi-s up">ทะเบียน ทบก.</div></div>
+  <div class="kpi go"><div class="kpi-v" id="kPrice">—</div><div class="kpi-l">ราคาลำไย (฿/กก.)</div><div class="kpi-s">ราคาวันนี้</div></div>
+  <div class="kpi or"><div class="kpi-v" id="kPest">—</div><div class="kpi-l">แจ้งเตือนศัตรูพืช</div><div class="kpi-s">รายการใช้งาน</div></div>
+  <div class="kpi te"><div class="kpi-v">9</div><div class="kpi-l">หน่วยงานในสังกัด</div><div class="kpi-s up">กระทรวงเกษตรฯ</div></div>
+  <div class="kpi"><div class="kpi-v">8</div><div class="kpi-l">อำเภอ · 77 ตำบล</div><div class="kpi-s">641 หมู่บ้าน</div></div>
+</div>
+<div class="g2">
+  <div class="card"><div class="card-head"><div class="ch-t">🌤️ สภาพอากาศวันนี้</div><button class="btn btn-o btn-sm" onclick="showPage('weather')">รายละเอียด</button></div><div id="weatherCard"><div class="spinner">กำลังโหลด...</div></div></div>
+  <div class="card"><div class="card-head"><div class="ch-t">💰 ราคาตลาดล่าสุด</div><button class="btn btn-o btn-sm" onclick="showPage('prices')">ดูทั้งหมด</button></div><div id="pricesCard"><div class="spinner">กำลังโหลด...</div></div></div>
+</div>
+<div class="g2">
+  <div class="card"><div class="card-head"><div class="ch-t">🏢 สถานะ 9 หน่วยงาน กระทรวงเกษตรฯ</div><button class="btn btn-o btn-sm" onclick="showPage('agency-status')">ดูทั้งหมด</button></div><div id="agencyStatusCard"><div class="spinner">กำลังโหลด...</div></div></div>
+  <div class="card"><div class="card-head"><div class="ch-t">🐛 แจ้งเตือนศัตรูพืชล่าสุด</div><button class="btn btn-d btn-sm" onclick="showPage('pest')">จัดการ</button></div><div id="alertsCard"><div class="spinner">กำลังโหลด...</div></div></div>
+</div>
+<div class="card"><div class="card-head"><div class="ch-t">📊 KPI ภาพรวมจังหวัด — ปีงบ 2568</div></div>
+  <div class="gauge-row">
+    <div class="gauge-box"><div class="gauge-v" style="color:var(--green2)">72%</div><div class="gauge-l">ผลสำเร็จแผนงาน</div><div class="gauge-t">เป้า 80%</div></div>
+    <div class="gauge-box"><div class="gauge-v" style="color:var(--gold)">71.8%</div><div class="gauge-l">เบิกจ่ายงบประมาณ</div><div class="gauge-t">เป้า 75%</div></div>
+    <div class="gauge-box"><div class="gauge-v" style="color:var(--navy3)">84%</div><div class="gauge-l">ความพึงพอใจ</div><div class="gauge-t">เป้า 80% ✅</div></div>
+  </div>
+</div>
+</div><!-- /portal -->
+
+<!-- ══ PAGE: ORG CHART ══ -->
+<div class="page" id="page-orgchart">
+<div class="ph"><div class="ph-title">🏗️ โครงสร้างองค์กร — กระทรวงเกษตรและสหกรณ์ ระดับจังหวัดแพร่</div>
+<div class="ph-sub">ตามพระราชบัญญัติปรับปรุงกระทรวง ทบวง กรม พ.ศ. 2545 และที่แก้ไขเพิ่มเติม</div></div>
+<div class="g2" style="align-items:start">
+<div>
+<div class="card"><div class="card-head"><div class="ch-t">🏛️ สายบังคับบัญชา: กระทรวง → จังหวัด → อำเภอ → ตำบล → เกษตรกร</div></div>
+<div style="font-size:11px">
+<div class="org-node org-l0"><div class="org-node-t">🏛️ รัฐมนตรีว่าการกระทรวงเกษตรและสหกรณ์</div><div class="org-node-s">ผู้บังคับบัญชาสูงสุด — กำหนดนโยบาย</div></div>
+<div class="org-conn">
+<div class="org-node org-l1"><div class="org-node-t">🎖️ รัฐมนตรีช่วยว่าการ (2-3 ท่าน)</div><div class="org-node-s">กำกับดูแลด้านที่ได้รับมอบหมาย</div></div>
+<div class="org-node org-l1"><div class="org-node-t">📋 ปลัดกระทรวงเกษตรและสหกรณ์</div><div class="org-node-s">บริหารราชการกระทรวง · กำกับกรมต่างๆ</div></div>
+<div class="org-conn">
+  <div class="org-node org-l2" style="border-left-color:var(--gold);background:#fffbeb"><div class="org-node-t">🏛️ สำนักงานเกษตรและสหกรณ์จังหวัดแพร่</div><div class="org-node-s">ขึ้นตรงปลัดกระทรวง · มีสำนักงานและบุคลากรของตนเอง · ประสานงานบูรณาการทุกหน่วย</div></div>
+  <div class="org-node org-l2"><div class="org-node-t">🌾 กรมส่งเสริมการเกษตร → สนง.เกษตรจังหวัดแพร่</div><div class="org-node-s">เกษตรจังหวัด (ผู้อำนวยการ) · ดูแลสนง.เกษตรอำเภอ 8 แห่ง</div></div>
+  <div class="org-conn">
+    <div class="org-node org-l3"><div class="org-node-t">🏘️ สนง.เกษตรอำเภอ 8 แห่ง (เกษตรอำเภอ)</div><div class="org-node-s">เมืองแพร่ · ร้องกวาง · ลอง · สูงเม่น · เด่นชัย · สอง · วังชิ้น · หนองม่วงไข่</div></div>
+    <div class="org-conn">
+      <div class="org-node org-l4"><div class="org-node-t">🌱 เกษตรตำบล (นักวิชาการส่งเสริมการเกษตร)</div><div class="org-node-s">77 ตำบล · ถ่ายทอดเทคโนโลยี · บันทึกข้อมูล ทบก.</div></div>
+      <div class="org-conn">
+        <div class="org-node org-l5"><div class="org-node-t">🤝 อาสาสมัครเกษตรหมู่บ้าน (อกม.)</div><div class="org-node-s">641 หมู่บ้าน · ไม่ใช่ข้าราชการ · ตัวแทนชุมชน</div></div>
+        <div class="org-conn"><div class="org-node" style="border-left:4px solid var(--green2);margin-left:90px"><div class="org-node-t">🧑‍🌾 เกษตรกร จ.แพร่ (~65,000 ราย)</div><div class="org-node-s">ผู้รับบริการ — ฐานของทั้งระบบ</div></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="org-node org-l2"><div class="org-node-t">🤝 กรมส่งเสริมสหกรณ์ → สนง.สหกรณ์จังหวัดแพร่</div><div class="org-node-s">สหกรณ์การเกษตร · กลุ่มเกษตรกร · สมาชิกสหกรณ์</div></div>
+  <div class="org-node org-l2"><div class="org-node-t">📊 กรมตรวจบัญชีสหกรณ์ → สตท. แพร่</div><div class="org-node-s">ตรวจสอบบัญชีสหกรณ์ · ส่งเสริมการทำบัญชีเกษตรกร</div></div>
+  <div class="org-node org-l2"><div class="org-node-t">🐄 กรมปศุสัตว์ → สนง.ปศุสัตว์จังหวัดแพร่</div><div class="org-node-s">ปศุสัตว์จังหวัด → ปศุสัตว์อำเภอ 8 แห่ง</div></div>
+  <div class="org-node org-l2"><div class="org-node-t">🐟 กรมประมง → สนง.ประมงจังหวัดแพร่</div><div class="org-node-s">ประมงน้ำจืด · แหล่งน้ำ · เพาะเลี้ยงสัตว์น้ำ</div></div>
+  <div class="org-node org-l2"><div class="org-node-t">📐 สปก. → สนง.การปฏิรูปที่ดิน จ.แพร่</div><div class="org-node-s">จัดสรรที่ดินทำกินแก่เกษตรกร</div></div>
+  <div class="org-node org-l2"><div class="org-node-t">💧 กรมชลประทาน → โครงการชลประทาน จ.แพร่</div><div class="org-node-s">บริหารจัดการน้ำเพื่อเกษตรกรรม</div></div>
+  <div class="org-node org-l2"><div class="org-node-t">🌱 กรมพัฒนาที่ดิน → สพด. แพร่</div><div class="org-node-s">ปรับปรุงบำรุงดิน · วิเคราะห์ดิน · ส่งเสริมปุ๋ยพืชสด</div></div>
+  <div class="org-node org-l2"><div class="org-node-t">🔬 กรมวิชาการเกษตร → ศูนย์วิจัยการเกษตรแพร่</div><div class="org-node-s">วิจัยพัฒนาพันธุ์พืช · มาตรฐาน GAP · ปัจจัยการผลิต</div></div>
+</div></div>
+</div></div></div>
+<div>
+<div class="card"><div class="card-head"><div class="ch-t">⚠️ หน่วยงานที่เกี่ยวข้อง (ต่างกระทรวง)</div></div>
+<div style="font-size:11px;background:#fff8e1;padding:10px;border-radius:8px;border-left:4px solid var(--orange);margin-bottom:10px">
+  <div style="font-weight:800;color:var(--navy);margin-bottom:6px">หน่วยงานเหล่านี้ไม่ได้สังกัดกระทรวงเกษตรและสหกรณ์ — แต่ทำงานร่วมกัน:</div>
+  <div style="margin-bottom:4px">🏦 <strong>ธ.ก.ส.</strong> — สังกัดกระทรวงการคลัง (รัฐวิสาหกิจ)</div>
+  <div style="margin-bottom:4px">🏘️ <strong>พัฒนาชุมชน (พช.)</strong> — สังกัดกระทรวงมหาดไทย</div>
+  <div style="margin-bottom:4px">📚 <strong>ศูนย์การเรียนรู้ ICT</strong> — สังกัดกระทรวงดิจิทัล</div>
+  <div>🏥 <strong>โรงพยาบาลส่งเสริมสุขภาพ</strong> — สังกัดกระทรวงสาธารณสุข</div>
+</div>
+<div style="font-size:11px;background:#f0fdf4;padding:10px;border-radius:8px;border-left:4px solid var(--green2)">
+  <div style="font-weight:800;color:var(--navy);margin-bottom:4px">บทบาทของ "เกษตรและสหกรณ์จังหวัด"</div>
+  <div style="color:var(--text2);line-height:1.8">
+    ✅ มีสำนักงานและบุคลากรของตนเอง<br>
+    ✅ ประสานบูรณาการงานทุกหน่วยงานเกษตรในจังหวัด<br>
+    ✅ รายงานตรงต่อปลัดกระทรวง<br>
+    ✅ ไม่มีอำนาจบังคับบัญชาหน่วยงานสาย<br>
+    ✅ เป็นตัวแทนกระทรวงในระดับจังหวัด
+  </div>
+</div>
+</div>
+<div class="card"><div class="card-head"><div class="ch-t">📊 ตัวเลขสำคัญ จ.แพร่</div></div>
+<div class="tw"><table class="tbl"><thead><tr><th>ระดับ</th><th>จำนวน</th></tr></thead><tbody>
+  <tr><td>หน่วยงานสังกัดกระทรวงเกษตรฯ</td><td>9 หน่วยงาน</td></tr>
+  <tr><td>อำเภอ</td><td>8 อำเภอ</td></tr>
+  <tr><td>ตำบล</td><td>77 ตำบล</td></tr>
+  <tr><td>หมู่บ้าน</td><td>641 หมู่บ้าน</td></tr>
+  <tr><td>อาสาสมัครเกษตร (อกม.)</td><td>~641 ราย</td></tr>
+  <tr><td>เกษตรกรขึ้นทะเบียน ทบก.</td><td>~65,000 ราย</td></tr>
+  <tr><td>พื้นที่การเกษตร</td><td>~1.2 ล้านไร่</td></tr>
+</tbody></table></div>
+</div>
+</div></div>
+</div><!-- /orgchart -->
+
+<!-- ══ PAGE: AGENCY STATUS ══ -->
+<div class="page" id="page-agency-status">
+<div class="ph"><div class="ph-title">🏢 สถานะหน่วยงานเกษตรและสหกรณ์ จ.แพร่</div>
+<div class="ph-sub">9 หน่วยงานสังกัดกระทรวงเกษตรและสหกรณ์ — ปีงบประมาณ 2568</div></div>
+<div id="agStatusGrid" class="g2"><div class="spinner">กำลังโหลด...</div></div>
+</div><!-- /agency-status -->
+
+<!-- ══ PAGE: DISTRICT LIST ══ -->
+<div class="page" id="page-district-list">
+<div class="ph"><div class="ph-title">🗺️ สำนักงานเกษตรอำเภอ ทั้ง 8 แห่ง จ.แพร่</div>
+<div class="ph-sub">กรมส่งเสริมการเกษตร → สนง.เกษตรจังหวัดแพร่ → สนง.เกษตรอำเภอ</div></div>
+<div id="districtGrid" class="g2"><!-- JS render --></div>
+</div><!-- /district-list -->
+
+<!-- ══ PAGE: DISTRICT HOME ══ -->
+<div class="page" id="page-district-home">
+<div class="bc"><a onclick="showPage('district-list')">🗺️ รายการอำเภอ</a><span class="bc-sep">›</span><span class="bc-cur" id="dhBCTitle">อำเภอ</span></div>
+<div class="ph">
+  <div class="ph-title" id="dhTitle">🏘️ สนง.เกษตรอำเภอ —</div>
+  <div class="ph-sub" id="dhSub">เกษตรอำเภอ: — · จำนวนตำบล: — · เกษตรกร: —</div>
+  <div class="ph-actions">
+    <button class="btn btn-p btn-sm" onclick="showPage('subdistrict-list')">📋 รายการตำบล</button>
+    <button class="btn btn-o btn-sm" onclick="showPage('volunteers')">🤝 อกม.</button>
+    <button class="btn btn-o btn-sm" onclick="showPage('farmers')">🧑‍🌾 เกษตรกร</button>
+  </div>
+</div>
+<div class="kpi-row">
+  <div class="kpi nv"><div class="kpi-v" id="dhFarmer">—</div><div class="kpi-l">เกษตรกรในอำเภอ</div><div class="kpi-s">ขึ้นทะเบียน ทบก.</div></div>
+  <div class="kpi go"><div class="kpi-v" id="dhTambon">—</div><div class="kpi-l">จำนวนตำบล</div><div class="kpi-s">มีเกษตรตำบลดูแล</div></div>
+  <div class="kpi te"><div class="kpi-v" id="dhVol">—</div><div class="kpi-l">อกม. ในอำเภอ</div><div class="kpi-s">อาสาสมัครเกษตร</div></div>
+  <div class="kpi or"><div class="kpi-v" id="dhAlert">—</div><div class="kpi-l">แจ้งเตือนในพื้นที่</div><div class="kpi-s">ศัตรูพืช/โรคพืช</div></div>
+</div>
+<div class="g2">
+  <div class="card"><div class="card-head"><div class="ch-t">🌾 ตำบลในอำเภอ</div></div><div id="subdistrictPreview"><!-- JS --></div></div>
+  <div class="card"><div class="card-head"><div class="ch-t">🤝 อกม. ในอำเภอ</div></div><div id="distVolPreview"><div class="spinner">กำลังโหลด...</div></div></div>
+</div>
+</div><!-- /district-home -->
+
+<!-- ══ PAGE: SUBDISTRICT LIST ══ -->
+<div class="page" id="page-subdistrict-list">
+<div class="ph"><div class="ph-title" id="subdistListTitle">📋 รายการตำบล — อำเภอ —</div>
+<div class="ph-sub">เกษตรตำบล · อกม. · เกษตรกร แยกรายตำบล</div></div>
+<div id="subdistListGrid" class="g2"><!-- JS --></div>
+</div><!-- /subdistrict-list -->
+
+<!-- ══ PAGE: VOLUNTEERS ══ -->
+<div class="page" id="page-volunteers">
+<div class="ph"><div class="ph-title">🤝 อาสาสมัครเกษตรหมู่บ้าน (อกม.)</div>
+<div class="ph-sub" id="volAreaSub">ผู้ประสานงานระหว่างราชการกับเกษตรกร ระดับหมู่บ้าน</div>
+<div class="ph-actions">
+  <button class="btn btn-p btn-sm" onclick="openVolForm()">+ เพิ่ม อกม.</button>
+  <input class="fi" style="width:170px" placeholder="ค้นหา..." id="volSearch" onkeyup="filterVols(this.value)">
+</div></div>
+<div class="card"><div class="card-head"><div class="ch-t">รายชื่ออาสาสมัครเกษตร (<span id="volTotal">—</span> ราย)</div></div>
+<div class="tw"><table class="tbl"><thead><tr>
+  <th>ชื่อ-นามสกุล</th><th>หมู่บ้าน</th><th>ตำบล</th><th>อำเภอ</th><th>โทรศัพท์</th><th>เกษตรกรดูแล</th><th>สถานะ</th>
+</tr></thead><tbody id="volTable">
+  <tr><td colspan="7"><div class="spinner">กำลังโหลด...</div></td></tr>
+</tbody></table></div>
+</div>
+</div><!-- /volunteers -->
+
+<!-- ══ PAGE: DEPT HOME ══ -->
+<div class="page" id="page-dept-home">
+<div class="ph"><div class="ph-title" id="deptHomeTitle">🌾 สำนักงานเกษตรจังหวัดแพร่</div>
+<div class="ph-sub" id="deptHomeSub">กรมส่งเสริมการเกษตร — ปีงบประมาณ 2568</div></div>
+<div class="kpi-row">
+  <div class="kpi nv"><div class="kpi-v" id="dhKpi1">3</div><div class="kpi-l" id="dhLbl1">โครงการดำเนินการ</div><div class="kpi-s up">ปีงบ 2568</div></div>
+  <div class="kpi go"><div class="kpi-v">71.8%</div><div class="kpi-l">เบิกจ่ายงบ</div><div class="kpi-s" id="dhBudSub">จาก 12.4 ล้านบาท</div></div>
+  <div class="kpi or"><div class="kpi-v">3</div><div class="kpi-l">เอกสารรออนุมัติ</div><div class="kpi-s warn">รอลงนาม 3 ฉบับ</div></div>
+  <div class="kpi te"><div class="kpi-v" id="dhKpi4">8</div><div class="kpi-l" id="dhLbl4">อำเภอภายใต้กำกับ</div><div class="kpi-s">สนง.เกษตรอำเภอ</div></div>
+</div>
+<div class="g2">
+  <div class="card"><div class="card-head"><div class="ch-t">📅 กิจกรรมวันนี้</div><button class="btn btn-o btn-sm" onclick="showPage('calendar')">ปฏิทิน</button></div>
+    <div><div class="doc-item"><div class="doc-icon word">📋</div><div class="doc-info"><div class="dn">ประชุมหัวหน้าส่วนราชการจังหวัด</div><div class="dm">09:00 · ห้องประชุมจังหวัด</div></div><span class="badge bg-blue">ประชุม</span></div>
+    <div class="doc-item"><div class="doc-icon gen">🌾</div><div class="doc-info"><div class="dn">ลงพื้นที่ตรวจแปลงสาธิต อ.เด่นชัย</div><div class="dm">13:00 · ภาคสนาม</div></div><span class="badge bg-green">ภาคสนาม</span></div>
+    <div class="doc-item"><div class="doc-icon pdf">📊</div><div class="doc-info"><div class="dn">รายงานผล Q2/2568</div><div class="dm">กำหนดส่ง 17:00 น.</div></div><span class="badge bg-red">ด่วน</span></div></div>
+  </div>
+  <div class="card"><div class="card-head"><div class="ch-t">📁 เอกสารรออนุมัติ</div><button class="btn btn-o btn-sm" onclick="showPage('documents')">ดูทั้งหมด</button></div>
+    <div><div class="ap-step"><div class="ap-num ap-cur">1</div><div class="ap-info"><div class="ap-name">ขออนุมัติโครงการส่งเสริมลำไย 2568</div><div class="ap-role">รออนุมัติ: เกษตรจังหวัด</div></div><span class="badge bg-orange">รอ</span></div>
+    <div class="ap-step"><div class="ap-num ap-done">✓</div><div class="ap-info"><div class="ap-name">รายงานผลการดำเนินงาน พ.ค.68</div><div class="ap-role">อนุมัติ: สำนักงานจังหวัด</div></div><span class="badge bg-green">สำเร็จ</span></div>
+    <div class="ap-step"><div class="ap-num ap-wait">3</div><div class="ap-info"><div class="ap-name">ขออนุมัติเดินทางไปราชการ</div><div class="ap-role">รอผู้อนุมัติขั้น 2</div></div><span class="badge bg-gray">รอคิว</span></div></div>
+  </div>
+</div>
+<div class="card"><div class="card-head"><div class="ch-t">🎯 โครงการหลัก</div><button class="btn btn-o btn-sm" onclick="showPage('projects')">ดูทั้งหมด</button></div>
+  <div class="proj-card"><div class="proj-head"><div class="proj-name">🌾 โครงการส่งเสริมการปลูกลำไยคุณภาพ จ.แพร่</div><span class="badge bg-blue">ดำเนินการ</span></div><div class="proj-meta">งบ 2.5 ล้านบาท · เป้า 500 ราย · สนง.เกษตรอำเภอ 8 แห่ง</div><div class="pl"><span>ความก้าวหน้า</span><span>72%</span></div><div class="pb"><div class="pf" style="width:72%"></div></div></div>
+  <div class="proj-card"><div class="proj-head"><div class="proj-name">💻 โครงการพัฒนา Smart Farm จ.แพร่</div><span class="badge bg-orange">ล่าช้า</span></div><div class="proj-meta">งบ 1.2 ล้านบาท · เป้า 30 แปลง · อ.เมืองแพร่ + สูงเม่น</div><div class="pl"><span>ความก้าวหน้า</span><span>38%</span></div><div class="pb"><div class="pf or" style="width:38%"></div></div></div>
+</div>
+</div><!-- /dept-home -->
+
+<!-- ══ PAGE: CALENDAR ══ -->
+<div class="page" id="page-calendar">
+<div class="ph"><div class="ph-title">📅 ปฏิทินงานและนัดประชุม</div><div class="ph-sub" id="calDeptLabel">ปีงบประมาณ 2568</div>
+<div class="ph-actions"><button class="btn btn-p btn-sm" onclick="openAddEvent()">+ เพิ่มกิจกรรม</button><button class="btn btn-o btn-sm" onclick="renderCal()">🔄 รีเฟรช</button></div></div>
+<div class="g2" style="align-items:start">
+  <div class="card"><div class="card-head"><div class="ch-t" id="calMonthLabel">เดือน ปี</div><div style="display:flex;gap:3px"><button class="btn btn-o btn-sm" onclick="changeMonth(-1)">‹</button><button class="btn btn-o btn-sm" onclick="changeMonth(1)">›</button></div></div>
+    <div class="cal-grid" id="calGrid">
+      <div class="cal-head">อา</div><div class="cal-head">จ</div><div class="cal-head">อ</div><div class="cal-head">พ</div><div class="cal-head">พฤ</div><div class="cal-head">ศ</div><div class="cal-head">ส</div>
+    </div>
+  </div>
+  <div>
+    <div class="card"><div class="card-head"><div class="ch-t">📋 กิจกรรมเดือนนี้</div></div>
+      <div id="eventList">
+        <div class="doc-item"><div class="doc-icon word">📋</div><div class="doc-info"><div class="dn">ประชุมหัวหน้าส่วนราชการ</div><div class="dm">5 พ.ค. · 09:00 · ห้องประชุมจังหวัด</div></div><span class="badge bg-blue">ประชุม</span></div>
+        <div class="doc-item"><div class="doc-icon gen">🌾</div><div class="doc-info"><div class="dn">ลงพื้นที่สาธิต อ.ร้องกวาง</div><div class="dm">8 พ.ค. · 08:00 · ภาคสนาม</div></div><span class="badge bg-green">ภาคสนาม</span></div>
+        <div class="doc-item"><div class="doc-icon pdf">📊</div><div class="doc-info"><div class="dn">ส่งรายงานผล Q2</div><div class="dm">15 พ.ค. · กำหนดส่ง</div></div><span class="badge bg-red">กำหนดส่ง</span></div>
+        <div class="doc-item"><div class="doc-icon gen">🎓</div><div class="doc-info"><div class="dn">อบรมเกษตรกร 50 ราย</div><div class="dm">20-21 พ.ค. · ศูนย์เกษตร</div></div><span class="badge bg-purple">อบรม</span></div>
+      </div>
+    </div>
+    <div class="card" id="addEventForm" style="display:none">
+      <div class="card-head"><div class="ch-t">➕ เพิ่มกิจกรรม</div></div>
+      <div class="fg"><label>ชื่อกิจกรรม</label><input class="fi" id="evTitle" placeholder="ระบุชื่อกิจกรรม"></div>
+      <div class="fr"><div class="fg"><label>วันที่</label><input class="fi" type="date" id="evDate"></div><div class="fg"><label>เวลา</label><input class="fi" type="time" id="evTime"></div></div>
+      <div class="fg"><label>ประเภท</label><select class="fi" id="evType"><option value="meet">ประชุม</option><option value="field">ภาคสนาม</option><option value="dead">กำหนดส่ง</option><option value="train">อบรม</option></select></div>
+      <div class="fg"><label>สถานที่/หมายเหตุ</label><input class="fi" id="evNote"></div>
+      <div class="btn-group"><button class="btn btn-p btn-sm" onclick="saveEvent()">💾 บันทึก</button><button class="btn btn-o btn-sm" onclick="document.getElementById('addEventForm').style.display='none'">ยกเลิก</button></div>
+    </div>
+  </div>
+</div>
+</div><!-- /calendar -->
+
+<!-- ══ PAGE: DOCUMENTS ══ -->
+<div class="page" id="page-documents">
+<div class="ph"><div class="ph-title">📁 จัดการเอกสารและการอนุมัติ</div><div class="ph-sub">ระบบเอกสารราชการ + Workflow อนุมัติ</div>
+<div class="ph-actions"><button class="btn btn-p btn-sm">+ สร้างเอกสารใหม่</button><button class="btn btn-o btn-sm">📤 นำเข้าไฟล์</button></div></div>
+<div class="tabs">
+  <div class="tab active" onclick="switchDocTab('pending',this)">รออนุมัติ <span class="badge bg-orange">3</span></div>
+  <div class="tab" onclick="switchDocTab('all',this)">ทั้งหมด</div>
+  <div class="tab" onclick="switchDocTab('approved',this)">อนุมัติแล้ว</div>
+  <div class="tab" onclick="switchDocTab('draft',this)">ร่าง</div>
+</div>
+<div id="docTab-pending">
+  <div class="g2">
+    <div>
+      <div class="doc-item"><div class="doc-icon pdf">📋</div><div class="doc-info"><div class="dn">ขออนุมัติโครงการส่งเสริมลำไย 2568</div><div class="dm">บันทึกข้อความ · ยื่น 22 พ.ค.68</div></div><span class="badge bg-orange">รออนุมัติ</span></div>
+      <div class="doc-item"><div class="doc-icon word">📝</div><div class="doc-info"><div class="dn">รายงานสำรวจพื้นที่ปลูกข้าวโพด อ.วังชิ้น</div><div class="dm">รายงาน · ยื่น 20 พ.ค.68</div></div><span class="badge bg-orange">รออนุมัติ</span></div>
+      <div class="doc-item"><div class="doc-icon xls">💼</div><div class="doc-info"><div class="dn">ขออนุมัติเดินทางไปราชการ กรุงเทพ</div><div class="dm">ขออนุมัติ · ยื่น 19 พ.ค.68</div></div><span class="badge bg-orange">รออนุมัติ</span></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="ch-t">🔄 ขั้นตอนการอนุมัติ</div></div>
+      <div class="ap-step"><div class="ap-num ap-done">✓</div><div class="ap-info"><div class="ap-name">ผู้รับผิดชอบโครงการ</div><div class="ap-role">เจ้าหน้าที่ส่งเสริม · 22 พ.ค.</div></div></div>
+      <div class="ap-step"><div class="ap-num ap-done">✓</div><div class="ap-info"><div class="ap-name">หัวหน้ากลุ่มส่งเสริมการผลิต</div><div class="ap-role">ตรวจสอบเบื้องต้น · 23 พ.ค.</div></div></div>
+      <div class="ap-step"><div class="ap-num ap-cur">3</div><div class="ap-info"><div class="ap-name">เกษตรจังหวัด</div><div class="ap-role">รออนุมัติ — ผู้มีอำนาจลงนาม</div></div></div>
+      <div class="ap-step"><div class="ap-num ap-wait">4</div><div class="ap-info"><div class="ap-name">สำนักงานจังหวัด</div><div class="ap-role">รอรับเรื่องต่อ</div></div></div>
+      <div class="btn-group" style="margin-top:10px">
+        <button class="btn btn-s btn-sm">✅ อนุมัติ</button>
+        <button class="btn btn-d btn-sm">❌ ไม่อนุมัติ</button>
+        <button class="btn btn-o btn-sm">💬 ส่งกลับแก้ไข</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="docTab-all" style="display:none"><div class="tw"><table class="tbl"><thead><tr><th>เลขที่</th><th>ชื่อเรื่อง</th><th>ประเภท</th><th>วันที่</th><th>สถานะ</th><th>การดำเนินการ</th></tr></thead><tbody>
+  <tr><td>กษ.0001/2568</td><td>ขออนุมัติโครงการส่งเสริมลำไย</td><td>บันทึกข้อความ</td><td>22 พ.ค.68</td><td><span class="badge bg-orange">รออนุมัติ</span></td><td><button class="btn btn-o btn-sm">ดู</button></td></tr>
+  <tr><td>กษ.0002/2568</td><td>รายงานผลสำรวจ Q1/2568</td><td>รายงาน</td><td>15 พ.ค.68</td><td><span class="badge bg-green">อนุมัติ</span></td><td><button class="btn btn-o btn-sm">ดู</button></td></tr>
+  <tr><td>กษ.0003/2568</td><td>แผนปฏิบัติการประจำปี 2568</td><td>แผนงาน</td><td>3 เม.ย.68</td><td><span class="badge bg-green">อนุมัติ</span></td><td><button class="btn btn-o btn-sm">ดู</button></td></tr>
+</tbody></table></div></div>
+<div id="docTab-approved" style="display:none"><div class="spinner">เอกสารที่อนุมัติแล้ว</div></div>
+<div id="docTab-draft" style="display:none"><div class="spinner">ร่างเอกสาร</div></div>
+</div><!-- /documents -->
+
+<!-- ══ PAGE: BUDGET ══ -->
+<div class="page" id="page-budget">
+<div class="ph"><div class="ph-title">💼 ติดตามงบประมาณ</div><div class="ph-sub" id="budgetSub">ปีงบประมาณ 2568</div></div>
+<div class="kpi-row">
+  <div class="kpi nv"><div class="kpi-v">12.4<span style="font-size:13px">ล.</span></div><div class="kpi-l">งบที่ได้รับ</div><div class="kpi-s up">ปีงบ 2568</div></div>
+  <div class="kpi go"><div class="kpi-v">8.9<span style="font-size:13px">ล.</span></div><div class="kpi-l">เบิกจ่ายแล้ว</div><div class="kpi-s up">71.8%</div></div>
+  <div class="kpi or"><div class="kpi-v">1.2<span style="font-size:13px">ล.</span></div><div class="kpi-l">ระหว่างดำเนินการ</div><div class="kpi-s">9.7%</div></div>
+  <div class="kpi re"><div class="kpi-v">2.3<span style="font-size:13px">ล.</span></div><div class="kpi-l">คงเหลือ</div><div class="kpi-s dn">18.5%</div></div>
+</div>
+<div class="card"><div class="card-head"><div class="ch-t">📊 งบประมาณแยกตามหมวดรายจ่าย</div></div>
+  <div style="margin-bottom:10px"><div class="pl"><span>งบบุคลากร (เงินเดือน)</span><span>4.2 / 4.5 ล้าน (93.3%)</span></div><div class="pb" style="height:10px"><div class="pf go" style="width:93.3%"></div></div></div>
+  <div style="margin-bottom:10px"><div class="pl"><span>งบดำเนินงาน (ค่าใช้สอย)</span><span>2.8 / 3.2 ล้าน (87.5%)</span></div><div class="pb" style="height:10px"><div class="pf" style="width:87.5%"></div></div></div>
+  <div style="margin-bottom:10px"><div class="pl"><span>งบลงทุน (วัสดุ-ครุภัณฑ์)</span><span>1.5 / 2.8 ล้าน (53.6%)</span></div><div class="pb" style="height:10px"><div class="pf or" style="width:53.6%"></div></div></div>
+  <div><div class="pl"><span>งบเงินอุดหนุน</span><span>0.4 / 1.9 ล้าน (21.1%)</span></div><div class="pb" style="height:10px"><div class="pf re" style="width:21.1%"></div></div></div>
+</div>
+<div class="g2">
+  <div class="card"><div class="card-head"><div class="ch-t">💰 แยกตามโครงการ</div></div>
+    <div class="tw"><table class="tbl"><thead><tr><th>โครงการ</th><th>งบ</th><th>เบิก</th><th>%</th></tr></thead><tbody>
+      <tr><td>ส่งเสริมลำไยคุณภาพ</td><td>2,500,000</td><td>1,820,000</td><td><span class="badge bg-green">72.8%</span></td></tr>
+      <tr><td>ถ่ายทอดเทคโนโลยี</td><td>800,000</td><td>800,000</td><td><span class="badge bg-green">100%</span></td></tr>
+      <tr><td>พัฒนา Smart Farm</td><td>1,200,000</td><td>450,000</td><td><span class="badge bg-orange">37.5%</span></td></tr>
+    </tbody></table></div>
+  </div>
+  <div class="card"><div class="card-head"><div class="ch-t">📋 เบิกจ่ายล่าสุด</div></div>
+    <div class="tw"><table class="tbl"><thead><tr><th>วันที่</th><th>รายการ</th><th>จำนวน</th></tr></thead><tbody>
+      <tr><td>22 พ.ค.</td><td>ค่าวัสดุการเกษตร</td><td>45,200</td></tr>
+      <tr><td>20 พ.ค.</td><td>ค่าเดินทางภาคสนาม</td><td>12,500</td></tr>
+      <tr><td>18 พ.ค.</td><td>ค่าจ้างวิทยากร</td><td>30,000</td></tr>
+    </tbody></table></div>
+  </div>
+</div>
+</div><!-- /budget -->
+
+<!-- ══ PAGE: PROJECTS ══ -->
+<div class="page" id="page-projects">
+<div class="ph"><div class="ph-title">🎯 ติดตามโครงการและ KPI</div><div class="ph-sub">แผนงาน/โครงการ ปีงบ 2568</div>
+<div class="ph-actions"><button class="btn btn-p btn-sm">+ เพิ่มโครงการ</button><button class="btn btn-o btn-sm">📊 รายงาน KPI</button></div></div>
+<div class="tabs">
+  <div class="tab active" onclick="switchProjTab('proj',this)">โครงการ</div>
+  <div class="tab" onclick="switchProjTab('kpi',this)">KPI ตัวชี้วัด</div>
+</div>
+<div id="projTab-proj">
+  <div class="proj-card"><div class="proj-head"><div><div class="proj-name">🌾 โครงการส่งเสริมการปลูกลำไยคุณภาพ จ.แพร่</div><div class="proj-meta">งบ 2,500,000 บาท · ระยะเวลา ต.ค.67 – ก.ย.68 · เป้า 500 ราย</div></div><span class="badge bg-blue">ดำเนินการ</span></div><div class="pl"><span>ความก้าวหน้า</span><span>72%</span></div><div class="pb"><div class="pf" style="width:72%"></div></div></div>
+  <div class="proj-card"><div class="proj-head"><div><div class="proj-name">🏘️ โครงการถ่ายทอดเทคโนโลยีการเกษตร</div><div class="proj-meta">งบ 800,000 บาท · ระยะเวลา ต.ค.67 – มี.ค.68 · เป้า 200 ราย</div></div><span class="badge bg-green">สำเร็จ</span></div><div class="pl"><span>ผลสำเร็จ</span><span>100%</span></div><div class="pb"><div class="pf gr" style="width:100%"></div></div></div>
+  <div class="proj-card"><div class="proj-head"><div><div class="proj-name">💻 โครงการพัฒนา Smart Farm จ.แพร่</div><div class="proj-meta">งบ 1,200,000 บาท · เป้า 30 แปลง · อ.เมืองแพร่ + สูงเม่น</div></div><span class="badge bg-orange">ล่าช้า</span></div><div class="pl"><span>ความก้าวหน้า</span><span>38%</span></div><div class="pb"><div class="pf or" style="width:38%"></div></div></div>
+</div>
+<div id="projTab-kpi" style="display:none">
+  <div class="gauge-row"><div class="gauge-box"><div class="gauge-v" style="color:var(--green2)">72%</div><div class="gauge-l">ผลสำเร็จตามแผน</div><div class="gauge-t">เป้า 80%</div></div>
+  <div class="gauge-box"><div class="gauge-v" style="color:var(--gold)">71.8%</div><div class="gauge-l">เบิกจ่ายงบ</div><div class="gauge-t">เป้า 75%</div></div>
+  <div class="gauge-box"><div class="gauge-v" style="color:var(--navy3)">84%</div><div class="gauge-l">ความพึงพอใจ</div><div class="gauge-t">เป้า 80% ✅</div></div></div>
+</div>
+</div><!-- /projects -->
+
+<!-- ===== FARMERS PAGE ===== -->
+<div id="page-farmers" class="page" style="display:none">
+  <div class="card">
+    <div class="card-h">🌾 ทะเบียนเกษตรกร — เกษตรจังหวัดแพร่</div>
+    <div class="row-wrap" style="gap:8px;margin-bottom:12px">
+      <input id="f-search" class="inp" placeholder="ค้นหาชื่อ/เลขบัตร..." style="flex:1;min-width:180px">
+      <select id="f-district" class="inp" style="width:160px">
+        <option value="">— ทุกอำเภอ —</option>
+        <option value="mueang">เมืองแพร่</option><option value="rongkwang">ร้องกวาง</option>
+        <option value="long">ลอง</option><option value="sungmen">สูงเม่น</option>
+        <option value="denchai">เด่นชัย</option><option value="song">สอง</option>
+        <option value="wangchin">วังชิ้น</option><option value="nongmuangkhai">หนองม่วงไข่</option>
+      </select>
+      <select id="f-crop" class="inp" style="width:150px">
+        <option value="">— ทุกพืช —</option>
+        <option value="rice">ข้าว</option><option value="corn">ข้าวโพด</option>
+        <option value="longan">ลำไย</option><option value="teak">สัก</option>
+      </select>
+      <button class="btn" onclick="loadFarmers()">🔍 ค้นหา</button>
+      <button class="btn btn-g" onclick="exportFarmers()">📥 Export</button>
+    </div>
+    <div id="farmer-stats" class="row-wrap" style="gap:8px;margin-bottom:12px"></div>
+    <div id="farmer-table"></div>
+    <div id="farmer-pages" style="margin-top:8px;text-align:center"></div>
+  </div>
+</div>
+
+<!-- ===== WEATHER PAGE ===== -->
+<div id="page-weather" class="page" style="display:none">
+  <div class="card">
+    <div class="card-h">🌦️ พยากรณ์อากาศ — จังหวัดแพร่</div>
+    <div id="weather-current" class="row-wrap" style="gap:12px"></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <div class="card-h">📊 พยากรณ์ 7 วัน</div>
+    <div id="weather-7day" class="row-wrap" style="gap:8px"></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <div class="card-h">⚠️ คำแนะนำเกษตรกร</div>
+    <div id="weather-advice"></div>
+  </div>
+</div>
+
+<!-- ===== PRICES PAGE ===== -->
+<div id="page-prices" class="page" style="display:none">
+  <div class="card">
+    <div class="card-h">💰 ราคาสินค้าเกษตร — ตลาดแพร่</div>
+    <div class="row-wrap" style="gap:8px;margin-bottom:12px">
+      <button class="btn" onclick="loadPrices()">🔄 อัปเดตราคา</button>
+      <span id="prices-updated" style="font-size:12px;color:var(--navy3);align-self:center"></span>
+    </div>
+    <div id="prices-table"></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <div class="card-h">📈 แนวโน้มราคา</div>
+    <div id="prices-trend" style="font-size:14px;padding:8px"></div>
+  </div>
+</div>
+
+<!-- ===== PEST ALERTS PAGE ===== -->
+<div id="page-pest" class="page" style="display:none">
+  <div class="card">
+    <div class="card-h">🐛 แจ้งเตือนศัตรูพืช — จังหวัดแพร่</div>
+    <button class="btn" onclick="reportPest()" style="margin-bottom:12px">➕ รายงานการระบาด</button>
+    <div id="pest-list"></div>
+  </div>
+</div>
+
+<!-- ===== BROADCAST PAGE ===== -->
+<div id="page-broadcast" class="page" style="display:none">
+  <div class="card">
+    <div class="card-h">📢 ส่งข้อความ LINE — @phrae555</div>
+    <div style="margin-bottom:12px">
+      <label style="font-size:13px;font-weight:600;display:block;margin-bottom:4px">กลุ่มเป้าหมาย</label>
+      <select id="bc-target" class="inp" style="width:240px">
+        <option value="all">ทุกคน (~65,000 ราย)</option>
+        <option value="agri">เกษตรกรทุกราย</option>
+        <option value="officer">เจ้าหน้าที่</option>
+        <option value="volunteer">อาสาสมัคร อกม.</option>
+      </select>
+    </div>
+    <div style="margin-bottom:12px">
+      <label style="font-size:13px;font-weight:600;display:block;margin-bottom:4px">ประเภทข้อความ</label>
+      <div class="row-wrap" style="gap:8px">
+        <button class="btn" onclick="bcTemplate('weather')">🌦️ พยากรณ์</button>
+        <button class="btn" onclick="bcTemplate('price')">💰 ราคาพืช</button>
+        <button class="btn" onclick="bcTemplate('pest')">🐛 เตือนศัตรู</button>
+        <button class="btn" onclick="bcTemplate('news')">📰 ข่าวสาร</button>
+      </div>
+    </div>
+    <textarea id="bc-msg" class="inp" rows="6" placeholder="พิมพ์ข้อความที่ต้องการส่ง..." style="width:100%;resize:vertical"></textarea>
+    <div class="row-wrap" style="gap:8px;margin-top:8px">
+      <button class="btn btn-g" onclick="sendBroadcast()" style="padding:10px 24px">📤 ส่งข้อความ</button>
+      <span id="bc-status" style="font-size:13px;align-self:center"></span>
+    </div>
+    <div id="bc-history" style="margin-top:16px"></div>
+  </div>
+</div>
+
+<!-- ===== AI REPORT PAGE ===== -->
+<div id="page-aireport" class="page" style="display:none">
+  <div class="card">
+    <div class="card-h">🤖 รายงาน AI — วิเคราะห์ข้อมูลเกษตรจังหวัดแพร่</div>
+    <div class="row-wrap" style="gap:8px;margin-bottom:12px">
+      <select id="rpt-type" class="inp" style="width:220px">
+        <option value="monthly">รายงานประจำเดือน</option>
+        <option value="situation">สถานการณ์เกษตร</option>
+        <option value="market">วิเคราะห์ตลาด</option>
+        <option value="risk">ประเมินความเสี่ยง</option>
+      </select>
+      <button class="btn btn-g" onclick="genReport()" id="rpt-btn">✨ สร้างรายงาน AI</button>
+    </div>
+    <div id="rpt-output" style="background:var(--bg2);border-radius:8px;padding:16px;min-height:200px;font-size:14px;line-height:1.8;white-space:pre-wrap"></div>
+    <div style="margin-top:8px;text-align:right">
+      <button class="btn" onclick="copyReport()" id="rpt-copy" style="display:none">📋 คัดลอก</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== AI CHAT PAGE ===== -->
+<div id="page-aichat" class="page" style="display:none">
+  <div class="card" style="display:flex;flex-direction:column;height:calc(100vh - 200px)">
+    <div class="card-h">💬 ผู้ช่วย AI — ถามตอบข้อมูลเกษตรแพร่</div>
+    <div id="chat-msgs" style="flex:1;overflow-y:auto;padding:8px;background:var(--bg2);border-radius:8px;margin-bottom:8px;min-height:300px"></div>
+    <div class="row-wrap" style="gap:8px">
+      <input id="chat-inp" class="inp" placeholder="พิมพ์คำถาม..." style="flex:1" onkeydown="if(event.key==='Enter')sendChat()">
+      <button class="btn btn-g" onclick="sendChat()">📤 ส่ง</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== NOTIFICATIONS PAGE ===== -->
+<div id="page-notif" class="page" style="display:none">
+  <div class="card">
+    <div class="card-h">🔔 การแจ้งเตือน</div>
+    <div id="notif-list"></div>
+  </div>
+</div>
+
+</div><!-- /main-content -->
+</div><!-- /app-body -->
+</div><!-- /app -->
+
+<script>
+/* ============================================================
+   CONFIG & CONSTANTS
+   ============================================================ */
+const API = 'https://g2g-ai-pool.fly.dev/api/phrae';
+const HDRS = {'x-api-key':'phrae2026','Content-Type':'application/json'};
+
+const DISTRICTS = {
+  mueang:       {name:'เมืองแพร่',    tambon:25, icon:'🏙️'},
+  rongkwang:    {name:'ร้องกวาง',     tambon:12, icon:'🌾'},
+  long:         {name:'ลอง',          tambon:11, icon:'🏔️'},
+  sungmen:      {name:'สูงเม่น',      tambon:12, icon:'🌿'},
+  denchai:      {name:'เด่นชัย',      tambon:5,  icon:'🏘️'},
+  song:         {name:'สอง',          tambon:12, icon:'🌲'},
+  wangchin:     {name:'วังชิ้น',      tambon:8,  icon:'💧'},
+  nongmuangkhai:{name:'หนองม่วงไข่',  tambon:6,  icon:'🌾'}
+};
+
+const AGENCIES = {
+  coord:{name:'เกษตรและสหกรณ์จังหวัดแพร่', parent:'สำนักงานปลัดกระทรวงเกษตรและสหกรณ์', icon:'🏛️'},
+  agri: {name:'สำนักงานเกษตรจังหวัดแพร่',  parent:'กรมส่งเสริมการเกษตร', icon:'🌾'},
+  coop: {name:'สำนักงานสหกรณ์จังหวัดแพร่', parent:'กรมส่งเสริมสหกรณ์', icon:'🤝'},
+  cad:  {name:'สตท. แพร่',                  parent:'กรมตรวจบัญชีสหกรณ์', icon:'📊'},
+  live: {name:'สนง.ปศุสัตว์จังหวัดแพร่',   parent:'กรมปศุสัตว์', icon:'🐄'},
+  fish: {name:'สนง.ประมงจังหวัดแพร่',      parent:'กรมประมง', icon:'🐟'},
+  land: {name:'สนง.สปก.จังหวัดแพร่',       parent:'สปก.', icon:'📐'},
+  irri: {name:'โครงการชลประทาน จ.แพร่',    parent:'กรมชลประทาน', icon:'💧'},
+  ldd:  {name:'สพด. แพร่',                  parent:'กรมพัฒนาที่ดิน', icon:'🌱'},
+  doa:  {name:'ศูนย์วิจัยการเกษตรแพร่',    parent:'กรมวิชาการเกษตร', icon:'🔬'}
+};
+
+let STATE = {
+  user:null, role:null, agency:null, district:null, subdistrict:null,
+  curAgency:'coord', curPage:'portal', farmerPage:1,
+  calYear: new Date().getFullYear(), calMonth: new Date().getMonth()
+};
+</script>
+
+<script>
+/* ============================================================
+   API HELPER
+   ============================================================ */
+async function apiFetch(path, opts={}) {
+  try {
+    const r = await fetch(API+path, {headers:HDRS, ...opts});
+    if (!r.ok) throw new Error(r.status);
+    return await r.json();
+  } catch(e) { console.warn('API', path, e); return null; }
+}
+
+/* ============================================================
+   LOGIN / LOGOUT
+   ============================================================ */
+/* selRole — called by role card buttons */
+let _selectedRole = null;
+function selRole(role) {
+  _selectedRole = role;
+  document.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('active'));
+  const btn = document.getElementById('r-'+role);
+  if (btn) btn.classList.add('active');
+  // show/hide agency & district selects
+  const swA = document.getElementById('sw-agency');
+  const swD = document.getElementById('sw-district');
+  const swS = document.getElementById('sw-sub');
+  if (swA) swA.style.display = (role==='head') ? 'flex' : 'none';
+  if (swD) swD.style.display = (role==='district'||role==='subdistrict'||role==='volunteer') ? 'flex' : 'none';
+  if (swS) swS.style.display = (role==='subdistrict'||role==='volunteer') ? 'flex' : 'none';
+}
+
+function doLogin() {
+  const role    = _selectedRole;
+  const agency  = document.getElementById('selAgency')?.value   || 'agri';
+  const district= document.getElementById('selDistrict')?.value || 'mueang';
+  if (!role) { alert('กรุณาเลือกบทบาทก่อน'); return; }
+  const name = getRoleLabel(role);
+  STATE.user=name; STATE.role=role; STATE.agency=agency; STATE.district=district;
+  document.getElementById('login').style.display='none';
+  document.getElementById('app').style.display='flex';
+  const tbUser = document.getElementById('tbUser');
+  if (tbUser) tbUser.textContent = name;
+  setupByRole(role);
+  showPage('portal');
+  loadPortal();
+}
+
+function getRoleLabel(r) {
+  return {coord:'เกษตรและสหกรณ์จว.',head:'หัวหน้าส่วนราชการ',district:'เกษตรอำเภอ',
+          subdistrict:'เกษตรตำบล',volunteer:'อาสาสมัคร อกม.',farmer:'เกษตรกร'}[r]||r;
+}
+
+function doLogout() {
+  STATE = {...STATE, user:null, role:null};
+  _selectedRole = null;
+  document.getElementById('app').style.display='none';
+  document.getElementById('login').style.display='flex';
+  document.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('active'));
+  ['sw-agency','sw-district','sw-sub'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.style.display='none';
+  });
+}
+</script>
+
+<script>
+/* ============================================================
+   ROLE-BASED UI SETUP
+   ============================================================ */
+function setupByRole(role) {
+  const agBar = document.getElementById('agencyBar');
+  const lvBar = document.getElementById('levelBar');
+  // hide all sidebars first
+  ['sb-coord','sb-agri','sb-generic','sb-district'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){el.classList.add('hidden');el.style.display='none';}
+  });
+
+  function showSb(id) {
+    const el=document.getElementById(id);
+    if(el){el.classList.remove('hidden');el.style.display='block';}
+  }
+
+  if (role==='coord') {
+    if(agBar) agBar.style.display='flex';
+    if(lvBar) lvBar.style.display='none';
+    showSb('sb-coord');
+    switchAgency('coord');
+  } else if (role==='head') {
+    if(agBar) agBar.style.display='none';
+    if(lvBar) lvBar.style.display='none';
+    showSb('sb-generic');
+    STATE.curAgency = STATE.agency||'agri';
+    switchAgency(STATE.curAgency);
+  } else if (role==='district') {
+    if(agBar) agBar.style.display='none';
+    if(lvBar) lvBar.style.display='flex';
+    showSb('sb-agri');
+    STATE.curAgency='agri';
+    setLevelBar('district');
+  } else if (role==='subdistrict') {
+    if(agBar) agBar.style.display='none';
+    if(lvBar) lvBar.style.display='flex';
+    showSb('sb-agri');
+    STATE.curAgency='agri';
+    setLevelBar('subdistrict');
+  } else {
+    if(agBar) agBar.style.display='none';
+    if(lvBar) lvBar.style.display='none';
+    showSb('sb-agri');
+    STATE.curAgency='agri';
+  }
+  // hide officer-only nav items for farmers & volunteers
+  if (role==='farmer'||role==='volunteer') {
+    document.querySelectorAll('.nav-officer').forEach(el=>el.style.display='none');
+  }
+}
+
+function switchAgency(ag) {
+  STATE.curAgency = ag;
+  document.querySelectorAll('.agency-tab').forEach(t=>{
+    t.classList.toggle('active', t.dataset.ag===ag);
+  });
+  const inf = AGENCIES[ag];
+  const tbDept = document.getElementById('tbDept');
+  if (tbDept && inf) tbDept.textContent = inf.icon+' '+inf.name;
+  // reload current page for new agency
+  if (STATE.curPage) showPage(STATE.curPage);
+}
+</script>
+
+<script>
+/* ============================================================
+   PAGE NAVIGATION
+   ============================================================ */
+function showPage(pg) {
+  STATE.curPage = pg;
+  document.querySelectorAll('.page').forEach(p=>p.style.display='none');
+  const el = document.getElementById('page-'+pg);
+  if (el) el.style.display='block';
+  document.querySelectorAll('.nav-item').forEach(n=>{
+    n.classList.toggle('active', n.dataset.page===pg);
+  });
+  // lazy load page data
+  const loaders = {
+    portal:      loadPortal,
+    farmers:     loadFarmers,
+    weather:     loadWeather,
+    prices:      loadPrices,
+    pest:        loadAlerts,
+    'agency-status': loadAgencyStatus,
+    'district-list': renderDistrictList,
+    'district-home': ()=>renderDistrictHome(STATE.district),
+    calendar:    ()=>renderCal(STATE.calYear, STATE.calMonth),
+    notif:       loadNotif
+  };
+  if (loaders[pg]) loaders[pg]();
+}
+
+function setLevelBar(level) {
+  document.querySelectorAll('.level-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.level===level);
+  });
+}
+
+function goLevel(level) {
+  setLevelBar(level);
+  if (level==='province') showPage('portal');
+  else if (level==='district') showPage('district-list');
+  else if (level==='subdistrict') showPage('subdistrict-list');
+  else if (level==='village') showPage('volunteers');
+}
+
+function drillDistrict(distKey) {
+  STATE.district = distKey;
+  showPage('district-home');
+}
+</script>
+
+<script>
+/* ============================================================
+   PORTAL (DASHBOARD)
+   ============================================================ */
+async function loadPortal() {
+  const el = document.getElementById('portal-kpi');
+  if (!el) return;
+  el.innerHTML = '<div style="color:var(--navy3);font-size:13px">⏳ กำลังโหลด...</div>';
+  const data = await apiFetch('/dashboard');
+  if (!data) {
+    el.innerHTML = renderPortalDefault();
+    return;
+  }
+  el.innerHTML = `
+    <div class="kpi-card"><div class="kpi-v">${fmtNum(data.totalFarmers||65432)}</div><div class="kpi-l">เกษตรกรทั้งหมด</div></div>
+    <div class="kpi-card"><div class="kpi-v">${fmtNum(data.registeredArea||480250)}</div><div class="kpi-l">พื้นที่ขึ้นทะเบียน (ไร่)</div></div>
+    <div class="kpi-card"><div class="kpi-v">${data.agencies||9}</div><div class="kpi-l">หน่วยงานในสังกัด</div></div>
+    <div class="kpi-card"><div class="kpi-v">${data.volunteers||641}</div><div class="kpi-l">อาสาสมัคร อกม.</div></div>
+  `;
+}
+
+function renderPortalDefault() {
+  return `
+    <div class="kpi-card"><div class="kpi-v">65,432</div><div class="kpi-l">เกษตรกรทั้งหมด</div></div>
+    <div class="kpi-card"><div class="kpi-v">480,250</div><div class="kpi-l">พื้นที่ขึ้นทะเบียน (ไร่)</div></div>
+    <div class="kpi-card"><div class="kpi-v">9</div><div class="kpi-l">หน่วยงานในสังกัด</div></div>
+    <div class="kpi-card"><div class="kpi-v">641</div><div class="kpi-l">อาสาสมัคร อกม.</div></div>
+  `;
+}
+
+function fmtNum(n) {
+  return Number(n).toLocaleString('th-TH');
+}
+</script>
+
+<script>
+/* ============================================================
+   FARMERS
+   ============================================================ */
+let farmerData = [];
+async function loadFarmers() {
+  const tbl = document.getElementById('farmer-table');
+  if (!tbl) return;
+  tbl.innerHTML = '<div style="color:var(--navy3);font-size:13px;padding:12px">⏳ กำลังโหลดข้อมูล...</div>';
+  const params = new URLSearchParams();
+  const q = document.getElementById('f-search')?.value;
+  const d = document.getElementById('f-district')?.value;
+  const c = document.getElementById('f-crop')?.value;
+  if (q) params.set('search', q);
+  if (d) params.set('district', d);
+  if (c) params.set('crop', c);
+  params.set('page', STATE.farmerPage);
+  params.set('limit', 20);
+  const data = await apiFetch('/farmers?'+params.toString());
+  if (!data || !data.farmers) {
+    tbl.innerHTML = renderFarmerMock();
+    return;
+  }
+  farmerData = data.farmers;
+  renderFarmerStats(data);
+  renderFarmerTable(data.farmers);
+  renderFarmerPagination(data.total, data.page, data.limit);
+}
+
+function renderFarmerStats(data) {
+  const el = document.getElementById('farmer-stats');
+  if (!el) return;
+  el.innerHTML = `
+    <div class="kpi-card" style="flex:0 0 auto"><div class="kpi-v">${fmtNum(data.total||0)}</div><div class="kpi-l">ทั้งหมด</div></div>
+    <div class="kpi-card" style="flex:0 0 auto"><div class="kpi-v">${fmtNum(data.newThisYear||0)}</div><div class="kpi-l">ขึ้นทะเบียนปีนี้</div></div>
+  `;
+}
+
+function renderFarmerTable(farmers) {
+  const tbl = document.getElementById('farmer-table');
+  if (!tbl || !farmers.length) { tbl.innerHTML='<div style="padding:12px;color:#888">ไม่พบข้อมูล</div>'; return; }
+  let h = `<table style="width:100%;border-collapse:collapse;font-size:13px">
+    <thead><tr style="background:var(--navy1);color:#fff">
+      <th style="padding:8px 6px;text-align:left">ชื่อ-สกุล</th>
+      <th>อำเภอ</th><th>ตำบล</th><th>พืชหลัก</th><th>พื้นที่(ไร่)</th>
+    </tr></thead><tbody>`;
+  farmers.forEach((f,i)=>{
+    h += `<tr style="background:${i%2?'var(--bg2)':'#fff'}">
+      <td style="padding:7px 6px">${f.name||'-'}</td>
+      <td style="text-align:center">${f.district||'-'}</td>
+      <td style="text-align:center">${f.subdistrict||'-'}</td>
+      <td style="text-align:center">${f.mainCrop||'-'}</td>
+      <td style="text-align:center">${f.area||'-'}</td>
+    </tr>`;
+  });
+  h += '</tbody></table>';
+  tbl.innerHTML = h;
+}
+</script>
+
+<script>
+function renderFarmerMock() {
+  const mock = [
+    {name:'นายสมชาย ใจดี',district:'เมืองแพร่',subdistrict:'ในเวียง',mainCrop:'ข้าว',area:'12'},
+    {name:'นางสาวมาลี รักถิ่น',district:'ร้องกวาง',subdistrict:'ร้องกวาง',mainCrop:'ลำไย',area:'8'},
+    {name:'นายประยุทธ์ เกษตรดี',district:'ลอง',subdistrict:'ห้วยอ้อ',mainCrop:'ข้าวโพด',area:'15'},
+    {name:'นางสุภา รุ่งเรือง',district:'สูงเม่น',subdistrict:'สูงเม่น',mainCrop:'สัก',area:'20'},
+    {name:'นายวิชัย พัฒนา',district:'เด่นชัย',subdistrict:'เด่นชัย',mainCrop:'ข้าว',area:'10'}
+  ];
+  const el = document.getElementById('farmer-stats');
+  if (el) el.innerHTML = '<div class="kpi-card" style="flex:0 0 auto"><div class="kpi-v">65,432</div><div class="kpi-l">ทั้งหมด (ข้อมูลจำลอง)</div></div>';
+  let h = `<table style="width:100%;border-collapse:collapse;font-size:13px">
+    <thead><tr style="background:var(--navy1);color:#fff">
+      <th style="padding:8px 6px;text-align:left">ชื่อ-สกุล</th>
+      <th>อำเภอ</th><th>ตำบล</th><th>พืชหลัก</th><th>พื้นที่(ไร่)</th>
+    </tr></thead><tbody>`;
+  mock.forEach((f,i)=>{
+    h += `<tr style="background:${i%2?'var(--bg2)':'#fff'}">
+      <td style="padding:7px 6px">${f.name}</td>
+      <td style="text-align:center">${f.district}</td>
+      <td style="text-align:center">${f.subdistrict}</td>
+      <td style="text-align:center">${f.mainCrop}</td>
+      <td style="text-align:center">${f.area}</td>
+    </tr>`;
+  });
+  return h + '<tr><td colspan="5" style="padding:8px;color:#888;text-align:center">ข้อมูลตัวอย่าง — เชื่อมต่อ API เพื่อดูข้อมูลจริง</td></tr></tbody></table>';
+}
+
+function renderFarmerPagination(total, page, limit) {
+  const el = document.getElementById('farmer-pages');
+  if (!el) return;
+  const pages = Math.ceil((total||0)/limit);
+  if (pages<=1) { el.innerHTML=''; return; }
+  let h = '<div style="display:flex;gap:4px;justify-content:center">';
+  for (let i=1;i<=Math.min(pages,10);i++) {
+    h += `<button class="btn${i===page?' btn-g':''}" style="padding:4px 10px;min-width:32px" onclick="STATE.farmerPage=${i};loadFarmers()">${i}</button>`;
+  }
+  h += '</div>';
+  el.innerHTML = h;
+}
+
+function exportFarmers() {
+  if (!farmerData.length) { alert('ไม่มีข้อมูลสำหรับ export'); return; }
+  const csv = ['ชื่อ-สกุล,อำเภอ,ตำบล,พืชหลัก,พื้นที่(ไร่)']
+    .concat(farmerData.map(f=>`${f.name||''},${f.district||''},${f.subdistrict||''},${f.mainCrop||''},${f.area||''}`)).join('\n');
+  const blob = new Blob(['﻿'+csv], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'farmers-phrae.csv';
+  a.click();
+}
+</script>
+
+<script>
+/* ============================================================
+   WEATHER
+   ============================================================ */
+async function loadWeather() {
+  const cur = document.getElementById('weather-current');
+  if (!cur) return;
+  cur.innerHTML = '<div style="color:var(--navy3);font-size:13px">⏳ โหลด...</div>';
+  const data = await apiFetch('/weather');
+  if (!data) { renderWeatherMock(); return; }
+  const w = data.current || data;
+  cur.innerHTML = `
+    <div class="kpi-card" style="flex:1;min-width:140px">
+      <div class="kpi-v" style="font-size:32px">${w.icon||'🌤️'}</div>
+      <div class="kpi-l">${w.condition||'มีเมฆบางส่วน'}</div>
+    </div>
+    <div class="kpi-card" style="flex:1;min-width:140px">
+      <div class="kpi-v">${w.temp||28}°C</div>
+      <div class="kpi-l">อุณหภูมิ</div>
+      <div class="kpi-sub">ต่ำสุด ${w.low||22}° / สูงสุด ${w.high||34}°</div>
+    </div>
+    <div class="kpi-card" style="flex:1;min-width:140px">
+      <div class="kpi-v">${w.humidity||72}%</div>
+      <div class="kpi-l">ความชื้น</div>
+    </div>
+    <div class="kpi-card" style="flex:1;min-width:140px">
+      <div class="kpi-v">${w.rain||'3.2'} มม.</div>
+      <div class="kpi-l">ปริมาณฝน 24 ชม.</div>
+    </div>
+  `;
+  const days7 = document.getElementById('weather-7day');
+  if (days7 && data.forecast) {
+    days7.innerHTML = data.forecast.map(d=>`
+      <div class="kpi-card" style="flex:0 0 100px;text-align:center">
+        <div style="font-size:11px;color:var(--navy3)">${d.date||''}</div>
+        <div style="font-size:22px;margin:4px 0">${d.icon||'🌤️'}</div>
+        <div style="font-size:13px;font-weight:600">${d.high||'-'}° / ${d.low||'-'}°</div>
+      </div>`).join('');
+  }
+  const adv = document.getElementById('weather-advice');
+  if (adv) adv.innerHTML = `<div style="padding:12px;font-size:14px;line-height:1.8">${data.advice||'สภาพอากาศเหมาะสมสำหรับการเพาะปลูก กรุณาระวังฝนในช่วงบ่ายถึงค่ำ'}</div>`;
+}
+
+function renderWeatherMock() {
+  const cur = document.getElementById('weather-current');
+  if (cur) cur.innerHTML = `
+    <div class="kpi-card" style="flex:1;min-width:140px"><div class="kpi-v" style="font-size:32px">🌤️</div><div class="kpi-l">มีเมฆบางส่วน</div></div>
+    <div class="kpi-card" style="flex:1;min-width:140px"><div class="kpi-v">28°C</div><div class="kpi-l">อุณหภูมิ</div><div class="kpi-sub">ต่ำสุด 22° / สูงสุด 34°</div></div>
+    <div class="kpi-card" style="flex:1;min-width:140px"><div class="kpi-v">72%</div><div class="kpi-l">ความชื้น</div></div>
+    <div class="kpi-card" style="flex:1;min-width:140px"><div class="kpi-v">3.2 มม.</div><div class="kpi-l">ปริมาณฝน 24 ชม.</div></div>`;
+  const adv = document.getElementById('weather-advice');
+  if (adv) adv.innerHTML = '<div style="padding:12px;font-size:14px">⚠️ ไม่สามารถเชื่อมต่อ API — แสดงข้อมูลจำลอง</div>';
+}
+</script>
+
+<script>
+/* ============================================================
+   PRICES
+   ============================================================ */
+async function loadPrices() {
+  const tbl = document.getElementById('prices-table');
+  if (!tbl) return;
+  tbl.innerHTML = '<div style="color:var(--navy3);font-size:13px;padding:12px">⏳ โหลดราคา...</div>';
+  const data = await apiFetch('/prices');
+  const prices = data?.prices || getMockPrices();
+  const upd = document.getElementById('prices-updated');
+  if (upd) upd.textContent = 'อัปเดต: '+(data?.updatedAt || new Date().toLocaleString('th-TH'));
+  let h = `<table style="width:100%;border-collapse:collapse;font-size:13px">
+    <thead><tr style="background:var(--navy1);color:#fff">
+      <th style="padding:8px 6px;text-align:left">สินค้า</th>
+      <th>ราคา (บาท/กก.)</th><th>เปลี่ยนแปลง</th><th>แหล่งอ้างอิง</th>
+    </tr></thead><tbody>`;
+  prices.forEach((p,i)=>{
+    const chg = p.change || 0;
+    const chgColor = chg>0?'var(--green2)':chg<0?'var(--red)':'#888';
+    const chgSign = chg>0?'▲ ':chg<0?'▼ ':'';
+    h += `<tr style="background:${i%2?'var(--bg2)':'#fff'}">
+      <td style="padding:7px 6px">${p.name||'-'}</td>
+      <td style="text-align:center;font-weight:600">${p.price||'-'}</td>
+      <td style="text-align:center;color:${chgColor}">${chgSign}${Math.abs(chg)||'-'}</td>
+      <td style="text-align:center;color:#888;font-size:12px">${p.source||'ตลาดแพร่'}</td>
+    </tr>`;
+  });
+  h += '</tbody></table>';
+  tbl.innerHTML = h;
+  const trend = document.getElementById('prices-trend');
+  if (trend) trend.innerHTML = data?.trend || '📈 ลำไยราคาปรับตัวสูงขึ้น 8% จากสัปดาห์ที่แล้ว เนื่องจากความต้องการตลาดส่งออกเพิ่มขึ้น<br>📉 ข้าวเปลือกราคาทรงตัว ปริมาณผลผลิตสูงกว่าปีที่แล้ว 12%';
+}
+
+function getMockPrices() {
+  return [
+    {name:'ข้าวเปลือกหอมมะลิ',price:'9.50',change:0.20,source:'ตลาดแพร่'},
+    {name:'ข้าวเปลือกเจ้า',price:'7.20',change:-0.10,source:'ตลาดแพร่'},
+    {name:'ลำไย (ช่อ)',price:'28.00',change:2.50,source:'ตลาดร้องกวาง'},
+    {name:'ข้าวโพดเลี้ยงสัตว์',price:'8.80',change:0,source:'ตลาดแพร่'},
+    {name:'มันสำปะหลัง',price:'2.90',change:-0.05,source:'โรงงานแพร่'},
+    {name:'ยาสูบ',price:'85.00',change:1.00,source:'อบต.'}
+  ];
+}
+</script>
+
+<script>
+/* ============================================================
+   PEST ALERTS
+   ============================================================ */
+async function loadAlerts() {
+  const el = document.getElementById('pest-list');
+  if (!el) return;
+  el.innerHTML = '<div style="color:var(--navy3);font-size:13px;padding:12px">⏳ โหลด...</div>';
+  const data = await apiFetch('/alerts');
+  const alerts = data?.alerts || getMockAlerts();
+  if (!alerts.length) { el.innerHTML='<div style="padding:12px;color:#888">ไม่มีการแจ้งเตือน</div>'; return; }
+  el.innerHTML = alerts.map(a=>`
+    <div style="border-left:4px solid ${a.severity==='high'?'var(--red)':a.severity==='medium'?'var(--gold)':'var(--green2)'};padding:10px 14px;margin-bottom:8px;background:var(--bg2);border-radius:0 8px 8px 0">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+        <strong style="font-size:14px">${a.pest||'ไม่ระบุศัตรูพืช'}</strong>
+        <span style="font-size:11px;background:${a.severity==='high'?'var(--red)':a.severity==='medium'?'var(--gold)':'var(--green2)'};color:#fff;padding:2px 8px;border-radius:12px">${a.severity==='high'?'ระดับสูง':a.severity==='medium'?'ระดับกลาง':'ระดับต่ำ'}</span>
+      </div>
+      <div style="font-size:13px;color:var(--navy3)">📍 ${a.area||'-'} | 🌾 ${a.crop||'-'} | 📅 ${a.date||'-'}</div>
+      <div style="font-size:13px;margin-top:4px">${a.description||''}</div>
+    </div>`).join('');
+}
+
+function getMockAlerts() {
+  return [
+    {pest:'เพลี้ยกระโดดสีน้ำตาล',severity:'high',area:'อ.เมืองแพร่ ต.ทุ่งโฮ้ง',crop:'ข้าว',date:'24 พ.ค. 69',description:'ตรวจพบการระบาด ควรพ่นสารฆ่าแมลงเพื่อป้องกัน'},
+    {pest:'หนอนเจาะลำต้น',severity:'medium',area:'อ.ร้องกวาง 3 ตำบล',crop:'ข้าวโพด',date:'22 พ.ค. 69',description:'พบในแปลงปลูกข้าวโพด ควรเฝ้าระวัง'},
+    {pest:'โรคราสนิม',severity:'low',area:'อ.สูงเม่น',crop:'ข้าวสาลี',date:'20 พ.ค. 69',description:'พบประปราย ยังไม่แพร่ระบาด'}
+  ];
+}
+
+async function reportPest() {
+  const pest = prompt('ชื่อศัตรูพืช:');
+  if (!pest) return;
+  const area = prompt('พื้นที่ระบาด (อำเภอ/ตำบล):');
+  const crop = prompt('พืชที่ได้รับผลกระทบ:');
+  const body = JSON.stringify({pest,area,crop,reportedBy:STATE.user,date:new Date().toLocaleDateString('th-TH')});
+  const res = await apiFetch('/alerts', {method:'POST',body});
+  alert(res ? '✅ รายงานสำเร็จ' : '❌ ไม่สามารถบันทึกได้ กรุณาลองใหม่');
+  loadAlerts();
+}
+</script>
+
+<script>
+/* ============================================================
+   BROADCAST
+   ============================================================ */
+const BC_TEMPLATES = {
+  weather: ()=>`🌦️ พยากรณ์อากาศจังหวัดแพร่\nวันที่ ${new Date().toLocaleDateString('th-TH')}\n\nอุณหภูมิ: 22-34°C | ความชื้น: 72%\nมีเมฆมาก โอกาสฝน 60% ในช่วงบ่ายถึงเย็น\n\n📌 แนะนำ: หลีกเลี่ยงการพ่นสารเคมีในช่วงฝน\n\n— สำนักงานเกษตรจังหวัดแพร่ @phrae555`,
+  price:   ()=>`💰 ราคาสินค้าเกษตร วันนี้\nข้าวเปลือกหอมมะลิ: 9.50 บ./กก.\nลำไย: 28.00 บ./กก.\nข้าวโพด: 8.80 บ./กก.\n\n— เกษตรจังหวัดแพร่ @phrae555`,
+  pest:    ()=>`⚠️ แจ้งเตือนศัตรูพืช\nพบการระบาดของเพลี้ยกระโดดสีน้ำตาลในนาข้าว อ.เมืองแพร่\nกรุณาตรวจสอบแปลงและแจ้งเจ้าหน้าที่ทันที\n☎️ 054-511-xxx\n\n— เกษตรจังหวัดแพร่`,
+  news:    ()=>`📢 ข่าวประชาสัมพันธ์เกษตรจังหวัดแพร่\n\n[กรุณาพิมพ์เนื้อหาข่าว]\n\n— สำนักงานเกษตรจังหวัดแพร่`
+};
+
+function bcTemplate(type) {
+  const el = document.getElementById('bc-msg');
+  if (el) el.value = BC_TEMPLATES[type]?.() || '';
+}
+
+async function sendBroadcast() {
+  const msg = document.getElementById('bc-msg')?.value.trim();
+  const target = document.getElementById('bc-target')?.value || 'all';
+  const status = document.getElementById('bc-status');
+  if (!msg) { alert('กรุณาพิมพ์ข้อความ'); return; }
+  if (!confirm(`ยืนยันส่งข้อความถึง "${target}" ใช่หรือไม่?`)) return;
+  if (status) status.textContent = '⏳ กำลังส่ง...';
+  const body = JSON.stringify({message:msg, target, sentBy:STATE.user, sentAt:new Date().toISOString()});
+  const res = await apiFetch('/broadcast', {method:'POST', body});
+  if (status) {
+    if (res && res.ok) {
+      status.textContent = '✅ ส่งสำเร็จ '+(res.sent||'')+(res.sent?' ราย':'');
+      status.style.color='var(--green2)';
+      addBcHistory(msg, target);
+      document.getElementById('bc-msg').value='';
+    } else {
+      status.textContent = '❌ ส่งไม่สำเร็จ กรุณาลองใหม่';
+      status.style.color='var(--red)';
+    }
+  }
+}
+
+function addBcHistory(msg, target) {
+  const el = document.getElementById('bc-history');
+  if (!el) return;
+  const now = new Date().toLocaleString('th-TH');
+  el.insertAdjacentHTML('afterbegin', `
+    <div style="border-left:3px solid var(--green2);padding:8px 12px;margin-bottom:8px;background:var(--bg2);border-radius:0 8px 8px 0;font-size:13px">
+      <div style="color:#888;font-size:11px;margin-bottom:4px">✅ ส่งแล้ว — ${now} → ${target}</div>
+      <div style="white-space:pre-line">${msg.substring(0,200)}${msg.length>200?'...':''}</div>
+    </div>`);
+}
+</script>
+
+<script>
+/* ============================================================
+   AI REPORT
+   ============================================================ */
+async function genReport() {
+  const type = document.getElementById('rpt-type')?.value || 'monthly';
+  const out = document.getElementById('rpt-output');
+  const btn = document.getElementById('rpt-btn');
+  if (!out) return;
+  out.textContent = '⏳ AI กำลังวิเคราะห์ข้อมูล...';
+  if (btn) btn.disabled = true;
+  const body = JSON.stringify({type, agency:STATE.curAgency, district:STATE.district, requestedBy:STATE.user});
+  const data = await apiFetch('/reports/generate', {method:'POST', body});
+  if (btn) btn.disabled = false;
+  if (data && data.report) {
+    out.textContent = data.report;
+    const copyBtn = document.getElementById('rpt-copy');
+    if (copyBtn) copyBtn.style.display='inline-block';
+  } else {
+    out.textContent = getMockReport(type);
+    const copyBtn = document.getElementById('rpt-copy');
+    if (copyBtn) copyBtn.style.display='inline-block';
+  }
+}
+
+function getMockReport(type) {
+  const d = new Date().toLocaleDateString('th-TH',{year:'numeric',month:'long'});
+  return `รายงานสถานการณ์เกษตรจังหวัดแพร่ ประจำ${d}
+========================================
+
+1. ภาพรวมการเกษตร
+จังหวัดแพร่มีเกษตรกรขึ้นทะเบียนทั้งสิ้น 65,432 ราย พื้นที่การเกษตร 480,250 ไร่ ครอบคลุม 8 อำเภอ 77 ตำบล 641 หมู่บ้าน
+
+2. สถานการณ์พืชหลัก
+- ข้าวนาปี: เกษตรกรเตรียมเพาะปลูกแล้ว 78% ของเป้าหมาย
+- ลำไย: ผลผลิตปีนี้คาดว่าเพิ่มขึ้น 15% จากปีที่แล้ว ราคาอยู่ที่ 28 บ./กก.
+- ข้าวโพดเลี้ยงสัตว์: พื้นที่ปลูกลดลง 8% เนื่องจากภัยแล้งในบางพื้นที่
+
+3. ศัตรูพืชและโรคพืช
+พบการระบาดของเพลี้ยกระโดดสีน้ำตาลในนาข้าวบางพื้นที่ของอำเภอเมืองแพร่ เจ้าหน้าที่ลงพื้นที่แนะนำและควบคุมแล้ว
+
+4. ราคาสินค้าเกษตร
+ราคาสินค้าเกษตรโดยรวมทรงตัวถึงปรับตัวสูงขึ้นเล็กน้อย ลำไยมีราคาดีเนื่องจากความต้องการตลาดส่งออก
+
+5. ข้อเสนอแนะ
+- เร่งส่งเสริมระบบน้ำชลประทานในพื้นที่ขาดแคลน
+- สนับสนุนการทำเกษตรอินทรีย์เพื่อเพิ่มมูลค่าผลผลิต
+- จัดอบรมเกษตรกรด้านการจัดการศัตรูพืช
+
+— จัดทำโดย: AI ระบบวิเคราะห์ข้อมูลเกษตรจังหวัดแพร่
+   ${new Date().toLocaleString('th-TH')}`;
+}
+
+function copyReport() {
+  const txt = document.getElementById('rpt-output')?.textContent || '';
+  navigator.clipboard.writeText(txt).then(()=>alert('✅ คัดลอกแล้ว'));
+}
+</script>
+
+<script>
+/* ============================================================
+   AI CHAT
+   ============================================================ */
+const chatHistory = [{role:'assistant', text:'สวัสดีครับ/ค่ะ ผมเป็นผู้ช่วย AI ของสำนักงานเกษตรจังหวัดแพร่ ยินดีตอบคำถามด้านการเกษตร ราคาพืช สถานการณ์ศัตรูพืช หรือข้อมูลเกษตรกรในจังหวัดแพร่ครับ'}];
+
+function renderChatHistory() {
+  const el = document.getElementById('chat-msgs');
+  if (!el) return;
+  el.innerHTML = chatHistory.map(m=>`
+    <div style="display:flex;justify-content:${m.role==='user'?'flex-end':'flex-start'};margin-bottom:10px">
+      <div style="max-width:80%;background:${m.role==='user'?'var(--navy1)':'#fff'};color:${m.role==='user'?'#fff':'inherit'};padding:10px 14px;border-radius:${m.role==='user'?'18px 18px 4px 18px':'18px 18px 18px 4px'};font-size:13px;box-shadow:0 1px 4px rgba(0,0,0,.1);white-space:pre-wrap">${m.text}</div>
+    </div>`).join('');
+  el.scrollTop = el.scrollHeight;
+}
+
+async function sendChat() {
+  const inp = document.getElementById('chat-inp');
+  const msg = inp?.value.trim();
+  if (!msg) return;
+  inp.value = '';
+  chatHistory.push({role:'user', text:msg});
+  renderChatHistory();
+  // typing indicator
+  const typing = {role:'assistant', text:'⏳ กำลังคิด...'};
+  chatHistory.push(typing);
+  renderChatHistory();
+  const body = JSON.stringify({message:msg, history:chatHistory.slice(-6), agency:STATE.curAgency});
+  const data = await apiFetch('/chat', {method:'POST', body});
+  chatHistory.pop(); // remove typing
+  const reply = data?.reply || getMockChatReply(msg);
+  chatHistory.push({role:'assistant', text:reply});
+  renderChatHistory();
+}
+
+function getMockChatReply(msg) {
+  if (msg.includes('ราคา')) return 'ราคาสินค้าเกษตรวันนี้:\n• ข้าวเปลือกหอมมะลิ: 9.50 บ./กก.\n• ลำไย: 28.00 บ./กก.\n• ข้าวโพด: 8.80 บ./กก.\n\nต้องการดูราคาสินค้าอื่นหรือไม่ครับ?';
+  if (msg.includes('เกษตรกร')||msg.includes('ทะเบียน')) return 'จังหวัดแพร่มีเกษตรกรขึ้นทะเบียนทั้งสิ้น 65,432 ราย ครอบคลุม 8 อำเภอ ต้องการข้อมูลเกษตรกรในอำเภอใดเป็นพิเศษครับ?';
+  if (msg.includes('ศัตรู')||msg.includes('โรค')||msg.includes('แมลง')) return 'ขณะนี้มีการแจ้งเตือนระบาดของเพลี้ยกระโดดสีน้ำตาลในอ.เมืองแพร่ แนะนำให้ตรวจแปลงและติดต่อเจ้าหน้าที่ส่งเสริมการเกษตรใกล้บ้านท่านครับ';
+  return 'ขอบคุณสำหรับคำถามครับ ผมเป็น AI ช่วยเหลือด้านข้อมูลเกษตรจังหวัดแพร่ สามารถถามเรื่องราคาพืช สถานการณ์ศัตรูพืช ข้อมูลเกษตรกร หรือพยากรณ์อากาศได้เลยครับ';
+}
+</script>
+
+<script>
+/* ============================================================
+   CALENDAR
+   ============================================================ */
+const MONTHS_TH = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน',
+  'กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+let calEvents = {};
+
+function renderCal(year, month) {
+  STATE.calYear=year; STATE.calMonth=month;
+  const hdr = document.getElementById('cal-header');
+  const grid = document.getElementById('cal-grid');
+  if (!hdr||!grid) return;
+  hdr.textContent = MONTHS_TH[month]+' '+(year+543);
+  const first = new Date(year,month,1).getDay();
+  const days = new Date(year,month+1,0).getDate();
+  let h = '<div class="cal-day-label">อา</div><div class="cal-day-label">จ</div><div class="cal-day-label">อ</div><div class="cal-day-label">พ</div><div class="cal-day-label">พฤ</div><div class="cal-day-label">ศ</div><div class="cal-day-label">ส</div>';
+  for (let i=0;i<first;i++) h += '<div class="cal-cell"></div>';
+  const today = new Date();
+  for (let d=1;d<=days;d++) {
+    const key=`${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday = today.getDate()===d&&today.getMonth()===month&&today.getFullYear()===year;
+    const evts = calEvents[key]||[];
+    h += `<div class="cal-cell${isToday?' today':''}" onclick="calDayClick('${key}',${d})">
+      <div class="cal-num">${d}</div>
+      ${evts.slice(0,2).map(e=>`<div class="cal-ev">${e.title||e}</div>`).join('')}
+      ${evts.length>2?`<div class="cal-ev" style="color:#888">+${evts.length-2}</div>`:''}
+    </div>`;
+  }
+  grid.innerHTML = h;
+}
+
+function changeMonth(delta) {
+  let m = STATE.calMonth + delta;
+  let y = STATE.calYear;
+  if (m<0) {m=11;y--;} else if (m>11) {m=0;y++;}
+  renderCal(y,m);
+}
+
+function calDayClick(key, day) {
+  const title = prompt(`เพิ่มกิจกรรมวันที่ ${day} ${MONTHS_TH[STATE.calMonth]} ${STATE.calYear+543}:`);
+  if (!title) return;
+  if (!calEvents[key]) calEvents[key]=[];
+  calEvents[key].push({title});
+  renderCal(STATE.calYear, STATE.calMonth);
+}
+
+/* ============================================================
+   AGENCY STATUS
+   ============================================================ */
+async function loadAgencyStatus() {
+  const el = document.getElementById('agency-status-grid');
+  if (!el) return;
+  el.innerHTML = '<div style="color:var(--navy3);font-size:13px">⏳ โหลด...</div>';
+  const data = await apiFetch('/agencies/status');
+  const statuses = data?.agencies || getMockAgencyStatus();
+  el.innerHTML = statuses.map(ag=>`
+    <div class="kpi-card" style="min-width:200px">
+      <div style="font-size:20px;margin-bottom:4px">${ag.icon||'🏛️'}</div>
+      <div style="font-size:13px;font-weight:600;margin-bottom:6px">${ag.name||'-'}</div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <div style="width:10px;height:10px;border-radius:50%;background:${ag.status==='online'?'var(--green2)':ag.status==='warning'?'var(--gold)':'var(--red)'}"></div>
+        <span style="font-size:12px;color:#555">${ag.status==='online'?'ปกติ':ag.status==='warning'?'แจ้งเตือน':'ออฟไลน์'}</span>
+      </div>
+      ${ag.note?`<div style="font-size:11px;color:#888;margin-top:4px">${ag.note}</div>`:''}
+    </div>`).join('');
+}
+
+function getMockAgencyStatus() {
+  return Object.entries(AGENCIES).map(([k,v])=>({...v,status:'online'}));
+}
+</script>
+
+<script>
+/* ============================================================
+   DISTRICT / SUBDISTRICT RENDERING
+   ============================================================ */
+function renderDistrictList() {
+  const el = document.getElementById('district-list-body');
+  if (!el) return;
+  el.innerHTML = Object.entries(DISTRICTS).map(([k,d])=>`
+    <tr onclick="drillDistrict('${k}')" style="cursor:pointer" class="tr-hover">
+      <td style="padding:10px 8px">${d.icon} ${d.name}</td>
+      <td style="text-align:center">${d.tambon}</td>
+      <td style="text-align:center">${d.tambon*8}</td>
+      <td style="text-align:center">${Math.floor(d.tambon*810)}</td>
+      <td style="text-align:center">
+        <div class="pb"><div class="pf gn" style="width:${60+Math.floor(Math.random()*35)}%"></div></div>
+      </td>
+    </tr>`).join('');
+}
+
+function renderDistrictHome(distKey) {
+  const d = DISTRICTS[distKey||'mueang'];
+  const hdr = document.getElementById('dist-home-hdr');
+  const body = document.getElementById('dist-home-body');
+  if (hdr) hdr.textContent = `${d.icon} อำเภอ${d.name} — ${d.tambon} ตำบล`;
+  if (body) body.innerHTML = `
+    <div class="row-wrap" style="gap:8px;margin-bottom:12px">
+      <div class="kpi-card" style="flex:1"><div class="kpi-v">${d.tambon}</div><div class="kpi-l">ตำบล</div></div>
+      <div class="kpi-card" style="flex:1"><div class="kpi-v">${d.tambon*8}</div><div class="kpi-l">หมู่บ้าน</div></div>
+      <div class="kpi-card" style="flex:1"><div class="kpi-v">${fmtNum(d.tambon*810)}</div><div class="kpi-l">เกษตรกร</div></div>
+    </div>
+    <button class="btn" onclick="showPage('subdistrict-list')">📋 ดูรายตำบล →</button>`;
+}
+
+/* ============================================================
+   NOTIFICATIONS
+   ============================================================ */
+async function loadNotif() {
+  const el = document.getElementById('notif-list');
+  if (!el) return;
+  const mocks = [
+    {icon:'🌦️',title:'พยากรณ์อากาศ',msg:'คาดมีฝนตกหนักในอ.เมืองแพร่ วันพรุ่งนี้',time:'9:00'},
+    {icon:'💰',title:'ราคาพืชอัปเดต',msg:'ลำไยราคาปรับขึ้น 2.50 บาท/กก.',time:'8:30'},
+    {icon:'🐛',title:'แจ้งเตือนศัตรูพืช',msg:'พบเพลี้ยกระโดดในอ.เมืองแพร่',time:'เมื่อวาน'}
+  ];
+  el.innerHTML = mocks.map(n=>`
+    <div style="display:flex;gap:12px;padding:12px;border-bottom:1px solid var(--border);align-items:flex-start">
+      <div style="font-size:24px">${n.icon}</div>
+      <div style="flex:1">
+        <div style="font-weight:600;font-size:14px">${n.title}</div>
+        <div style="font-size:13px;color:#555;margin-top:2px">${n.msg}</div>
+      </div>
+      <div style="font-size:11px;color:#888;white-space:nowrap">${n.time}</div>
+    </div>`).join('');
+}
+
+/* ============================================================
+   SHOW PROJ TAB (already in HTML but need JS handler)
+   ============================================================ */
+function showProjTab(tab) {
+  document.querySelectorAll('.proj-tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  document.querySelectorAll('[id^="projTab-"]').forEach(t=>t.style.display='none');
+  const el = document.getElementById('projTab-'+tab);
+  if (el) el.style.display='block';
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+window.addEventListener('DOMContentLoaded', ()=>{
+  // Show login on load
+  document.getElementById('login').style.display='flex';
+  document.getElementById('app').style.display='none';
+  // Hide agency/district selects initially
+  ['sw-agency','sw-district','sw-sub'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.style.display='none';
+  });
+  // AI chat: render history when tab becomes visible
+  const chatPage = document.getElementById('page-aichat');
+  if (chatPage) {
+    const observer = new MutationObserver(()=>{
+      if (chatPage.style.display!=='none') renderChatHistory();
+    });
+    observer.observe(chatPage, {attributes:true, attributeFilter:['style']});
+  }
+});
+</script>
+<script src="/access-bar.js"></script>
+</body>
+</html>

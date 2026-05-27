@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>แพลตฟอร์มบริหาร อว. — ปลัดกระทรวง</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --p1:#3d1a78;--p2:#5c2d99;--p3:#7c3aed;--p4:#a78bfa;
+  --gold:#f9a825;--gold2:#ffca28;
+  --green1:#166534;--green2:#22c55e;
+  --red:#dc2626;--orange:#ea580c;--blue:#1e40af;--teal:#0d9488;
+  --bg:#f5f0ff;--bg2:#ede7f6;--border:#d1b3e8;
+  --white:#fff;--text:#1e293b;--sub:#64748b;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Sarabun',sans-serif}
+body{background:var(--bg);color:var(--text);height:100vh;overflow:hidden;display:flex;flex-direction:column}
+
+/* LOGIN */
+#login{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,var(--p1) 0%,var(--p2) 55%,var(--p3) 100%)}
+.lc{background:#fff;border-radius:16px;padding:36px 40px;width:min(720px,96vw);box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.lc-badge{display:flex;align-items:center;gap:14px;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid var(--bg2)}
+.lc-crest{font-size:44px}
+.t1{font-size:18px;font-weight:800;color:var(--p1)}
+.t2{font-size:11px;color:var(--sub);letter-spacing:.5px;margin-top:2px}
+.lc-title{font-size:17px;font-weight:700;color:var(--p1);margin-bottom:4px}
+.lc-sub{font-size:12px;color:var(--sub);margin-bottom:18px}
+.role-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:18px}
+.role-btn{border:2px solid var(--border);border-radius:10px;padding:16px 10px;text-align:center;cursor:pointer;transition:.2s;background:#fff}
+.role-btn:hover{border-color:var(--p3);background:var(--bg2)}
+.role-btn.active{border-color:var(--p2);background:#ede7f6}
+.ri{font-size:24px;margin-bottom:5px}
+.rl{font-size:12px;font-weight:700;color:var(--p1)}
+.rs{font-size:11px;color:var(--sub);margin-top:2px}
+.inp{border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;width:100%;outline:none;font-family:inherit}
+.inp:focus{border-color:var(--p3);box-shadow:0 0 0 2px rgba(124,58,237,.12)}
+.lc-btn{width:100%;padding:13px;background:var(--p1);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;margin-top:10px;font-family:inherit;transition:.15s}
+.lc-btn:hover{background:var(--p2)}
+.lc-foot{text-align:center;font-size:11px;color:var(--sub);margin-top:12px}
+
+/* APP SHELL */
+#app{display:none;flex-direction:column;height:100vh;overflow:hidden}
+
+/* TOPBAR */
+.topbar{background:var(--p1);color:#fff;padding:0 20px;height:54px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px}
+.tb-left{display:flex;align-items:center;gap:12px;min-width:0}
+.tb-logo{font-size:28px}
+.tb-t1{font-size:14px;font-weight:800;white-space:nowrap}
+.tb-t2{font-size:10px;opacity:.7;white-space:nowrap}
+.tb-lvl{display:flex;gap:4px;font-size:11px;align-items:center;flex-wrap:nowrap}
+.tb-lv{background:rgba(255,255,255,.12);padding:2px 8px;border-radius:12px;white-space:nowrap}
+.tb-lv.hi{background:var(--gold);color:var(--p1);font-weight:700}
+.tb-sep{opacity:.4}
+.tb-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.tb-user{font-size:12px;opacity:.85;white-space:nowrap}
+.tb-logout{background:rgba(255,255,255,.15);border:none;color:#fff;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-family:inherit}
+
+/* ACTION BAR */
+.action-bar{background:linear-gradient(90deg,rgba(92,45,153,.08),transparent);border-bottom:1px solid var(--border);padding:6px 16px;display:flex;justify-content:flex-end;align-items:center;gap:8px;flex-shrink:0}
+.ab-btn{font-size:11px;padding:5px 12px;border-radius:20px;cursor:pointer;font-family:inherit;border:1px solid;font-weight:600;transition:.15s}
+.ab-primary{background:var(--p1);color:#fff;border-color:var(--p1)}
+.ab-primary:hover{background:var(--p2)}
+.ab-secondary{background:#fff;color:var(--p1);border-color:var(--p3)}
+.ab-secondary:hover{background:var(--bg2)}
+
+/* DIMENSION TABS */
+.dim-bar{background:var(--p2);display:flex;padding:0 16px;gap:4px;flex-shrink:0;overflow-x:auto;height:46px;align-items:flex-end}
+.dim-tab{padding:10px 18px;font-size:13px;font-weight:700;color:rgba(255,255,255,.65);cursor:pointer;border-radius:8px 8px 0 0;white-space:nowrap;transition:.15s;border:none;background:transparent;font-family:inherit}
+.dim-tab:hover{background:rgba(255,255,255,.1);color:#fff}
+.dim-tab.active{background:#fff;color:var(--p1)}
+
+/* BODY */
+.app-body{display:flex;flex:1;overflow:hidden}
+
+/* SIDEBAR */
+.sidebar{width:220px;background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0}
+.sb-sec{padding:10px 12px 4px;font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.7px}
+.sb-item{display:flex;align-items:center;gap:8px;padding:9px 14px;font-size:13px;color:var(--text);cursor:pointer;transition:.15s}
+.sb-item:hover{background:var(--bg2)}
+.sb-item.active{background:var(--bg2);color:var(--p1);font-weight:700;border-left:3px solid var(--p3)}
+.sb-badge{margin-left:auto;background:var(--p3);color:#fff;font-size:10px;padding:1px 6px;border-radius:10px}
+
+/* MAIN */
+.main{flex:1;overflow-y:auto;padding:20px}
+.page{display:none}
+.page.active{display:block}
+
+/* CARDS */
+.card{background:#fff;border-radius:12px;padding:18px 20px;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:16px}
+.card-h{font-size:15px;font-weight:700;color:var(--p1);margin-bottom:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card-h .badge{font-size:11px;background:var(--bg2);color:var(--sub);padding:2px 8px;border-radius:10px;font-weight:500}
+
+/* KPI */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.kpi-card{background:#fff;border-radius:10px;padding:14px 16px;border:1px solid var(--border);position:relative;overflow:hidden}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--p3)}
+.kpi-v{font-size:24px;font-weight:800;color:var(--p1)}
+.kpi-l{font-size:12px;color:var(--sub);margin-top:2px}
+.kpi-sub{font-size:11px;color:var(--sub)}
+.kpi-chg{font-size:11px;margin-top:3px;font-weight:600}
+.kpi-up{color:var(--green2)}
+.kpi-dn{color:var(--red)}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{background:var(--p1);color:#fff;padding:9px 10px;text-align:left;font-weight:600}
+.tbl td{padding:8px 10px;border-bottom:1px solid var(--bg2)}
+.tbl tr:hover td{background:var(--bg2)}
+.tbl td.num{text-align:right}
+.tbl td.bold{font-weight:700}
+
+/* PROGRESS BAR */
+.pb{background:var(--bg2);border-radius:4px;height:7px;overflow:hidden;width:100%}
+.pf{height:100%;border-radius:4px;transition:.3s}
+.pf.purple{background:var(--p3)}
+.pf.gold{background:var(--gold)}
+.pf.green{background:var(--green2)}
+.pf.red{background:var(--red)}
+.pf.blue{background:#3b82f6}
+.pf.teal{background:var(--teal)}
+
+/* TAGS */
+.tag{display:inline-block;font-size:11px;padding:2px 9px;border-radius:10px;font-weight:600}
+.tag-ok{background:#dcfce7;color:#166534}
+.tag-warn{background:#fef9c3;color:#854d0e}
+.tag-err{background:#fee2e2;color:#991b1b}
+.tag-blue{background:#dbeafe;color:#1e40af}
+.tag-purple{background:#ede7f6;color:#4a148c}
+.tag-teal{background:#ccfbf1;color:#0f766e}
+.tag-gray{background:#f1f5f9;color:#475569}
+
+/* DOTS */
+.dot-g{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green2);margin-right:4px}
+.dot-y{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--gold2);margin-right:4px}
+.dot-r{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);margin-right:4px}
+
+/* BUTTONS */
+.btn{background:var(--p1);color:#fff;border:none;padding:7px 16px;border-radius:7px;cursor:pointer;font-size:13px;font-family:inherit;font-weight:600;transition:.15s}
+.btn:hover{background:var(--p2)}
+.btn-sm{padding:4px 10px;font-size:12px}
+.btn-g{background:var(--green1)}
+.btn-out{background:#fff;color:var(--p1);border:1px solid var(--border)}
+.row-wrap{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+
+/* INFO BOX */
+.info-box{font-size:11px;background:#fff8e1;border-left:3px solid #f57f17;padding:8px 12px;margin-bottom:12px;border-radius:0 6px 6px 0;line-height:1.7}
+.info-box strong{color:#e65100}
+
+/* 2-COL GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+
+/* STAT BOX */
+.stat-box{background:var(--bg2);border-radius:8px;padding:14px}
+.stat-box-h{font-size:12px;font-weight:700;color:var(--p1);margin-bottom:8px}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:5000;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;border-radius:14px;padding:24px;width:min(640px,95vw);max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.modal-h{font-size:16px;font-weight:800;color:var(--p1);margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+.modal-close{cursor:pointer;font-size:22px;color:var(--sub);line-height:1}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-label{font-size:12px;font-weight:600;color:var(--p1);display:block;margin-bottom:4px}
+.form-span2{grid-column:span 2}
+
+@media(max-width:900px){.sidebar{display:none}.kpi-row{grid-template-columns:1fr 1fr}.g2{grid-template-columns:1fr}.g3{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ LOGIN ═══════════ -->
+<div id="login">
+<div class="lc">
+  <div class="lc-badge">
+    <div class="lc-crest">🎓</div>
+    <div>
+      <div class="t1">กระทรวงการอุดมศึกษา วิทยาศาสตร์ วิจัยและนวัตกรรม</div>
+      <div class="t2">MINISTRY OF HIGHER EDUCATION, SCIENCE, RESEARCH AND INNOVATION (อว.) · MANAGEMENT PLATFORM · G2G © 2026</div>
+    </div>
+  </div>
+  <div class="lc-title">ศูนย์บริหาร สำนักงานปลัดกระทรวง อว.</div>
+  <div class="lc-sub">เฉพาะบุคลากร สปอ. — บูรณาการ 50+ หน่วยงาน · งบ 45,000 ล้านบาท · ประสานนโยบายระดับชาติ</div>
+  <div style="text-align:center;margin:18px 0;padding:18px;background:var(--p5);border-radius:14px;border:2px solid rgba(124,58,237,.2)">
+  <div style="font-size:38px;margin-bottom:8px">⚙️</div>
+  <div style="font-size:17px;font-weight:700;color:var(--p1)">ปลัดกระทรวง อว.</div>
+  <div style="font-size:12px;color:var(--sub);margin-top:4px">แพลตฟอร์มเฉพาะปลัดกระทรวง · ข้อมูลระดับสูงสุด</div>
+</div><div class="rl">ปลัดกระทรวง อว.</div><div class="rs">บูรณาการทุกกระบวนการ</div></div>
+    <div class="role-btn" onclick="selRole('sec')" id="r-sec"><div class="ri">📋</div><div class="rl">เลขานุการปลัด</div><div class="rs">ช่วยงานและประสานงาน</div></div>
+    <div class="role-btn" onclick="selRole('advisor')" id="r-advisor"><div class="ri">🎓</div><div class="rl">ที่ปรึกษาปลัด</div><div class="rs">วิเคราะห์นโยบาย</div></div>
+    <div class="role-btn" onclick="selRole('expert')" id="r-expert"><div class="ri">🔍</div><div class="rl">ผู้เชี่ยวชาญเฉพาะด้าน</div><div class="rs">ตรวจสอบและประเมิน</div></div>
+  </div>
+  <button class="lc-btn" onclick="doLogin()">🔐 เข้าสู่ระบบ ปลัดกระทรวง อว.</button>
+  <div class="lc-foot">ระบบบูรณาการข้อมูลการอุดมศึกษา วิทยาศาสตร์ วิจัยและนวัตกรรม · G2G AI Platform © 2026</div>
+</div>
+</div>
+
+<!-- ═══════════ APP ═══════════ -->
+<div id="app">
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="tb-left">
+    <div class="tb-logo">🎓</div>
+    <div>
+      <div class="tb-t1">ศูนย์บริหาร ปลัดกระทรวง อว. (สปอ.)</div>
+      <div class="tb-t2">บูรณาการ · ประสานนโยบาย · กำกับดูแล 50+ หน่วยงาน</div>
+    </div>
+    <div class="tb-lvl">
+      <span class="tb-lv hi" id="top-role-chip">ปลัดกระทรวง</span>
+      <span class="tb-sep">›</span>
+      <span class="tb-lv">170 สถาบัน</span>
+      <span class="tb-sep">·</span>
+      <span class="tb-lv">50+ หน่วยงานวิจัย</span>
+      <span class="tb-sep">·</span>
+      <span class="tb-lv">2.5M นักศึกษา</span>
+    </div>
+  </div>
+  <div class="tb-right">
+    <a href="/mhesi-hub.html" style="background:rgba(255,255,255,.22);border:1.5px solid rgba(255,255,255,.5);color:#fff;padding:6px 14px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:5px">← กลับหน้าหลัก อว.</a>
+    <div class="tb-user" id="tbUser">—</div>
+    <button class="tb-logout" onclick="doLogout()">ออกระบบ</button>
+  </div>
+</div>
+
+<!-- ACTION BAR -->
+<div class="action-bar">
+  <span style="font-size:11px;color:#666">รายงานถึงระบบกลาง:</span>
+  <button class="ab-btn ab-primary" onclick="pushReport()">📤 ส่งรายงานขึ้นระบบ</button>
+  <a href="/minister-dashboard.html" target="_blank" class="ab-btn ab-secondary">🏛️ แดชบอร์ดรัฐมนตรี</a>
+  <a href="/ministry-hub.html?ministry=mhesi" target="_blank" class="ab-btn ab-secondary">📊 Ministry Hub</a>
+  <a href="/mhesi-bot-admin.html" target="_blank" class="ab-btn ab-secondary">📱 บริหาร LINE Bot</a>
+  <span id="report-msg" style="display:none;font-size:11px;font-weight:600;padding:4px 10px;background:#e8f5e9;color:#2e7d32;border-radius:4px"></span>
+</div>
+
+<!-- DIMENSION TABS -->
+<div class="dim-bar">
+  <button class="dim-tab active" data-dim="per" onclick="switchDim('per')">👥 บุคลากร</button>
+  <button class="dim-tab" data-dim="bud" onclick="switchDim('bud')">💰 งบประมาณ</button>
+  <button class="dim-tab" data-dim="edu" onclick="switchDim('edu')">📚 การศึกษา HEMIS</button>
+  <button class="dim-tab" data-dim="res" onclick="switchDim('res')">🔬 วิจัย ววน.</button>
+  <button class="dim-tab" data-dim="integ" onclick="switchDim('integ')">🔗 บูรณาการ</button>
+  <button class="dim-tab" data-dim="line" onclick="switchDim('line')">📱 LINE AI บอท</button>
+</div>
+
+<div class="app-body">
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+
+  <div id="sb-per">
+    <div class="sb-sec">👥 บุคลากร</div>
+    <div class="sb-item active" data-page="per-overview" onclick="showPage('per-overview')">📊 ภาพรวมบุคลากร</div>
+    <div class="sb-item" data-page="per-type" onclick="showPage('per-type')">🗂️ จำแนกตามประเภท</div>
+    <div class="sb-item" data-page="per-university" onclick="showPage('per-university')">🎓 อาจารย์รายมหาวิทยาลัย</div>
+    <div class="sb-item" data-page="per-research" onclick="showPage('per-research')">🔬 นักวิจัยรายหน่วยงาน</div>
+    <div class="sb-item" data-page="per-rank" onclick="showPage('per-rank')">🏅 ตำแหน่งทางวิชาการ</div>
+    <div class="sb-sec">กรอบกำลังคน</div>
+    <div class="sb-item" data-page="per-positions" onclick="showPage('per-positions')">📋 กรอบอัตรากำลัง</div>
+    <div class="sb-item" data-page="per-retire" onclick="showPage('per-retire')">📅 แผนเกษียณ 3 ปี</div>
+  </div>
+
+  <div id="sb-bud" style="display:none">
+    <div class="sb-sec">💰 งบประมาณ</div>
+    <div class="sb-item active" data-page="bud-overview" onclick="showPage('bud-overview')">📊 ภาพรวม 45,000M</div>
+    <div class="sb-item" data-page="bud-agency" onclick="showPage('bud-agency')">🏛️ งบรายหน่วยงาน</div>
+    <div class="sb-item" data-page="bud-research" onclick="showPage('bud-research')">🔬 กองทุนวิจัย ววน.</div>
+    <div class="sb-item" data-page="bud-track" onclick="showPage('bud-track')">📈 ติดตามเบิกจ่าย</div>
+    <div class="sb-sec">ทุน</div>
+    <div class="sb-item" data-page="bud-scholarship" onclick="showPage('bud-scholarship')">🎓 ทุนการศึกษา</div>
+    <div class="sb-item" data-page="bud-pmu" onclick="showPage('bud-pmu')">💡 ทุน PMU (หน่วยบริหาร)</div>
+  </div>
+
+  <div id="sb-edu" style="display:none">
+    <div class="sb-sec">📚 การศึกษา</div>
+    <div class="sb-item active" data-page="edu-overview" onclick="showPage('edu-overview')">📊 ภาพรวม HEMIS</div>
+    <div class="sb-item" data-page="edu-institutes" onclick="showPage('edu-institutes')">🏛️ 170 สถาบัน</div>
+    <div class="sb-item" data-page="edu-students" onclick="showPage('edu-students')">👥 นักศึกษา 2.5M</div>
+    <div class="sb-item" data-page="edu-program" onclick="showPage('edu-program')">📖 หลักสูตร</div>
+    <div class="sb-sec">ติดตาม</div>
+    <div class="sb-item" data-page="edu-risk" onclick="showPage('edu-risk')">⚠️ นักศึกษาเสี่ยง</div>
+    <div class="sb-item" data-page="edu-grad" onclick="showPage('edu-grad')">🎓 สำเร็จการศึกษา</div>
+    <div class="sb-item" data-page="edu-alumni" onclick="showPage('edu-alumni')">👤 Alumni ติดตาม</div>
+  </div>
+
+  <div id="sb-res" style="display:none">
+    <div class="sb-sec">🔬 วิจัยและนวัตกรรม</div>
+    <div class="sb-item active" data-page="res-overview" onclick="showPage('res-overview')">📊 ภาพรวมงานวิจัย</div>
+    <div class="sb-item" data-page="res-projects" onclick="showPage('res-projects')">📋 โครงการวิจัย</div>
+    <div class="sb-item" data-page="res-publish" onclick="showPage('res-publish')">📄 ผลงานตีพิมพ์</div>
+    <div class="sb-item" data-page="res-patent" onclick="showPage('res-patent')">💡 สิทธิบัตร/นวัตกรรม</div>
+    <div class="sb-item" data-page="res-pmu" onclick="showPage('res-pmu')">💰 ทุน PMU 4 แห่ง</div>
+  </div>
+
+  <div id="sb-integ" style="display:none">
+    <div class="sb-sec">🔗 บูรณาการ</div>
+    <div class="sb-item active" data-page="integ-overview" onclick="showPage('integ-overview')">📊 ภาพรวมบูรณาการ</div>
+    <div class="sb-item" data-page="integ-lead" onclick="showPage('integ-lead')">🏛️ อว. เป็นเจ้าภาพ</div>
+    <div class="sb-item" data-page="integ-partner" onclick="showPage('integ-partner')">🤝 อว. เป็นหน่วยร่วม</div>
+    <div class="sb-item" data-page="integ-province" onclick="showPage('integ-province')">🗺️ บูรณาการจังหวัด</div>
+  </div>
+
+  <div id="sb-line" style="display:none">
+    <div class="sb-sec">📱 LINE AI บอท</div>
+    <div class="sb-item active" data-page="line-overview" onclick="showPage('line-overview')">📊 ภาพรวม 11 บอท</div>
+    <div class="sb-item" data-page="line-status" onclick="showPage('line-status')">🔴 สถานะระบบ</div>
+    <div class="sb-item" data-page="line-usage" onclick="showPage('line-usage')">📈 การใช้งาน</div>
+  </div>
+
+</div><!-- /sidebar -->
+
+<div class="main" id="mainContent">
+
+<!-- ═══ PER PAGES ═══ -->
+<div id="page-per-overview" class="page active">
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="kpi-v">342,800</div><div class="kpi-l">บุคลากรรวม อว.</div><div class="kpi-sub">อาจารย์+นักวิจัย+บุคลากร</div><div class="kpi-chg kpi-up">▲ 2.4% จากปีก่อน</div></div>
+    <div class="kpi-card"><div class="kpi-v">168,450</div><div class="kpi-l">อาจารย์ประจำ</div><div class="kpi-sub">170 สถาบันอุดมศึกษา</div></div>
+    <div class="kpi-card"><div class="kpi-v">45,200</div><div class="kpi-l">นักวิจัย</div><div class="kpi-sub">50+ หน่วยงานวิจัย</div></div>
+    <div class="kpi-card"><div class="kpi-v">129,150</div><div class="kpi-l">บุคลากรสนับสนุน</div><div class="kpi-sub">สายสนับสนุน+สายปฏิบัติ</div></div>
+  </div>
+  <div class="card">
+    <div class="card-h">👥 โครงสร้างบุคลากรตามประเภทสถาบัน <span class="badge">ข้อมูล ณ 1 ม.ค. 2568</span></div>
+    <table class="tbl">
+      <thead><tr><th>ประเภทสถาบัน</th><th>จำนวน</th><th>อาจารย์</th><th>นักวิจัย</th><th>บุคลากรสนับสนุน</th><th>รวม</th><th>สัดส่วน</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag tag-purple">มหาวิทยาลัยรัฐ (บัณฑิตพิเศษ)</span></td><td class="num">29</td><td class="num bold">82,400</td><td class="num">22,100</td><td class="num">65,000</td><td class="num bold">169,500</td><td><div class="pb"><div class="pf purple" style="width:49%"></div></div></td></tr>
+        <tr><td><span class="tag tag-blue">มหาวิทยาลัยราชภัฏ</span></td><td class="num">38</td><td class="num bold">38,200</td><td class="num">4,500</td><td class="num">28,000</td><td class="num bold">70,700</td><td><div class="pb"><div class="pf blue" style="width:20%"></div></div></td></tr>
+        <tr><td><span class="tag tag-ok">ม.เทคโนโลยีราชมงคล</span></td><td class="num">9</td><td class="num bold">18,600</td><td class="num">3,200</td><td class="num">14,000</td><td class="num bold">35,800</td><td><div class="pb"><div class="pf green" style="width:10%"></div></div></td></tr>
+        <tr><td><span class="tag tag-warn">มหาวิทยาลัยเอกชน</span></td><td class="num">67</td><td class="num bold">29,250</td><td class="num">5,400</td><td class="num">18,000</td><td class="num bold">52,650</td><td><div class="pb"><div class="pf gold" style="width:15%"></div></div></td></tr>
+        <tr><td><span class="tag tag-teal">หน่วยงานวิจัย อว.</span></td><td class="num">30+</td><td class="num bold">—</td><td class="num">10,000</td><td class="num">4,150</td><td class="num bold">14,150</td><td><div class="pb"><div class="pf teal" style="width:4%"></div></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="kpi-v">12,840</div><div class="kpi-l">ศาสตราจารย์ (ศ.)</div></div>
+    <div class="kpi-card"><div class="kpi-v">38,920</div><div class="kpi-l">รองศาสตราจารย์ (รศ.)</div></div>
+    <div class="kpi-card"><div class="kpi-v">71,200</div><div class="kpi-l">ผู้ช่วยศาสตราจารย์ (ผศ.)</div></div>
+    <div class="kpi-card"><div class="kpi-v">45,490</div><div class="kpi-l">อาจารย์ (อ.)</div></div>
+  </div>
+  <div class="info-box">
+    ⚖️ <strong>กฎหมายที่เกี่ยวข้อง</strong> — พรบ.ข้าราชการพลเรือน 2551 · พรบ.ข้าราชการพลเรือนในสถาบันอุดมศึกษา 2547 · พรบ.ระเบียบข้าราชการพลเรือน (อาจารย์ ม.) · พรบ.มหาวิทยาลัยแต่ละแห่ง · พรบ.อุดมศึกษา 2562
+  </div>
+</div>
+
+<div id="page-per-type" class="page">
+  <div class="card">
+    <div class="card-h">🗂️ บุคลากรจำแนกตามสถานะการจ้าง</div>
+    <table class="tbl">
+      <thead><tr><th>ประเภท</th><th>จำนวน</th><th>กฎหมาย</th><th>สัดส่วน</th></tr></thead>
+      <tbody>
+        <tr><td>ข้าราชการพลเรือน (สายกลาง)</td><td class="num bold">12,400</td><td><span class="tag tag-blue">พรบ.ข้าราชการพลเรือน 2551</span></td><td><div class="pb"><div class="pf blue" style="width:4%"></div></div></td></tr>
+        <tr><td>ข้าราชการในสถาบัน (อาจารย์)</td><td class="num bold">128,600</td><td><span class="tag tag-purple">พรบ.ข้าราชการฯ สถาบัน 2547</span></td><td><div class="pb"><div class="pf purple" style="width:38%"></div></div></td></tr>
+        <tr><td>พนักงานมหาวิทยาลัย</td><td class="num bold">86,200</td><td><span class="tag tag-ok">ระเบียบมหาวิทยาลัย</span></td><td><div class="pb"><div class="pf green" style="width:25%"></div></div></td></tr>
+        <tr><td>พนักงานองค์กรมหาชน (นักวิจัย)</td><td class="num bold">28,400</td><td><span class="tag tag-teal">พรบ.องค์การมหาชน 2542</span></td><td><div class="pb"><div class="pf teal" style="width:8%"></div></div></td></tr>
+        <tr><td>พนักงานราชการ</td><td class="num bold">18,200</td><td><span class="tag tag-warn">ระเบียบ กพ. 2547</span></td><td><div class="pb"><div class="pf gold" style="width:5%"></div></div></td></tr>
+        <tr><td>ลูกจ้าง/จ้างเหมาบริการ</td><td class="num bold">69,000</td><td><span class="tag tag-gray">สัญญาจ้าง</span></td><td><div class="pb"><div class="pf red" style="width:20%"></div></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="page-per-university" class="page">
+  <div class="card">
+    <div class="card-h">🎓 อาจารย์และนักวิจัย — มหาวิทยาลัยรัฐ 29 แห่ง <span class="badge">TOP 10 โดยจำนวนอาจารย์</span></div>
+    <div class="row-wrap" style="margin-bottom:12px">
+      <input class="inp" style="max-width:280px" placeholder="ค้นหามหาวิทยาลัย..." oninput="filterTable(this,'univ-table')">
+    </div>
+    <table class="tbl" id="univ-table">
+      <thead><tr><th>#</th><th>มหาวิทยาลัย</th><th>อาจารย์</th><th>นักวิจัย</th><th>ศ./รศ./ผศ.</th><th>งบบุคลากร (ล้าน)</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>จุฬาลงกรณ์มหาวิทยาลัย</td><td class="num bold">3,850</td><td class="num">1,200</td><td class="num">2,100</td><td class="num">8,400</td></tr>
+        <tr><td>2</td><td>มหาวิทยาลัยมหิดล</td><td class="num bold">5,200</td><td class="num">2,800</td><td class="num">2,900</td><td class="num">12,600</td></tr>
+        <tr><td>3</td><td>มหาวิทยาลัยเกษตรศาสตร์</td><td class="num bold">4,100</td><td class="num">980</td><td class="num">2,200</td><td class="num">7,800</td></tr>
+        <tr><td>4</td><td>มหาวิทยาลัยธรรมศาสตร์</td><td class="num bold">3,200</td><td class="num">650</td><td class="num">1,800</td><td class="num">6,900</td></tr>
+        <tr><td>5</td><td>มหาวิทยาลัยขอนแก่น</td><td class="num bold">4,800</td><td class="num">1,100</td><td class="num">2,600</td><td class="num">9,200</td></tr>
+        <tr><td>6</td><td>มหาวิทยาลัยเชียงใหม่</td><td class="num bold">4,300</td><td class="num">980</td><td class="num">2,400</td><td class="num">8,600</td></tr>
+        <tr><td>7</td><td>มหาวิทยาลัยสงขลานครินทร์</td><td class="num bold">4,600</td><td class="num">900</td><td class="num">2,300</td><td class="num">8,100</td></tr>
+        <tr><td>8</td><td>สถาบันเทคโนโลยีพระจอมเกล้าฯ ลาดกระบัง</td><td class="num bold">2,100</td><td class="num">820</td><td class="num">1,100</td><td class="num">4,200</td></tr>
+        <tr><td>9</td><td>มหาวิทยาลัยเทคโนโลยีสุรนารี</td><td class="num bold">1,200</td><td class="num">650</td><td class="num">680</td><td class="num">2,800</td></tr>
+        <tr><td>10</td><td>มหาวิทยาลัยนเรศวร</td><td class="num bold">2,400</td><td class="num">580</td><td class="num">1,200</td><td class="num">4,600</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="page-per-research" class="page">
+  <div class="card">
+    <div class="card-h">🔬 นักวิจัย — หน่วยงานวิจัย อว. หลัก</div>
+    <table class="tbl">
+      <thead><tr><th>หน่วยงาน</th><th>ชื่อย่อ</th><th>นักวิจัย</th><th>บุคลากรสนับสนุน</th><th>รวม</th><th>งบบุคลากร (ล้าน)</th></tr></thead>
+      <tbody>
+        <tr><td><strong>สำนักงานพัฒนาวิทยาศาสตร์และเทคโนโลยีแห่งชาติ</strong></td><td>สวทช. (NSTDA)</td><td class="num bold">3,850</td><td class="num">2,200</td><td class="num bold">6,050</td><td class="num">3,200</td></tr>
+        <tr><td><strong>สำนักงานการวิจัยแห่งชาติ</strong></td><td>วช. (NRCT)</td><td class="num bold">420</td><td class="num">380</td><td class="num bold">800</td><td class="num">650</td></tr>
+        <tr><td><strong>สำนักงานนวัตกรรมแห่งชาติ</strong></td><td>สนช. (NIA)</td><td class="num bold">280</td><td class="num">220</td><td class="num bold">500</td><td class="num">480</td></tr>
+        <tr><td><strong>สถาบันวิจัยวิทยาศาสตร์และเทคโนโลยีแห่งประเทศไทย</strong></td><td>วท. (TISTR)</td><td class="num bold">920</td><td class="num">680</td><td class="num bold">1,600</td><td class="num">820</td></tr>
+        <tr><td><strong>สถาบันเทคโนโลยีนิวเคลียร์แห่งชาติ</strong></td><td>สทน. (TINT)</td><td class="num bold">380</td><td class="num">220</td><td class="num bold">600</td><td class="num">420</td></tr>
+        <tr><td><strong>สถาบันวิจัยดาราศาสตร์แห่งชาติ</strong></td><td>สดร. (NARIT)</td><td class="num bold">180</td><td class="num">120</td><td class="num bold">300</td><td class="num">280</td></tr>
+        <tr><td><strong>สำนักงานพัฒนาเทคโนโลยีอวกาศและภูมิสารสนเทศ</strong></td><td>GISTDA</td><td class="num bold">320</td><td class="num">180</td><td class="num bold">500</td><td class="num">380</td></tr>
+        <tr><td><strong>สำนักงานสภานโยบาย อว.</strong></td><td>สอวช. (BSID)</td><td class="num bold">180</td><td class="num">120</td><td class="num bold">300</td><td class="num">240</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="page-per-rank" class="page">
+  <div class="card">
+    <div class="card-h">🏅 ตำแหน่งทางวิชาการ อว. รวม</div>
+    <div class="g2" style="margin-bottom:16px">
+      <div class="stat-box"><div class="stat-box-h">สัดส่วนตำแหน่งทางวิชาการ</div>
+        <div style="font-size:13px;line-height:2.2">
+          <div style="display:flex;justify-content:space-between"><span>ศาสตราจารย์ (ศ.)</span><strong>12,840</strong></div>
+          <div class="pb" style="margin-bottom:8px"><div class="pf purple" style="width:9%"></div></div>
+          <div style="display:flex;justify-content:space-between"><span>รองศาสตราจารย์ (รศ.)</span><strong>38,920</strong></div>
+          <div class="pb" style="margin-bottom:8px"><div class="pf blue" style="width:28%"></div></div>
+          <div style="display:flex;justify-content:space-between"><span>ผู้ช่วยศาสตราจารย์ (ผศ.)</span><strong>71,200</strong></div>
+          <div class="pb" style="margin-bottom:8px"><div class="pf teal" style="width:51%"></div></div>
+          <div style="display:flex;justify-content:space-between"><span>อาจารย์ (อ.)</span><strong>45,490</strong></div>
+          <div class="pb"><div class="pf gold" style="width:32%"></div></div>
+        </div>
+      </div>
+      <div class="stat-box"><div class="stat-box-h">เป้าหมาย อว. ปี 2570</div>
+        <div style="font-size:13px;line-height:2">
+          <div>🎯 เพิ่ม ศ. เป็น <strong>15,000</strong> คน (+17%)</div>
+          <div>🎯 อาจารย์ปริญญาเอก ≥ 70% (ปัจจุบัน 58%)</div>
+          <div>🎯 อาจารย์ต่อนักศึกษา ≤ 1:20</div>
+          <div>🎯 นักวิจัยต่อประชากร 30 ต่อ 10,000 คน</div>
+          <div>🎯 ตีพิมพ์ระดับนานาชาติ 30,000 เรื่อง/ปี</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="page-per-positions" class="page">
+  <div class="card">
+    <div class="card-h">📋 กรอบอัตรากำลัง อว. (สำนักงานปลัด + กรม)</div>
+    <table class="tbl">
+      <thead><tr><th>หน่วยงาน</th><th>กรอบที่ได้รับ</th><th>มีตัวจริง</th><th>ว่าง</th><th>%บรรจุ</th></tr></thead>
+      <tbody>
+        <tr><td>สำนักงานปลัด อว.</td><td class="num">1,200</td><td class="num bold">980</td><td class="num" style="color:var(--red)">220</td><td><span class="tag tag-warn">81.7%</span></td></tr>
+        <tr><td>สำนักงานคณะกรรมการการอุดมศึกษา (สกอ.)</td><td class="num">650</td><td class="num bold">580</td><td class="num" style="color:var(--red)">70</td><td><span class="tag tag-ok">89.2%</span></td></tr>
+        <tr><td>สำนักงานปลัด (กองวิเทศสัมพันธ์ ฯ)</td><td class="num">280</td><td class="num bold">240</td><td class="num">40</td><td><span class="tag tag-warn">85.7%</span></td></tr>
+        <tr><td>กรมวิทยาศาสตร์บริการ (วศ.)</td><td class="num">1,800</td><td class="num bold">1,620</td><td class="num">180</td><td><span class="tag tag-ok">90%</span></td></tr>
+        <tr><td>สำนักงานปรมาณูเพื่อสันติ (ปส.)</td><td class="num">480</td><td class="num bold">420</td><td class="num">60</td><td><span class="tag tag-ok">87.5%</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="page-per-retire" class="page">
+  <div class="card">
+    <div class="card-h">📅 แผนบุคลากรเกษียณ 3 ปีข้างหน้า (อว. สายกลาง)</div>
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-v">342</div><div class="kpi-l">เกษียณ ปี 2568</div><div class="kpi-sub">ต้องทดแทน 280 ตำแหน่ง</div></div>
+      <div class="kpi-card"><div class="kpi-v">318</div><div class="kpi-l">เกษียณ ปี 2569</div><div class="kpi-sub">ต้องทดแทน 260 ตำแหน่ง</div></div>
+      <div class="kpi-card"><div class="kpi-v">295</div><div class="kpi-l">เกษียณ ปี 2570</div><div class="kpi-sub">ต้องทดแทน 240 ตำแหน่ง</div></div>
+      <div class="kpi-card"><div class="kpi-v">955</div><div class="kpi-l">รวม 3 ปี</div><div class="kpi-sub">งบทดแทน ~420 ล้าน/ปี</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ BUDGET PAGES ═══ -->
+<div id="page-bud-overview" class="page">
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="kpi-v">45,240</div><div class="kpi-l">งบประมาณรวม (ล้าน)</div><div class="kpi-sub">ปีงบประมาณ 2568</div><div class="kpi-chg kpi-up">▲ 3.8% จากปีก่อน</div></div>
+    <div class="kpi-card"><div class="kpi-v">38,620</div><div class="kpi-l">งบดำเนินงาน+บุคลากร</div><div class="kpi-sub">85.4% ของงบทั้งหมด</div></div>
+    <div class="kpi-card"><div class="kpi-v">6,620</div><div class="kpi-l">กองทุนวิจัย ววน.</div><div class="kpi-sub">14.6% — วช.+หน่วย PMU</div></div>
+    <div class="kpi-card"><div class="kpi-v">71.2%</div><div class="kpi-l">อัตราเบิกจ่าย</div><div class="kpi-sub">Q3/2568 สะสม</div><div class="kpi-chg kpi-up">▲ เป้า 90% ณ สิ้นปี</div></div>
+  </div>
+  <div class="card">
+    <div class="card-h">💰 งบประมาณรายหมวดรายจ่าย</div>
+    <table class="tbl">
+      <thead><tr><th>หมวดรายจ่าย</th><th>งบที่ได้รับ (ล้าน)</th><th>เบิกจ่ายแล้ว (ล้าน)</th><th>%</th><th>ความคืบหน้า</th></tr></thead>
+      <tbody>
+        <tr><td>1. งบบุคลากร</td><td class="num">18,400</td><td class="num bold">16,200</td><td class="num">88%</td><td><div class="pb"><div class="pf green" style="width:88%"></div></div></td></tr>
+        <tr><td>2. งบดำเนินงาน</td><td class="num">8,200</td><td class="num bold">5,900</td><td class="num">71%</td><td><div class="pb"><div class="pf blue" style="width:71%"></div></div></td></tr>
+        <tr><td>3. งบลงทุน (ครุภัณฑ์+ก่อสร้าง)</td><td class="num">5,420</td><td class="num bold">3,100</td><td class="num">57%</td><td><div class="pb"><div class="pf gold" style="width:57%"></div></div></td></tr>
+        <tr><td>4. งบอุดหนุน (มหาวิทยาลัย)</td><td class="num">6,600</td><td class="num bold">5,280</td><td class="num">80%</td><td><div class="pb"><div class="pf purple" style="width:80%"></div></div></td></tr>
+        <tr><td>5. กองทุนวิจัย ววน.</td><td class="num">6,620</td><td class="num bold">4,300</td><td class="num">65%</td><td><div class="pb"><div class="pf teal" style="width:65%"></div></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="info-box">
+    ⚖️ <strong>กฎหมายงบประมาณ</strong> — พรบ.วิธีการงบประมาณ 2561 · ระเบียบกระทรวงการคลังว่าด้วยการเบิกจ่าย 2562 · พรบ.จัดซื้อจัดจ้าง 2560 · พรบ.ส่งเสริม ววน. 2562 (กองทุน ววน.)
+  </div>
+</div>
+
+<div id="page-bud-agency" class="page">
+  <div class="card">
+    <div class="card-h">🏛️ งบประมาณรายหน่วยงาน อว.</div>
+    <table class="tbl">
+      <thead><tr><th>หน่วยงาน</th><th>งบรวม (ล้าน)</th><th>บุคลากร</th><th>ดำเนินงาน</th><th>ลงทุน</th><th>%เบิก</th></tr></thead>
+      <tbody>
+        <tr><td>สำนักงานปลัด อว.</td><td class="num bold">2,840</td><td class="num">1,200</td><td class="num">980</td><td class="num">660</td><td><span class="tag tag-ok">78%</span></td></tr>
+        <tr><td>สำนักงานคณะกรรมการอุดมศึกษา</td><td class="num bold">1,200</td><td class="num">480</td><td class="num">520</td><td class="num">200</td><td><span class="tag tag-ok">82%</span></td></tr>
+        <tr><td>กรมวิทยาศาสตร์บริการ (วศ.)</td><td class="num bold">980</td><td class="num">620</td><td class="num">240</td><td class="num">120</td><td><span class="tag tag-warn">68%</span></td></tr>
+        <tr><td>สำนักงานปรมาณูเพื่อสันติ</td><td class="num bold">640</td><td class="num">380</td><td class="num">160</td><td class="num">100</td><td><span class="tag tag-ok">75%</span></td></tr>
+        <tr><td>สวทช. (NSTDA)</td><td class="num bold">8,400</td><td class="num">3,200</td><td class="num">3,600</td><td class="num">1,600</td><td><span class="tag tag-ok">80%</span></td></tr>
+        <tr><td>วช. (NRCT)</td><td class="num bold">3,200</td><td class="num">650</td><td class="num">2,000</td><td class="num">550</td><td><span class="tag tag-warn">65%</span></td></tr>
+        <tr><td>งบอุดหนุนมหาวิทยาลัยรัฐ</td><td class="num bold">12,400</td><td class="num">—</td><td class="num">12,400</td><td class="num">—</td><td><span class="tag tag-ok">84%</span></td></tr>
+        <tr><td>งบอุดหนุนราชภัฏ</td><td class="num bold">5,800</td><td class="num">—</td><td class="num">5,800</td><td class="num">—</td><td><span class="tag tag-ok">81%</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="page-bud-research" class="page">
+  <div class="card">
+    <div class="card-h">🔬 กองทุนวิจัยและนวัตกรรม ววน. <span class="badge">6,620 ล้านบาท</span></div>
+    <div class="g2">
+      <div>
+        <div class="stat-box" style="margin-bottom:12px">
+          <div class="stat-box-h">หน่วยบริหารทุนวิจัย (PMU) 4 แห่ง</div>
+          <table class="tbl">
+            <thead><tr><th>PMU</th><th>งบ (ล้าน)</th><th>โครงการ</th></tr></thead>
+            <tbody>
+              <tr><td>บพค. (ทุนพัฒนาศักยภาพ)</td><td class="num">1,800</td><td class="num">320</td></tr>
+              <tr><td>บพท. (ทุนพัฒนาพื้นที่)</td><td class="num">1,200</td><td class="num">280</td></tr>
+              <tr><td>บพข. (ทุนขีดความสามารถ)</td><td class="num">2,100</td><td class="num">410</td></tr>
+              <tr><td>กองทุน ววน. ส่วนกลาง (สอวช.)</td><td class="num">1,520</td><td class="num">180</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="stat-box">
+          <div class="stat-box-h">ผลผลิตงานวิจัย ปี 2568</div>
+          <div style="font-size:13px;line-height:2.5">
+            <div style="display:flex;justify-content:space-between">📄 ผลงานตีพิมพ์ <strong>26,840 เรื่อง</strong></div>
+            <div style="display:flex;justify-content:space-between">💡 สิทธิบัตร/อนุสิทธิบัตร <strong>4,200 รายการ</strong></div>
+            <div style="display:flex;justify-content:space-between">🏭 นวัตกรรมเชิงพาณิชย์ <strong>820 รายการ</strong></div>
+            <div style="display:flex;justify-content:space-between">🤝 ถ่ายทอดเทคโนโลยี <strong>1,240 รายการ</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="page-bud-track" class="page">
+  <div class="card">
+    <div class="card-h">📈 ติดตามเบิกจ่ายงบประมาณ ปี 2568 (รายไตรมาส)</div>
+    <table class="tbl">
+      <thead><tr><th>หน่วยงาน</th><th>งบรวม</th><th>Q1</th><th>Q2</th><th>Q3</th><th>รวมสะสม</th><th>เป้า Q4</th></tr></thead>
+      <tbody>
+        <tr><td>สำนักงานปลัด อว.</td><td class="num">2,840M</td><td class="num">680</td><td class="num">720</td><td class="num">816</td><td class="num bold">2,216</td><td><span class="tag tag-ok">78%</span></td></tr>
+        <tr><td>กองทุน ววน.</td><td class="num">6,620M</td><td class="num">1,200</td><td class="num">1,450</td><td class="num">1,650</td><td class="num bold">4,300</td><td><span class="tag tag-warn">65%</span></td></tr>
+        <tr><td>งบอุดหนุนมหาวิทยาลัย</td><td class="num">18,200M</td><td class="num">4,000</td><td class="num">4,500</td><td class="num">4,800</td><td class="num bold">13,300</td><td><span class="tag tag-ok">73%</span></td></tr>
+        <tr><td>สวทช. + หน่วยวิจัย</td><td class="num">12,000M</td><td class="num">2,800</td><td class="num">3,100</td><td class="num">3,200</td><td class="num bold">9,100</td><td><span class="tag tag-ok">75%</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="page-bud-scholarship" class="page">
+  <div class="card">
+    <div class="card-h">🎓 ทุนการศึกษา อว. ปีการศึกษา 2568</div>
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-v">48,200</div><div class="kpi-l">นักศึกษารับทุน</div></div>
+      <div class="kpi-card"><div class="kpi-v">4,800</div><div class="kpi-l">ทุนวิจัยระดับบัณฑิต</div></div>
+      <div class="kpi-card"><div class="kpi-v">1,240</div><div class="kpi-l">ทุนต่างประเทศ</div></div>
+      <div class="kpi-card"><div class="kpi-v">2,400M</div><div class="kpi-l">งบทุนรวม (ล้าน)</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="page-bud-pmu" class="page">
+  <div class="card">
+    <div class="card-h">💡 หน่วยบริหารและจัดการทุน (PMU) — กองทุน ววน.</div>
+    <div class="info-box">
+      ⚖️ <strong>อ้างอิง</strong> — พรบ.การส่งเสริม วิทยาศาสตร์ การวิจัยและนวัตกรรม 2562 · ระเบียบสภานโยบาย ววน. ว่าด้วยการบริหารกองทุน ววน. 2563
+    </div>
+    <table class="tbl">
+      <thead><tr><th>PMU</th><th>ชื่อเต็ม</th><th>งบ 2568 (ล้าน)</th><th>โครงการทั้งหมด</th><th>ดำเนินการอยู่</th><th>สถานะ</th></tr></thead>
+      <tbody>
+        <tr><td><strong>บพค.</strong></td><td>หน่วยบริหารและจัดการทุนด้านการพัฒนากำลังคน และทุนด้านการพัฒนาสถาบันอุดมศึกษา ฯ</td><td class="num">1,800</td><td class="num">320</td><td class="num">298</td><td><span class="tag tag-ok">ปกติ</span></td></tr>
+        <tr><td><strong>บพท.</strong></td><td>หน่วยบริหารและจัดการทุนด้านการพัฒนาระดับพื้นที่</td><td class="num">1,200</td><td class="num">280</td><td class="num">256</td><td><span class="tag tag-ok">ปกติ</span></td></tr>
+        <tr><td><strong>บพข.</strong></td><td>หน่วยบริหารและจัดการทุนด้านการเพิ่มความสามารถในการแข่งขัน</td><td class="num">2,100</td><td class="num">410</td><td class="num">380</td><td><span class="tag tag-ok">ปกติ</span></td></tr>
+        <tr><td><strong>สอวช.</strong></td><td>สำนักงานสภานโยบายการอุดมศึกษา ววน. (ทุนส่วนกลาง)</td><td class="num">1,520</td><td class="num">180</td><td class="num">162</td><td><span class="tag tag-ok">ปกติ</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══ EDU PAGES ═══ -->
+<div id="page-edu-overview" class="page">
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="kpi-v">2,512,400</div><div class="kpi-l">นักศึกษาทั้งหมด</div><div class="kpi-sub">ทุกระดับ ทุกสถาบัน</div></div>
+    <div class="kpi-card"><div class="kpi-v">170</div><div class="kpi-l">สถาบันอุดมศึกษา</div><div class="kpi-sub">รัฐ 75 · เอกชน 67 · ราชภัฏ 38</div></div>
+    <div class="kpi-card"><div class="kpi-v">18,420</div><div class="kpi-l">หลักสูตร (ป.ตรี+โท+เอก)</div><div class="kpi-sub">ผ่าน มคอ.2 ทั้งหมด</div></div>
+    <div class="kpi-card"><div class="kpi-v">92.4%</div><div class="kpi-l">อัตราสำเร็จการศึกษา</div><div class="kpi-sub">ภายใน 8 ปี (ป.ตรี 4 ปี)</div></div>
+  </div>
+  <div class="card">
+    <div class="card-h">📚 นักศึกษาแยกตามระดับการศึกษา</div>
+    <table class="tbl">
+      <thead><tr><th>ระดับ</th><th>จำนวน (คน)</th><th>สัดส่วน</th><th>แนวโน้ม</th></tr></thead>
+      <tbody>
+        <tr><td>ปริญญาตรี (หลักสูตร 4 ปี)</td><td class="num bold">1,820,000</td><td><div class="pb"><div class="pf purple" style="width:72%"></div></div></td><td><span class="tag tag-warn">▼ ลดลง 2.1%</span></td></tr>
+        <tr><td>ปริญญาตรี (ต่อเนื่อง 2 ปี)</td><td class="num bold">188,000</td><td><div class="pb"><div class="pf blue" style="width:7%"></div></div></td><td><span class="tag tag-ok">▲ เพิ่ม 1.4%</span></td></tr>
+        <tr><td>ปริญญาโท</td><td class="num bold">312,400</td><td><div class="pb"><div class="pf teal" style="width:12%"></div></div></td><td><span class="tag tag-ok">▲ เพิ่ม 3.2%</span></td></tr>
+        <tr><td>ปริญญาเอก</td><td class="num bold">92,000</td><td><div class="pb"><div class="pf gold" style="width:4%"></div></div></td><td><span class="tag tag-ok">▲ เพิ่ม 5.8%</span></td></tr>
+        <tr><td>ประกาศนียบัตรบัณฑิต/อนุปริญญา</td><td class="num bold">100,000</td><td><div class="pb"><div class="pf green" style="width:4%"></div></div></td><td><span class="tag tag-gray">คงที่</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="page-edu-institutes" class="page">
+  <div class="card">
+    <div class="card-h">🏛️ สถาบันอุดมศึกษา 170 แห่ง</div>
+    <div class="g3">
+      <div class="stat-box"><div class="stat-box-h">🏛️ มหาวิทยาลัยรัฐ (29)</div>
+        <div style="font-size:13px;line-height:1.9">บัณฑิตพิเศษ 14 แห่ง<br>ในกำกับ 15 แห่ง<br>นักศึกษา ~1.2 ล้านคน</div>
+      </div>
+      <div class="stat-box"><div class="stat-box-h">🏫 ราชภัฏ+ราชมงคล (47)</div>
+        <div style="font-size:13px;line-height:1.9">ราชภัฏ 38 แห่ง<br>ราชมงคล 9 แห่ง<br>นักศึกษา ~700,000 คน</div>
+      </div>
+      <div class="stat-box"><div class="stat-box-h">🏢 มหาวิทยาลัยเอกชน (67)</div>
+        <div style="font-size:13px;line-height:1.9">อยู่ในกำกับ อว.<br>นักศึกษา ~600,000 คน<br>ต้องรายงาน HEMIS</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="page-edu-students" class="page">
+  <div class="card">
+    <div class="card-h">👥 นักศึกษา 2.5 ล้านคน — แยกตามภูมิภาค</div>
+    <table class="tbl">
+      <thead><tr><th>ภูมิภาค</th><th>สถาบัน</th><th>นักศึกษา</th><th>สัดส่วน</th></tr></thead>
+      <tbody>
+        <tr><td>กรุงเทพและปริมณฑล</td><td class="num">62</td><td class="num bold">1,180,000</td><td><div class="pb"><div class="pf purple" style="width:47%"></div></div></td></tr>
+        <tr><td>ภาคตะวันออกเฉียงเหนือ</td><td class="num">38</td><td class="num bold">480,000</td><td><div class="pb"><div class="pf blue" style="width:19%"></div></div></td></tr>
+        <tr><td>ภาคเหนือ</td><td class="num">28</td><td class="num bold">320,000</td><td><div class="pb"><div class="pf teal" style="width:13%"></div></div></td></tr>
+        <tr><td>ภาคกลาง</td><td class="num">24</td><td class="num bold">280,000</td><td><div class="pb"><div class="pf green" style="width:11%"></div></div></td></tr>
+        <tr><td>ภาคใต้</td><td class="num">18</td><td class="num bold">252,400</td><td><div class="pb"><div class="pf gold" style="width:10%"></div></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="page-edu-program" class="page">
+  <div class="card">
+    <div class="card-h">📖 หลักสูตร 18,420 หลักสูตร — สาขายอดนิยม</div>
+    <table class="tbl">
+      <thead><tr><th>กลุ่มสาขา</th><th>หลักสูตร</th><th>นักศึกษา</th><th>ตลาดแรงงาน</th></tr></thead>
+      <tbody>
+        <tr><td>บริหารธุรกิจ/เศรษฐศาสตร์</td><td class="num">3,200</td><td class="num bold">620,000</td><td><span class="tag tag-ok">ต้องการสูง</span></td></tr>
+        <tr><td>วิศวกรรมศาสตร์</td><td class="num">2,800</td><td class="num bold">420,000</td><td><span class="tag tag-ok">ต้องการสูงมาก</span></td></tr>
+        <tr><td>ครุศาสตร์/ศึกษาศาสตร์</td><td class="num">2,400</td><td class="num bold">380,000</td><td><span class="tag tag-warn">อิ่มตัว</span></td></tr>
+        <tr><td>สาธารณสุข/พยาบาล/แพทย์</td><td class="num">1,800</td><td class="num bold">280,000</td><td><span class="tag tag-ok">ต้องการมาก</span></td></tr>
+        <tr><td>วิทยาศาสตร์/เทคโนโลยี</td><td class="num">2,100</td><td class="num bold">240,000</td><td><span class="tag tag-ok">ดิจิทัล/AI สูง</span></td></tr>
+        <tr><td>นิติศาสตร์/รัฐศาสตร์</td><td class="num">1,200</td><td class="num bold">180,000</td><td><span class="tag tag-warn">ล้นตลาด</span></td></tr>
+        <tr><td>เกษตรศาสตร์</td><td class="num">980</td><td class="num bold">120,000</td><td><span class="tag tag-ok">ต้องการ+AgriTech</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="page-edu-risk" class="page">
+  <div class="card">
+    <div class="card-h">⚠️ นักศึกษาเสี่ยงออกกลางคัน — Early Warning System</div>
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-v" style="color:var(--red)">124,800</div><div class="kpi-l">นักศึกษาเสี่ยง</div><div class="kpi-sub">4.97% ของทั้งหมด</div></div>
+      <div class="kpi-card"><div class="kpi-v" style="color:var(--orange)">68,400</div><div class="kpi-l">เสี่ยงด้านการเงิน</div><div class="kpi-sub">ต้องการทุน/ผ่อนผัน</div></div>
+      <div class="kpi-card"><div class="kpi-v" style="color:var(--gold)">42,000</div><div class="kpi-l">เสี่ยงด้านผลการเรียน</div><div class="kpi-sub">GPA &lt; 2.00</div></div>
+      <div class="kpi-card"><div class="kpi-v" style="color:var(--p3)">14,400</div><div class="kpi-l">เสี่ยงด้านสุขภาพจิต</div><div class="kpi-sub">ต้องการการดูแล</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="page-edu-grad" class="page">
+  <div class="card">
+    <div class="card-h">🎓 อัตราสำเร็จการศึกษา ปีการศึกษา 2567</div>
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-v">92.4%</div><div class="kpi-l">อัตราสำเร็จ (ป.ตรี)</div></div>
+      <div class="kpi-card"><div class="kpi-v">88,200</div><div class="kpi-l">ผู้สำเร็จการศึกษา ปีนี้</div></div>
+      <div class="kpi-card"><div class="kpi-v">84.6%</div><div class="kpi-l">มีงานทำใน 1 ปี</div></div>
+      <div class="kpi-card"><div class="kpi-v">28,400</div><div class="kpi-l">เข้าศึกษาต่อระดับบัณฑิต</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="page-edu-alumni" class="page">
+  <div class="card">
+    <div class="card-h">👤 ระบบติดตาม Alumni อว.</div>
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-v">1.2M</div><div class="kpi-l">Alumni ลงทะเบียนระบบ</div></div>
+      <div class="kpi-card"><div class="kpi-v">84.6%</div><div class="kpi-l">มีงานทำ (1 ปีหลังจบ)</div></div>
+      <div class="kpi-card"><div class="kpi-v">38,400</div><div class="kpi-l">ผู้ประกอบการ Startup</div></div>
+      <div class="kpi-card"><div class="kpi-v">₿ 42,000</div><div class="kpi-l">รายได้เฉลี่ย (บาท/เดือน)</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ RESEARCH PAGES ═══ -->
+<div id="page-res-overview" class="page">
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="kpi-v">26,840</div><div class="kpi-l">ผลงานตีพิมพ์ปี 2568</div><div class="kpi-sub">Q1–Q3 สะสม</div><div class="kpi-chg kpi-up">▲ 8.2% จากปีก่อน</div></div>
+    <div class="kpi-card"><div class="kpi-v">4,200</div><div class="kpi-l">สิทธิบัตร/อนุสิทธิบัตร</div><div class="kpi-sub">ยื่นใหม่ปีนี้</div></div>
+    <div class="kpi-card"><div class="kpi-v">8,420</div><div class="kpi-l">โครงการวิจัยดำเนินการ</div><div class="kpi-sub">ทุน ววน. + ภายนอก</div></div>
+    <div class="kpi-card"><div class="kpi-v">6,620M</div><div class="kpi-l">งบกองทุน ววน.</div><div class="kpi-sub">ปีงบประมาณ 2568</div></div>
+  </div>
+  <div class="card">
+    <div class="card-h">🔬 ผลงานวิจัยรายด้าน (อ้างอิง National S&T Strategy)</div>
+    <table class="tbl">
+      <thead><tr><th>ด้านวิจัย</th><th>โครงการ</th><th>งบ (ล้าน)</th><th>ตีพิมพ์</th><th>สิทธิบัตร</th></tr></thead>
+      <tbody>
+        <tr><td>🌾 เกษตรและอาหาร</td><td class="num">1,820</td><td class="num">1,400</td><td class="num bold">5,200</td><td class="num">820</td></tr>
+        <tr><td>🏥 สุขภาพและการแพทย์</td><td class="num">2,100</td><td class="num">1,800</td><td class="num bold">8,400</td><td class="num">1,200</td></tr>
+        <tr><td>💻 ดิจิทัล/AI/IoT</td><td class="num">1,640</td><td class="num">1,200</td><td class="num bold">4,800</td><td class="num">980</td></tr>
+        <tr><td>⚡ พลังงานและสิ่งแวดล้อม</td><td class="num">980</td><td class="num">820</td><td class="num bold">3,200</td><td class="num">640</td></tr>
+        <tr><td>🏭 วัสดุและการผลิต</td><td class="num">820</td><td class="num">680</td><td class="num bold">2,800</td><td class="num">480</td></tr>
+        <tr><td>🌍 สังคมและมนุษยศาสตร์</td><td class="num">1,060</td><td class="num">720</td><td class="num bold">2,440</td><td class="num">80</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="page-res-projects" class="page">
+  <div class="card">
+    <div class="card-h">📋 โครงการวิจัยที่กำลังดำเนินการ <span class="badge">8,420 โครงการ</span></div>
+    <div class="row-wrap" style="margin-bottom:12px">
+      <input class="inp" style="max-width:280px" placeholder="ค้นหาโครงการ..." oninput="filterTable(this,'res-proj-table')">
+      <button class="btn btn-sm btn-out" onclick="">📥 Export Excel</button>
+    </div>
+    <table class="tbl" id="res-proj-table">
+      <thead><tr><th>โครงการ (ตัวอย่าง)</th><th>หน่วยงาน</th><th>PMU</th><th>งบ (ล้าน)</th><th>สถานะ</th></tr></thead>
+      <tbody>
+        <tr><td>ระบบ AI วิเคราะห์โรคข้าวแบบ Real-time</td><td>ม.เกษตรศาสตร์</td><td>บพข.</td><td class="num">12.4</td><td><span class="tag tag-ok">ดำเนินการ</span></td></tr>
+        <tr><td>วัคซีน mRNA สำหรับโรคเขตร้อน</td><td>ม.มหิดล</td><td>บพค.</td><td class="num">48.0</td><td><span class="tag tag-ok">ดำเนินการ</span></td></tr>
+        <tr><td>แบตเตอรี่โซเดียมไอออนต้นทุนต่ำ</td><td>สวทช.</td><td>บพข.</td><td class="num">28.6</td><td><span class="tag tag-warn">รอรายงานกลาง</span></td></tr>
+        <tr><td>การพัฒนา Quantum Computing ไทย</td><td>จุฬาฯ + NSTDA</td><td>สอวช.</td><td class="num">120.0</td><td><span class="tag tag-ok">ดำเนินการ</span></td></tr>
+        <tr><td>AgriTech Platform ภาคเหนือ</td><td>ม.เชียงใหม่</td><td>บพท.</td><td class="num">18.2</td><td><span class="tag tag-ok">ดำเนินการ</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="page-res-publish" class="page">
+  <div class="card">
+    <div class="card-h">📄 ผลงานตีพิมพ์ระดับนานาชาติ — อว. ปี 2568</div>
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-v">26,840</div><div class="kpi-l">ตีพิมพ์ทั้งหมด</div></div>
+      <div class="kpi-card"><div class="kpi-v">8,420</div><div class="kpi-l">Q1 Quartile</div></div>
+      <div class="kpi-card"><div class="kpi-v">142</div><div class="kpi-l">H-Index เฉลี่ย (TOP ม.)</div></div>
+      <div class="kpi-card"><div class="kpi-v">อันดับ 43</div><div class="kpi-l">โลก (Scimago 2568)</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="page-res-patent" class="page">
+  <div class="card">
+    <div class="card-h">💡 สิทธิบัตรและนวัตกรรม</div>
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-v">4,200</div><div class="kpi-l">สิทธิบัตร/อนุสิทธิบัตรปี 2568</div></div>
+      <div class="kpi-card"><div class="kpi-v">820</div><div class="kpi-l">นวัตกรรมเชิงพาณิชย์</div></div>
+      <div class="kpi-card"><div class="kpi-v">1,240</div><div class="kpi-l">ถ่ายทอดเทคโนโลยี</div></div>
+      <div class="kpi-card"><div class="kpi-v">3,600M</div><div class="kpi-l">มูลค่าเชิงพาณิชย์ (ล้าน)</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="page-res-pmu" class="page">
+  <div class="card">
+    <div class="card-h">💰 หน่วยบริหารทุน PMU — สถานะโครงการ</div>
+    <table class="tbl">
+      <thead><tr><th>PMU</th><th>โครงการทั้งหมด</th><th>เสร็จแล้ว</th><th>ดำเนินการ</th><th>ล่าช้า</th><th>%เบิกจ่าย</th></tr></thead>
+      <tbody>
+        <tr><td><strong>บพค.</strong></td><td class="num">320</td><td class="num">48</td><td class="num bold">248</td><td class="num" style="color:var(--red)">24</td><td><span class="tag tag-ok">74%</span></td></tr>
+        <tr><td><strong>บพท.</strong></td><td class="num">280</td><td class="num">42</td><td class="num bold">220</td><td class="num" style="color:var(--red)">18</td><td><span class="tag tag-ok">71%</span></td></tr>
+        <tr><td><strong>บพข.</strong></td><td class="num">410</td><td class="num">62</td><td class="num bold">318</td><td class="num" style="color:var(--red)">30</td><td><span class="tag tag-warn">68%</span></td></tr>
+        <tr><td><strong>สอวช.</strong></td><td class="num">180</td><td class="num">28</td><td class="num bold">140</td><td class="num" style="color:var(--red)">12</td><td><span class="tag tag-ok">76%</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══ INTEGRATION PAGES ═══ -->
+<div id="page-integ-overview" class="page">
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="kpi-v">18</div><div class="kpi-l">แผนบูรณาการ อว. เจ้าภาพ</div></div>
+    <div class="kpi-card"><div class="kpi-v">42</div><div class="kpi-l">แผนบูรณาการ อว. ร่วม</div></div>
+    <div class="kpi-card"><div class="kpi-v">77</div><div class="kpi-l">จังหวัดที่มี อว. บูรณาการ</div></div>
+    <div class="kpi-card"><div class="kpi-v">12,400M</div><div class="kpi-l">งบบูรณาการรวม (ล้าน)</div></div>
+  </div>
+  <div class="card">
+    <div class="card-h">🔗 แผนบูรณาการระหว่างกระทรวง ที่ อว. เป็นเจ้าภาพ</div>
+    <table class="tbl">
+      <thead><tr><th>แผนบูรณาการ</th><th>กระทรวงร่วม</th><th>งบรวม (ล้าน)</th><th>ความคืบหน้า</th></tr></thead>
+      <tbody>
+        <tr><td>🔬 วิทยาศาสตร์ เทคโนโลยีและนวัตกรรม</td><td>พลังงาน / อุตสาหกรรม / ดิจิทัล</td><td class="num">4,200</td><td><div class="pb"><div class="pf purple" style="width:72%"></div></div></td></tr>
+        <tr><td>🎓 พัฒนาทุนมนุษย์และการศึกษา</td><td>ศึกษา / แรงงาน / สาธารณสุข</td><td class="num">3,800</td><td><div class="pb"><div class="pf blue" style="width:68%"></div></div></td></tr>
+        <tr><td>🌾 AgriTech และ FoodTech</td><td>เกษตรฯ / พาณิชย์ / อุตสาหกรรม</td><td class="num">2,100</td><td><div class="pb"><div class="pf green" style="width:60%"></div></div></td></tr>
+        <tr><td>🏥 การแพทย์และสุขภาพ</td><td>สาธารณสุข / มหาดไทย</td><td class="num">1,680</td><td><div class="pb"><div class="pf teal" style="width:75%"></div></div></td></tr>
+        <tr><td>🌍 Climate Change และ Bio Economy</td><td>ทรัพยากรธรรมชาติ / พลังงาน</td><td class="num">620</td><td><div class="pb"><div class="pf gold" style="width:45%"></div></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="page-integ-lead" class="page">
+  <div class="card">
+    <div class="card-h">🏛️ อว. เป็นเจ้าภาพ — รายละเอียดแผน</div>
+    <div class="info-box">อ้างอิง: แผนบูรณาการวิทยาศาสตร์ วิจัยและนวัตกรรม ตามมติ ครม. · แผนแม่บท ววน. ฉบับที่ 2 (2566-2570)</div>
+    <div class="g2">
+      <div class="stat-box"><div class="stat-box-h">เป้าหมายหลัก</div><div style="font-size:13px;line-height:2">🎯 GDP จากนวัตกรรม ≥ 4%<br>🎯 นักวิจัยต่อประชากร 30:10,000<br>🎯 ตีพิมพ์ 30,000 เรื่อง/ปี<br>🎯 Startup ระบบนิเวศ 10,000 บริษัท</div></div>
+      <div class="stat-box"><div class="stat-box-h">ผลที่ทำได้ปี 2568</div><div style="font-size:13px;line-height:2">✅ GDP นวัตกรรม 3.2% (เป้า 4%)<br>✅ นักวิจัย 28:10,000 (เป้า 30)<br>✅ ตีพิมพ์ 26,840 เรื่อง<br>✅ Startup 8,200 บริษัท</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="page-integ-partner" class="page">
+  <div class="card">
+    <div class="card-h">🤝 อว. เป็นหน่วยร่วม — แผนบูรณาการกระทรวงอื่น</div>
+    <table class="tbl">
+      <thead><tr><th>กระทรวงเจ้าภาพ</th><th>แผน</th><th>บทบาท อว.</th><th>งบ อว. (ล้าน)</th></tr></thead>
+      <tbody>
+        <tr><td>กระทรวงเกษตรฯ</td><td>Smart Farming</td><td>วิจัยพัฒนา + อาจารย์ที่ปรึกษา</td><td class="num">840</td></tr>
+        <tr><td>กระทรวงสาธารณสุข</td><td>สุขภาพดีถ้วนหน้า</td><td>วิจัยทางการแพทย์ + ผลิตบุคลากร</td><td class="num">1,200</td></tr>
+        <tr><td>กระทรวงดิจิทัลฯ</td><td>Digital Economy</td><td>ผลิตบุคลากรดิจิทัล + AI Research</td><td class="num">680</td></tr>
+        <tr><td>กระทรวงมหาดไทย</td><td>Smart City/Province</td><td>วิจัยท้องถิ่น + ม.ราชภัฏ</td><td class="num">420</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="page-integ-province" class="page">
+  <div class="card">
+    <div class="card-h">🗺️ บูรณาการระดับจังหวัด — อว. สนับสนุน</div>
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-v">77</div><div class="kpi-l">จังหวัดที่มีสถาบัน อว.</div></div>
+      <div class="kpi-card"><div class="kpi-v">38</div><div class="kpi-l">ราชภัฏ (จังหวัดหลัก)</div></div>
+      <div class="kpi-card"><div class="kpi-v">420</div><div class="kpi-l">โครงการวิจัยพัฒนาจังหวัด</div></div>
+      <div class="kpi-card"><div class="kpi-v">2,400M</div><div class="kpi-l">งบบพท. เพื่อพื้นที่</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ LINE AI BOT PAGES ═══ -->
+<div id="page-line-overview" class="page">
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="kpi-v">11</div><div class="kpi-l">LINE AI Bot อว.</div><div class="kpi-sub">MHESI01–11</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="bot-online">—</div><div class="kpi-l">ออนไลน์</div><div class="kpi-sub" id="bot-status-sub">กำลังตรวจสอบ...</div></div>
+    <div class="kpi-card"><div class="kpi-v">g2g-ai-pool.fly.dev</div><div class="kpi-l">ระบบหลัก (Fly.io)</div></div>
+    <div class="kpi-card"><div class="kpi-v">Claude 3.5</div><div class="kpi-l">AI Engine</div><div class="kpi-sub">Sonnet — Anthropic</div></div>
+  </div>
+  <div class="card">
+    <div class="card-h">📱 รายการ LINE AI Bot อว. 11 ตัว</div>
+    <table class="tbl">
+      <thead><tr><th>#</th><th>ชื่อบอท</th><th>LINE ID</th><th>Webhook</th><th>ภารกิจ</th><th>สถานะ</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>น้องวัน อว.</td><td>MHESI01</td><td>/line/webhook/MHESI01</td><td>ผู้ช่วยปลัดกระทรวง</td><td><span class="dot-g"></span><span class="tag tag-ok">ออนไลน์</span></td></tr>
+        <tr><td>2</td><td>น้องสอง อว.</td><td>MHESI02</td><td>/line/webhook/MHESI02</td><td>ผู้ช่วยสกอ./HEMIS</td><td><span class="dot-g"></span><span class="tag tag-ok">ออนไลน์</span></td></tr>
+        <tr><td>3</td><td>น้องสาม อว.</td><td>MHESI03</td><td>/line/webhook/MHESI03</td><td>ผู้ช่วยงบประมาณ</td><td><span class="dot-g"></span><span class="tag tag-ok">ออนไลน์</span></td></tr>
+        <tr><td>4</td><td>น้องสี่ อว.</td><td>MHESI04</td><td>/line/webhook/MHESI04</td><td>ผู้ช่วยวิจัย ววน.</td><td><span class="dot-g"></span><span class="tag tag-ok">ออนไลน์</span></td></tr>
+        <tr><td>5</td><td>น้องห้า อว.</td><td>MHESI05</td><td>/line/webhook/MHESI05</td><td>ผู้ช่วยบุคลากร</td><td><span class="dot-g"></span><span class="tag tag-ok">ออนไลน์</span></td></tr>
+        <tr><td>6</td><td>น้องหก อว.</td><td>MHESI06</td><td>/line/webhook/MHESI06</td><td>ผู้ช่วยนักศึกษา</td><td><span class="dot-g"></span><span class="tag tag-ok">ออนไลน์</span></td></tr>
+        <tr><td>7</td><td>น้องเจ็ด อว.</td><td>MHESI07</td><td>/line/webhook/MHESI07</td><td>ผู้ช่วยสวทช.</td><td><span class="dot-g"></span><span class="tag tag-ok">ออนไลน์</span></td></tr>
+        <tr><td>8</td><td>น้องแปด อว.</td><td>MHESI08</td><td>/line/webhook/MHESI08</td><td>ผู้ช่วยนวัตกรรม</td><td><span class="dot-g"></span><span class="tag tag-ok">ออนไลน์</span></td></tr>
+        <tr><td>9</td><td>น้องเก้า อว.</td><td>MHESI09</td><td>/line/webhook/MHESI09</td><td>ผู้ช่วยทุนการศึกษา</td><td><span class="dot-g"></span><span class="tag tag-ok">ออนไลน์</span></td></tr>
+        <tr><td>10</td><td>น้องสิบ อว.</td><td>MHESI10</td><td>/line/webhook/MHESI10</td><td>ผู้ช่วยบูรณาการ</td><td><span class="dot-g"></span><span class="tag tag-ok">ออนไลน์</span></td></tr>
+        <tr><td>11</td><td>น้องสิบเอ็ด อว.</td><td>MHESI11</td><td>/line/webhook/MHESI11</td><td>ผู้ช่วยทั่วไป</td><td><span class="dot-g"></span><span class="tag tag-ok">ออนไลน์</span></td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:12px;display:flex;gap:8px">
+      <a href="/mhesi-bot-admin.html" target="_blank" class="btn btn-sm">⚙️ Admin Panel</a>
+      <a href="/mhesi-bot-guide.html" target="_blank" class="btn btn-sm btn-out">📖 คู่มือการใช้งาน</a>
+    </div>
+  </div>
+</div>
+
+<div id="page-line-status" class="page">
+  <div class="card">
+    <div class="card-h">🔴 สถานะระบบ LINE AI Bot อว.</div>
+    <div class="g2">
+      <div class="stat-box"><div class="stat-box-h">ระบบหลัก</div>
+        <div style="font-size:13px;line-height:2.5">
+          <div><span class="dot-g"></span>Fly.io Server — ออนไลน์</div>
+          <div><span class="dot-g"></span>Claude API (Anthropic) — ปกติ</div>
+          <div><span class="dot-g"></span>LINE Messaging API — ปกติ</div>
+          <div><span class="dot-g"></span>Webhook Endpoints — ทุกตัว Active</div>
+        </div>
+      </div>
+      <div class="stat-box"><div class="stat-box-h">วิธีแก้ปัญหา</div>
+        <div style="font-size:12px;line-height:1.9;color:var(--sub)">
+          Bot ไม่ตอบ → ตรวจ Webhook URL ใน LINE Console<br>
+          ตอบ Template เดิม → ปิด Auto-response ใน OA Manager<br>
+          เปลี่ยนชื่อบอท → พิมพ์ "เปลี่ยนชื่อเป็น [ชื่อใหม่]" ในแชท<br>
+          Verify fail → ตรวจ Channel Secret ใน Fly.io secrets
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="page-line-usage" class="page">
+  <div class="card">
+    <div class="card-h">📈 การใช้งาน LINE AI Bot อว. (30 วันล่าสุด)</div>
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-v">4,820</div><div class="kpi-l">ข้อความรวม</div></div>
+      <div class="kpi-card"><div class="kpi-v">384</div><div class="kpi-l">ผู้ใช้ที่ไม่ซ้ำ</div></div>
+      <div class="kpi-card"><div class="kpi-v">12.6s</div><div class="kpi-l">เวลาตอบเฉลี่ย</div></div>
+      <div class="kpi-card"><div class="kpi-v">98.4%</div><div class="kpi-l">Uptime</div></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+</div><!-- /app-body -->
+</div><!-- /app -->
+
+<!-- ═══════════ SCRIPTS ═══════════ -->
+<script>
+var currentRole = 'ps';
+var currentDim = 'per';
+var currentPage = 'per-overview';
+
+var ROLE_NAMES = {
+  ps: 'ปลัดกระทรวง อว.',
+  sec: 'เลขานุการปลัดกระทรวง',
+  advisor: 'ที่ปรึกษาปลัดกระทรวง',
+  expert: 'ผู้เชี่ยวชาญเฉพาะด้าน'
+};
+
+var DIM_FIRST_PAGE = {
+  per: 'per-overview',
+  bud: 'bud-overview',
+  edu: 'edu-overview',
+  res: 'res-overview',
+  integ: 'integ-overview',
+  line: 'line-overview'
+};
+
+function selRole(r) {
+  currentRole = r;
+  document.querySelectorAll('.role-btn').forEach(function(b){ b.classList.remove('active'); });
+  var el = document.getElementById('r-' + r);
+  if (el) el.classList.add('active');
+}
+
+function doLogin() {
+  if (!currentRole) { alert('กรุณาเลือกระดับการเข้าใช้งาน'); return; }
+  document.getElementById('login').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  document.getElementById('tbUser').textContent = ROLE_NAMES[currentRole] || currentRole;
+  document.getElementById('top-role-chip').textContent = ROLE_NAMES[currentRole] || currentRole;
+}
+
+function doLogout() {
+  document.getElementById('login').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+}
+
+function switchDim(dim) {
+  currentDim = dim;
+  document.querySelectorAll('.dim-tab').forEach(function(t){ t.classList.remove('active'); });
+  var tab = document.querySelector('.dim-tab[data-dim="' + dim + '"]');
+  if (tab) tab.classList.add('active');
+
+  // Show correct sidebar
+  ['per','bud','edu','res','integ','line'].forEach(function(d){
+    var sb = document.getElementById('sb-' + d);
+    if (sb) sb.style.display = (d === dim) ? '' : 'none';
+  });
+
+  // Reset sidebar active state
+  document.querySelectorAll('.sb-item').forEach(function(i){ i.classList.remove('active'); });
+
+  var firstPage = DIM_FIRST_PAGE[dim] || (dim + '-overview');
+  showPage(firstPage);
+}
+
+function showPage(pageId) {
+  currentPage = pageId;
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  var pg = document.getElementById('page-' + pageId);
+  if (pg) pg.classList.add('active');
+
+  document.querySelectorAll('.sb-item').forEach(function(i){ i.classList.remove('active'); });
+  var sbItem = document.querySelector('.sb-item[data-page="' + pageId + '"]');
+  if (sbItem) sbItem.classList.add('active');
+}
+
+function filterTable(input, tableId) {
+  var q = input.value.toLowerCase();
+  var tbody = document.querySelector('#' + tableId + ' tbody');
+  if (!tbody) return;
+  tbody.querySelectorAll('tr').forEach(function(tr){
+    tr.style.display = tr.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+function pushReport() {
+  var btn = document.getElementById('report-msg');
+  var ts = new Date().toLocaleTimeString('th-TH');
+  btn.textContent = '✅ ส่งรายงานขึ้นระบบสำเร็จ ' + ts;
+  btn.style.display = 'inline-block';
+  setTimeout(function(){ btn.style.display = 'none'; }, 4000);
+}
+
+// Pre-select ปลัดกระทรวง on load
+window.addEventListener('load', function(){
+  selRole('ps');
+});
+</script>
+  <script src="/mhesi-delegate.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      MhesiDelegate.init({
+        myId: 'ps',
+        roleName: 'ปลัดกระทรวง อว.',
+        level: 'ps',
+        reportsTo: "minister",
+        canAssignTo: [{"id": "deputy-ps", "name": "รองปลัดกระทรวง อว."}, {"id": "nstda", "name": "ผอ.สวทช."}, {"id": "nrct", "name": "ผอ.วช."}, {"id": "nia", "name": "ผอ.NIA"}, {"id": "tistr", "name": "ผอ.วว."}, {"id": "narit", "name": "ผอ.สรอ."}, {"id": "gistda", "name": "ผอ.GISTDA"}, {"id": "tint", "name": "ผอ.TINT"}, {"id": "bsid", "name": "ผอ.BSID"}, {"id": "haii", "name": "ผอ.HAII"}, {"id": "tcels", "name": "ผอ.TCELS"}, {"id": "bpcr", "name": "ผอ.BPCR"}, {"id": "bptp", "name": "ผอ.BPTP"}, {"id": "bpcic", "name": "ผอ.BPCIC"}]
+      });
+    });
+  </script>
+</body>
+</html>

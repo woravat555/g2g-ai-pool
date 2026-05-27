@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MDES Management — ระบบบริหารกระทรวงดิจิทัลเพื่อเศรษฐกิจและสังคม</title>
+<style>
+:root{
+  --primary:#004d40; --primary2:#00695c; --primary3:#00897b; --primary4:#4db6ac;
+  --gold:#f59e0b; --orange:#f97316; --red:#ef4444; --green1:#16a34a; --green2:#22c55e;
+  --purple:#7c3aed; --navy1:#1e3a5f; --navy3:#2563eb;
+  --bg:#f0faf9; --bg2:#e8f5e9; --sub:#6b7280; --border:#d1fae5; --white:#fff;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Sarabun',sans-serif}
+body{background:var(--bg);color:#1a1a2e;font-size:14px}
+/* LOGIN */
+#login{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,var(--primary) 0%,var(--primary2) 50%,var(--primary3) 100%)}
+.lc{background:var(--white);border-radius:18px;padding:40px;width:420px;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+.lc-logo{text-align:center;margin-bottom:20px}
+.lc-logo .ic{font-size:48px}
+.lc-logo h1{font-size:18px;font-weight:800;color:var(--primary);margin-top:8px;line-height:1.4}
+.lc-logo p{font-size:12px;color:var(--sub);margin-top:4px}
+.lc-label{font-size:12px;font-weight:600;color:var(--sub);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px}
+.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.role-btn{padding:10px 8px;border:2px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:12px;font-weight:600;color:var(--primary);text-align:center;transition:all .2s}
+.role-btn:hover,.role-btn.active{border-color:var(--primary2);background:var(--primary2);color:#fff}
+.lc-input{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;margin-bottom:12px;outline:none}
+.lc-input:focus{border-color:var(--primary2)}
+.lc-btn{width:100%;padding:12px;background:var(--primary);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:background .2s}
+.lc-btn:hover{background:var(--primary2)}
+/* APP SHELL */
+#app{display:none;height:100vh;flex-direction:column}
+.topbar{background:linear-gradient(90deg,var(--primary) 0%,var(--primary2) 100%);color:#fff;padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.2)}
+.tb-left{display:flex;align-items:center;gap:12px}
+.tb-brand{font-size:15px;font-weight:800;letter-spacing:0.3px}
+.tb-sub{font-size:11px;opacity:.8}
+.tb-right{display:flex;align-items:center;gap:16px;font-size:13px}
+.tb-user{background:rgba(255,255,255,.15);padding:4px 12px;border-radius:20px;font-size:12px}
+.logout-btn{background:rgba(255,255,255,.2);border:none;color:#fff;padding:5px 12px;border-radius:8px;cursor:pointer;font-size:12px}
+.logout-btn:hover{background:rgba(255,255,255,.35)}
+.dim-tabs{display:flex;background:var(--primary2);padding:0 20px;flex-shrink:0}
+.dim-tab{padding:10px 20px;color:rgba(255,255,255,.75);font-size:13px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;user-select:none}
+.dim-tab:hover{color:#fff;background:rgba(255,255,255,.1)}
+.dim-tab.active{color:#fff;border-bottom-color:#fff;background:rgba(255,255,255,.15)}
+.main-area{display:flex;flex:1;overflow:hidden}
+/* SIDEBAR */
+.sidebar{width:220px;background:var(--white);border-right:1.5px solid var(--border);overflow-y:auto;flex-shrink:0;padding:12px 0}
+.sb-section{padding:6px 16px 4px;font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:1px}
+.sb-item{display:block;padding:9px 16px 9px 20px;font-size:13px;color:#374151;cursor:pointer;border-left:3px solid transparent;transition:all .15s;user-select:none}
+.sb-item:hover{background:var(--bg);color:var(--primary)}
+.sb-item.active{background:var(--bg2);color:var(--primary);border-left-color:var(--primary2);font-weight:700}
+/* CONTENT */
+.content{flex:1;overflow-y:auto;padding:20px;background:var(--bg)}
+.page{display:none}
+.page.active{display:block}
+/* CARDS */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+.kpi-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.kpi-ic{font-size:26px;margin-bottom:6px}
+.kpi-v{font-size:24px;font-weight:800;color:var(--primary)}
+.kpi-l{font-size:11px;color:var(--sub);margin-top:2px}
+.card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.card-title{font-size:14px;font-weight:700;color:var(--primary);margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{background:var(--bg2);padding:9px 12px;text-align:left;font-weight:700;font-size:12px;color:var(--primary);border-bottom:2px solid var(--border)}
+.tbl td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+.tbl tr:hover td{background:#f0fdf4}
+/* CHIPS */
+.level-chip{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.lc-central{background:#dbeafe;color:#1e40af}
+.lc-region{background:#dcfce7;color:#166534}
+.lc-local{background:#fef9c3;color:#92400e}
+.lc-indep{background:#fce7f3;color:#9d174d}
+.lc-teal{background:#ccfbf1;color:#134e4a}
+/* PROGRESS */
+.pb{background:#e5e7eb;border-radius:20px;height:8px;overflow:hidden}
+.pf{height:100%;border-radius:20px;background:var(--primary3);transition:width .3s}
+.pf.gold{background:var(--gold)}
+.pf.red{background:var(--red)}
+.pf.green{background:var(--green1)}
+.pf.teal{background:var(--primary3)}
+/* DOTS */
+.dot-g{display:inline-block;width:8px;height:8px;background:var(--green2);border-radius:50%;margin-right:4px}
+.dot-r{display:inline-block;width:8px;height:8px;background:var(--red);border-radius:50%;margin-right:4px}
+.dot-y{display:inline-block;width:8px;height:8px;background:var(--gold);border-radius:50%;margin-right:4px}
+/* BTN */
+.btn{padding:7px 14px;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary2)}
+.btn-sm{padding:5px 10px;font-size:12px}
+.sect-title{font-size:16px;font-weight:800;color:var(--primary);margin-bottom:4px}
+.sect-sub{font-size:12px;color:var(--sub);margin-bottom:16px}
+.alert-box{background:#e0f2f1;border:1px solid var(--primary4);border-radius:10px;padding:14px;margin-bottom:16px;font-size:13px;color:var(--primary)}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="lc">
+    <div class="lc-logo">
+      <div class="ic">🖥️</div>
+      <h1>ระบบบริหารกระทรวงดิจิทัล<br>เพื่อเศรษฐกิจและสังคม (MDES/ดศ.)</h1>
+      <p>Ministry of Digital Economy and Society — Management System</p>
+    </div>
+    <div class="lc-label">เลือกระดับการเข้าใช้งาน</div>
+    <div class="role-grid">
+      <button class="role-btn" id="r-minister" onclick="selRole('minister')">🏛️ ปลัดกระทรวง ดศ.</button>
+      <button class="role-btn" id="r-etda" onclick="selRole('etda')">🔒 ผู้บริหาร ETDA</button>
+      <button class="role-btn" id="r-depa" onclick="selRole('depa')">💡 ผู้บริหาร DEPA</button>
+      <button class="role-btn" id="r-dga" onclick="selRole('dga')">🏢 ผู้บริหาร DGA</button>
+      <button class="role-btn" id="r-nbtc" onclick="selRole('nbtc')">📡 ผู้บริหาร NBTC</button>
+      <button class="role-btn" id="r-officer" onclick="selRole('officer')">👤 เจ้าหน้าที่ดิจิทัล</button>
+    </div>
+    <div class="lc-label">รหัสผ่านระบบ</div>
+    <input class="lc-input" type="password" id="pw" placeholder="กรอกรหัสผ่าน..." onkeydown="if(event.key==='Enter') doLogin()">
+    <button class="lc-btn" onclick="doLogin()">🔐 เข้าสู่ระบบ</button>
+  </div>
+</div>
+
+<!-- APP SHELL -->
+<div id="app">
+  <div class="topbar">
+    <div class="tb-left">
+      <span style="font-size:22px">🖥️</span>
+      <div>
+        <div class="tb-brand">MDES Management System</div>
+        <div class="tb-sub">กระทรวงดิจิทัลเพื่อเศรษฐกิจและสังคม — งบ 26,800 ล้านบาท FY2568</div>
+      </div>
+    </div>
+    <div class="tb-right">
+      <span style="font-size:12px;opacity:.8">📅 ปีงบประมาณ 2568</span>
+      <span class="tb-user" id="tbUser">—</span>
+      <button class="logout-btn" onclick="doLogout()">ออกจากระบบ</button>
+    </div>
+  </div>
+  <div style="display:flex;justify-content:flex-end;align-items:center;gap:8px;padding:6px 16px;background:linear-gradient(90deg,transparent,rgba(0,0,0,0.04));border-bottom:1px solid var(--border,#e0e0e0)">
+    <span style="font-size:11px;color:#666">รายงานขึ้นสู่ระบบกลาง:</span>
+    <button id="hub-report-btn" onclick="pushReportToHub()" style="background:#1565c0;color:#fff;border:none;padding:5px 14px;border-radius:20px;font-size:12px;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:4px">📤 ส่งรายงานขึ้นระบบ</button>
+    <a href="/minister-dashboard.html" target="_blank" style="font-size:11px;color:#1565c0;text-decoration:none;padding:5px 10px;border:1px solid #1565c0;border-radius:20px">🏛️ แดชบอร์ดรัฐมนตรี</a>
+    <a href="/ministry-hub.html?ministry=mdes" target="_blank" style="font-size:11px;color:#666;text-decoration:none;padding:5px 10px;border:1px solid #ccc;border-radius:20px">📊 Hub กระทรวง</a>
+    <span id="hub-report-msg" style="display:none;font-size:11px;font-weight:600;padding:4px 10px;background:#e8f5e9;color:#2e7d32;border-radius:4px"></span>
+  </div>
+  <div class="dim-tabs">
+    <div class="dim-tab" data-dim="people" onclick="switchDim('people')">👤 บุคลากร</div>
+    <div class="dim-tab" data-dim="budget" onclick="switchDim('budget')">💰 งบประมาณ</div>
+    <div class="dim-tab" data-dim="projects" onclick="switchDim('projects')">🚀 โครงการ</div>
+    <div class="dim-tab" data-dim="integration" onclick="switchDim('integration')">🔗 บูรณาการ</div>
+  </div>
+  <div class="main-area">
+    <div class="sidebar">
+      <!-- People sidebar -->
+      <div id="sb-people" style="display:none">
+        <div class="sb-section">บุคลากร</div>
+        <div class="sb-item" data-page="people-overview" onclick="showPage('people-overview')">📊 ภาพรวมบุคลากร</div>
+        <div class="sb-item" data-page="people-list" onclick="showPage('people-list')">📋 รายชื่อบุคลากร</div>
+        <div class="sb-item" data-page="people-digital" onclick="showPage('people-digital')">💻 นักพัฒนาดิจิทัล</div>
+        <div class="sb-item" data-page="people-cyber" onclick="showPage('people-cyber')">🔐 Cybersecurity</div>
+        <div class="sb-item" data-page="people-agencies" onclick="showPage('people-agencies')">🏛️ หน่วยงาน 6 แห่ง</div>
+      </div>
+      <!-- Budget sidebar -->
+      <div id="sb-budget" style="display:none">
+        <div class="sb-section">งบประมาณ</div>
+        <div class="sb-item" data-page="budget-overview" onclick="showPage('budget-overview')">📊 ภาพรวมงบ 26,800 ล.</div>
+        <div class="sb-item" data-page="budget-agencies" onclick="showPage('budget-agencies')">🏢 งบรายหน่วยงาน</div>
+        <div class="sb-item" data-page="budget-digital-fund" onclick="showPage('budget-digital-fund')">💎 กองทุน Digital Economy</div>
+        <div class="sb-item" data-page="budget-tracking" onclick="showPage('budget-tracking')">📈 ติดตามการเบิกจ่าย</div>
+        <div class="sb-item" data-page="budget-contracts" onclick="showPage('budget-contracts')">📝 สัญญาจัดซื้อจัดจ้าง</div>
+      </div>
+      <!-- Projects sidebar -->
+      <div id="sb-projects" style="display:none">
+        <div class="sb-section">โครงการ</div>
+        <div class="sb-item" data-page="proj-overview" onclick="showPage('proj-overview')">📊 ภาพรวมโครงการ</div>
+        <div class="sb-item" data-page="proj-digital-transform" onclick="showPage('proj-digital-transform')">🔄 Digital Transformation</div>
+        <div class="sb-item" data-page="proj-ai" onclick="showPage('proj-ai')">🤖 AI Strategy 2570</div>
+        <div class="sb-item" data-page="proj-broadband" onclick="showPage('proj-broadband')">📡 Broadband 77 จังหวัด</div>
+        <div class="sb-item" data-page="proj-kpi" onclick="showPage('proj-kpi')">🎯 KPI Dashboard</div>
+        <div class="sb-item" data-page="proj-list" onclick="showPage('proj-list')">📋 รายการโครงการทั้งหมด</div>
+      </div>
+      <!-- Integration sidebar -->
+      <div id="sb-integration" style="display:none">
+        <div class="sb-section">บูรณาการ</div>
+        <div class="sb-item" data-page="integ-overview" onclick="showPage('integ-overview')">📊 ภาพรวมบูรณาการ</div>
+        <div class="sb-item" data-page="integ-govcloud" onclick="showPage('integ-govcloud')">☁️ ข้อมูลภาครัฐ (DGA)</div>
+        <div class="sb-item" data-page="integ-cyber" onclick="showPage('integ-cyber')">🛡️ ความปลอดภัยไซเบอร์</div>
+        <div class="sb-item" data-page="integ-cloud" onclick="showPage('integ-cloud')">🌐 Cloud Government</div>
+        <div class="sb-item" data-page="integ-plans" onclick="showPage('integ-plans')">📋 แผนบูรณาการทั้งหมด</div>
+      </div>
+    </div>
+    <div class="content">
+      <!-- ===== PEOPLE PAGES ===== -->
+      <div class="page" id="page-people-overview">
+        <div class="sect-title">ภาพรวมบุคลากร กระทรวงดิจิทัลฯ</div>
+        <div class="sect-sub">ข้าราชการและบุคลากร MDES รวม 6 หน่วยงานหลัก ปีงบประมาณ 2568</div>
+        <div class="kpi-row">
+          <div class="kpi-card"><div class="kpi-ic">👥</div><div class="kpi-v" id="kpi-total">8,500</div><div class="kpi-l">บุคลากรรวม</div></div>
+          <div class="kpi-card"><div class="kpi-ic">🏛️</div><div class="kpi-v" id="kpi-civil">5,800</div><div class="kpi-l">ข้าราชการ</div></div>
+          <div class="kpi-card"><div class="kpi-ic">📋</div><div class="kpi-v" id="kpi-govemp">1,500</div><div class="kpi-l">พนักงานราชการ</div></div>
+          <div class="kpi-card"><div class="kpi-ic">💼</div><div class="kpi-v" id="kpi-contract">1,200</div><div class="kpi-l">จ้างเหมา</div></div>
+          <div class="kpi-card"><div class="kpi-ic">🏢</div><div class="kpi-v">6</div><div class="kpi-l">หน่วยงานหลัก</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">บุคลากรแยกตามหน่วยงาน
+            <button class="btn btn-primary btn-sm" onclick="addPerson()">+ เพิ่มบุคลากร</button>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="tbl">
+              <thead><tr><th>หน่วยงาน</th><th>ประเภท</th><th>ข้าราชการ</th><th>พนักงานราชการ</th><th>จ้างเหมา</th><th>รวม</th></tr></thead>
+              <tbody id="people-agency-table"><tr><td colspan="6" style="text-align:center;color:var(--sub);padding:20px">⏳ กำลังโหลด...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="page" id="page-people-list">
+        <div class="sect-title">รายชื่อบุคลากร</div>
+        <div class="sect-sub">ข้อมูลบุคลากรกระทรวงดิจิทัลฯ จากระบบ API</div>
+        <div class="card">
+          <div class="card-title">รายชื่อทั้งหมด
+            <button class="btn btn-primary btn-sm" onclick="addPerson()">+ เพิ่มบุคลากร</button>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="tbl">
+              <thead><tr><th>ชื่อ-นามสกุล</th><th>ประเภท</th><th>ตำแหน่ง</th><th>หน่วยงาน</th><th>ระดับ</th><th>สถานะ</th></tr></thead>
+              <tbody id="people-tbody"><tr><td colspan="6" style="text-align:center;color:var(--sub);padding:20px">⏳ กำลังโหลด...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="page" id="page-people-digital">
+        <div class="sect-title">นักพัฒนาดิจิทัล</div>
+        <div class="sect-sub">บุคลากรด้านดิจิทัล IT และการพัฒนาระบบ</div>
+        <div class="kpi-row">
+          <div class="kpi-card"><div class="kpi-ic">💻</div><div class="kpi-v">2,400</div><div class="kpi-l">นักพัฒนาดิจิทัล</div></div>
+          <div class="kpi-card"><div class="kpi-ic">🤖</div><div class="kpi-v">320</div><div class="kpi-l">ผู้เชี่ยวชาญ AI/ML</div></div>
+          <div class="kpi-card"><div class="kpi-ic">☁️</div><div class="kpi-v">180</div><div class="kpi-l">Cloud Architect</div></div>
+          <div class="kpi-card"><div class="kpi-ic">📊</div><div class="kpi-v">450</div><div class="kpi-l">Data Scientists</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">กระจายตามหน่วยงาน</div>
+          <div id="digital-staff-content"><div style="text-align:center;color:var(--sub);padding:20px">⏳ กำลังโหลด...</div></div>
+        </div>
+      </div>
+
+      <div class="page" id="page-people-cyber">
+        <div class="sect-title">ผู้เชี่ยวชาญ Cybersecurity</div>
+        <div class="sect-sub">บุคลากรด้านความมั่นคงปลอดภัยทางไซเบอร์ ETDA และ NCSC</div>
+        <div class="kpi-row">
+          <div class="kpi-card"><div class="kpi-ic">🛡️</div><div class="kpi-v">680</div><div class="kpi-l">Cybersecurity Experts</div></div>
+          <div class="kpi-card"><div class="kpi-ic">🔍</div><div class="kpi-v">120</div><div class="kpi-l">Threat Analysts</div></div>
+          <div class="kpi-card"><div class="kpi-ic">🚨</div><div class="kpi-v">3,200</div><div class="kpi-l">Incidents/ปี</div></div>
+          <div class="kpi-card"><div class="kpi-ic">⏱️</div><div class="kpi-v">45 นาที</div><div class="kpi-l">MTTD เฉลี่ย</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">ทีม Cybersecurity ETDA</div>
+          <div id="cyber-staff-content">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+              <div style="border:2px solid var(--primary4);border-radius:10px;padding:14px;background:#e0f2f1">
+                <div style="font-weight:700;font-size:13px;color:var(--primary)">SOC Team (Security Operations)</div>
+                <div style="font-size:12px;color:var(--sub);margin-top:6px">Monitor 24/7 · 80 คน</div>
+                <div class="pb" style="margin-top:8px"><div class="pf teal" style="width:85%"></div></div>
+                <div style="font-size:11px;margin-top:4px;color:var(--sub)">ความพร้อม 85%</div>
+              </div>
+              <div style="border:2px solid var(--navy3);border-radius:10px;padding:14px;background:#eff6ff">
+                <div style="font-weight:700;font-size:13px;color:var(--navy1)">CERT-TH (Computer Emergency)</div>
+                <div style="font-size:12px;color:var(--sub);margin-top:6px">รับมือเหตุฉุกเฉิน · 45 คน</div>
+                <div class="pb" style="margin-top:8px"><div class="pf teal" style="width:92%"></div></div>
+                <div style="font-size:11px;margin-top:4px;color:var(--sub)">ความพร้อม 92%</div>
+              </div>
+              <div style="border:2px solid var(--gold);border-radius:10px;padding:14px;background:#fffbeb">
+                <div style="font-weight:700;font-size:13px;color:#92400e">Penetration Testing Team</div>
+                <div style="font-size:12px;color:var(--sub);margin-top:6px">ทดสอบเจาะระบบ · 25 คน</div>
+                <div class="pb" style="margin-top:8px"><div class="pf gold" style="width:78%"></div></div>
+                <div style="font-size:11px;margin-top:4px;color:var(--sub)">ความพร้อม 78%</div>
+              </div>
+              <div style="border:2px solid var(--purple);border-radius:10px;padding:14px;background:#f5f3ff">
+                <div style="font-weight:700;font-size:13px;color:var(--purple)">Digital Forensics</div>
+                <div style="font-size:12px;color:var(--sub);margin-top:6px">นิติวิทยาศาสตร์ดิจิทัล · 30 คน</div>
+                <div class="pb" style="margin-top:8px"><div class="pf" style="width:70%;background:var(--purple)"></div></div>
+                <div style="font-size:11px;margin-top:4px;color:var(--sub)">ความพร้อม 70%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page" id="page-people-agencies">
+        <div class="sect-title">หน่วยงาน 6 แห่ง MDES</div>
+        <div class="sect-sub">โครงสร้างองค์กรและสายงานบังคับบัญชา</div>
+        <div id="agencies-org-chart">
+          <div style="text-align:center;font-size:13px;min-width:900px;overflow-x:auto;padding:10px">
+            <div style="background:var(--primary);color:#fff;padding:12px 24px;border-radius:10px;display:inline-block;margin-bottom:10px;font-weight:700">🏛️ กระทรวงดิจิทัลเพื่อเศรษฐกิจและสังคม (MDES/ดศ.)</div>
+            <div style="display:flex;gap:8px;justify-content:center;margin-top:8px;flex-wrap:wrap">
+              <div style="border:2px solid var(--primary3);border-radius:8px;padding:10px 14px;background:#e0f2f1;min-width:130px">🔒 ETDA (สพธอ.)<br><span style="font-size:11px;color:var(--sub)">ธุรกรรมออนไลน์+ไซเบอร์</span></div>
+              <div style="border:2px solid var(--gold);border-radius:8px;padding:10px 14px;background:#fffbeb;min-width:130px">💡 DEPA (สดช.)<br><span style="font-size:11px;color:var(--sub)">ส่งเสริมเศรษฐกิจดิจิทัล</span></div>
+              <div style="border:2px solid var(--navy3);border-radius:8px;padding:10px 14px;background:#eff6ff;min-width:130px">🏢 DGA (สรอ.)<br><span style="font-size:11px;color:var(--sub)">รัฐบาลดิจิทัล+บริการ</span></div>
+              <div style="border:2px solid var(--orange);border-radius:8px;padding:10px 14px;background:#fff7ed;min-width:130px">📡 NBTC (กสทช.)<br><span style="font-size:11px;color:var(--sub)">คลื่นความถี่+โทรคมนาคม</span></div>
+              <div style="border:2px solid var(--green1);border-radius:8px;padding:10px 14px;background:#f0fdf4;min-width:130px">📶 NT (โทรคมนาคม)<br><span style="font-size:11px;color:var(--sub)">โครงข่าย Broadband</span></div>
+              <div style="border:2px solid var(--purple);border-radius:8px;padding:10px 14px;background:#f5f3ff;min-width:130px">🔏 PDPC (คปด.)<br><span style="font-size:11px;color:var(--sub)">คุ้มครองข้อมูลส่วนบุคคล</span></div>
+            </div>
+            <div style="margin-top:14px;font-size:11px;color:var(--sub)">เส้นทึบ = สายบังคับบัญชา | NBTC/PDPC = องค์กรอิสระ (กำกับดูแล ไม่ใช่บังคับบัญชาตรง)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== BUDGET PAGES ===== -->
+      <div class="page" id="page-budget-overview">
+        <div class="sect-title">ภาพรวมงบประมาณ 26,800 ล้านบาท</div>
+        <div class="sect-sub">งบประมาณรายจ่ายปีงบประมาณ 2568 กระทรวงดิจิทัลฯ</div>
+        <div class="kpi-row">
+          <div class="kpi-card"><div class="kpi-ic">💰</div><div class="kpi-v" id="b-total">26,800ล.</div><div class="kpi-l">งบรวม FY2568</div></div>
+          <div class="kpi-card"><div class="kpi-ic">✅</div><div class="kpi-v" id="b-spent">—</div><div class="kpi-l">เบิกจ่ายแล้ว</div></div>
+          <div class="kpi-card"><div class="kpi-ic">📊</div><div class="kpi-v" id="b-pct">70%</div><div class="kpi-l">อัตราเบิกจ่าย</div></div>
+          <div class="kpi-card"><div class="kpi-ic">🔗</div><div class="kpi-v">6</div><div class="kpi-l">หน่วยงาน</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">สัดส่วนงบประมาณตามหมวดรายจ่าย</div>
+          <div class="law-note" style="font-size:11px;background:#e3f2fd;border-left:3px solid #1565c0;padding:6px 10px;margin-bottom:10px;border-radius:0 4px 4px 0">
+            ⚖️ <strong>ขั้นตอนการอนุมัติงบประมาณ</strong> — พรบ.วิธีการงบประมาณ พ.ศ. 2561 มาตรา 24–25<br>
+            <span style="color:#555;font-size:10px">🏢 หน่วยงาน → 🏛️ กระทรวง → 📋 สำนักงบประมาณ → ⚖️ ครม.อนุมัติ → 🗳️ สภาผู้แทนราษฎร → 🏅 วุฒิสภา → 📰 ราชกิจจานุเบกษา</span>
+          </div>
+          <div class="law-note" style="font-size:11px;background:#e3f2fd;border-left:3px solid #1565c0;padding:4px 8px;margin-bottom:8px">⚖️ จำแนกงบรายจ่ายตาม พรบ.วิธีการงบประมาณ 2561 มาตรา 28 (5 ประเภท) และหลักการจำแนกประเภทรายจ่าย กรมบัญชีกลาง</div>
+          <div id="budget-cat-bars"><div style="text-align:center;color:var(--sub);padding:20px">⏳ กำลังโหลด...</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">งบประมาณรายหน่วยงาน
+            <button class="btn btn-primary btn-sm" onclick="showPage('budget-agencies')">ดูรายละเอียด</button>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="tbl">
+              <thead><tr><th>หน่วยงาน</th><th>01 งบบุคลากร</th><th>02 งบดำเนินงาน</th><th>03 งบลงทุน</th><th>04 งบเงินอุดหนุน</th><th>รวม</th><th>เบิกจ่าย</th></tr></thead>
+              <tbody id="budget-agency-tbody"><tr><td colspan="7" style="text-align:center;color:var(--sub);padding:20px">⏳ กำลังโหลด...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="page" id="page-budget-agencies">
+        <div class="sect-title">งบประมาณแยกรายหน่วยงาน</div>
+        <div class="sect-sub">รายละเอียดการจัดสรรงบประมาณ 7 หน่วยงาน ภายใต้ MDES</div>
+        <div class="card">
+          <div class="card-title">รายละเอียดงบรายหน่วยงาน
+            <button class="btn btn-primary btn-sm" onclick="addBudget()">+ อัปเดตงบ</button>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="tbl">
+              <thead><tr><th>หน่วยงาน</th><th>บุคลากร</th><th>ดำเนินงาน</th><th>ลงทุน</th><th>อุดหนุน</th><th>รวม</th><th>% เบิก</th></tr></thead>
+              <tbody id="agencies-budget-tbody"><tr><td colspan="7" style="text-align:center;color:var(--sub);padding:20px">⏳ กำลังโหลด...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="page" id="page-budget-digital-fund">
+        <div class="sect-title">กองทุน Digital Economy</div>
+        <div class="sect-sub">กองทุนพัฒนาเศรษฐกิจและสังคมดิจิทัล (DEPA Fund)</div>
+        <div class="kpi-row">
+          <div class="kpi-card"><div class="kpi-ic">💎</div><div class="kpi-v">5,000ล.</div><div class="kpi-l">กองทุนรวม</div></div>
+          <div class="kpi-card"><div class="kpi-ic">🎯</div><div class="kpi-v">3,800</div><div class="kpi-l">Startups ที่รับทุน</div></div>
+          <div class="kpi-card"><div class="kpi-ic">🏭</div><div class="kpi-v">150</div><div class="kpi-l">Incubators</div></div>
+          <div class="kpi-card"><div class="kpi-ic">📈</div><div class="kpi-v">72%</div><div class="kpi-l">เบิกจ่ายแล้ว</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">ประเภทการสนับสนุน</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+            <div style="border-left:4px solid var(--primary3);padding:14px;background:var(--bg2);border-radius:0 10px 10px 0">
+              <div style="font-weight:700;font-size:13px;color:var(--primary);margin-bottom:6px">Startup Voucher Program</div>
+              <div style="font-size:12px;color:var(--sub)">สนับสนุน Startup ระยะเริ่มต้น<br>วงเงินสูงสุด 1 ล้านบาท/ราย</div>
+              <div style="font-size:15px;font-weight:800;color:var(--primary);margin-top:8px">1,200ล.</div>
+            </div>
+            <div style="border-left:4px solid var(--gold);padding:14px;background:#fffbeb;border-radius:0 10px 10px 0">
+              <div style="font-weight:700;font-size:13px;color:#92400e;margin-bottom:6px">Digital Transformation Fund</div>
+              <div style="font-size:12px;color:var(--sub)">ช่วย SME ปรับตัวสู่ดิจิทัล<br>กว่า 45,000 ราย</div>
+              <div style="font-size:15px;font-weight:800;color:var(--gold);margin-top:8px">2,100ล.</div>
+            </div>
+            <div style="border-left:4px solid var(--navy3);padding:14px;background:#eff6ff;border-radius:0 10px 10px 0">
+              <div style="font-weight:700;font-size:13px;color:var(--navy1);margin-bottom:6px">Incubator Development Fund</div>
+              <div style="font-size:12px;color:var(--sub)">สนับสนุน Incubator 150 แห่ง<br>ทั่วประเทศ</div>
+              <div style="font-size:15px;font-weight:800;color:var(--navy3);margin-top:8px">900ล.</div>
+            </div>
+            <div style="border-left:4px solid var(--purple);padding:14px;background:#f5f3ff;border-radius:0 10px 10px 0">
+              <div style="font-weight:700;font-size:13px;color:var(--purple);margin-bottom:6px">Digital Research & Innovation</div>
+              <div style="font-size:12px;color:var(--sub)">วิจัยและพัฒนา AI, Blockchain,<br>IoT ระดับชาติ</div>
+              <div style="font-size:15px;font-weight:800;color:var(--purple);margin-top:8px">800ล.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page" id="page-budget-tracking">
+        <div class="sect-title">ติดตามการเบิกจ่ายงบประมาณ</div>
+        <div class="sect-sub">ความก้าวหน้าการเบิกจ่ายรายเดือน เปรียบเทียบแผน vs จริง</div>
+        <div class="card">
+          <div class="card-title">Monthly Disbursement Tracking</div>
+          <div id="monthly-tracking-table"><div style="text-align:center;color:var(--sub);padding:20px">⏳ กำลังโหลด...</div></div>
+        </div>
+      </div>
+
+      <div class="page" id="page-budget-contracts">
+        <div class="sect-title">สัญญาจัดซื้อจัดจ้าง</div>
+        <div class="sect-sub">สัญญาทั้งหมดภายใต้ MDES ปีงบประมาณ 2568</div>
+        <div class="card">
+          <div class="card-title">รายการสัญญา
+            <button class="btn btn-primary btn-sm" onclick="addContract()">+ เพิ่มสัญญา</button>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="tbl">
+              <thead><tr><th>ผู้รับจ้าง</th><th>ประเภท</th><th>งาน</th><th>อัตราเดือน</th><th>ปีงบ</th><th>วงเงิน (บ.)</th><th>วิธีจัดซื้อ</th><th>เลข e-GP</th></tr></thead>
+              <tbody id="contracts-tbody"><tr><td colspan="8" style="text-align:center;color:var(--sub);padding:20px">⏳ กำลังโหลด...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PROJECT PAGES ===== -->
+      <div class="page" id="page-proj-overview">
+        <div class="sect-title">ภาพรวมโครงการ MDES</div>
+        <div class="sect-sub">โครงการ Digital Transformation สำคัญ ปีงบประมาณ 2568</div>
+        <div class="kpi-row">
+          <div class="kpi-card"><div class="kpi-ic">📁</div><div class="kpi-v" id="proj-total">—</div><div class="kpi-l">โครงการทั้งหมด</div></div>
+          <div class="kpi-card"><div class="kpi-ic">🟢</div><div class="kpi-v" id="proj-ontrack">—</div><div class="kpi-l">ตามแผน</div></div>
+          <div class="kpi-card"><div class="kpi-ic">🟡</div><div class="kpi-v" id="proj-risk">—</div><div class="kpi-l">เสี่ยงล่าช้า</div></div>
+          <div class="kpi-card"><div class="kpi-ic">✅</div><div class="kpi-v" id="proj-done">—</div><div class="kpi-l">เสร็จสิ้น</div></div>
+          <div class="kpi-card"><div class="kpi-ic">📊</div><div class="kpi-v" id="proj-avg">—</div><div class="kpi-l">ความก้าวหน้าเฉลี่ย</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">สรุปโครงการทั้งหมด
+            <button class="btn btn-primary btn-sm" onclick="addProject()">+ เพิ่มโครงการ</button>
+          </div>
+          <div class="law-note" style="font-size:11px;background:#e8f5e9;border-left:3px solid #2e7d32;padding:6px 10px;margin-bottom:10px;border-radius:0 4px 4px 0">
+            ⚖️ <strong>กระบวนการโครงการตามกฎหมาย</strong> — พรบ.การจัดซื้อจัดจ้างฯ 2560 + พรบ.วิธีการงบประมาณ 2561<br>
+            <span style="color:#555;font-size:10px">📋 จัดทำโครงการ → 💰 ขอจัดสรรงบ → 🏛️ กระทรวง → สำนักงบ → ครม. → สภาฯ → 📑 ได้รับจัดสรร → 🛒 จัดซื้อ (e-bidding/เฉพาะเจาะจง) → ✅ ตรวจรับ → 💳 เบิกจ่าย GFMIS → 📊 รายงาน eMENSCR</span>
+          </div>
+          <div id="proj-summary-table"><div style="text-align:center;color:var(--sub);padding:20px">⏳ กำลังโหลด...</div></div>
+        </div>
+      </div>
+
+      <div class="page" id="page-proj-digital-transform">
+        <div class="sect-title">โครงการ Digital Transformation</div>
+        <div class="sect-sub">โครงการปรับเปลี่ยนสู่ดิจิทัลเต็มรูปแบบ</div>
+        <div class="kpi-row">
+          <div class="kpi-card"><div class="kpi-ic">💳</div><div class="kpi-v">78%</div><div class="kpi-l">Digital Wallet Progress</div></div>
+          <div class="kpi-card"><div class="kpi-ic">🏢</div><div class="kpi-v">1,200</div><div class="kpi-l">e-Gov Services (DGA)</div></div>
+          <div class="kpi-card"><div class="kpi-ic">🪪</div><div class="kpi-v">71%</div><div class="kpi-l">Digital ID Progress</div></div>
+          <div class="kpi-card"><div class="kpi-ic">📊</div><div class="kpi-v">10,000</div><div class="kpi-l">Open Datasets</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">โครงการ Digital Transformation หลัก</div>
+          <div id="digital-transform-content">
+            <div style="display:grid;gap:12px">
+              <div style="border:1px solid var(--border);border-radius:10px;padding:14px;display:flex;justify-content:space-between;align-items:center">
+                <div><div style="font-weight:700;font-size:13px">Thailand Digital Wallet Infrastructure</div><div style="font-size:12px;color:var(--sub)">สำนักงานปลัดกระทรวง ดศ. | งบ 4,500 ล้านบาท</div></div>
+                <div style="text-align:right"><div style="font-weight:800;font-size:16px;color:var(--primary)">78%</div><div class="pb" style="width:120px;margin-top:4px"><div class="pf teal" style="width:78%"></div></div></div>
+              </div>
+              <div style="border:1px solid var(--border);border-radius:10px;padding:14px;display:flex;justify-content:space-between;align-items:center">
+                <div><div style="font-weight:700;font-size:13px">e-Government Services 1,200 บริการ (DGA)</div><div style="font-size:12px;color:var(--sub)">DGA (สรอ.) | งบ 1,800 ล้านบาท</div></div>
+                <div style="text-align:right"><div style="font-weight:800;font-size:16px;color:var(--green1)">91%</div><div class="pb" style="width:120px;margin-top:4px"><div class="pf green" style="width:91%"></div></div></div>
+              </div>
+              <div style="border:1px solid var(--border);border-radius:10px;padding:14px;display:flex;justify-content:space-between;align-items:center">
+                <div><div style="font-weight:700;font-size:13px">One Data — ศูนย์ข้อมูลเปิดภาครัฐ</div><div style="font-size:12px;color:var(--sub)">DGA (สรอ.) | งบ 850 ล้านบาท</div></div>
+                <div style="text-align:right"><div style="font-weight:800;font-size:16px;color:var(--navy3)">57%</div><div class="pb" style="width:120px;margin-top:4px"><div class="pf" style="width:57%;background:var(--navy3)"></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page" id="page-proj-ai">
+        <div class="sect-title">AI Strategy 2570 — แผน AI แห่งชาติ</div>
+        <div class="sect-sub">DEPA นำขับเคลื่อน AI ระดับชาติ เป้าหมาย GDP +1.5% จาก AI ภายใน 2570</div>
+        <div class="kpi-row">
+          <div class="kpi-card"><div class="kpi-ic">🤖</div><div class="kpi-v">45%</div><div class="kpi-l">AI Strategy Progress</div></div>
+          <div class="kpi-card"><div class="kpi-ic">🏭</div><div class="kpi-v">100</div><div class="kpi-l">หน่วยงานเป้าหมาย AI</div></div>
+          <div class="kpi-card"><div class="kpi-ic">💰</div><div class="kpi-v">3,200ล.</div><div class="kpi-l">งบ AI Plan</div></div>
+          <div class="kpi-card"><div class="kpi-ic">📈</div><div class="kpi-v">+1.5%</div><div class="kpi-l">เป้า GDP เพิ่มจาก AI</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">แผนงาน AI Strategy 2570</div>
+          <div class="law-note" style="font-size:11px;background:#e3f2fd;border-left:3px solid #1565c0;padding:4px 8px;margin-bottom:8px">⚖️ แผนปฏิบัติราชการตาม พรบ.วิธีการงบประมาณ 2561 มาตรา 16 — สอดคล้องยุทธศาสตร์ชาติ 20 ปี → แผนพัฒนาฯ ฉ.13 → แผนปฏิบัติราชการ 5 ปี → ประจำปี</div>
+          <div style="font-size:13px;line-height:2.2">
+            <div style="border-left:3px solid var(--primary3);padding:8px 12px;margin-bottom:8px;background:var(--bg2);border-radius:0 8px 8px 0"><strong>Phase 1 (2568):</strong> สร้าง National AI Infrastructure — GPU Cloud, Data Center, AI Talent Pipeline</div>
+            <div style="border-left:3px solid var(--gold);padding:8px 12px;margin-bottom:8px;background:#fffbeb;border-radius:0 8px 8px 0"><strong>Phase 2 (2569):</strong> 100 หน่วยงานรัฐใช้ AI Decision Support · AI for Healthcare · AI for Agriculture</div>
+            <div style="border-left:3px solid var(--navy3);padding:8px 12px;margin-bottom:8px;background:#eff6ff;border-radius:0 8px 8px 0"><strong>Phase 3 (2570):</strong> GDP ดิจิทัลจาก AI +1.5% · AI Export Economy · Global AI Hub Thailand</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">โครงการ AI ที่กำลังดำเนินการ</div>
+          <div id="ai-projects-content"><div style="text-align:center;color:var(--sub);padding:20px">⏳ กำลังโหลด...</div></div>
+        </div>
+      </div>
+
+      <div class="page" id="page-proj-broadband">
+        <div class="sect-title">Broadband 77 จังหวัด</div>
+        <div class="sect-sub">NT นำขับเคลื่อนโครงข่าย Broadband ครอบคลุมทั่วประเทศ</div>
+        <div class="kpi-row">
+          <div class="kpi-card"><div class="kpi-ic">📡</div><div class="kpi-v">96.5%</div><div class="kpi-l">ครัวเรือนครอบคลุม</div></div>
+          <div class="kpi-card"><div class="kpi-ic">🎯</div><div class="kpi-v">98%</div><div class="kpi-l">เป้าหมาย 2568</div></div>
+          <div class="kpi-card"><div class="kpi-ic">💰</div><div class="kpi-v">8,900ล.</div><div class="kpi-l">งบโครงการ</div></div>
+          <div class="kpi-card"><div class="kpi-ic">📶</div><div class="kpi-v">82%</div><div class="kpi-l">ความก้าวหน้าโครงการ</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">สถานะการติดตั้ง Broadband รายภาค</div>
+          <div id="broadband-content">
+            <table class="tbl">
+              <thead><tr><th>ภาค</th><th>จังหวัด</th><th>เป้าครัวเรือน</th><th>ครอบคลุมแล้ว</th><th>%</th><th>สถานะ</th></tr></thead>
+              <tbody>
+                <tr><td>ภาคกลาง</td><td style="text-align:center">26</td><td style="text-align:right">4,200,000</td><td style="text-align:right">4,158,000</td><td><div class="pb" style="width:100px"><div class="pf teal" style="width:99%"></div></div> 99%</td><td><span class="dot-g"></span>เสร็จสิ้น</td></tr>
+                <tr><td>ภาคเหนือ</td><td style="text-align:center">17</td><td style="text-align:right">1,850,000</td><td style="text-align:right">1,795,000</td><td><div class="pb" style="width:100px"><div class="pf teal" style="width:97%"></div></div> 97%</td><td><span class="dot-g"></span>ตามแผน</td></tr>
+                <tr><td>ภาคตะวันออกเฉียงเหนือ</td><td style="text-align:center">20</td><td style="text-align:right">4,800,000</td><td style="text-align:right">4,416,000</td><td><div class="pb" style="width:100px"><div class="pf teal" style="width:92%"></div></div> 92%</td><td><span class="dot-g"></span>ตามแผน</td></tr>
+                <tr><td>ภาคใต้</td><td style="text-align:center">14</td><td style="text-align:right">2,100,000</td><td style="text-align:right">1,869,000</td><td><div class="pb" style="width:100px"><div class="pf gold" style="width:89%"></div></div> 89%</td><td><span class="dot-y"></span>ใกล้เป้า</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="page" id="page-proj-kpi">
+        <div class="sect-title">KPI Dashboard — ตัวชี้วัดสำคัญ</div>
+        <div class="sect-sub">Key Performance Indicators กระทรวงดิจิทัลฯ ปี 2568</div>
+        <div id="kpi-dashboard-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:16px">
+          <div style="text-align:center;color:var(--sub);padding:20px">⏳ กำลังโหลด...</div>
+        </div>
+      </div>
+
+      <div class="page" id="page-proj-list">
+        <div class="sect-title">รายการโครงการทั้งหมด</div>
+        <div class="sect-sub">โครงการ MDES ปีงบประมาณ 2568 ทั้งหมด</div>
+        <div class="card">
+          <div class="card-title">โครงการ MDES ทั้งหมด
+            <button class="btn btn-primary btn-sm" onclick="addProject()">+ เพิ่มโครงการ</button>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="tbl">
+              <thead><tr><th>รหัส</th><th>โครงการ</th><th>หน่วยงาน</th><th>งบ(บ.)</th><th>KPI</th><th>ความก้าวหน้า</th><th>สถานะ</th></tr></thead>
+              <tbody id="proj-list-tbody"><tr><td colspan="7" style="text-align:center;color:var(--sub);padding:20px">⏳ กำลังโหลด...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== INTEGRATION PAGES ===== -->
+      <div class="page" id="page-integ-overview">
+        <div class="sect-title">ภาพรวมบูรณาการดิจิทัล</div>
+        <div class="sect-sub">แผนบูรณาการระหว่างหน่วยงานภายใต้ MDES และพันธมิตร</div>
+        <div class="kpi-row">
+          <div class="kpi-card"><div class="kpi-ic">🔗</div><div class="kpi-v" id="integ-total">6</div><div class="kpi-l">แผนบูรณาการ</div></div>
+          <div class="kpi-card"><div class="kpi-ic">🟢</div><div class="kpi-v">6</div><div class="kpi-l">กำลังดำเนินการ</div></div>
+          <div class="kpi-card"><div class="kpi-ic">💰</div><div class="kpi-v">36,200ล.</div><div class="kpi-l">งบบูรณาการรวม</div></div>
+          <div class="kpi-card"><div class="kpi-ic">🏢</div><div class="kpi-v">20+</div><div class="kpi-l">หน่วยงานร่วม</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">ตารางแผนบูรณาการทั้งหมด</div>
+          <div id="integ-overview-table"><div style="text-align:center;color:var(--sub);padding:20px">⏳ กำลังโหลด...</div></div>
+        </div>
+      </div>
+
+      <div class="page" id="page-integ-govcloud">
+        <div class="sect-title">ข้อมูลภาครัฐ DGA — One Data</div>
+        <div class="sect-sub">DGA บริหาร Government Data Platform และ e-Services ภาครัฐ</div>
+        <div class="kpi-row">
+          <div class="kpi-card"><div class="kpi-ic">🏢</div><div class="kpi-v">1,200</div><div class="kpi-l">e-Gov Services</div></div>
+          <div class="kpi-card"><div class="kpi-ic">📊</div><div class="kpi-v">10,000</div><div class="kpi-l">Open Datasets</div></div>
+          <div class="kpi-card"><div class="kpi-ic">🪪</div><div class="kpi-v">40ล.</div><div class="kpi-l">เป้า Digital ID</div></div>
+          <div class="kpi-card"><div class="kpi-ic">☁️</div><div class="kpi-v">65%</div><div class="kpi-l">GovCloud Progress</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">สถาปัตยกรรม Government Data</div>
+          <div style="font-size:13px;line-height:2.2">
+            <div style="border-left:3px solid var(--primary3);padding:8px 12px;margin-bottom:8px;background:var(--bg2);border-radius:0 8px 8px 0"><strong>GovCloud Thailand:</strong> ศูนย์ข้อมูลภาครัฐ Tier 3+, ใช้ร่วมกัน 80% หน่วยงาน</div>
+            <div style="border-left:3px solid var(--gold);padding:8px 12px;margin-bottom:8px;background:#fffbeb;border-radius:0 8px 8px 0"><strong>One Data Platform:</strong> Data Catalog ข้อมูลเปิดภาครัฐ 10,000 datasets ให้ประชาชนเข้าถึง</div>
+            <div style="border-left:3px solid var(--navy3);padding:8px 12px;margin-bottom:8px;background:#eff6ff;border-radius:0 8px 8px 0"><strong>Digital ID / e-KYC:</strong> ร่วมกับ ETDA, PDPC, กรมการปกครอง, ธปท. — เป้า 40 ล้านคน</div>
+            <div style="border-left:3px solid var(--purple);padding:8px 12px;margin-bottom:8px;background:#f5f3ff;border-radius:0 8px 8px 0"><strong>Biz Portal:</strong> จุดเดียวลงทะเบียนธุรกิจ 50+ หน่วยงาน ดำเนินการโดย DGA</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page" id="page-integ-cyber">
+        <div class="sect-title">ความปลอดภัยไซเบอร์แห่งชาติ</div>
+        <div class="sect-sub">ETDA นำบูรณาการ National Cybersecurity ร่วมกับ NBTC, DGA, กองทัพ</div>
+        <div class="kpi-row">
+          <div class="kpi-card"><div class="kpi-ic">🛡️</div><div class="kpi-v">3,200</div><div class="kpi-l">Incidents/ปี</div></div>
+          <div class="kpi-card"><div class="kpi-ic">⏱️</div><div class="kpi-v">-50%</div><div class="kpi-l">เป้าลด Incidents</div></div>
+          <div class="kpi-card"><div class="kpi-ic">💰</div><div class="kpi-v">3,800ล.</div><div class="kpi-l">งบบูรณาการ Cyber</div></div>
+          <div class="kpi-card"><div class="kpi-ic">📊</div><div class="kpi-v">52%</div><div class="kpi-l">ความก้าวหน้า</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">National Cybersecurity Framework</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px">
+            <div style="border:1.5px solid var(--primary3);border-radius:10px;padding:12px;background:#e0f2f1">
+              <div style="font-weight:700;font-size:12px;color:var(--primary);margin-bottom:4px">IDENTIFY</div>
+              <div style="font-size:11px;color:var(--sub)">Asset Management · Risk Assessment · Governance</div>
+            </div>
+            <div style="border:1.5px solid var(--gold);border-radius:10px;padding:12px;background:#fffbeb">
+              <div style="font-weight:700;font-size:12px;color:#92400e;margin-bottom:4px">PROTECT</div>
+              <div style="font-size:11px;color:var(--sub)">Access Control · Awareness Training · Data Security</div>
+            </div>
+            <div style="border:1.5px solid var(--navy3);border-radius:10px;padding:12px;background:#eff6ff">
+              <div style="font-weight:700;font-size:12px;color:var(--navy1);margin-bottom:4px">DETECT</div>
+              <div style="font-size:11px;color:var(--sub)">SOC 24/7 · Anomaly Detection · CERT-TH</div>
+            </div>
+            <div style="border:1.5px solid var(--orange);border-radius:10px;padding:12px;background:#fff7ed">
+              <div style="font-weight:700;font-size:12px;color:#c2410c;margin-bottom:4px">RESPOND</div>
+              <div style="font-size:11px;color:var(--sub)">IR Team · Crisis Comms · Law Enforcement</div>
+            </div>
+            <div style="border:1.5px solid var(--purple);border-radius:10px;padding:12px;background:#f5f3ff">
+              <div style="font-weight:700;font-size:12px;color:var(--purple);margin-bottom:4px">RECOVER</div>
+              <div style="font-size:11px;color:var(--sub)">BCP · System Restore · Post-Incident Analysis</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page" id="page-integ-cloud">
+        <div class="sect-title">Cloud Government — GovCloud Thailand</div>
+        <div class="sect-sub">DGA + NT ร่วมพัฒนา Cloud Infrastructure ภาครัฐ</div>
+        <div class="kpi-row">
+          <div class="kpi-card"><div class="kpi-ic">☁️</div><div class="kpi-v">65%</div><div class="kpi-l">GovCloud Progress</div></div>
+          <div class="kpi-card"><div class="kpi-ic">🏢</div><div class="kpi-v">80%</div><div class="kpi-l">เป้าหน่วยงานบน Cloud</div></div>
+          <div class="kpi-card"><div class="kpi-ic">💰</div><div class="kpi-v">4,200ล.</div><div class="kpi-l">งบ GovCloud</div></div>
+          <div class="kpi-card"><div class="kpi-ic">🔐</div><div class="kpi-v">Tier 3+</div><div class="kpi-l">ระดับ Data Center</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">ความก้าวหน้า GovCloud</div>
+          <div id="cloud-gov-content">
+            <div style="font-size:13px;line-height:2.2">
+              <div style="border-left:3px solid var(--primary3);padding:8px 12px;margin-bottom:8px;background:var(--bg2);border-radius:0 8px 8px 0"><strong>Phase 1 — Foundation (เสร็จสิ้น 91%):</strong> Data Center Tier 3, Network Backbone, Security Framework</div>
+              <div style="border-left:3px solid var(--gold);padding:8px 12px;margin-bottom:8px;background:#fffbeb;border-radius:0 8px 8px 0"><strong>Phase 2 — Migration (กำลังดำเนินการ 65%):</strong> ย้าย 200 หน่วยงานสู่ GovCloud · ใช้ Hybrid Cloud model</div>
+              <div style="border-left:3px solid var(--navy3);padding:8px 12px;margin-bottom:8px;background:#eff6ff;border-radius:0 8px 8px 0"><strong>Phase 3 — Optimization (เป้า 2569):</strong> AI-driven Cloud Management · Cost Optimization · Data Sovereignty</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page" id="page-integ-plans">
+        <div class="sect-title">แผนบูรณาการทั้งหมด</div>
+        <div class="sect-sub">แผนบูรณาการดิจิทัลระหว่างหน่วยงาน ปีงบประมาณ 2568</div>
+        <div class="card">
+          <div class="card-title">แผนบูรณาการ MDES
+            <button class="btn btn-primary btn-sm" onclick="addIntegPlan()">+ เพิ่มแผน</button>
+          </div>
+          <div id="integ-plans-list"><div style="text-align:center;color:var(--sub);padding:20px">⏳ กำลังโหลด...</div></div>
+        </div>
+      </div>
+
+    </div><!-- end content -->
+  </div><!-- end main-area -->
+</div><!-- end app -->
+
+<script>
+/* ============================================================
+   MDES Management System — Data + API Layer
+   ============================================================ */
+const API_BASE = '';
+const MDES_API = `${API_BASE}/api/mdes/management`;
+const API_KEY = 'mdes2026';
+const HGET = {'x-api-key': API_KEY};
+const HPOST = {'x-api-key': API_KEY, 'Content-Type': 'application/json'};
+
+let API_PERSONNEL  = [];
+let API_BUDGET     = [];
+let API_PROJECTS   = [];
+let API_CONTRACTS  = [];
+let API_INTEGRATION= [];
+let API_SUMMARY    = null;
+let DATA_LOADED    = false;
+
+async function loadAllData() {
+  try {
+    const [sumR,perR,budR,prjR,ctrR,intR] = await Promise.allSettled([
+      fetch(`${MDES_API}/summary`, {headers:HGET}).then(r=>r.json()),
+      fetch(`${MDES_API}/personnel`, {headers:HGET}).then(r=>r.json()),
+      fetch(`${MDES_API}/budget`, {headers:HGET}).then(r=>r.json()),
+      fetch(`${MDES_API}/projects`, {headers:HGET}).then(r=>r.json()),
+      fetch(`${MDES_API}/contracts`, {headers:HGET}).then(r=>r.json()),
+      fetch(`${MDES_API}/integration`, {headers:HGET}).then(r=>r.json()),
+    ]);
+    if(sumR.status==='fulfilled'&&sumR.value.ok) API_SUMMARY    = sumR.value.summary;
+    if(perR.status==='fulfilled'&&perR.value.ok) API_PERSONNEL  = perR.value.people||[];
+    if(budR.status==='fulfilled'&&budR.value.ok) API_BUDGET     = budR.value.agencies||[];
+    if(prjR.status==='fulfilled'&&prjR.value.ok) API_PROJECTS   = prjR.value.projects||[];
+    if(ctrR.status==='fulfilled'&&ctrR.value.ok) API_CONTRACTS  = ctrR.value.contracts||[];
+    if(intR.status==='fulfilled'&&intR.value.ok) API_INTEGRATION= intR.value.plans||[];
+    DATA_LOADED = true;
+    console.log('[MDES] Data loaded — personnel:',API_PERSONNEL.length,'budget:',API_BUDGET.length,'projects:',API_PROJECTS.length);
+  } catch(e) {
+    console.error('[MDES] loadAllData error:',e);
+  }
+}
+</script>
+
+<script>
+/* ── LOGIN ── */
+let _selectedRole = null;
+function selRole(r) {
+  _selectedRole = r;
+  document.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('active'));
+  const btn=document.getElementById('r-'+r); if(btn) btn.classList.add('active');
+}
+async function doLogin() {
+  if (!_selectedRole) { alert('กรุณาเลือกระดับการเข้าใช้งาน'); return; }
+  const pw = document.getElementById('pw').value;
+  if (pw !== 'mdes2026') { alert('รหัสผ่านไม่ถูกต้อง'); return; }
+  const btn = document.querySelector('.lc-btn');
+  if(btn){ btn.textContent='⏳ กำลังโหลดข้อมูล...'; btn.disabled=true; }
+  STATE.role = _selectedRole;
+  const labels = {minister:'ปลัดกระทรวง ดศ.',etda:'ผู้บริหาร ETDA (สพธอ.)',depa:'ผู้บริหาร DEPA (สดช.)',dga:'ผู้บริหาร DGA (สรอ.)',nbtc:'ผู้บริหาร NBTC (กสทช.)',officer:'เจ้าหน้าที่ดิจิทัล'};
+  await loadAllData();
+  document.getElementById('login').style.display='none';
+  document.getElementById('app').style.display='flex';
+  document.getElementById('tbUser').textContent = labels[_selectedRole]||_selectedRole;
+  switchDim('people');
+}
+function doLogout() {
+  _selectedRole=null; STATE.role=null;
+  document.getElementById('app').style.display='none';
+  document.getElementById('login').style.display='flex';
+  document.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('active'));
+  const btn=document.querySelector('.lc-btn'); if(btn){btn.textContent='🔐 เข้าสู่ระบบ';btn.disabled=false;}
+  document.getElementById('pw').value='';
+}
+
+/* ── STATE ── */
+let STATE = {role:null, curDim:'people', curPage:'people-overview'};
+
+/* ── NAVIGATION ── */
+function switchDim(dim) {
+  STATE.curDim = dim;
+  document.querySelectorAll('.dim-tab').forEach(t=>t.classList.toggle('active',t.dataset.dim===dim));
+  ['people','budget','projects','integration'].forEach(d=>{
+    const el=document.getElementById('sb-'+d); if(el) el.style.display = d===dim?'block':'none';
+  });
+  const firstPage = {people:'people-overview',budget:'budget-overview',projects:'proj-overview',integration:'integ-overview'}[dim];
+  showPage(firstPage);
+}
+function showPage(pg) {
+  STATE.curPage = pg;
+  document.querySelectorAll('.page').forEach(p=>{p.classList.remove('active');p.style.display='none';});
+  const el=document.getElementById('page-'+pg);
+  if(el){el.classList.add('active');el.style.display='block';}
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.toggle('active',i.dataset.page===pg));
+  renderPage(pg);
+}
+
+/* ── PAGE ROUTER ── */
+function renderPage(pg) {
+  const fn = {
+    'people-overview':      renderPeopleOverview,
+    'people-list':          renderPeopleList,
+    'people-digital':       renderPeopleDigital,
+    'people-cyber':         ()=>{},
+    'people-agencies':      ()=>{},
+    'budget-overview':      renderBudgetOverview,
+    'budget-agencies':      renderBudgetAgencies,
+    'budget-digital-fund':  ()=>{},
+    'budget-tracking':      renderBudgetTracking,
+    'budget-contracts':     renderBudgetContracts,
+    'proj-overview':        renderProjOverview,
+    'proj-digital-transform':()=>{},
+    'proj-ai':              renderProjAI,
+    'proj-broadband':       ()=>{},
+    'proj-kpi':             renderProjKPI,
+    'proj-list':            renderProjList,
+    'integ-overview':       renderIntegOverview,
+    'integ-govcloud':       ()=>{},
+    'integ-cyber':          ()=>{},
+    'integ-cloud':          ()=>{},
+    'integ-plans':          renderIntegPlans,
+  }[pg];
+  if(fn) fn();
+}
+</script>
+
+<script>
+/* ── PEOPLE RENDERERS ── */
+function fmtM(n) { return (Number(n||0)/1e6).toFixed(1)+'ล.'; }
+
+function renderPeopleOverview() {
+  if(API_SUMMARY) {
+    const p = API_SUMMARY.personnel;
+    document.getElementById('kpi-total').textContent   = (p.total||8500).toLocaleString('th-TH');
+    document.getElementById('kpi-civil').textContent   = (p.civil||5800).toLocaleString('th-TH');
+    document.getElementById('kpi-govemp').textContent  = (p.govEmp||1500).toLocaleString('th-TH');
+    document.getElementById('kpi-contract').textContent= (p.contract||1200).toLocaleString('th-TH');
+  }
+  const tbody = document.getElementById('people-agency-table');
+  if(!tbody) return;
+  if(!DATA_LOADED){ tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--sub);padding:20px">⏳ กำลังโหลดข้อมูล...</td></tr>'; return; }
+  const agMap = {};
+  API_PERSONNEL.forEach(p=>{
+    const k=p.agency_name||'ไม่ระบุ';
+    if(!agMap[k]) agMap[k]={name:k,civil:0,govEmp:0,state:0,contract:0};
+    if(p.employee_type==='ข้าราชการ') agMap[k].civil++;
+    else if(p.employee_type==='พนักงานราชการ') agMap[k].govEmp++;
+    else if(p.employee_type==='พนักงานรัฐวิสาหกิจ') agMap[k].state++;
+    else agMap[k].contract++;
+  });
+  const agencies = Object.values(agMap);
+  if(agencies.length===0){ tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--sub);padding:20px">ไม่มีข้อมูล</td></tr>'; return; }
+  tbody.innerHTML = agencies.map(ag=>`
+    <tr>
+      <td><strong>${ag.name}</strong></td>
+      <td><span class="level-chip lc-teal">หน่วยงาน ดศ.</span></td>
+      <td style="text-align:center">${ag.civil}</td>
+      <td style="text-align:center">${ag.govEmp+ag.state}</td>
+      <td style="text-align:center;color:var(--primary);font-weight:600">${ag.contract}</td>
+      <td style="text-align:center;font-weight:700">${ag.civil+ag.govEmp+ag.state+ag.contract}</td>
+    </tr>`).join('');
+}
+
+function renderPeopleList() {
+  const typeColor = {'ข้าราชการ':'lc-central','พนักงานราชการ':'lc-region','พนักงานรัฐวิสาหกิจ':'lc-teal','จ้างเหมาบริการ':'lc-indep'};
+  const tbody = document.getElementById('people-tbody');
+  if(!tbody) return;
+  tbody.innerHTML = API_PERSONNEL.length===0
+    ? `<tr><td colspan="6" style="text-align:center;color:var(--sub);padding:20px">${DATA_LOADED?'ไม่มีข้อมูล':'⏳ กำลังโหลด...'}</td></tr>`
+    : API_PERSONNEL.map(p=>`
+    <tr>
+      <td>${p.full_name||'—'}</td>
+      <td><span class="level-chip ${typeColor[p.employee_type]||'lc-local'}">${p.employee_type||'—'}</span></td>
+      <td>${p.position||'—'}</td>
+      <td>${p.agency_name||'—'}</td>
+      <td>${p.position_level||'—'}</td>
+      <td><span class="dot-g"></span>${p.status||'ปฏิบัติงาน'}</td>
+    </tr>`).join('');
+}
+
+function renderPeopleDigital() {
+  const content = document.getElementById('digital-staff-content');
+  if(!content) return;
+  const digital = API_PERSONNEL.filter(p=>p.position&&(p.position.includes('เทคโนโลยีสารสนเทศ')||p.position.includes('Cloud')||p.position.includes('AI')||p.position.includes('วิชาการ')||p.position.includes('IT')||p.position.includes('ดิจิทัล')));
+  content.innerHTML = digital.length===0
+    ? `<div style="text-align:center;color:var(--sub);padding:20px">${DATA_LOADED?'ไม่มีข้อมูล':'⏳ กำลังโหลด...'}</div>`
+    : `<table class="tbl"><thead><tr><th>ชื่อ</th><th>ตำแหน่ง</th><th>หน่วยงาน</th><th>ระดับ</th></tr></thead><tbody>
+      ${digital.map(p=>`<tr><td>${p.full_name||'—'}</td><td>${p.position||'—'}</td><td>${p.agency_name||'—'}</td><td>${p.position_level||'—'}</td></tr>`).join('')}
+      </tbody></table>`;
+}
+
+async function addPerson() {
+  const name = prompt('ชื่อ-นามสกุล:'); if(!name) return;
+  const agency = prompt('หน่วยงาน (เช่น ETDA/DEPA/DGA/NBTC/NT/PDPC):'); if(!agency) return;
+  const type = prompt('ประเภท: ข้าราชการ / พนักงานราชการ / พนักงานรัฐวิสาหกิจ')||'ข้าราชการ';
+  const pos = prompt('ตำแหน่ง:')||'';
+  try {
+    const r = await fetch(`${MDES_API}/personnel`,{method:'POST',headers:HPOST,
+      body:JSON.stringify({full_name:name,agency_name:agency,employee_type:type,position:pos,status:'ปฏิบัติงาน'})});
+    const d = await r.json();
+    if(d.ok){ alert('✅ บันทึกสำเร็จ'); await loadAllData(); renderPage(STATE.curPage); }
+    else alert('❌ เกิดข้อผิดพลาด: '+d.error);
+  } catch(e){ alert('❌ ไม่สามารถเชื่อมต่อ API'); }
+}
+</script>
+
+<script>
+/* ── BUDGET RENDERERS ── */
+function renderBudgetOverview() {
+  const data = API_BUDGET;
+  if(!DATA_LOADED){ document.getElementById('b-total').textContent='⏳'; return; }
+  const tot = data.reduce((a,b)=>({
+    p:a.p+Number(b.personnel_budget||0), o:a.o+Number(b.operating_budget||0),
+    c:a.c+Number(b.capital_budget||0), s:a.s+Number(b.subsidy_budget||0), x:a.x+Number(b.other_budget||0)
+  }),{p:0,o:0,c:0,s:0,x:0});
+  const grand = tot.p+tot.o+tot.c+tot.s+tot.x || 26800000000;
+  const avgPct = data.length>0 ? Math.round(data.reduce((a,b)=>a+Number(b.disbursed_pct||0),0)/data.length) : 70;
+  document.getElementById('b-total').textContent  = fmtM(grand);
+  document.getElementById('b-spent').textContent  = fmtM(grand*avgPct/100);
+  document.getElementById('b-pct').textContent    = avgPct+'%';
+  const cats=[
+    {label:'งบบุคลากร',val:tot.p,color:'var(--primary)'},
+    {label:'งบดำเนินงาน',val:tot.o,color:'var(--primary3)'},
+    {label:'งบลงทุน',val:tot.c,color:'var(--gold)'},
+    {label:'งบเงินอุดหนุน',val:tot.s,color:'var(--orange)'},
+    {label:'งบรายจ่ายอื่น',val:tot.x,color:'var(--purple)'},
+  ];
+  document.getElementById('budget-cat-bars').innerHTML = cats.map(c=>{
+    const pct=grand>0?Math.round(c.val/grand*100):0;
+    return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+      <div style="width:120px;font-size:13px">${c.label}</div>
+      <div class="pb" style="flex:1"><div class="pf" style="width:${pct}%;background:${c.color}"></div></div>
+      <div style="width:70px;text-align:right;font-size:13px;font-weight:700">${fmtM(c.val)}</div>
+      <div style="width:35px;font-size:12px;color:var(--sub)">${pct}%</div>
+    </div>`;}).join('');
+  const tbody=document.getElementById('budget-agency-tbody');
+  if(!tbody) return;
+  tbody.innerHTML = data.length===0
+    ? '<tr><td colspan="7" style="text-align:center;color:var(--sub);padding:20px">ไม่มีข้อมูล</td></tr>'
+    : data.map(b=>{
+      const tot2=Number(b.personnel_budget||0)+Number(b.operating_budget||0)+Number(b.capital_budget||0)+Number(b.subsidy_budget||0)+Number(b.other_budget||0);
+      const pct=Number(b.disbursed_pct||0);
+      const sc=pct>=75?'var(--green2)':pct>=60?'var(--gold)':'var(--red)';
+      return `<tr>
+        <td><strong>${b.agency_name||'—'}</strong></td>
+        <td style="text-align:right">${fmtM(b.personnel_budget)}</td>
+        <td style="text-align:right">${fmtM(b.operating_budget)}</td>
+        <td style="text-align:right">${fmtM(b.capital_budget)}</td>
+        <td style="text-align:right">${Number(b.subsidy_budget||0)>0?fmtM(b.subsidy_budget):'—'}</td>
+        <td style="text-align:right;font-weight:700">${fmtM(tot2)}</td>
+        <td><div style="display:flex;align-items:center;gap:6px">
+          <div class="pb" style="width:80px"><div class="pf" style="width:${pct}%;background:${sc}"></div></div>
+          <span style="font-size:12px;font-weight:700;color:${sc}">${pct}%</span>
+        </div></td>
+      </tr>`;}).join('');
+}
+
+function renderBudgetAgencies() {
+  const tbody=document.getElementById('agencies-budget-tbody');
+  if(!tbody) return;
+  const data = API_BUDGET;
+  tbody.innerHTML = data.length===0
+    ? '<tr><td colspan="7" style="text-align:center;color:var(--sub);padding:20px">ไม่มีข้อมูล</td></tr>'
+    : data.map(b=>{
+      const tot=Number(b.personnel_budget||0)+Number(b.operating_budget||0)+Number(b.capital_budget||0)+Number(b.subsidy_budget||0)+Number(b.other_budget||0);
+      const pct=Number(b.disbursed_pct||0);
+      const sc=pct>=75?'var(--green2)':pct>=60?'var(--gold)':'var(--red)';
+      return `<tr>
+        <td><strong>${b.agency_name||'—'}</strong></td>
+        <td style="text-align:right">${fmtM(b.personnel_budget)}</td>
+        <td style="text-align:right">${fmtM(b.operating_budget)}</td>
+        <td style="text-align:right">${fmtM(b.capital_budget)}</td>
+        <td style="text-align:right">${Number(b.subsidy_budget||0)>0?fmtM(b.subsidy_budget):'—'}</td>
+        <td style="text-align:right;font-weight:700">${fmtM(tot)}</td>
+        <td><div style="display:flex;align-items:center;gap:6px">
+          <div class="pb" style="width:80px"><div class="pf" style="width:${pct}%;background:${sc}"></div></div>
+          <span style="font-size:12px;font-weight:700;color:${sc}">${pct}%</span>
+        </div></td>
+      </tr>`;}).join('');
+}
+
+function renderBudgetTracking() {
+  const months=['ต.ค.','พ.ย.','ธ.ค.','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.'];
+  const plan=[8,16,25,34,43,52,61,68];
+  const actual=[7,15,23,32,40,49,58,63];
+  document.getElementById('monthly-tracking-table').innerHTML=`
+    <table class="tbl"><thead><tr><th>เดือน</th><th>เป้า(%)</th><th>จริง(%)</th><th>สถานะ</th><th>Progress</th></tr></thead><tbody>
+    ${months.map((m,i)=>`<tr>
+      <td>${m} 2568</td>
+      <td style="text-align:center">${plan[i]}%</td>
+      <td style="text-align:center;font-weight:700;color:${actual[i]>=plan[i]-3?'var(--green1)':'var(--red)'}">${actual[i]}%</td>
+      <td>${actual[i]>=plan[i]-3?'<span class="dot-g"></span>ตามแผน':'<span class="dot-r"></span>ล่าช้า'}</td>
+      <td><div class="pb" style="width:160px"><div class="pf green" style="width:${actual[i]}%"></div></div></td>
+    </tr>`).join('')}</tbody></table>`;
+}
+
+function renderBudgetContracts() {
+  const methodColor={'เฉพาะเจาะจง':'lc-local','สืบราคา':'lc-region','ประกวดราคา':'lc-central'};
+  const tbody=document.getElementById('contracts-tbody');
+  if(!tbody) return;
+  tbody.innerHTML = API_CONTRACTS.length===0
+    ? `<tr><td colspan="8" style="text-align:center;color:var(--sub);padding:20px">${DATA_LOADED?'ไม่มีข้อมูล':'⏳ กำลังโหลด...'}</td></tr>`
+    : API_CONTRACTS.map(c=>`<tr>
+      <td>${c.contractor_name||'—'}</td>
+      <td><span class="level-chip lc-indep">${c.contract_type||'—'}</span></td>
+      <td>${c.work_description||'—'}<br><span style="font-size:11px;color:var(--sub)">${c.agency_name||''}</span></td>
+      <td style="text-align:right">${c.monthly_rate?Number(c.monthly_rate).toLocaleString('th-TH')+' บ./เดือน':'—'}</td>
+      <td style="text-align:center">${c.fiscal_year||'2568'}</td>
+      <td style="text-align:right;font-weight:700">${c.total_amount?Number(c.total_amount).toLocaleString('th-TH'):'—'}</td>
+      <td><span class="level-chip ${methodColor[c.procurement_method]||'lc-local'}">${c.procurement_method||'—'}</span></td>
+      <td style="font-size:11px;color:var(--sub)">${c.egp_number||'—'}</td>
+    </tr>`).join('');
+}
+
+async function addBudget() {
+  const agency = prompt('หน่วยงาน (ETDA/DEPA/DGA/NBTC/NT/PDPC):'); if(!agency) return;
+  const per = prompt('งบบุคลากร (ล้านบาท):')||'0';
+  const op = prompt('งบดำเนินงาน (ล้านบาท):')||'0';
+  const cap = prompt('งบลงทุน (ล้านบาท):')||'0';
+  const sub = prompt('งบอุดหนุน (ล้านบาท) — ETDA/DEPA/NT/ทุนดิจิทัล:')||'0';
+  const xtra = prompt('งบรายจ่ายอื่น (ล้านบาท):')||'0';
+  try {
+    const r=await fetch(`${MDES_API}/budget`,{method:'POST',headers:HPOST,
+      body:JSON.stringify({agency_name:agency,personnel_budget:Number(per)*1e6,operating_budget:Number(op)*1e6,capital_budget:Number(cap)*1e6,subsidy_budget:Number(sub)*1e6,other_budget:Number(xtra)*1e6,disbursed_pct:0,year:'2568'})});
+    const d=await r.json();
+    if(d.ok){alert('✅ บันทึกสำเร็จ');await loadAllData();renderPage(STATE.curPage);}
+    else alert('❌ '+d.error);
+  } catch(e){alert('❌ ไม่สามารถเชื่อมต่อ API');}
+}
+
+async function addContract() {
+  const cname=prompt('ชื่อผู้รับจ้าง/บริษัท:'); if(!cname) return;
+  const agency=prompt('หน่วยงานผู้ว่าจ้าง:'); if(!agency) return;
+  const work=prompt('ลักษณะงาน:')||'';
+  const total=prompt('วงเงินสัญญา (บาท):')||'0';
+  const ctype=prompt('ประเภท: รายเดือน / รายวัน / รายโครงการ')||'รายโครงการ';
+  try {
+    const r=await fetch(`${MDES_API}/contracts`,{method:'POST',headers:HPOST,
+      body:JSON.stringify({contractor_name:cname,agency_name:agency,work_description:work,total_amount:Number(total),contract_type:ctype,fiscal_year:'2568',status:'มีผลบังคับ'})});
+    const d=await r.json();
+    if(d.ok){alert('✅ บันทึกสำเร็จ วิธีจัดซื้อ: '+d.procurement_method);await loadAllData();renderPage(STATE.curPage);}
+    else alert('❌ '+d.error);
+  } catch(e){alert('❌ ไม่สามารถเชื่อมต่อ API');}
+}
+</script>
+
+<script>
+/* ── PROJECT RENDERERS ── */
+function _sc(s){return s==='เสร็จสิ้น'?'var(--green2)':s==='เสี่ยงล่าช้า'?'var(--red)':'var(--primary3)';}
+function _sl(s){const m={'อยู่ระหว่างดำเนินการ':'<span class="dot-g"></span>กำลังดำเนินการ','เสี่ยงล่าช้า':'<span class="dot-y"></span>เสี่ยงล่าช้า','เสร็จสิ้น':'<span class="dot-g"></span>เสร็จสิ้น'};return m[s]||`<span class="dot-g"></span>${s||'—'}`;}
+
+function renderProjOverview() {
+  const projs=API_PROJECTS;
+  document.getElementById('proj-total').textContent   = projs.length||(DATA_LOADED?0:'…');
+  document.getElementById('proj-ontrack').textContent = projs.filter(p=>p.status==='อยู่ระหว่างดำเนินการ').length;
+  document.getElementById('proj-risk').textContent    = projs.filter(p=>p.status==='เสี่ยงล่าช้า').length;
+  document.getElementById('proj-done').textContent    = projs.filter(p=>p.status==='เสร็จสิ้น').length;
+  document.getElementById('proj-avg').textContent     = projs.length?Math.round(projs.reduce((a,p)=>a+Number(p.progress_pct||0),0)/projs.length)+'%':'—';
+  document.getElementById('proj-summary-table').innerHTML = projs.length===0
+    ? `<div style="text-align:center;color:var(--sub);padding:20px">${DATA_LOADED?'ไม่มีข้อมูล':'⏳ กำลังโหลด...'}</div>`
+    : `<table class="tbl"><thead><tr><th>รหัส</th><th>โครงการ</th><th>หน่วยงาน</th><th>งบ(ล.)</th><th>KPI</th><th>ความก้าวหน้า</th></tr></thead>
+    <tbody>${projs.map(p=>{const sc=_sc(p.status); return `<tr>
+      <td style="font-size:12px;color:var(--sub)">${p.project_code||'—'}</td>
+      <td><strong>${p.project_name||'—'}</strong></td>
+      <td>${p.agency_name||'—'}</td>
+      <td style="text-align:right">${p.budget_total?(Number(p.budget_total)/1e6).toFixed(0)+'ล.':'—'}</td>
+      <td style="font-size:12px">${p.kpi_target||'—'}</td>
+      <td><div style="display:flex;align-items:center;gap:8px">
+        <div class="pb" style="width:100px"><div class="pf" style="width:${p.progress_pct||0}%;background:${sc}"></div></div>
+        <span style="font-size:12px;font-weight:700;color:${sc}">${p.progress_pct||0}%</span>
+      </div></td>
+    </tr>`;}).join('')}</tbody></table>`;
+}
+
+function renderProjList() {
+  const tbody=document.getElementById('proj-list-tbody');
+  if(!tbody) return;
+  tbody.innerHTML = API_PROJECTS.length===0
+    ? `<tr><td colspan="7" style="text-align:center;color:var(--sub);padding:20px">${DATA_LOADED?'ไม่มีข้อมูล':'⏳ กำลังโหลด...'}</td></tr>`
+    : API_PROJECTS.map(p=>`<tr>
+      <td style="font-size:11px;color:var(--sub)">${p.project_code||'—'}</td>
+      <td>${p.project_name||'—'}</td>
+      <td>${p.agency_name||'—'}</td>
+      <td style="text-align:right">${p.budget_total?Number(p.budget_total).toLocaleString('th-TH'):'—'}</td>
+      <td style="font-size:12px">${p.kpi_target||'—'}</td>
+      <td><div class="pb" style="width:80px"><div class="pf teal" style="width:${p.progress_pct||0}%"></div></div> ${p.progress_pct||0}%</td>
+      <td>${_sl(p.status)}</td>
+    </tr>`).join('');
+}
+
+function renderProjKPI() {
+  const projs=API_PROJECTS;
+  document.getElementById('kpi-dashboard-grid').innerHTML = projs.length===0
+    ? `<div style="text-align:center;color:var(--sub);padding:20px">${DATA_LOADED?'ไม่มีข้อมูล':'⏳ กำลังโหลด...'}</div>`
+    : projs.map(p=>`
+    <div class="kpi-card" style="text-align:left">
+      <div style="font-size:11px;color:var(--sub);margin-bottom:4px">${p.project_code||'—'} — ${p.agency_name||'—'}</div>
+      <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:8px">${p.project_name||'—'}</div>
+      <div style="font-size:12px;margin-bottom:8px">🎯 ${p.kpi_target||'—'}</div>
+      <div class="pb"><div class="pf ${p.status==='เสี่ยงล่าช้า'?'red':'teal'}" style="width:${p.progress_pct||0}%"></div></div>
+      <div style="font-size:13px;font-weight:700;margin-top:6px;color:${_sc(p.status)}">${p.progress_pct||0}%</div>
+    </div>`).join('');
+}
+
+function renderProjAI() {
+  const aiProjs=API_PROJECTS.filter(p=>p.project_name&&(p.project_name.includes('AI')||p.project_name.includes('Data')));
+  document.getElementById('ai-projects-content').innerHTML = aiProjs.length===0
+    ? `<div style="text-align:center;color:var(--sub);padding:20px">${DATA_LOADED?'ไม่มีข้อมูล':'⏳ กำลังโหลด...'}</div>`
+    : `<table class="tbl"><thead><tr><th>โครงการ</th><th>หน่วยงาน</th><th>งบ</th><th>ความก้าวหน้า</th></tr></thead>
+    <tbody>${aiProjs.map(p=>`<tr>
+      <td><strong>${p.project_name||'—'}</strong></td>
+      <td>${p.agency_name||'—'}</td>
+      <td style="text-align:right">${p.budget_total?(Number(p.budget_total)/1e6).toFixed(0)+'ล.':'—'}</td>
+      <td><div style="display:flex;align-items:center;gap:8px">
+        <div class="pb" style="width:100px"><div class="pf ${p.status==='เสี่ยงล่าช้า'?'red':'teal'}" style="width:${p.progress_pct||0}%"></div></div>
+        <span style="font-size:12px;font-weight:700">${p.progress_pct||0}%</span>
+      </div></td>
+    </tr>`).join('')}</tbody></table>`;
+}
+
+async function addProject() {
+  const name=prompt('ชื่อโครงการ:'); if(!name) return;
+  const agency=prompt('หน่วยงานรับผิดชอบ (ETDA/DEPA/DGA/NBTC/NT/PDPC):'); if(!agency) return;
+  const budget=prompt('งบประมาณ (บาท):')||'0';
+  const kpi=prompt('KPI/เป้าหมาย:')||'';
+  try {
+    const r=await fetch(`${MDES_API}/projects`,{method:'POST',headers:HPOST,
+      body:JSON.stringify({project_name:name,agency_name:agency,budget_total:Number(budget),kpi_target:kpi,status:'อยู่ระหว่างดำเนินการ',progress_pct:0})});
+    const d=await r.json();
+    if(d.ok){alert('✅ บันทึกสำเร็จ รหัส: '+d.project_code);await loadAllData();renderPage(STATE.curPage);}
+    else alert('❌ '+d.error);
+  } catch(e){alert('❌ ไม่สามารถเชื่อมต่อ API');}
+}
+</script>
+
+<script>
+/* ── INTEGRATION RENDERERS ── */
+function renderIntegOverview() {
+  const plans=API_INTEGRATION;
+  if(plans.length>0) document.getElementById('integ-total').textContent=plans.length;
+  document.getElementById('integ-overview-table').innerHTML = plans.length===0
+    ? `<div style="text-align:center;color:var(--sub);padding:20px">${DATA_LOADED?'ไม่มีข้อมูล':'⏳ กำลังโหลด...'}</div>`
+    : `<table class="tbl"><thead><tr><th>รหัส</th><th>แผนบูรณาการ</th><th>หน่วยงานเจ้าภาพ</th><th>หน่วยงานร่วม</th><th>งบ</th><th>ความก้าวหน้า</th></tr></thead>
+    <tbody>${plans.map(p=>{
+      const partners=(p.partner_agencies||'').split(',').filter(Boolean).join(' · ');
+      const pct=Number(p.progress_pct||0);
+      return `<tr>
+        <td style="font-size:11px;color:var(--sub)">${p.plan_id||'—'}</td>
+        <td><strong>${p.plan_name||'—'}</strong></td>
+        <td>${p.host_agency||'—'}</td>
+        <td style="font-size:12px">${partners||'—'}</td>
+        <td style="text-align:right;font-weight:700">${p.budget?(Number(p.budget)/1e6).toFixed(0)+'ล.':'—'}</td>
+        <td><div style="display:flex;align-items:center;gap:6px">
+          <div class="pb" style="width:80px"><div class="pf gold" style="width:${pct}%"></div></div>
+          <span style="font-size:12px;font-weight:700">${pct}%</span>
+        </div></td>
+      </tr>`;}).join('')}</tbody></table>`;
+}
+
+function renderIntegPlans() {
+  const plans=API_INTEGRATION;
+  document.getElementById('integ-plans-list').innerHTML = plans.length===0
+    ? `<div style="text-align:center;color:var(--sub);padding:20px">${DATA_LOADED?'ไม่มีข้อมูล':'⏳ กำลังโหลด...'}</div>`
+    : plans.map(p=>{
+      const partners=(p.partner_agencies||'').split(',').filter(Boolean);
+      const pct=Number(p.progress_pct||0);
+      return `<div style="border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:8px">
+        <div>
+          <div style="font-size:11px;color:var(--sub)">${p.plan_id||'—'}</div>
+          <div style="font-weight:700;font-size:14px;color:var(--primary)">${p.plan_name||'—'}</div>
+          <div style="font-size:12px;color:var(--sub);margin-top:2px">เจ้าภาพ: ${p.host_agency||'—'}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-size:18px;font-weight:800;color:var(--gold)">${p.budget?(Number(p.budget)/1e6).toFixed(0)+'ล.':'—'}</div>
+          <div style="font-size:11px;color:var(--sub)">งบบูรณาการ</div>
+        </div>
+      </div>
+      <div style="font-size:12px;margin-bottom:8px">🏛️ หน่วยงานร่วม: ${partners.length?partners.map(a=>`<span style="background:var(--bg2);padding:2px 8px;border-radius:10px;margin:2px;display:inline-block">${a.trim()}</span>`).join(''):'—'}</div>
+      <div style="font-size:12px;margin-bottom:8px">🎯 KPI: <strong>${p.kpi||'—'}</strong></div>
+      <div class="pb"><div class="pf gold" style="width:${pct}%"></div></div>
+      <div style="font-size:12px;margin-top:4px;color:var(--sub)">ความก้าวหน้า ${pct}%</div>
+    </div>`;}).join('');
+}
+
+async function addIntegPlan() {
+  const pname=prompt('ชื่อแผนบูรณาการ:'); if(!pname) return;
+  const host=prompt('หน่วยงานเจ้าภาพ:'); if(!host) return;
+  const partners=prompt('หน่วยงานร่วม (คั่นด้วย ,):')||'';
+  const budget=prompt('งบบูรณาการ (บาท):')||'0';
+  const kpi=prompt('KPI หลัก:')||'';
+  try {
+    const r=await fetch(`${MDES_API}/integration`,{method:'POST',headers:HPOST,
+      body:JSON.stringify({plan_name:pname,host_agency:host,partner_agencies:partners,budget:Number(budget),kpi,progress_pct:0,status:'กำลังดำเนินการ',fiscal_year:'2568'})});
+    const d=await r.json();
+    if(d.ok){alert('✅ บันทึกแผนบูรณาการสำเร็จ');await loadAllData();renderPage(STATE.curPage);}
+    else alert('❌ '+d.error);
+  } catch(e){alert('❌ ไม่สามารถเชื่อมต่อ API');}
+}
+
+/* ── INIT ── */
+window.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('login').style.display='flex';
+  document.getElementById('app').style.display='none';
+});
+
+async function pushReportToHub() {
+  const btn = document.getElementById('hub-report-btn');
+  if(btn) { btn.disabled=true; btn.textContent='⏳ กำลังส่ง...'; }
+  const report = {
+    agencyId: 'mdes-central',
+    agencyName: 'กระทรวงดิจิทัลฯ (ส่วนกลาง)',
+    parentId: 'mdes',
+    ministryId: 'mdes',
+    level: 3,
+    reportedBy: 'system-auto',
+    kpis: [],
+    budget: { total: 0, spent: 0, remaining: 0, unit: 'ล้านบาท' },
+    personnel: { total: 0, present: 0, onLeave: 0, other: 0 },
+    projects: { total: 0, ontrack: 0, delayed: 0, completed: 0 },
+    alerts: [],
+    timestamp: new Date().toISOString()
+  };
+  // Try to pick up live values from the page
+  try {
+    const kv = (id) => { const el=document.getElementById(id); return el?(parseFloat(el.textContent.replace(/[^0-9.]/g,''))||0):0; };
+    report.budget.spent = kv('b-spent') || kv('pay-used-budget') || 0;
+    report.budget.total = kv('b-total') || 0;
+    report.personnel.total = kv('pay-total-ppl') || 0;
+  } catch(e) {}
+  try {
+    const resp = await fetch('/api/hub/report', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(report) });
+    const data = await resp.json();
+    const msg = document.getElementById('hub-report-msg');
+    if(msg) { msg.textContent = data.ok ? '✅ ส่งรายงานขึ้นระบบแล้ว — '+new Date().toLocaleTimeString('th-TH') : '❌ '+data.error; msg.style.display='block'; setTimeout(()=>{msg.style.display='none';},4000); }
+  } catch(e) {
+    const msg=document.getElementById('hub-report-msg');
+    if(msg){msg.textContent='❌ ไม่สามารถส่งได้: '+e.message;msg.style.display='block';setTimeout(()=>{msg.style.display='none';},4000);}
+  }
+  if(btn){btn.disabled=false;btn.textContent='📤 ส่งรายงานขึ้นระบบ';}
+}
+</script>
+<script>
+window.G2G_PAGE_CONFIG = {
+  pageName: 'ระบบบริหารกระทรวงดิจิทัลเพื่อเศรษฐกิจและสังคม',
+  agencyId: 'mdes-central', ministryId: 'mdes',
+  manualText: 'ระบบบริหาร ดศ. ครอบคลุม ETDA DGA ONDE DEPA CAT TOT และ NT — กำกับดูแลโครงสร้างพื้นฐานดิจิทัลของประเทศ',
+  manualSteps: [
+    '1. เลือกหมวด: คน เงิน งาน/นวัตกรรม บูรณาการ',
+    '2. หมวด งาน: ดูโครงการดิจิทัล ผลการดำเนินงาน KPI รายกรม',
+    '3. ติดตามงบลงทุนด้านโครงสร้างพื้นฐาน (เน็ตประชารัฐ 5G Cloud Gov)',
+    '4. กด 📤 ส่งรายงาน เพื่อแจ้งความคืบหน้าขึ้น Hub กระทรวง',
+    '5. ใช้ AI ผู้ช่วยวิเคราะห์ข้อมูลดิจิทัลผ่านปุ่ม 🤖 มุมขวาล่าง'
+  ]
+};
+</script>
+<script src="/access-bar.js"></script>
+<script src="/delegation.js"></script>
+</body>
+</html>

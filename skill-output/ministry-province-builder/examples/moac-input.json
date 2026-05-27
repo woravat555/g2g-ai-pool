@@ -1,0 +1,33 @@
+{
+  "namespace": "moac",
+  "name_th": "กระทรวงเกษตรและสหกรณ์",
+  "name_en": "Ministry of Agriculture and Cooperatives",
+  "kind": "ministry",
+  "theme": { "p1": "#0b3d2e", "p2": "#1b4332", "p3": "#2d6a4f", "gold": "#c9a227" },
+  "leaders": [
+    { "role_id": "minister", "role_name": "รัฐมนตรีว่าการ กษ.", "icon": "👑", "level": "minister", "reports_to": "cabinet" },
+    { "role_id": "minister-sec", "role_name": "เลขาฯ รมว.", "icon": "📝", "level": "sec", "reports_to": "minister" },
+    { "role_id": "dep-minister", "role_name": "รัฐมนตรีช่วยว่าการ กษ.", "icon": "🎖", "level": "dep-minister", "reports_to": "minister" },
+    { "role_id": "ps", "role_name": "ปลัด กษ.", "icon": "📋", "level": "ps", "reports_to": "minister" },
+    { "role_id": "deputy-ps", "role_name": "รองปลัด กษ.", "icon": "📋", "level": "deputy-ps", "reports_to": "ps" }
+  ],
+  "departments": [
+    { "code": "OPS", "name_th": "สำนักงานปลัด กษ.", "head_position": "ปลัด", "icon": "🏛", "theme_p1": "#1b4332" },
+    { "code": "DOAE", "name_th": "กรมส่งเสริมการเกษตร", "head_position": "อธิบดี", "icon": "🌾", "theme_p1": "#2d6a4f" },
+    { "code": "CPD", "name_th": "กรมส่งเสริมสหกรณ์", "head_position": "อธิบดี", "icon": "🤝", "theme_p1": "#40916c" },
+    { "code": "CAD", "name_th": "กรมตรวจบัญชีสหกรณ์", "head_position": "อธิบดี", "icon": "📊", "theme_p1": "#52b788" },
+    { "code": "DLD", "name_th": "กรมปศุสัตว์", "head_position": "อธิบดี", "icon": "🐄", "theme_p1": "#74c69d" },
+    { "code": "DOF", "name_th": "กรมประมง", "head_position": "อธิบดี", "icon": "🐟", "theme_p1": "#1e6091" },
+    { "code": "RD", "name_th": "กรมการข้าว", "head_position": "อธิบดี", "icon": "🌾", "theme_p1": "#c9a227" },
+    { "code": "DOA", "name_th": "กรมวิชาการเกษตร", "head_position": "อธิบดี", "icon": "🔬", "theme_p1": "#6a994e" },
+    { "code": "LDD", "name_th": "กรมพัฒนาที่ดิน", "head_position": "อธิบดี", "icon": "🌱", "theme_p1": "#8b5a2b" },
+    { "code": "RID", "name_th": "กรมชลประทาน", "head_position": "อธิบดี", "icon": "💧", "theme_p1": "#1976d2" },
+    { "code": "ALRO", "name_th": "ส.ป.ก.", "head_position": "เลขาธิการ", "icon": "📐", "theme_p1": "#5e35b1" },
+    { "code": "RAOT", "name_th": "กยท. (ยางพารา)", "head_position": "ผู้ว่าการ", "icon": "🌳", "theme_p1": "#2e7d32" },
+    { "code": "QSDS", "name_th": "กรมหม่อนไหม", "head_position": "อธิบดี", "icon": "🧵", "theme_p1": "#c2185b" },
+    { "code": "OAE", "name_th": "สศก.", "head_position": "เลขาธิการ", "icon": "📈", "theme_p1": "#303f9f" },
+    { "code": "ACFS", "name_th": "มกอช.", "head_position": "เลขาธิการ", "icon": "✅", "theme_p1": "#00796b" }
+  ],
+  "base_url": "https://g2g-ai-pool.fly.dev",
+  "fly_app_name": "g2g-ai-pool"
+}

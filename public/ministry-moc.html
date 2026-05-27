@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>กระทรวงพาณิชย์ — PLAT Ministry Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0b1f3a;--navy2:#152d4f;--navy3:#1e3d68;--navy4:#2a5298;
+  --gold:#c9a227;--gold2:#e8c55a;
+  --green:#1a7a3a;--green2:#2ea855;--accent:#34c785;
+  --red:#b71c1c;--red2:#c62828;--red3:#e53935;
+  --amber:#ffd54f;--amber2:#ffca28;
+  --orange:#d35400;--blue:#2980b9;--purple:#7d3c98;--teal:#0e7490;
+  --bg:#eef2f7;--surface:#fff;--border:#dde3ec;
+  --text:#1a202c;--text2:#4a5568;--text3:#718096;
+}
+body{font-family:'Sarabun','Inter',sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.55}
+a{text-decoration:none;color:inherit}
+
+.topbar{background:linear-gradient(135deg,var(--navy) 0%,var(--navy3) 100%);color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,.3);position:sticky;top:0;z-index:100}
+.tb-l{display:flex;align-items:center;gap:14px}
+.tb-logo{font-size:34px}
+.tb-titles .t1{font-size:16px;font-weight:800}
+.tb-titles .t2{font-size:11px;color:#94a8c0;margin-top:3px;letter-spacing:.04em}
+.tb-r{display:flex;align-items:center;gap:10px}
+.tb-link{font-size:11px;color:#cfd6e0;padding:6px 12px;border-radius:7px;border:1px solid rgba(255,255,255,.15)}
+.tb-link:hover{background:rgba(255,255,255,.1);color:#fff}
+.tb-link.gold{background:rgba(201,162,39,.15);border-color:var(--gold);color:var(--gold2);font-weight:700}
+
+.hero{background:linear-gradient(135deg,#7b0000 0%,var(--red2) 50%,#7b0000 100%);color:#fff;padding:40px 28px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 30%,rgba(255,213,79,.15) 0%,transparent 50%)}
+.hero-inner{max-width:1320px;margin:0 auto;position:relative;z-index:2;display:grid;grid-template-columns:2fr 1fr;gap:30px}
+@media(max-width:900px){.hero-inner{grid-template-columns:1fr}}
+.hero-eyebrow{font-size:11px;letter-spacing:.2em;color:var(--amber);font-weight:700;margin-bottom:10px;text-transform:uppercase}
+.hero-title{font-size:34px;font-weight:800;line-height:1.2;margin-bottom:10px}
+.hero-sub{font-size:14px;color:#f5c6c6;line-height:1.7;max-width:680px}
+.hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hero-stat{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:12px 14px}
+.hs-lab{font-size:10px;color:#f5c6c6;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.hs-val{font-size:20px;font-weight:800;color:var(--amber);font-family:'Inter','Sarabun',sans-serif}
+.hs-sub{font-size:10px;color:#f5c6c6;margin-top:2px}
+
+.main{max-width:1320px;margin:0 auto;padding:24px}
+
+.section{margin-top:24px}
+.sec-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:14px;gap:14px;flex-wrap:wrap}
+.sec-title{font-size:20px;font-weight:800;color:var(--navy)}
+.sec-sub{font-size:11px;color:var(--text3);max-width:600px}
+
+.card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+
+.dept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:12px}
+.dept-card{background:#fff;border:1px solid var(--border);border-radius:11px;padding:14px;border-left:4px solid var(--red)}
+.dept-card.special{border-left-color:var(--amber2);background:linear-gradient(to right,#fff8e1 0%,#fff 50%)}
+.dept-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.dept-icon{font-size:26px}
+.dept-code{font-size:9px;font-weight:700;color:var(--red);letter-spacing:.06em;text-transform:uppercase}
+.dept-name{font-size:14px;font-weight:800;color:var(--navy);line-height:1.3;margin-top:2px}
+.dept-fn{font-size:11px;color:var(--text2);line-height:1.55;margin:6px 0}
+.dept-stats{display:flex;gap:8px;margin-top:8px}
+.dept-stat{background:#f7f9fc;border-radius:6px;padding:5px 9px;font-size:10px;color:var(--text2)}
+.dept-stat b{color:var(--navy);font-weight:700}
+
+.policy-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:11px}
+.policy-card{background:linear-gradient(135deg,#fff8e1 0%,#fffde7 100%);border:1px solid #ffd54f;border-left:5px solid var(--red);border-radius:11px;padding:14px}
+.pol-name{font-size:13px;font-weight:800;color:var(--navy);margin-bottom:5px}
+.pol-desc{font-size:11px;color:var(--text2);margin-bottom:8px;line-height:1.6}
+.pol-progress-wrap{background:#e0e0e0;border-radius:6px;height:8px;margin-bottom:6px;overflow:hidden}
+.pol-progress-bar{height:8px;border-radius:6px;background:linear-gradient(90deg,var(--red) 0%,var(--red3) 100%)}
+.pol-meta{display:flex;justify-content:space-between;font-size:10px;color:var(--text3)}
+.pol-status{display:inline-block;background:rgba(183,28,28,.1);color:var(--red2);border-radius:5px;padding:2px 8px;font-size:9px;font-weight:700;margin-bottom:4px}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:11px}
+.kpi-card{background:linear-gradient(135deg,#fff 0%,#fff3e0 100%);border:1px solid #ffccbc;border-radius:11px;padding:14px 16px;text-align:center}
+.kpi-lab{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;font-weight:700;margin-bottom:8px}
+.kpi-val{font-size:26px;font-weight:800;color:var(--red);font-family:'Inter','Sarabun',sans-serif}
+.kpi-unit{font-size:11px;color:var(--text3);margin-top:2px}
+.kpi-progress{background:#e0e0e0;border-radius:4px;height:5px;margin-top:8px;overflow:hidden}
+.kpi-progress-fill{height:5px;border-radius:4px;background:linear-gradient(90deg,var(--red2),var(--red3))}
+
+.price-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+.price-table th{text-align:left;padding:9px 12px;background:#b71c1c;color:#fff;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.price-table th:first-child{border-radius:8px 0 0 0}
+.price-table th:last-child{border-radius:0 8px 0 0}
+.price-table td{padding:10px 12px;border-bottom:1px solid #f5f5f5;color:var(--text2)}
+.price-table tr:hover td{background:#fafafa}
+.price-table tr:last-child td{border-bottom:none}
+.trend-up{color:#1a7a3a;font-weight:700}
+.trend-down{color:#b71c1c;font-weight:700}
+
+.rollout-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:11px;margin-top:14px}
+.rollout-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px}
+.ro-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.ro-name{font-size:14px;font-weight:800;color:var(--navy)}
+.ro-phase{font-size:9px;font-weight:700;padding:3px 9px;border-radius:10px}
+.ph-1{background:rgba(183,28,28,.15);color:var(--red2)}
+.ph-2{background:rgba(42,82,152,.15);color:var(--navy4)}
+.ro-focus{font-size:11px;color:var(--text2);margin-bottom:10px}
+.ro-bar-wrap{background:#e0e0e0;border-radius:6px;height:8px;overflow:hidden}
+.ro-bar{height:8px;border-radius:6px;background:linear-gradient(90deg,var(--red) 0%,var(--red3) 100%)}
+.ro-pct{font-size:10px;color:var(--text3);margin-top:4px;text-align:right}
+
+.live-panel{background:#fff;border:2px solid var(--red);border-radius:14px;padding:20px;margin-top:24px}
+.live-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.live-title{font-size:18px;font-weight:800;color:var(--red)}
+.live-badge{background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.7}}
+.btn-refresh{background:linear-gradient(135deg,var(--red) 0%,var(--red2) 100%);color:#fff;border:none;padding:8px 18px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+.btn-refresh:hover{opacity:.85}
+.live-content{font-size:12px;color:var(--text2);line-height:1.7}
+
+.loader{padding:80px 20px;text-align:center;color:var(--text3)}
+.loader .sp{display:inline-block;width:40px;height:40px;border:3px solid #cbd5e0;border-top-color:var(--red);border-radius:50%;animation:sp .9s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+footer{margin-top:36px;padding:24px;text-align:center;font-size:11px;color:var(--text3);border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="tb-l">
+    <div class="tb-logo"><img class="ministry-logo-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Seal_of_Ministry_of_Commerce_%28Thailand%29.svg/250px-Seal_of_Ministry_of_Commerce_%28Thailand%29.svg.png" style="width:60px;height:60px;object-fit:contain;vertical-align:middle;margin-right:8px;" onerror="this.style.display='none'" alt="ตรากระทรวงพาณิชย์">🏪</div>
+    <div class="tb-titles">
+      <div class="t1">กระทรวงพาณิชย์ — PLAT Dashboard</div>
+      <div class="t2">Ministry of Commerce | G2G PLAT Thailand | พณ. / MOC</div>
+    </div>
+  </div>
+  <div class="tb-r">
+    <a href="/index.html" class="tb-link">← หน้าหลัก</a>
+    <a href="/ministry-agriculture.html" class="tb-link">กษ.</a>
+    <a href="/ministry-moc.html" class="tb-link gold">พณ. MOC</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">G2G PLAT — กระทรวงพาณิชย์ (MOC)</div>
+      <div class="hero-title">กระทรวงพาณิชย์<br>Ministry of Commerce</div>
+      <div class="hero-sub">ศูนย์กลางราคาสินค้าเกษตร · ส่งออกสินค้าไทย · ตลาดกลางดิจิทัล · GI สินค้าเกษตร<br>เชื่อมเกษตรกรไทยสู่ตลาดโลกผ่าน G2G AgriTech Platform</div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hs-lab">มูลค่าส่งออก</div>
+        <div class="hs-val">$285B</div>
+        <div class="hs-sub">ปี 2568 (เป้า $300B)</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hs-lab">ส่งออกเกษตร</div>
+        <div class="hs-val">22%</div>
+        <div class="hs-sub">สัดส่วนส่งออกเกษตร</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hs-lab">เกษตรกรในตลาด</div>
+        <div class="hs-val">450K</div>
+        <div class="hs-sub">ราย (เป้า 500K)</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hs-lab">ตลาดดิจิทัล</div>
+        <div class="hs-val">12B</div>
+        <div class="hs-sub">บาท E-Commerce เกษตร</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<!-- KPI SECTION -->
+<div class="section">
+  <div class="sec-head">
+    <div>
+      <div class="sec-title">📊 ตัวชี้วัดหลัก (Key KPIs)</div>
+      <div class="sec-sub">เป้าหมายการดำเนินงานกระทรวงพาณิชย์ ปี 2568</div>
+    </div>
+  </div>
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-lab">มูลค่าส่งออก</div>
+      <div class="kpi-val">$285B</div>
+      <div class="kpi-unit">เป้า $300B</div>
+      <div class="kpi-progress"><div class="kpi-progress-fill" style="width:95%"></div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-lab">ส่งออกเกษตร</div>
+      <div class="kpi-val">22%</div>
+      <div class="kpi-unit">เป้า 25%</div>
+      <div class="kpi-progress"><div class="kpi-progress-fill" style="width:88%"></div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-lab">ความเสถียรราคา</div>
+      <div class="kpi-val">88</div>
+      <div class="kpi-unit">/100 (เป้า 90)</div>
+      <div class="kpi-progress"><div class="kpi-progress-fill" style="width:98%"></div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-lab">เกษตรกรในตลาด</div>
+      <div class="kpi-val">450K</div>
+      <div class="kpi-unit">ราย (เป้า 500K)</div>
+      <div class="kpi-progress"><div class="kpi-progress-fill" style="width:90%"></div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-lab">สินค้า GI</div>
+      <div class="kpi-val">32</div>
+      <div class="kpi-unit">ชนิด (เป้า 50)</div>
+      <div class="kpi-progress"><div class="kpi-progress-fill" style="width:64%"></div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-lab">E-Commerce เกษตร</div>
+      <div class="kpi-val">12B</div>
+      <div class="kpi-unit">บาท (เป้า 20B)</div>
+      <div class="kpi-progress"><div class="kpi-progress-fill" style="width:60%"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- DEPARTMENTS -->
+<div class="section">
+  <div class="sec-head">
+    <div>
+      <div class="sec-title">🏛️ กรมและหน่วยงานในสังกัด</div>
+      <div class="sec-sub">6 กรมหลักรับผิดชอบการค้าและราคาสินค้าเกษตร</div>
+    </div>
+  </div>
+  <div class="dept-grid">
+    <div class="dept-card">
+      <div class="dept-head">
+        <div class="dept-icon">🏢</div>
+        <div>
+          <div class="dept-code">DBD</div>
+          <div class="dept-name">กรมพัฒนาธุรกิจการค้า</div>
+        </div>
+      </div>
+      <div class="dept-fn">จดทะเบียนธุรกิจ · E-Commerce · พัฒนาผู้ประกอบการค้า SME และเกษตรกรออนไลน์</div>
+      <div class="dept-stats">
+        <div class="dept-stat">งบ <b>1,800M</b></div>
+        <div class="dept-stat">บุคลากร <b>2,000</b> คน</div>
+      </div>
+    </div>
+    <div class="dept-card">
+      <div class="dept-head">
+        <div class="dept-icon">🌐</div>
+        <div>
+          <div class="dept-code">DFT</div>
+          <div class="dept-name">กรมการค้าต่างประเทศ</div>
+        </div>
+      </div>
+      <div class="dept-fn">ส่งออก/นำเข้า · ใบอนุญาต · ตรวจสอบมาตรฐานสินค้าเกษตรส่งออก · RCEP/FTA</div>
+      <div class="dept-stats">
+        <div class="dept-stat">งบ <b>2,200M</b></div>
+        <div class="dept-stat">บุคลากร <b>1,500</b> คน</div>
+      </div>
+    </div>
+    <div class="dept-card special">
+      <div class="dept-head">
+        <div class="dept-icon">🏷️</div>
+        <div>
+          <div class="dept-code">DIT</div>
+          <div class="dept-name">กรมการค้าภายใน</div>
+        </div>
+      </div>
+      <div class="dept-fn">กำกับราคาสินค้าเกษตร · คุ้มครองผู้บริโภค · ตลาดกลางสินค้าเกษตร · ดูแลความเป็นธรรมทางการค้า</div>
+      <div class="dept-stats">
+        <div class="dept-stat">งบ <b>1,500M</b></div>
+        <div class="dept-stat">บุคลากร <b>1,800</b> คน</div>
+      </div>
+    </div>
+    <div class="dept-card">
+      <div class="dept-head">
+        <div class="dept-icon">📦</div>
+        <div>
+          <div class="dept-code">DITP</div>
+          <div class="dept-name">กรมส่งเสริมการค้าระหว่างประเทศ</div>
+        </div>
+      </div>
+      <div class="dept-fn">ส่งเสริมการส่งออกสินค้าไทย · Thailand Brand · งาน Trade Fair ต่างประเทศ · ผลไม้ไทยตลาดจีน</div>
+      <div class="dept-stats">
+        <div class="dept-stat">งบ <b>3,000M</b></div>
+        <div class="dept-stat">บุคลากร <b>1,200</b> คน</div>
+      </div>
+    </div>
+    <div class="dept-card">
+      <div class="dept-head">
+        <div class="dept-icon">🔖</div>
+        <div>
+          <div class="dept-code">DIP</div>
+          <div class="dept-name">กรมทรัพย์สินทางปัญญา</div>
+        </div>
+      </div>
+      <div class="dept-fn">สิทธิบัตร · ลิขสิทธิ์ · GI (สิ่งบ่งชี้ทางภูมิศาสตร์) สินค้าเกษตรไทย 32 ชนิด</div>
+      <div class="dept-stats">
+        <div class="dept-stat">งบ <b>800M</b></div>
+        <div class="dept-stat">บุคลากร <b>900</b> คน</div>
+      </div>
+    </div>
+    <div class="dept-card special">
+      <div class="dept-head">
+        <div class="dept-icon">📈</div>
+        <div>
+          <div class="dept-code">TPSO</div>
+          <div class="dept-name">สำนักงานนโยบายและยุทธศาสตร์การค้า</div>
+        </div>
+      </div>
+      <div class="dept-fn">วิเคราะห์ราคาสินค้าเกษตร · พยากรณ์ราคาตลาด · ข้อมูลเศรษฐกิจการค้า · นโยบายราคา</div>
+      <div class="dept-stats">
+        <div class="dept-stat">งบ <b>600M</b></div>
+        <div class="dept-stat">บุคลากร <b>400</b> คน</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- COMMODITY PRICES -->
+<div class="section">
+  <div class="sec-head">
+    <div>
+      <div class="sec-title">💰 ราคาสินค้าเกษตร (อ้างอิง กรมการค้าภายใน)</div>
+      <div class="sec-sub">ราคาตลาดกลางสินค้าเกษตรล่าสุด — อัปเดต 25 พ.ค. 2569</div>
+    </div>
+  </div>
+  <div class="card">
+    <table class="price-table">
+      <thead>
+        <tr>
+          <th>สินค้าเกษตร</th>
+          <th>ราคา (บาท/กก.)</th>
+          <th>หน่วย</th>
+          <th>เปลี่ยนแปลง</th>
+          <th>แนวโน้ม</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>ยางพารา</b></td>
+          <td>68.50</td>
+          <td>กก.</td>
+          <td class="trend-up">+2.3%</td>
+          <td class="trend-up">↑ ขึ้น</td>
+        </tr>
+        <tr>
+          <td><b>ข้าวเปลือก (หอมมะลิ)</b></td>
+          <td>18.20</td>
+          <td>กก.</td>
+          <td class="trend-down">-0.5%</td>
+          <td class="trend-down">↓ ลง</td>
+        </tr>
+        <tr>
+          <td><b>มันสำปะหลัง</b></td>
+          <td>3.80</td>
+          <td>กก.</td>
+          <td class="trend-up">+1.2%</td>
+          <td class="trend-up">↑ ขึ้น</td>
+        </tr>
+        <tr>
+          <td><b>ลำไย (ชั้น 1)</b></td>
+          <td>45.00</td>
+          <td>กก.</td>
+          <td class="trend-up">+5.8%</td>
+          <td class="trend-up">↑ ขึ้น</td>
+        </tr>
+        <tr>
+          <td><b>ทุเรียน (หมอนทอง)</b></td>
+          <td>120.00</td>
+          <td>กก.</td>
+          <td class="trend-down">-3.2%</td>
+          <td class="trend-down">↓ ลง</td>
+        </tr>
+        <tr>
+          <td><b>อ้อยโรงงาน</b></td>
+          <td>1.20</td>
+          <td>กก.</td>
+          <td class="trend-up">+0.8%</td>
+          <td class="trend-up">↑ ขึ้น</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- POLICIES -->
+<div class="section">
+  <div class="sec-head">
+    <div>
+      <div class="sec-title">📋 นโยบายหลัก 6 ด้าน</div>
+      <div class="sec-sub">แผนงานสำคัญกระทรวงพาณิชย์ ปี 2568–2570</div>
+    </div>
+  </div>
+  <div class="policy-grid">
+    <div class="policy-card">
+      <div class="pol-status">กำลังดำเนินการ</div>
+      <div class="pol-name">ราคาเกษตรที่เป็นธรรม</div>
+      <div class="pol-desc">รับประกันราคาสินค้าเกษตร 10 ชนิดหลัก · งบ 3,500M บาท</div>
+      <div class="pol-progress-wrap"><div class="pol-progress-bar" style="width:75%"></div></div>
+      <div class="pol-meta"><span>ความคืบหน้า</span><span>75%</span></div>
+    </div>
+    <div class="policy-card">
+      <div class="pol-status">กำลังดำเนินการ</div>
+      <div class="pol-name">ส่งออกผลไม้ 100,000 ล้าน</div>
+      <div class="pol-desc">ขยายส่งออกผลไม้สดและแปรรูปสู่จีน/อาเซียน · งบ 2,000M บาท</div>
+      <div class="pol-progress-wrap"><div class="pol-progress-bar" style="width:62%"></div></div>
+      <div class="pol-meta"><span>ความคืบหน้า</span><span>62%</span></div>
+    </div>
+    <div class="policy-card">
+      <div class="pol-status">กำลังดำเนินการ</div>
+      <div class="pol-name">E-Commerce เกษตร</div>
+      <div class="pol-desc">แพลตฟอร์มขายสินค้าเกษตรออนไลน์ครบวงจร · งบ 1,500M บาท</div>
+      <div class="pol-progress-wrap"><div class="pol-progress-bar" style="width:55%"></div></div>
+      <div class="pol-meta"><span>ความคืบหน้า</span><span>55%</span></div>
+    </div>
+    <div class="policy-card">
+      <div class="pol-status">กำลังดำเนินการ</div>
+      <div class="pol-name">ตลาดกลางสินค้าเกษตร</div>
+      <div class="pol-desc">ตลาดกลางดิจิทัลเชื่อมเกษตรกร-ล้ง-ผู้ส่งออก · งบ 2,500M บาท</div>
+      <div class="pol-progress-wrap"><div class="pol-progress-bar" style="width:70%"></div></div>
+      <div class="pol-meta"><span>ความคืบหน้า</span><span>70%</span></div>
+    </div>
+    <div class="policy-card">
+      <div class="pol-status">กำลังดำเนินการ</div>
+      <div class="pol-name">GI สินค้าไทย</div>
+      <div class="pol-desc">สิ่งบ่งชี้ทางภูมิศาสตร์สินค้าเกษตร 50 ชนิด · งบ 800M บาท</div>
+      <div class="pol-progress-wrap"><div class="pol-progress-bar" style="width:80%"></div></div>
+      <div class="pol-meta"><span>ความคืบหน้า</span><span>80%</span></div>
+    </div>
+    <div class="policy-card">
+      <div class="pol-status" style="background:rgba(42,82,152,.1);color:var(--navy4)">เริ่มดำเนินการ</div>
+      <div class="pol-name">RCEP เกษตร</div>
+      <div class="pol-desc">เพิ่มมูลค่าส่งออกผ่าน RCEP 15% · งบ 1,200M บาท</div>
+      <div class="pol-progress-wrap"><div class="pol-progress-bar" style="width:35%"></div></div>
+      <div class="pol-meta"><span>ความคืบหน้า</span><span>35%</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- PROVINCE ROLLOUT -->
+<div class="section">
+  <div class="sec-head">
+    <div>
+      <div class="sec-title">🗺️ การขยายตลาดดิจิทัลรายจังหวัด</div>
+      <div class="sec-sub">สถานะการเชื่อมราคาตลาดสินค้าเกษตร MOC รายจังหวัด</div>
+    </div>
+  </div>
+  <div class="rollout-grid">
+    <div class="rollout-card">
+      <div class="ro-head">
+        <div class="ro-name">เชียงราย</div>
+        <div class="ro-phase ph-1">Phase 1</div>
+      </div>
+      <div class="ro-focus">ลำไย/ส้ม ราคาตลาด</div>
+      <div class="ro-bar-wrap"><div class="ro-bar" style="width:85%"></div></div>
+      <div class="ro-pct">85% สำเร็จ</div>
+    </div>
+    <div class="rollout-card">
+      <div class="ro-head">
+        <div class="ro-name">อุดรธานี</div>
+        <div class="ro-phase ph-1">Phase 1</div>
+      </div>
+      <div class="ro-focus">อ้อย/มันสำปะหลัง</div>
+      <div class="ro-bar-wrap"><div class="ro-bar" style="width:78%"></div></div>
+      <div class="ro-pct">78% สำเร็จ</div>
+    </div>
+    <div class="rollout-card">
+      <div class="ro-head">
+        <div class="ro-name">เชียงใหม่</div>
+        <div class="ro-phase ph-1">Phase 1</div>
+      </div>
+      <div class="ro-focus">ลำไย/ทุเรียนส่งออก</div>
+      <div class="ro-bar-wrap"><div class="ro-bar" style="width:90%"></div></div>
+      <div class="ro-pct">90% สำเร็จ</div>
+    </div>
+    <div class="rollout-card">
+      <div class="ro-head">
+        <div class="ro-name">ขอนแก่น</div>
+        <div class="ro-phase ph-2">Phase 2</div>
+      </div>
+      <div class="ro-focus">ยางพารา/มันสำปะหลัง</div>
+      <div class="ro-bar-wrap"><div class="ro-bar" style="width:72%"></div></div>
+      <div class="ro-pct">72% สำเร็จ</div>
+    </div>
+    <div class="rollout-card">
+      <div class="ro-head">
+        <div class="ro-name">สงขลา</div>
+        <div class="ro-phase ph-2">Phase 2</div>
+      </div>
+      <div class="ro-focus">ยางพารา/ปาล์มน้ำมัน</div>
+      <div class="ro-bar-wrap"><div class="ro-bar" style="width:68%"></div></div>
+      <div class="ro-pct">68% สำเร็จ</div>
+    </div>
+  </div>
+</div>
+
+<!-- LIVE PANEL -->
+<div id="moc-live-panel" class="live-panel">
+  <div class="live-head">
+    <div class="live-title">🔴 Live API Data — กระทรวงพาณิชย์</div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <div class="live-badge">● LIVE</div>
+      <button class="btn-refresh" onclick="loadMocLive()">🔄 รีเฟรช</button>
+    </div>
+  </div>
+  <div class="live-content" id="moc-live-content">
+    <div class="loader"><div class="sp"></div><p style="margin-top:14px">กำลังโหลดข้อมูล API...</p></div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<footer>
+  <div>G2G PLAT Thailand &mdash; กระทรวงพาณิชย์ (MOC) Dashboard &mdash; พัฒนาโดย G2G AgriTech</div>
+  <div style="margin-top:6px;color:#94a8c0">ข้อมูลอ้างอิง: กรมการค้าภายใน · กรมการค้าต่างประเทศ · กรมส่งเสริมการค้าระหว่างประเทศ · สำนักงานนโยบายและยุทธศาสตร์การค้า</div>
+</footer>
+
+<script>
+async function loadMocLive() {
+  var panel = document.getElementById('moc-live-content');
+  panel.innerHTML = '<div class="loader"><div class="sp"></div><p style="margin-top:14px">กำลังโหลด...</p></div>';
+  try {
+    var base = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://g2g-ai-pool.fly.dev';
+    var headers = {'x-api-key': 'moc2026'};
+
+    var [ovRes, kpiRes, priceRes] = await Promise.all([
+      fetch(base + '/api/moc/overview', {headers: headers}),
+      fetch(base + '/api/moc/kpis', {headers: headers}),
+      fetch(base + '/api/moc/commodity-prices', {headers: headers})
+    ]);
+
+    var ov = await ovRes.json();
+    var kpiData = await kpiRes.json();
+    var priceData = await priceRes.json();
+
+    var h = '';
+    h += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px">';
+    h += '<div style="background:#fff3e0;border-radius:8px;padding:12px;border-left:4px solid #b71c1c">';
+    h += '<div style="font-size:10px;color:#666;text-transform:uppercase;font-weight:700">กระทรวง</div>';
+    h += '<div style="font-size:15px;font-weight:800;color:#b71c1c;margin-top:4px">' + (ov.ministry ? ov.ministry.name_th : 'N/A') + '</div>';
+    h += '<div style="font-size:10px;color:#888;margin-top:2px">กรม: ' + (ov.departments_count || 0) + ' | นโยบาย: ' + (ov.policies_count || 0) + '</div>';
+    h += '</div>';
+    h += '<div style="background:#fff3e0;border-radius:8px;padding:12px;border-left:4px solid #b71c1c">';
+    h += '<div style="font-size:10px;color:#666;text-transform:uppercase;font-weight:700">ส่งออก</div>';
+    h += '<div style="font-size:15px;font-weight:800;color:#b71c1c;margin-top:4px">$' + ((ov.key_kpis && ov.key_kpis.export_value_billion_usd) || 0) + 'B</div>';
+    h += '<div style="font-size:10px;color:#888;margin-top:2px">มูลค่าส่งออกรวม</div>';
+    h += '</div>';
+    h += '<div style="background:#fff3e0;border-radius:8px;padding:12px;border-left:4px solid #b71c1c">';
+    h += '<div style="font-size:10px;color:#666;text-transform:uppercase;font-weight:700">อัปเดต</div>';
+    h += '<div style="font-size:12px;font-weight:700;color:#333;margin-top:4px">' + new Date(ov.updated_at).toLocaleString('th-TH') + '</div>';
+    h += '</div></div>';
+
+    if (kpiData.kpis && kpiData.kpis.length > 0) {
+      h += '<div style="margin-bottom:12px"><b style="color:#b71c1c">KPI Live:</b></div>';
+      h += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-bottom:16px">';
+      for (var i = 0; i < kpiData.kpis.length; i++) {
+        var k = kpiData.kpis[i];
+        var pct = k.achievement_pct || 0;
+        var barColor = pct >= 90 ? '#1a7a3a' : (pct >= 70 ? '#f57c00' : '#b71c1c');
+        h += '<div style="background:#fafafa;border:1px solid #eee;border-radius:8px;padding:10px">';
+        h += '<div style="font-size:10px;color:#666;margin-bottom:4px">' + k.name + '</div>';
+        h += '<div style="font-size:16px;font-weight:800;color:#b71c1c">' + k.value + '</div>';
+        h += '<div style="font-size:9px;color:#888;margin-bottom:4px">เป้า: ' + k.target + '</div>';
+        h += '<div style="background:#e0e0e0;border-radius:4px;height:5px"><div style="width:' + Math.min(pct, 100) + '%;height:5px;border-radius:4px;background:' + barColor + '"></div></div>';
+        h += '<div style="font-size:9px;color:' + barColor + ';text-align:right;margin-top:2px">' + pct + '%</div>';
+        h += '</div>';
+      }
+      h += '</div>';
+    }
+
+    if (priceData.prices && priceData.prices.length > 0) {
+      h += '<div style="margin-bottom:8px"><b style="color:#b71c1c">ราคาสินค้าเกษตร Live:</b></div>';
+      h += '<table style="width:100%;border-collapse:collapse;font-size:11px">';
+      h += '<tr style="background:#b71c1c;color:#fff"><th style="padding:7px;text-align:left">สินค้า</th><th style="padding:7px;text-align:right">ราคา/กก.</th><th style="padding:7px;text-align:right">เปลี่ยนแปลง</th><th style="padding:7px;text-align:center">แนวโน้ม</th></tr>';
+      for (var j = 0; j < priceData.prices.length; j++) {
+        var p = priceData.prices[j];
+        var trendColor = p.trend === 'up' ? '#1a7a3a' : '#b71c1c';
+        var trendArrow = p.trend === 'up' ? '↑' : '↓';
+        h += '<tr style="border-bottom:1px solid #f0f0f0">';
+        h += '<td style="padding:7px;font-weight:700">' + p.name + '</td>';
+        h += '<td style="padding:7px;text-align:right">' + p.price_per_kg.toFixed(2) + ' บาท</td>';
+        h += '<td style="padding:7px;text-align:right;color:' + trendColor + ';font-weight:700">' + (p.change_pct > 0 ? '+' : '') + p.change_pct + '%</td>';
+        h += '<td style="padding:7px;text-align:center;color:' + trendColor + ';font-size:16px;font-weight:700">' + trendArrow + '</td>';
+        h += '</tr>';
+      }
+      h += '</table>';
+    }
+
+    panel.innerHTML = h;
+  } catch(err) {
+    panel.innerHTML = '<div style="color:#b71c1c;padding:20px;text-align:center">เกิดข้อผิดพลาด: ' + err.message + '</div>';
+  }
+}
+
+window.addEventListener('DOMContentLoaded', function() {
+  loadMocLive();
+});
+</script>
+<a href="/management-moc.html" style="display:inline-block;margin-top:16px;background:#ffd54f;color:#b71c1c;padding:12px 24px;border-radius:8px;text-decoration:none;font-size:14px;font-weight:800">🏪 เข้าระบบบริหาร พณ. →</a>
+<script src="/access-bar.js"></script>
+</body>
+</html>

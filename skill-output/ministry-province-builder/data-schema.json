@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Ministry/Province Platform Config",
+  "type": "object",
+  "required": ["namespace", "name_th", "theme", "departments", "base_url"],
+  "properties": {
+    "namespace": { "type": "string", "pattern": "^[a-z0-9-]+$", "description": "URL-safe code, e.g. moac, mhesi, phrae" },
+    "name_th": { "type": "string" },
+    "name_en": { "type": "string" },
+    "kind": { "enum": ["ministry", "province", "municipality", "state_enterprise"] },
+    "theme": {
+      "type": "object",
+      "properties": {
+        "p1": { "type": "string", "pattern": "^#[0-9a-fA-F]{3,8}$" },
+        "p2": { "type": "string" },
+        "p3": { "type": "string" },
+        "gold": { "type": "string" }
+      },
+      "required": ["p1"]
+    },
+    "leaders": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "role_id": { "type": "string" },
+          "role_name": { "type": "string" },
+          "icon": { "type": "string" },
+          "level": { "enum": ["minister", "dep-minister", "ps", "deputy-ps", "advisor", "sec"] },
+          "reports_to": { "type": "string" },
+          "can_assign_to": { "type": "array", "items": { "type": "object" } }
+        }
+      }
+    },
+    "departments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "name_th", "head_position", "icon"],
+        "properties": {
+          "code": { "type": "string" },
+          "name_th": { "type": "string" },
+          "name_en": { "type": "string" },
+          "head_position": { "type": "string", "description": "e.g. อธิบดี, เลขาธิการ, ผู้ว่าการ" },
+          "icon": { "type": "string", "description": "1 emoji" },
+          "theme_p1": { "type": "string" },
+          "key_programs": { "type": "array", "items": { "type": "string" } },
+          "province_presence": { "type": "string" }
+        }
+      }
+    },
+    "base_url": { "type": "string", "format": "uri" },
+    "fly_app_name": { "type": "string" },
+    "policy_priorities": { "type": "array" },
+    "key_kpis": { "type": "object" }
+  }
+}

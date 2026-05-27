@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>กระทรวงการอุดมศึกษา วิทยาศาสตร์ วิจัยและนวัตกรรม — PLAT Ministry Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0b1f3a;--navy2:#152d4f;--navy3:#1e3d68;--navy4:#2a5298;
+  --gold:#c9a227;--gold2:#e8c55a;
+  --purple:#5b21b6;--purple2:#7c3aed;--purple3:#8b5cf6;--purple4:#a78bfa;
+  --green:#1a7a3a;--green2:#2ea855;--accent:#34c785;
+  --red:#c0392b;--orange:#d35400;--blue:#2980b9;--teal:#0e7490;
+  --bg:#f3f0ff;--surface:#fff;--border:#dde3ec;
+  --text:#1a202c;--text2:#4a5568;--text3:#718096;
+}
+body{font-family:'Sarabun','Inter',sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.55}
+a{text-decoration:none;color:inherit}
+
+.topbar{background:linear-gradient(135deg,#1e0a4f 0%,#3b1fa8 100%);color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,.3);position:sticky;top:0;z-index:100}
+.tb-l{display:flex;align-items:center;gap:14px}
+.tb-logo{font-size:34px}
+.tb-titles .t1{font-size:16px;font-weight:800}
+.tb-titles .t2{font-size:11px;color:#c4b5fd;margin-top:3px;letter-spacing:.04em}
+.tb-r{display:flex;align-items:center;gap:10px}
+.tb-btn{font-size:11px;color:#cfd6e0;padding:6px 12px;border-radius:7px;border:1px solid rgba(255,255,255,.15)}
+.tb-btn:hover{background:rgba(255,255,255,.1);color:#fff}
+.tb-btn.active{background:rgba(167,139,250,.25);border-color:var(--purple4);color:var(--purple4);font-weight:700}
+.tb-btn.gold{background:rgba(201,162,39,.15);border-color:var(--gold);color:var(--gold2);font-weight:700}
+
+.hero{background:linear-gradient(135deg,#1e0a4f 0%,#3b1fa8 50%,#1e0a4f 100%);color:#fff;padding:40px 28px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 30%,rgba(201,162,39,.15) 0%,transparent 50%)}
+.hero-inner{max-width:1320px;margin:0 auto;position:relative;z-index:2;display:grid;grid-template-columns:2fr 1fr;gap:30px}
+@media(max-width:900px){.hero-inner{grid-template-columns:1fr}}
+.hero-eyebrow{font-size:11px;letter-spacing:.2em;color:var(--gold2);font-weight:700;margin-bottom:10px;text-transform:uppercase}
+.hero-title{font-size:34px;font-weight:800;line-height:1.2;margin-bottom:10px}
+.hero-sub{font-size:14px;color:#c4b5fd;line-height:1.7;max-width:680px}
+.hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hero-stat{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:12px 14px}
+.hs-lab{font-size:10px;color:#c4b5fd;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.hs-val{font-size:20px;font-weight:800;color:var(--gold2);font-family:'Inter','Sarabun',sans-serif}
+.hs-sub{font-size:10px;color:#94a8c0;margin-top:2px}
+
+.main{max-width:1320px;margin:0 auto;padding:24px}
+
+.section{margin-top:24px}
+.sec-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:14px;gap:14px;flex-wrap:wrap}
+.sec-title{font-size:20px;font-weight:800;color:var(--navy)}
+.sec-sub{font-size:11px;color:var(--text3);max-width:600px}
+
+.card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+
+.dept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:12px}
+.dept-card{background:#fff;border:1px solid var(--border);border-radius:11px;padding:14px;border-left:4px solid var(--purple2)}
+.dept-card.special{border-left-color:var(--gold);background:linear-gradient(to right,#fffbeb 0%,#fff 50%)}
+.dept-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.dept-icon{font-size:26px}
+.dept-code{font-size:9px;font-weight:700;color:var(--purple2);letter-spacing:.06em;text-transform:uppercase}
+.dept-name{font-size:14px;font-weight:800;color:var(--navy);line-height:1.3;margin-top:2px}
+.dept-head-pos{font-size:10px;color:var(--text3);margin-top:1px}
+.dept-fn{font-size:11px;color:var(--text2);line-height:1.55;margin:6px 0}
+.dept-presence{font-size:10px;color:var(--text3);background:#f7f9fc;padding:6px 8px;border-radius:6px;margin-top:6px}
+.dept-progs{margin-top:8px}
+.dept-progs-lab{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.dept-progs ul{padding-left:18px;font-size:10px;color:var(--text2);line-height:1.7}
+
+.policy-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:11px}
+.policy-card{background:linear-gradient(135deg,#ede9fe 0%,#f5f3ff 100%);border:1px solid #ddd6fe;border-left:5px solid var(--purple2);border-radius:11px;padding:14px}
+.pol-name{font-size:13px;font-weight:800;color:var(--navy);margin-bottom:5px}
+.pol-meta{font-size:10px;color:var(--text2);margin-bottom:6px;line-height:1.6}
+.pol-meta b{color:var(--navy)}
+.pol-kpi{background:rgba(255,255,255,.85);border-radius:7px;padding:7px 10px;font-size:10px;color:var(--text);margin-top:6px;border-left:3px solid var(--purple2);font-weight:600}
+.pol-note{font-size:10px;color:var(--purple);margin-top:5px;font-style:italic}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:11px}
+.kpi-card{background:linear-gradient(135deg,#fff 0%,#f5f3ff 100%);border:1px solid #ddd6fe;border-radius:11px;padding:14px 16px;text-align:center}
+.kpi-lab{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;font-weight:700;margin-bottom:8px}
+.kpi-val{font-size:26px;font-weight:800;color:var(--purple2);font-family:'Inter','Sarabun',sans-serif}
+.kpi-unit{font-size:11px;color:var(--text3);margin-top:2px}
+
+.rollout{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px}
+.phase-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:11px;margin-top:14px}
+.phase-card{padding:14px;border-radius:10px;text-align:center}
+.ph-1{background:linear-gradient(135deg,#ede9fe 0%,#ddd6fe 100%);border:2px solid var(--purple2)}
+.ph-2{background:linear-gradient(135deg,#dbeafe 0%,#bfdbfe 100%);border:2px solid var(--navy4)}
+.ph-3{background:linear-gradient(135deg,#fef3c7 0%,#fde68a 100%);border:2px solid var(--gold)}
+.ph-4{background:linear-gradient(135deg,#f0fdf4 0%,#bbf7d0 100%);border:2px solid var(--green2)}
+.ph-label{font-size:11px;font-weight:800;color:var(--navy);margin-bottom:6px;text-transform:uppercase;letter-spacing:.07em}
+.ph-name{font-size:13px;font-weight:700;color:var(--navy);line-height:1.5}
+.ph-status{display:inline-block;background:rgba(255,255,255,.7);padding:3px 9px;border-radius:5px;font-size:9px;font-weight:700;color:var(--navy);margin-top:6px}
+.ph-link{display:inline-block;margin-top:7px;font-size:11px;color:var(--navy);font-weight:700;text-decoration:underline}
+
+.connection-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;margin-top:10px}
+.conn-card{background:linear-gradient(135deg,#f0fdf4 0%,#dcfce7 100%);border:1px solid #86efac;border-radius:10px;padding:12px 14px;font-size:12px;color:var(--text2);line-height:1.6}
+.conn-card b{color:var(--navy)}
+
+.sources{background:#f8fafc;border:1px dashed var(--border);border-radius:8px;padding:12px 16px;font-size:10px;color:var(--text3);margin-top:14px;text-align:left}
+.sources b{color:var(--navy)}
+.sources ul{margin-top:6px;padding-left:18px;line-height:1.7}
+
+.loader{padding:80px 20px;text-align:center;color:var(--text3)}
+.loader .sp{display:inline-block;width:40px;height:40px;border:3px solid #ddd6fe;border-top-color:var(--purple2);border-radius:50%;animation:sp .9s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+footer{margin-top:36px;padding:24px;text-align:center;font-size:11px;color:var(--text3);border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+
+<script>
+window.MINISTRY_INLINE_DATA = {"ministry_code":"MHESI","ministry_code_th":"อว.","ministry_name_th":"กระทรวงการอุดมศึกษา วิทยาศาสตร์ วิจัยและนวัตกรรม","ministry_name_en":"Ministry of Higher Education, Science, Research and Innovation","ministry_abbr":"MHESI / อว.","established":"พ.ศ. 2562 (2 พฤษภาคม 2562)","mission":"ส่งเสริมการอุดมศึกษา วิทยาศาสตร์ การวิจัย และนวัตกรรมของประเทศ เพื่อสร้างความเข้มแข็งทางปัญญา และขีดความสามารถการแข่งขันของประเทศ","vision":"ประเทศไทยมีระบบอุดมศึกษาและวิทยาศาสตร์ที่เข้มแข็ง สร้างคนดีมีคุณภาพ และนวัตกรรมที่ตอบโจทย์ประเทศ","fiscal_year_2568_budget_baht":215000000000,"personnel_count_total":180000,"university_count":170,"student_count_total":2500000,"departments":[{"code":"OPS","name_th":"สำนักงานปลัดกระทรวง อว.","head_position":"ปลัดกระทรวง","icon":"🏛️","function":"อำนวยการ ประสานนโยบาย บริหารทั่วไป"},{"code":"OHEC","name_th":"สำนักงานปลัด (การอุดมศึกษา)","head_position":"ปลัดกระทรวง","icon":"🎓","function":"กำกับดูแลมหาวิทยาลัยทั่วประเทศ 170 แห่ง","province_presence":"มหาวิทยาลัยรัฐ 80 แห่ง · เอกชน 90 แห่ง"},{"code":"NSTDA","name_th":"สำนักงานพัฒนาวิทยาศาสตร์และเทคโนโลยีแห่งชาติ (สวทช.)","head_position":"ผู้อำนวยการ","icon":"🔬","function":"วิจัยและพัฒนาเทคโนโลยี — NECTEC, BIOTEC, MTEC, NANOTEC","key_programs":["Thailand Science Park","NECTEC Digital Tech","BIOTEC เกษตรแม่นยำ","NANOTEC นาโนวัสดุ"]},{"code":"NRCT","name_th":"สำนักงานการวิจัยแห่งชาติ (วช.)","head_position":"ผู้อำนวยการ","icon":"📚","function":"บริหารทุนวิจัยแห่งชาติ — ทุน วช. + ฐานข้อมูลวิจัยไทย"},{"code":"NIA","name_th":"สำนักงานนวัตกรรมแห่งชาติ (NIA)","head_position":"ผู้อำนวยการ","icon":"💡","function":"ส่งเสริม Startup นวัตกรรม — ทุน Innovation Voucher + AgriTech Startup"},{"code":"BSID","name_th":"สำนักงานพัฒนาเศรษฐกิจจากชีวภาพแห่งชาติ (BEDO/สพภ.)","head_position":"ผู้อำนวยการ","icon":"🌿","function":"Bio-Economy พัฒนาทรัพยากรชีวภาพ"},{"code":"HAII","name_th":"สถาบันสารสนเทศทรัพยากรน้ำ (สสน.)","head_position":"ผู้อำนวยการ","icon":"💧","function":"ระบบสารสนเทศน้ำ — flood forecast + drought alert + ข้อมูลน้ำแบบ real-time"},{"code":"KURDI","name_th":"หน่วยบริหารและจัดการทุน ด้านการพัฒนาระดับพื้นที่ (บพท.)","head_position":"ผู้อำนวยการ","icon":"🗺️","function":"ทุนวิจัยพัฒนาพื้นที่ — มหาวิทยาลัยนำการพัฒนาจังหวัด"},{"code":"TSRI","name_th":"สำนักงานคณะกรรมการส่งเสริมวิทยาศาสตร์ วิจัยและนวัตกรรม (สกสว.)","head_position":"เลขาธิการ","icon":"📊","function":"กำหนดทิศทางและจัดสรรงบวิจัยและนวัตกรรมของประเทศ"},{"code":"PMUC","name_th":"หน่วยบริหารและจัดการทุน (PMU-B, PMU-C, PMU-A)","head_position":"ผู้อำนวยการ","icon":"💰","function":"PMU-A (วิชาการ) PMU-B (บัณฑิตศึกษา) PMU-C (ชุมชน/พื้นที่)"}],"policy_priorities_2568":[{"name":"Reinventing University — มหาวิทยาลัยพันธุ์ใหม่","lead_dept":"OHEC","kpi":"30 มหาวิทยาลัยเปลี่ยนรูปแบบภายในปี 2570"},{"name":"AgriTech University Hub ประจำจังหวัด","lead_dept":"KURDI + NSTDA","kpi":"76 จังหวัด × มหาวิทยาลัย Hub 1 แห่ง ภายในปี 2570","note":"เชื่อมต่อกับ PLAT — ข้อมูลเกษตรกร + AI advisory"},{"name":"อว. for BCG Economy","lead_dept":"NSTDA + NIA","kpi":"มูลค่า BCG 4.4 ล้านล้านบาท / 3.5% GDP ปี 2570"},{"name":"Startup Thailand + AgriTech","lead_dept":"NIA","kpi":"Startup ใหม่ 10,000 ราย · AgriTech Startup 500 บริษัท"},{"name":"Digital Platform มหาวิทยาลัย","lead_dept":"OPS","kpi":"170 มหาวิทยาลัยบน MyUni Platform ปี 2568"},{"name":"วิจัยเกษตรแม่นยำ (Precision Agriculture)","lead_dept":"NSTDA + BIOTEC","kpi":"พันธุ์พืชใหม่ 50 พันธุ์ · ลดต้นทุนเกษตร 20%"},{"name":"ระบบน้ำ AI — HAII + Flood/Drought","lead_dept":"HAII","kpi":"ครอบคลุม 76 จังหวัด · forecast accuracy >85%"},{"name":"PLAT × อว. — AI for Farmers","lead_dept":"OPS + NSTDA","kpi":"เกษตรกรเข้าถึงงานวิจัย 5 ล้านคน ภายในปี 2570","note":"นักวิจัยเชื่อมต่อตรงกับเกษตรกรผ่าน PLAT"}],"key_kpi_2568":{"university_count":170,"student_count":2500000,"researcher_count":85000,"research_paper_per_year":28000,"startup_count":3200,"agritech_startup":180,"budget_research_baht":80000000000,"bcg_economy_value_baht":3200000000000,"patent_per_year":4200},"mhesi_agri_connection":{"title":"อว. × เกษตร — เชื่อมต่อ PLAT","connections":["NSTDA/BIOTEC: พันธุ์พืชทนโรค ปุ๋ยชีวภาพ เกษตรแม่นยำ","HAII: ระบบเตือนภัยน้ำท่วม/แล้ง เชื่อมต่อ /api/{prov}/alerts","NIA: AgriTech Startup ใช้ข้อมูลเกษตรกรจาก PLAT","KURDI/บพท.: มหาวิทยาลัย Hub พัฒนาพืชประจำจังหวัด","มหาวิทยาลัยแม่โจ้: เชียงราย Hub เกษตรอินทรีย์","มหาวิทยาลัยอุดรธานี Hub: โคขุน+อ้อย precision farming"]},"plat_rollout_mhesi":{"phase_1_universities":["มหาวิทยาลัยแม่โจ้ (เชียงใหม่/เชียงราย)","มหาวิทยาลัยราชภัฏแพร่"],"phase_2_provinces":["เชียงราย","อุดรธานี","แพร่"],"target":"มหาวิทยาลัย Hub 76 จังหวัด ภายในปี 2570"},"_data_sources":["กระทรวง อว. — mhesi.go.th","สวทช. — nstda.or.th","สกสว. — tsri.or.th","NIA — nia.or.th","เอกสารงบประมาณรายจ่ายประจำปี 2568"],"_version":"1.0","_updated":"2026-05-25"};
+</script>
+
+<div class="topbar">
+  <div class="tb-l">
+    <div class="tb-logo"><img class="ministry-logo-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Thai_MHESI_emblem.svg/250px-Thai_MHESI_emblem.svg.png" style="width:60px;height:60px;object-fit:contain;vertical-align:middle;margin-right:8px;" onerror="this.style.display='none'" alt="ตรากระทรวง อว.">🔬</div>
+    <div class="tb-titles">
+      <div class="t1">กระทรวงการอุดมศึกษา วิทยาศาสตร์ วิจัยและนวัตกรรม</div>
+      <div class="t2">MINISTRY OF HIGHER EDUCATION, SCIENCE, RESEARCH AND INNOVATION (MHESI / อว.) · PLAT Thailand</div>
+    </div>
+  </div>
+  <div class="tb-r">
+    <a href="/phrae.html" class="tb-btn">🏔️ แพร่</a>
+    <a href="/chiangrai.html" class="tb-btn">🏔️ เชียงราย</a>
+    <a href="/udonthani.html" class="tb-btn">🌾 อุดรธานี</a>
+    <a href="/ministry-agriculture.html" class="tb-btn">🌾 กษ.</a>
+    <a href="/ministry-mhesi.html" class="tb-btn active">🔬 อว.</a>
+    <a href="/ministry-moi.html" class="tb-btn">🏛️ มท.</a>
+  </div>
+</div>
+
+<div id="content">
+  <div class="loader"><div class="sp"></div><p style="margin-top:14px">กำลังโหลดข้อมูลกระทรวง อว.…</p></div>
+</div>
+
+<footer>
+  ⚙️ <b>ministry-mhesi.html</b> · ข้อมูลจาก <code>/ministry-data/mhesi.json</code> ·
+  <a href="/ministry-agriculture.html" style="color:var(--purple2);font-weight:700">กษ. Dashboard</a> ·
+  <a href="https://g2g-ai-pool.fly.dev" style="color:var(--purple2);font-weight:700">PLAT Thailand</a>
+</footer>
+
+<script>
+const FORMAT = {
+  num: n => (n==null) ? '—' : n.toLocaleString('th-TH'),
+  baht: n => (n==null) ? '—' : n.toLocaleString('th-TH') + ' บาท',
+  millionBaht: n => (n==null) ? '—' : (n/1000000).toLocaleString('th-TH',{maximumFractionDigits:1}) + ' ล้านบาท',
+  billionBaht: n => (n==null) ? '—' : (n/1000000000).toLocaleString('th-TH',{maximumFractionDigits:2}) + ' พันล้านบาท',
+};
+
+async function load() {
+  try {
+    let d;
+    if (window.MINISTRY_INLINE_DATA) {
+      d = window.MINISTRY_INLINE_DATA;
+    } else {
+      const r = await fetch('ministry-data/mhesi.json');
+      if (!r.ok) throw new Error('Cannot load ministry data: ' + r.status);
+      d = await r.json();
+    }
+    document.title = d.ministry_name_th + ' — PLAT Thailand';
+    render(d);
+    setTimeout(loadMhesiLive, 100);
+  } catch(e) {
+    const isFile = location.protocol === 'file:';
+    document.getElementById('content').innerHTML =
+      '<div style="padding:40px;text-align:center;color:#c0392b">⚠️ ' + e.message + '</div>' +
+      (isFile ? '<div style="padding:20px;text-align:center;background:#ede9fe;margin:20px"><b>เปิดแบบ file://</b> — browser block fetch()<br>' +
+       'ใช้: <a href="https://g2g-ai-pool.fly.dev/ministry-mhesi.html">g2g-ai-pool.fly.dev/ministry-mhesi.html</a></div>' : '');
+  }
+}
+
+function render(d) {
+  document.getElementById('content').innerHTML =
+    renderHero(d) +
+    '<div id="mhesi-live-panel"><div style="padding:16px;text-align:center;color:#888;font-size:13px">กำลังโหลดข้อมูล Live จาก MHESI API…</div></div>' +
+    '<div class="main">' +
+      renderKPIs(d) +
+      renderPolicies(d) +
+      renderDepartments(d) +
+      renderRollout(d) +
+      renderAgriConnection(d) +
+      renderSources(d) +
+    '</div>';
+}
+
+function renderHero(d) {
+  return '<div class="hero"><div class="hero-inner">' +
+    '<div>' +
+      '<div class="hero-eyebrow">PLAT · กระทรวงการอุดมศึกษา วิทยาศาสตร์ วิจัยและนวัตกรรม</div>' +
+      '<div class="hero-title">🔬 ' + d.ministry_name_th + '</div>' +
+      '<div class="hero-sub"><b>วิสัยทัศน์:</b> ' + (d.vision||'') + '</div>' +
+      '<div class="hero-sub" style="margin-top:8px"><b>พันธกิจ:</b> ' + (d.mission||'') + '</div>' +
+      '<div class="hero-sub" style="margin-top:10px;font-size:11px;opacity:.85">🎓 ' + d.ministry_abbr + ' · 📅 จัดตั้ง ' + (d.established||'') + '</div>' +
+    '</div>' +
+    '<div class="hero-stats">' +
+      '<div class="hero-stat"><div class="hs-lab">งบประมาณปี 2568</div><div class="hs-val">' + FORMAT.billionBaht(d.fiscal_year_2568_budget_baht) + '</div></div>' +
+      '<div class="hero-stat"><div class="hs-lab">บุคลากร+นักศึกษา</div><div class="hs-val">' + FORMAT.num(d.personnel_count_total) + '</div><div class="hs-sub">บุคลากรทั้งกระทรวง</div></div>' +
+      '<div class="hero-stat"><div class="hs-lab">มหาวิทยาลัย</div><div class="hs-val">' + (d.university_count||0) + ' แห่ง</div><div class="hs-sub">รัฐ + เอกชน</div></div>' +
+      '<div class="hero-stat"><div class="hs-lab">นักศึกษา</div><div class="hs-val">' + FORMAT.millionBaht(d.student_count_total).replace(' ล้านบาท',' ล้านคน') + '</div><div class="hs-sub">ทั่วประเทศ</div></div>' +
+    '</div>' +
+  '</div></div>';
+}
+
+function renderKPIs(d) {
+  const k = d.key_kpi_2568 || {};
+  const items = [
+    { lab: 'มหาวิทยาลัย', val: (k.university_count||0) + ' แห่ง', sub: 'รัฐ + เอกชน' },
+    { lab: 'นักศึกษา', val: ((k.student_count||0)/1e6).toFixed(1) + ' ล้านคน', sub: 'ทั่วประเทศ' },
+    { lab: 'นักวิจัย', val: FORMAT.num(k.researcher_count), sub: 'บุคลากรวิจัย' },
+    { lab: 'บทความวิจัย/ปี', val: FORMAT.num(k.research_paper_per_year), sub: 'ตีพิมพ์นานาชาติ' },
+    { lab: 'งบวิจัย', val: FORMAT.billionBaht(k.budget_research_baht), sub: 'ปีงบ 2568' },
+    { lab: 'BCG Economy', val: ((k.bcg_economy_value_baht||0)/1e12).toFixed(1) + ' ล้านล้าน', sub: 'มูลค่า BCG' },
+    { lab: 'Startup', val: FORMAT.num(k.startup_count) + ' บริษัท', sub: 'Startup ไทย' },
+    { lab: 'AgriTech Startup', val: (k.agritech_startup||0) + ' บริษัท', sub: 'เกษตรนวัตกรรม' },
+    { lab: 'สิทธิบัตร/ปี', val: FORMAT.num(k.patent_per_year), sub: 'ผลงานวิจัย' },
+  ];
+  return '<div class="section"><div class="sec-head">' +
+    '<div><div class="sec-title">📊 ตัวชี้วัดสำคัญ อว. ปีงบประมาณ 2568</div>' +
+    '<div class="sec-sub">ข้อมูลจากเอกสารงบประมาณรายจ่ายประจำปี · สกสว. · สวทช.</div></div></div>' +
+    '<div class="kpi-grid">' +
+      items.map(i => '<div class="kpi-card">' +
+        '<div class="kpi-lab">' + i.lab + '</div>' +
+        '<div class="kpi-val">' + i.val + '</div>' +
+        '<div class="kpi-unit">' + i.sub + '</div>' +
+      '</div>').join('') +
+    '</div></div>';
+}
+
+function renderPolicies(d) {
+  const pols = d.policy_priorities_2568 || [];
+  return '<div class="section"><div class="sec-head">' +
+    '<div><div class="sec-title">🎯 นโยบายเร่งด่วน อว. ปี 2568</div>' +
+    '<div class="sec-sub">' + pols.length + ' นโยบายหลัก — ขับเคลื่อนโดย อว. และเชื่อมต่อ PLAT</div></div></div>' +
+    '<div class="policy-grid">' +
+      pols.map(p => '<div class="policy-card">' +
+        '<div class="pol-name">' + p.name + '</div>' +
+        '<div class="pol-meta">🏛️ <b>หน่วยรับผิดชอบ:</b> ' + p.lead_dept + '</div>' +
+        '<div class="pol-kpi">📈 KPI: ' + p.kpi + '</div>' +
+        (p.note ? '<div class="pol-note">💡 ' + p.note + '</div>' : '') +
+      '</div>').join('') +
+    '</div></div>';
+}
+
+function renderDepartments(d) {
+  const deps = d.departments || [];
+  return '<div class="section"><div class="sec-head">' +
+    '<div><div class="sec-title">🏛️ สำนักงาน / หน่วยงานในกระทรวง อว.</div>' +
+    '<div class="sec-sub">' + deps.length + ' หน่วยงาน (สำนักงาน + องค์การมหาชน + หน่วยบริหารทุน)</div></div></div>' +
+    '<div class="dept-grid">' +
+      deps.map(dep => {
+        const cls = dep.code === 'OPS' ? 'dept-card special' : 'dept-card';
+        const programs = (dep.key_programs||[]).length ?
+          '<div class="dept-progs"><div class="dept-progs-lab">โครงการสำคัญ</div><ul>' +
+          dep.key_programs.map(p => '<li>' + p + '</li>').join('') + '</ul></div>' : '';
+        return '<div class="' + cls + '">' +
+          '<div class="dept-head">' +
+            '<div class="dept-icon">' + (dep.icon||'🏢') + '</div>' +
+            '<div>' +
+              '<div class="dept-code">' + dep.code + '</div>' +
+              '<div class="dept-name">' + dep.name_th + '</div>' +
+              '<div class="dept-head-pos">↳ ' + (dep.head_position||'') + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="dept-fn">' + (dep.function||'') + '</div>' +
+          (dep.province_presence ? '<div class="dept-presence">📍 ' + dep.province_presence + '</div>' : '') +
+          programs +
+        '</div>';
+      }).join('') +
+    '</div></div>';
+}
+
+function renderRollout(d) {
+  const r = d.plat_rollout_mhesi || {};
+  return '<div class="section"><div class="sec-head">' +
+    '<div><div class="sec-title">🗺️ PLAT × อว. — University Hub ประจำจังหวัด</div>' +
+    '<div class="sec-sub">เป้าหมาย: ' + (r.target||'มหาวิทยาลัย Hub 76 จังหวัด ภายในปี 2570') + '</div></div></div>' +
+    '<div class="rollout">' +
+      '<div class="phase-grid">' +
+        '<div class="phase-card ph-1">' +
+          '<div class="ph-label">Phase 1 — University Pilots</div>' +
+          '<div class="ph-name">' + (r.phase_1_universities||[]).join(' · ') + '</div>' +
+          '<div class="ph-status">นำร่อง</div>' +
+        '</div>' +
+        '<div class="phase-card ph-2">' +
+          '<div class="ph-label">Phase 2 — จังหวัดนำร่อง</div>' +
+          '<div class="ph-name">' + (r.phase_2_provinces||[]).join(' · ') + '</div>' +
+          '<div class="ph-status">กำลังดำเนินการ</div>' +
+          '<br><a href="/chiangrai.html" class="ph-link">→ เชียงราย</a>&nbsp;·&nbsp;' +
+          '<a href="/phrae.html" class="ph-link">→ แพร่</a>' +
+        '</div>' +
+        '<div class="phase-card ph-3">' +
+          '<div class="ph-label">Phase 3 — ขยาย 76 จังหวัด</div>' +
+          '<div class="ph-name">มหาวิทยาลัย Hub ทุกจังหวัด</div>' +
+          '<div class="ph-status">วางแผน ปี 2569-70</div>' +
+        '</div>' +
+        '<div class="phase-card ph-4">' +
+          '<div class="ph-label">เป้าหมายสูงสุด</div>' +
+          '<div class="ph-name">เกษตรกรเข้าถึงงานวิจัย 5 ล้านคน</div>' +
+          '<div class="ph-status">ปี 2570</div>' +
+        '</div>' +
+      '</div>' +
+    '</div></div>';
+}
+
+function renderAgriConnection(d) {
+  const conn = (d.mhesi_agri_connection || {}).connections || [];
+  if (!conn.length) return '';
+  return '<div class="section"><div class="sec-head">' +
+    '<div><div class="sec-title">🌾 อว. × เกษตร — เชื่อมต่อ PLAT Thailand</div>' +
+    '<div class="sec-sub">หน่วยงาน อว. ที่เชื่อมโยงโดยตรงกับภาคเกษตร และข้อมูลเกษตรกรใน PLAT</div></div></div>' +
+    '<div class="connection-grid">' +
+      conn.map(c => '<div class="conn-card">' + c + '</div>').join('') +
+    '</div></div>';
+}
+
+function renderSources(d) {
+  if (!(d._data_sources && d._data_sources.length)) return '';
+  return '<div class="section"><div class="sources">' +
+    '<b>📚 แหล่งข้อมูล:</b>' +
+    '<ul>' + d._data_sources.map(s => '<li>' + s + '</li>').join('') + '</ul>' +
+    '<div style="margin-top:8px;font-size:9px;color:var(--text3)">Version ' + (d._version||'1.0') + ' · Last updated: ' + (d._updated||'—') + '</div>' +
+  '</div></div>';
+}
+
+/* === MHESI LIVE DATA === */
+async function loadMhesiLive() {
+  var BASE = 'https://g2g-ai-pool.fly.dev/api/mhesi';
+  var el = document.getElementById('mhesi-live-panel');
+  if (!el) return;
+
+  try {
+    var results = await Promise.allSettled([
+      fetch(BASE + '/overview').then(function(r){ return r.json(); }),
+      fetch(BASE + '/province-rollout').then(function(r){ return r.json(); }),
+      fetch(BASE + '/kpis').then(function(r){ return r.json(); })
+    ]);
+
+    var ov  = results[0].status === 'fulfilled' ? results[0].value : null;
+    var pv  = results[1].status === 'fulfilled' ? results[1].value : null;
+    var kpi = results[2].status === 'fulfilled' ? results[2].value : null;
+
+    var h = '<div class="section">';
+    h += '<div class="sec-head"><div><div class="sec-title">📡 ข้อมูล Live จาก PLAT API (อว.)</div>';
+    h += '<div class="sec-sub">อัปเดตอัตโนมัติ · ' + new Date().toLocaleString('th-TH') + '</div></div>';
+    h += '<button onclick="loadMhesiLive()" style="background:#5b21b6;color:#fff;border:none;border-radius:6px;padding:6px 14px;cursor:pointer;font-size:13px">🔄 รีเฟรช</button>';
+    h += '</div>';
+
+    if (pv && pv.ok) {
+      var pvs = pv.provinces || [];
+      h += '<div class="card"><div style="font-weight:800;font-size:14px;color:var(--navy);margin-bottom:12px">🗺️ สถานะ University Hub รายจังหวัด (Live)</div>';
+      if (pvs.length) {
+        h += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px">';
+        pvs.forEach(function(p) {
+          var pct = p.completion_pct || 0;
+          var statusColor = pct >= 50 ? '#5b21b6' : (pct >= 30 ? '#d97706' : '#1d4ed8');
+          h += '<div style="background:#f5f3ff;border-radius:10px;padding:14px;border-top:4px solid ' + statusColor + '">';
+          h += '<div style="font-weight:700;font-size:14px">' + p.province + '</div>';
+          h += '<div style="font-size:11px;color:#555;margin:4px 0">' + (p.notes||'') + '</div>';
+          h += '<div style="font-size:24px;font-weight:800;color:' + statusColor + ';font-family:Inter,Sarabun,sans-serif">' + pct + '%</div>';
+          h += '<div style="background:#e0e0e0;border-radius:99px;height:8px;margin-top:6px"><div style="background:' + statusColor + ';width:' + pct + '%;height:100%;border-radius:99px"></div></div>';
+          h += '</div>';
+        });
+        h += '</div>';
+      }
+      h += '</div>';
+    }
+
+    if (kpi && kpi.ok) {
+      var kpis = kpi.kpis || [];
+      h += '<div class="card" style="margin-top:14px"><div style="font-weight:800;font-size:14px;color:var(--navy);margin-bottom:12px">📊 KPI กระทรวง อว. ปีงบ 2568</div>';
+      if (kpis.length) {
+        h += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px">';
+        kpis.forEach(function(k) {
+          var pct = k.achievement_pct || 0;
+          var c = pct >= 100 ? '#5b21b6' : (pct >= 70 ? '#d97706' : '#1d4ed8');
+          h += '<div style="background:#f5f3ff;border-radius:10px;padding:12px;border-left:4px solid ' + c + '">';
+          h += '<div style="font-size:12px;color:var(--text3)">' + k.name + '</div>';
+          h += '<div style="font-size:16px;font-weight:700;color:var(--navy);margin:4px 0">' + k.value + '</div>';
+          if (k.target) h += '<div style="font-size:11px;color:#888">เป้า: ' + k.target + '</div>';
+          if (pct) {
+            h += '<div style="background:#e0e0e0;border-radius:99px;height:6px;margin-top:6px"><div style="background:' + c + ';width:' + Math.min(pct,100) + '%;height:100%;border-radius:99px"></div></div>';
+            h += '<div style="font-size:11px;color:' + c + ';font-weight:700">' + pct + '%</div>';
+          }
+          h += '</div>';
+        });
+        h += '</div>';
+      }
+      h += '</div>';
+    }
+
+    if (ov && ov.ok) {
+      h += '<div class="card" style="margin-top:14px"><div style="font-weight:800;font-size:14px;color:var(--navy);margin-bottom:12px">📋 ข้อมูลพื้นฐาน อว. (Live)</div>';
+      h += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px">';
+      var items = [
+        {lab:'งบประมาณ 2568', val: ((ov.fiscal_year_2568_budget_baht||0)/1e9).toFixed(1) + ' พันล้านบาท'},
+        {lab:'บุคลากร', val: (ov.personnel_count_total||0).toLocaleString('th-TH') + ' คน'},
+        {lab:'มหาวิทยาลัย', val: (ov.university_count||0) + ' แห่ง'},
+        {lab:'นักศึกษา', val: ((ov.student_count_total||0)/1e6).toFixed(1) + ' ล้านคน'},
+      ];
+      items.forEach(function(i) {
+        h += '<div style="background:#ede9fe;border-radius:10px;padding:12px;text-align:center">';
+        h += '<div style="font-size:11px;color:#555;margin-bottom:4px">' + i.lab + '</div>';
+        h += '<div style="font-size:18px;font-weight:800;color:#5b21b6;font-family:Inter,Sarabun,sans-serif">' + i.val + '</div>';
+        h += '</div>';
+      });
+      h += '</div></div>';
+    }
+
+    h += '</div>';
+    el.innerHTML = h;
+  } catch(e) {
+    el.innerHTML = '<div style="padding:12px;color:var(--text3);font-size:13px">ไม่สามารถโหลด Live data: ' + e.message + '</div>';
+  }
+}
+
+load();
+</script>
+<script src="/access-bar.js"></script>
+</body>
+</html>

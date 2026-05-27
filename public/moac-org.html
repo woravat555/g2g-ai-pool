@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>แผนภูมิองค์กร กระทรวงเกษตรและสหกรณ์ (กษ.)</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --p1:#0b3d2e;--p2:#1b4332;--p3:#2d6a4f;--p4:#b7e4c7;--p5:#e6f4ea;
+  --gold:#c9a227;--gold2:#e8c55a;
+  --bg:#e6f4ea;--border:#9bcaa9;
+  --white:#fff;--text:#1e293b;--sub:#56707a;
+  --blue:#1e40af;--orange:#ea580c;--red:#dc2626;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Sarabun',sans-serif}
+body{background:var(--bg);color:var(--text);min-height:100vh}
+
+.hdr{background:linear-gradient(135deg,var(--p1) 0%,var(--p2) 60%,var(--p3) 100%);color:#fff;padding:18px 30px;border-bottom:3px solid var(--gold);box-shadow:0 2px 10px rgba(0,0,0,.2);position:sticky;top:0;z-index:50}
+.hdr-inner{max-width:1500px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.hdr-left{display:flex;align-items:center;gap:14px}
+.hdr-em{width:44px;height:44px;background:rgba(255,255,255,.18);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;border:2px solid var(--gold)}
+.hdr-t1{font-size:17px;font-weight:800}
+.hdr-t2{font-size:11px;opacity:.85;margin-top:1px}
+.hdr-btn{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);color:#fff;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;text-decoration:none;font-family:inherit}
+.hdr-btn.gold{background:var(--gold);color:var(--p1);border-color:var(--gold)}
+
+.bc{padding:6px 30px;background:rgba(0,0,0,.18);font-size:11px;color:rgba(255,255,255,.85)}
+.bc a{color:#fff;text-decoration:none}
+
+.main{max-width:1500px;margin:0 auto;padding:24px 30px 50px}
+
+.intro{background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px 22px;margin-bottom:24px;border-left:5px solid var(--gold)}
+.intro h2{font-size:16px;color:var(--p1);font-weight:800;margin-bottom:6px}
+.intro p{font-size:12px;color:var(--sub);line-height:1.6}
+
+/* ORG CHART NODES */
+.org{display:flex;flex-direction:column;align-items:center;gap:0;padding:14px 0}
+.lvl{display:flex;justify-content:center;flex-wrap:wrap;gap:14px;margin-bottom:8px}
+.connector{width:2px;height:24px;background:var(--p3);margin:0 auto}
+.tier-label{font-size:10px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:1.2px;background:var(--p1);padding:4px 12px;border-radius:14px;margin-bottom:8px;display:inline-block}
+
+.node{background:#fff;border-radius:12px;padding:12px 16px;text-align:center;border:2px solid var(--border);min-width:170px;max-width:240px;box-shadow:0 2px 8px rgba(0,0,0,.06);transition:.18s;cursor:default}
+.node:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(0,0,0,.12);border-color:var(--gold)}
+.node.minister{background:linear-gradient(135deg,var(--p1),var(--p3));color:#fff;border-color:var(--gold);min-width:240px}
+.node.dep-min{background:linear-gradient(135deg,var(--p2),#52b788);color:#fff;border-color:var(--gold)}
+.node.ps{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--p1);border-color:var(--p1);min-width:200px;font-weight:700}
+.node.dep-ps{background:#fff8db;border-color:var(--gold);color:var(--p1)}
+.node.dept{background:#fff;border-color:var(--p3)}
+.node a{color:inherit;text-decoration:none;display:block}
+.node-icon{font-size:24px;margin-bottom:4px}
+.node-role{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;opacity:.85}
+.node-name{font-size:13px;font-weight:800;line-height:1.3;margin-top:2px}
+.node-sub{font-size:10px;opacity:.78;margin-top:3px;line-height:1.3}
+
+.tree-block{background:#fff;border-radius:14px;padding:20px;border:1px solid var(--border);margin-bottom:20px}
+.tree-block-title{font-size:14px;font-weight:800;color:var(--p1);margin-bottom:14px;border-bottom:2px solid var(--gold);padding-bottom:8px;display:flex;align-items:center;gap:8px}
+
+/* DEPT GRID */
+.dept-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.dept-card{background:#fff;border:1.5px solid var(--p4);border-radius:10px;padding:11px 12px;text-align:center;transition:.18s;text-decoration:none;color:var(--text);display:block}
+.dept-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.1);border-color:var(--gold)}
+.dept-card .ic{font-size:22px;margin-bottom:3px}
+.dept-card .cd{font-size:10px;color:var(--gold);font-weight:700;letter-spacing:.5px}
+.dept-card .nm{font-size:11px;color:var(--p1);font-weight:700;margin-top:2px;line-height:1.3}
+.dept-card .pos{font-size:9px;color:var(--sub);margin-top:2px}
+
+@media(max-width:900px){.dept-grid{grid-template-columns:1fr 1fr 1fr}.lvl{flex-direction:column;align-items:center}}
+@media(max-width:600px){.dept-grid{grid-template-columns:1fr 1fr}.main{padding:14px}.hdr{padding:14px}}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-inner">
+    <div class="hdr-left">
+      <div class="hdr-em">🗺️</div>
+      <div>
+        <div class="hdr-t1">แผนภูมิองค์กร กระทรวงเกษตรและสหกรณ์ (กษ.)</div>
+        <div class="hdr-t2">Organization Chart · Ministry of Agriculture and Cooperatives · พ.ร.บ.ปรับปรุงกระทรวง 2545</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:6px">
+      <a href="/moac-hub.html" class="hdr-btn">← Hub กษ.</a>
+      <a href="/moac-minister.html" class="hdr-btn gold">🏛️ แดชบอร์ดรมว.</a>
+    </div>
+  </div>
+</div>
+<div class="bc"><a href="/platform-overview.html">G2G Platform</a> › <a href="/moac-hub.html">กษ.</a> › Org Chart</div>
+
+<div class="main">
+
+<div class="intro">
+  <h2>🌾 โครงสร้างกระทรวงเกษตรและสหกรณ์</h2>
+  <p>รัฐมนตรีว่าการ → รัฐมนตรีช่วยว่าการ 2 ตำแหน่ง → ปลัดกระทรวง → รองปลัด 3 ตำแหน่ง → กรม/สำนักงาน 15 หน่วยงาน · บุคลากรรวม 32,500 คน · เกษตรกรในระบบ 8.2 ล้านคน</p>
+</div>
+
+<div class="tree-block">
+  <div class="tree-block-title">🏛️ ระดับการเมือง — Political Level</div>
+  <div class="org">
+    <span class="tier-label">Tier 1 — รัฐมนตรี</span>
+    <div class="lvl">
+      <div class="node minister">
+        <a href="/moac-minister.html">
+          <div class="node-icon">🏛️</div>
+          <div class="node-role">รัฐมนตรีว่าการ</div>
+          <div class="node-name">รัฐมนตรีว่าการ กษ.</div>
+          <div class="node-sub">กำหนดนโยบาย · ตัดสินสูงสุด</div>
+        </a>
+      </div>
+    </div>
+    <div class="connector"></div>
+    <span class="tier-label" style="background:var(--p2)">Tier 2 — รัฐมนตรีช่วย (2 ตำแหน่ง)</span>
+    <div class="lvl">
+      <div class="node dep-min">
+        <a href="/moac-dep-minister.html">
+          <div class="node-icon">🤝</div>
+          <div class="node-role">รัฐมนตรีช่วย 1</div>
+          <div class="node-name">รมช.กษ. (พืช/ปศุสัตว์)</div>
+          <div class="node-sub">DOAE · DLD · DOA · RD · QSDS · RAOT</div>
+        </a>
+      </div>
+      <div class="node dep-min">
+        <a href="/moac-dep-minister.html">
+          <div class="node-icon">💧</div>
+          <div class="node-role">รัฐมนตรีช่วย 2</div>
+          <div class="node-name">รมช.กษ. (ที่ดิน-น้ำ-สหกรณ์)</div>
+          <div class="node-sub">RID · LDD · ALRO · CPD · CAD · DOF</div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tree-block">
+  <div class="tree-block-title">⚙️ ระดับข้าราชการ — Administrative Level</div>
+  <div class="org">
+    <span class="tier-label" style="background:var(--gold);color:var(--p1)">Tier 3 — ปลัดกระทรวง</span>
+    <div class="lvl">
+      <div class="node ps">
+        <a href="/moac-ps.html">
+          <div class="node-icon">⚙️</div>
+          <div class="node-role">ปลัดกระทรวง</div>
+          <div class="node-name">ปลัด กษ.</div>
+          <div class="node-sub">บูรณาการทั้งระบบ · 32,500 คน · 15 กรม</div>
+        </a>
+      </div>
+    </div>
+    <div class="connector"></div>
+    <span class="tier-label" style="background:var(--p3)">Tier 4 — รองปลัด (3 ตำแหน่ง)</span>
+    <div class="lvl">
+      <div class="node dep-ps">
+        <a href="/moac-deputy-ps.html">
+          <div class="node-icon">🌾</div>
+          <div class="node-role">รองปลัด สายงาน 1</div>
+          <div class="node-name">พืช · ประมง · ปศุสัตว์</div>
+          <div class="node-sub">DOAE · DOA · DLD · DOF · RD · QSDS</div>
+        </a>
+      </div>
+      <div class="node dep-ps">
+        <a href="/moac-deputy-ps.html">
+          <div class="node-icon">💧</div>
+          <div class="node-role">รองปลัด สายงาน 2</div>
+          <div class="node-name">ที่ดิน · น้ำ · ปฏิรูป</div>
+          <div class="node-sub">RID · LDD · ALRO · RAOT</div>
+        </a>
+      </div>
+      <div class="node dep-ps">
+        <a href="/moac-deputy-ps.html">
+          <div class="node-icon">📊</div>
+          <div class="node-role">รองปลัด สายงาน 3</div>
+          <div class="node-name">บริหาร · เศรษฐกิจ · สหกรณ์</div>
+          <div class="node-sub">OPS · CPD · CAD · OAE · ACFS</div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tree-block">
+  <div class="tree-block-title">🏢 หน่วยงาน 15 แห่ง — Departments / Agencies</div>
+  <div class="dept-grid">
+    <a href="/moac-dept.html?dept=OPS" class="dept-card"><div class="ic">🏛️</div><div class="cd">OPS / สป.</div><div class="nm">สำนักงานปลัดกระทรวง</div><div class="pos">ปลัดกระทรวง</div></a>
+    <a href="/moac-dept.html?dept=DOAE" class="dept-card"><div class="ic">🌾</div><div class="cd">DOAE / กสก.</div><div class="nm">กรมส่งเสริมการเกษตร</div><div class="pos">อธิบดี</div></a>
+    <a href="/moac-dept.html?dept=CPD" class="dept-card"><div class="ic">🤝</div><div class="cd">CPD / กสส.</div><div class="nm">กรมส่งเสริมสหกรณ์</div><div class="pos">อธิบดี</div></a>
+    <a href="/moac-dept.html?dept=CAD" class="dept-card"><div class="ic">📊</div><div class="cd">CAD / กตส.</div><div class="nm">กรมตรวจบัญชีสหกรณ์</div><div class="pos">อธิบดี</div></a>
+    <a href="/moac-dept.html?dept=DLD" class="dept-card"><div class="ic">🐄</div><div class="cd">DLD / ปศ.</div><div class="nm">กรมปศุสัตว์</div><div class="pos">อธิบดี</div></a>
+    <a href="/moac-dept.html?dept=DOF" class="dept-card"><div class="ic">🐟</div><div class="cd">DOF / ปม.</div><div class="nm">กรมประมง</div><div class="pos">อธิบดี</div></a>
+    <a href="/moac-dept.html?dept=RD" class="dept-card"><div class="ic">🌾</div><div class="cd">RD / กข.</div><div class="nm">กรมการข้าว</div><div class="pos">อธิบดี</div></a>
+    <a href="/moac-dept.html?dept=DOA" class="dept-card"><div class="ic">🔬</div><div class="cd">DOA / กวก.</div><div class="nm">กรมวิชาการเกษตร</div><div class="pos">อธิบดี</div></a>
+    <a href="/moac-dept.html?dept=LDD" class="dept-card"><div class="ic">🌱</div><div class="cd">LDD / พด.</div><div class="nm">กรมพัฒนาที่ดิน</div><div class="pos">อธิบดี</div></a>
+    <a href="/moac-dept.html?dept=RID" class="dept-card"><div class="ic">💧</div><div class="cd">RID / ชป.</div><div class="nm">กรมชลประทาน</div><div class="pos">อธิบดี</div></a>
+    <a href="/moac-dept.html?dept=ALRO" class="dept-card"><div class="ic">📐</div><div class="cd">ALRO / ส.ป.ก.</div><div class="nm">สนง.การปฏิรูปที่ดิน</div><div class="pos">เลขาธิการ</div></a>
+    <a href="/moac-dept.html?dept=RAOT" class="dept-card"><div class="ic">🌳</div><div class="cd">RAOT / กยท.</div><div class="nm">การยางแห่งประเทศไทย</div><div class="pos">ผู้ว่าการ</div></a>
+    <a href="/moac-dept.html?dept=QSDS" class="dept-card"><div class="ic">🧵</div><div class="cd">QSDS / มม.</div><div class="nm">กรมหม่อนไหม</div><div class="pos">อธิบดี</div></a>
+    <a href="/moac-dept.html?dept=OAE" class="dept-card"><div class="ic">📈</div><div class="cd">OAE / สศก.</div><div class="nm">สนง.เศรษฐกิจการเกษตร</div><div class="pos">เลขาธิการ</div></a>
+    <a href="/moac-dept.html?dept=ACFS" class="dept-card"><div class="ic">✅</div><div class="cd">ACFS / มกอช.</div><div class="nm">มาตรฐานสินค้าเกษตร</div><div class="pos">เลขาธิการ</div></a>
+  </div>
+</div>
+
+<div class="tree-block">
+  <div class="tree-block-title">🏦 หน่วยงานในกำกับ — Affiliated State Enterprise</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+    <div style="background:#fff8db;border:1.5px solid var(--gold);border-radius:10px;padding:14px;text-align:center">
+      <div style="font-size:24px">🏦</div>
+      <div style="font-size:11px;color:var(--gold);font-weight:800">BAAC / ธ.ก.ส.</div>
+      <div style="font-size:13px;color:var(--p1);font-weight:800;margin-top:3px">ธนาคารเพื่อการเกษตร</div>
+      <div style="font-size:10px;color:var(--sub);margin-top:3px">รัฐวิสาหกิจในกำกับ กษ. · ผู้จัดการ</div>
+      <div style="font-size:10px;color:var(--red);margin-top:6px;background:#fee2e2;padding:3px 8px;border-radius:6px;display:inline-block">⚠️ รัฐวิสาหกิจ ไม่ใช่กรม</div>
+    </div>
+    <div style="background:#fff8db;border:1.5px solid var(--gold);border-radius:10px;padding:14px;text-align:center">
+      <div style="font-size:24px">🌐</div>
+      <div style="font-size:11px;color:var(--gold);font-weight:800">G2G AgriTech</div>
+      <div style="font-size:13px;color:var(--p1);font-weight:800;margin-top:3px">G2G AgriTech Platform</div>
+      <div style="font-size:10px;color:var(--sub);margin-top:3px">นำร่อง 3 จว. → 76 จว. ภายในปี 2570</div>
+      <div style="font-size:10px;color:var(--p1);margin-top:6px;background:var(--p5);padding:3px 8px;border-radius:6px;display:inline-block">🚀 OPS + DOAE Lead</div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;padding:18px;font-size:11px;color:var(--sub);border-top:1px solid var(--border);margin-top:20px">
+  ที่มา: agriculture.json v1.0 · พ.ร.บ.ปรับปรุงกระทรวง ทบวง กรม พ.ศ.2545 · opsmoac.go.th
+</div>
+
+</div>
+</body>
+</html>

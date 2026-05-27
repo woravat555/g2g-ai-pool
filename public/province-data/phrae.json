@@ -1,0 +1,69 @@
+{
+  "code": "phrae",
+  "province_code_th": "54",
+  "name_th": "แพร่",
+  "name_en": "Phrae",
+  "name_full_th": "จังหวัดแพร่",
+  "name_short_th": "จ.แพร่",
+  "region": "ภาคเหนือ",
+  "title_long": "AgriPhrae — ระบบบูรณาการเกษตรและสหกรณ์ จ.แพร่",
+  "title_short": "AgriPhrae",
+  "ministry_chain": {
+    "ministry": "กระทรวงเกษตรและสหกรณ์",
+    "office": "สำนักงานปลัดกระทรวงเกษตรและสหกรณ์",
+    "province_office": "สำนักงานเกษตรและสหกรณ์จังหวัดแพร่"
+  },
+  "api_base": "https://g2g-ai-pool.fly.dev/api/phrae",
+  "api_key": "phrae2026",
+  "agency_prefix": "KST-54",
+  "line_oa_handle": "@phrae555",
+  "farmer_count_estimate": 65000,
+  "stats": {
+    "districts": 8,
+    "tambon": 78,
+    "village": 645,
+    "agricultural_household": 65000,
+    "agricultural_area_rai": 1800000
+  },
+  "districts": [
+    { "code": "mueang",        "name": "เมืองแพร่",     "tambon": 25, "icon": "🏙️" },
+    { "code": "rongkwang",     "name": "ร้องกวาง",      "tambon": 12, "icon": "🌾" },
+    { "code": "long",          "name": "ลอง",           "tambon": 11, "icon": "🏔️" },
+    { "code": "sungmen",       "name": "สูงเม่น",        "tambon": 12, "icon": "🌿" },
+    { "code": "denchai",       "name": "เด่นชัย",        "tambon": 5,  "icon": "🏘️" },
+    { "code": "song",          "name": "สอง",           "tambon": 12, "icon": "🌲" },
+    { "code": "wangchin",      "name": "วังชิ้น",        "tambon": 8,  "icon": "💧" },
+    { "code": "nongmuangkhai", "name": "หนองม่วงไข่",    "tambon": 6,  "icon": "🌾" }
+  ],
+  "agencies": [
+    { "code": "coord", "id": "KST-54-001", "name": "เกษตรและสหกรณ์จังหวัดแพร่", "parent": "สำนักงานปลัดกระทรวงเกษตรและสหกรณ์", "icon": "🏛️" },
+    { "code": "agri",  "id": "KST-54-002", "name": "สำนักงานเกษตรจังหวัดแพร่",  "parent": "กรมส่งเสริมการเกษตร", "icon": "🌾" },
+    { "code": "coop",  "id": "KST-54-003", "name": "สำนักงานสหกรณ์จังหวัดแพร่", "parent": "กรมส่งเสริมสหกรณ์", "icon": "🤝" },
+    { "code": "cad",   "id": "KST-54-004", "name": "สตท.แพร่",                  "parent": "กรมตรวจบัญชีสหกรณ์", "icon": "📊" },
+    { "code": "live",  "id": "KST-54-005", "name": "สนง.ปศุสัตว์จังหวัดแพร่",   "parent": "กรมปศุสัตว์", "icon": "🐄" },
+    { "code": "fish",  "id": "KST-54-006", "name": "สนง.ประมงจังหวัดแพร่",      "parent": "กรมประมง", "icon": "🐟" },
+    { "code": "land",  "id": "KST-54-007", "name": "สนง.สปก.จังหวัดแพร่",       "parent": "ส.ป.ก.", "icon": "📐" },
+    { "code": "irri",  "id": "KST-54-008", "name": "โครงการชลประทาน จ.แพร่",    "parent": "กรมชลประทาน", "icon": "💧" },
+    { "code": "ldd",   "id": "KST-54-009", "name": "สพด.แพร่",                  "parent": "กรมพัฒนาที่ดิน", "icon": "🌱" },
+    { "code": "doa",   "id": "KST-54-010", "name": "ศูนย์วิจัยการเกษตรแพร่",    "parent": "กรมวิชาการเกษตร", "icon": "🔬" }
+  ],
+  "key_crops": [
+    { "name": "ลำไย",   "rai": 78000, "season": "พ.ค.–ส.ค.", "price_baht_per_kg": 25 },
+    { "name": "ข้าวเหนียว", "rai": 320000, "season": "พ.ค.–พ.ย.", "price_baht_per_kg": 14 },
+    { "name": "ข้าวเจ้า",   "rai": 180000, "season": "พ.ค.–พ.ย.", "price_baht_per_kg": 12 },
+    { "name": "ยางพารา", "rai": 45000, "season": "ตลอดปี", "price_baht_per_kg": 55 },
+    { "name": "ข้าวโพดเลี้ยงสัตว์", "rai": 85000, "season": "พ.ค.–ก.ย.", "price_baht_per_kg": 9 },
+    { "name": "ถั่วเหลือง", "rai": 12000, "season": "ธ.ค.–มี.ค.", "price_baht_per_kg": 18 }
+  ],
+  "key_projects": [
+    { "name": "โครงการส่งเสริมการปลูกลำไยคุณภาพ จ.แพร่", "budget": 2500000, "target": "500 ราย", "progress": 72, "status": "ดำเนินการ", "agency": "agri", "icon": "🌾" },
+    { "name": "โครงการพัฒนา Smart Farm จ.แพร่",         "budget": 1200000, "target": "30 แปลง", "progress": 38, "status": "ล่าช้า",    "agency": "agri", "icon": "💻" },
+    { "name": "โครงการธนาคารน้ำใต้ดิน อ.ร้องกวาง",       "budget": 800000,  "target": "20 จุด",  "progress": 95, "status": "ใกล้เสร็จ",  "agency": "irri", "icon": "💧" }
+  ],
+  "geography": {
+    "lat": 18.146,
+    "lng": 100.140,
+    "weather_default": "ฝนตกบางพื้นที่",
+    "soil_type": "ดินร่วน-ดินเหนียวพาดูร์"
+  }
+}

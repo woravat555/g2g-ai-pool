@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>PLAT เชียงราย — ระบบบูรณาการเกษตรและสหกรณ์ จ.เชียงราย</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0b1f3a;--navy2:#152d4f;--navy3:#1e3d68;--navy4:#2a5298;
+  --gold:#c9a227;--gold2:#e8c55a;
+  --green:#1a7a3a;--green2:#2ea855;--accent:#34c785;
+  --red:#c0392b;--orange:#d35400;--blue:#2980b9;--purple:#7d3c98;--teal:#0e7490;
+  --bg:#eef2f7;--surface:#fff;--border:#dde3ec;
+  --text:#1a202c;--text2:#4a5568;--text3:#718096;
+}
+body{font-family:'Sarabun','Inter',sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.55;min-height:100vh}
+a{text-decoration:none;color:inherit}
+
+/* TOPBAR */
+.topbar{background:var(--navy);color:#fff;padding:12px 22px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,.25);position:sticky;top:0;z-index:100}
+.tb-left{display:flex;align-items:center;gap:14px}
+.tb-logo{font-size:30px}
+.tb-titles .t1{font-size:15px;font-weight:800;letter-spacing:.01em}
+.tb-titles .t2{font-size:10px;color:#94a8c0;letter-spacing:.05em;margin-top:2px}
+.tb-right{display:flex;align-items:center;gap:10px}
+.tb-prov-switcher{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#fff;font-family:inherit;font-size:12px;padding:8px 14px;border-radius:8px;cursor:pointer}
+.tb-prov-switcher:hover{background:rgba(255,255,255,.16)}
+.tb-link{font-size:11px;color:#94a8c0;padding:6px 10px;border-radius:6px}
+.tb-link:hover{background:rgba(255,255,255,.06);color:#fff}
+
+/* CHAIN BAR */
+.chain-bar{background:var(--navy2);color:#cfd6e0;padding:10px 22px;font-size:11px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;border-bottom:2px solid rgba(201,162,39,.25)}
+.chain-bar .item{background:rgba(255,255,255,.07);padding:4px 11px;border-radius:14px;font-weight:600}
+.chain-bar .item.now{background:var(--gold);color:var(--navy);font-weight:800}
+.chain-bar .arr{color:#5a6f8e;font-size:9px}
+
+/* MAIN */
+.main{max-width:1320px;margin:0 auto;padding:22px}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy3) 60%,var(--navy4) 100%);color:#fff;padding:30px 32px;border-radius:18px;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;position:relative;overflow:hidden;box-shadow:0 16px 48px rgba(11,31,58,.35)}
+.hero::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(201,162,39,.07) 1px,transparent 1px);background-size:24px 24px;opacity:.7}
+.hero-l{position:relative;z-index:2;flex:1;min-width:280px}
+.hero-eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold2);font-weight:700;margin-bottom:8px}
+.hero-title{font-size:32px;font-weight:800;line-height:1.15;margin-bottom:7px}
+.hero-sub{font-size:13px;color:#94a8c0;max-width:560px}
+.hero-r{position:relative;z-index:2;display:flex;flex-direction:column;gap:8px;text-align:right}
+.hero-stat{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:10px;padding:8px 14px;font-size:11px;color:#cfd6e0;display:flex;justify-content:space-between;align-items:center;gap:14px;min-width:200px}
+.hero-stat b{color:var(--gold2);font-size:14px;font-weight:800;font-family:'Inter','Sarabun',sans-serif}
+
+/* KPI ROW */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-top:18px}
+.kpi-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.kpi-label{font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);font-weight:700;margin-bottom:6px}
+.kpi-value{font-size:22px;font-weight:800;color:var(--navy);font-family:'Inter','Sarabun',sans-serif}
+.kpi-sub{font-size:10px;color:var(--text3);margin-top:2px}
+
+/* SECTIONS */
+.section{margin-top:24px}
+.sec-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:12px}
+.sec-title{font-size:18px;font-weight:800;color:var(--navy)}
+.sec-sub{font-size:11px;color:var(--text3)}
+
+/* CARD */
+.card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.card + .card{margin-top:14px}
+.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.card-title{font-size:14px;font-weight:800;color:var(--navy)}
+.card-sub{font-size:10px;color:var(--text3)}
+
+/* AGENCY GRID */
+.agency-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px}
+.agency-item{display:flex;gap:10px;align-items:flex-start;padding:11px;background:#f7f9fc;border-radius:9px;border:1px solid #e6ebf2;border-left:3px solid var(--navy3)}
+.agency-icon{font-size:20px;flex-shrink:0}
+.agency-info{flex:1;min-width:0}
+.agency-id{font-size:9px;font-weight:700;color:var(--gold);letter-spacing:.04em}
+.agency-name{font-size:12px;font-weight:700;color:var(--navy);margin-top:1px}
+.agency-parent{font-size:10px;color:var(--text3);margin-top:2px}
+
+/* DISTRICT GRID */
+.district-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:9px}
+.district-card{background:#f7f9fc;border-radius:9px;padding:10px 11px;border:1px solid #e6ebf2;display:flex;align-items:center;gap:9px;transition:.14s}
+.district-card:hover{background:#eff5fc;border-color:var(--navy4);transform:translateY(-1px)}
+.district-icon{font-size:18px}
+.district-info{flex:1;min-width:0}
+.district-name{font-size:12px;font-weight:700;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.district-tambon{font-size:10px;color:var(--text3)}
+
+/* CROP TABLE */
+.crop-table{width:100%;border-collapse:collapse;font-size:12px}
+.crop-table th{text-align:left;padding:10px 8px;background:#f1f5f9;border-bottom:2px solid var(--border);font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.04em;font-weight:700}
+.crop-table td{padding:11px 8px;border-bottom:1px solid #ebeef3;vertical-align:top}
+.crop-table tr:hover td{background:#fafbfd}
+.crop-name{font-weight:700;color:var(--navy);font-size:12px;display:flex;align-items:center;gap:6px}
+.crop-rank{background:var(--navy);color:#fff;border-radius:5px;width:22px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0}
+.crop-rank.top3{background:var(--gold);color:var(--navy)}
+.crop-meta{font-size:10px;color:var(--text3);margin-top:3px;line-height:1.5}
+.crop-gi{display:inline-block;background:#fef3c7;color:#92400e;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:700;margin-top:4px}
+.numeric{font-family:'Inter','Sarabun',sans-serif;font-weight:600;white-space:nowrap;text-align:right;color:var(--navy)}
+.crop-note{font-size:10px;color:var(--text2);font-style:italic;line-height:1.5;margin-top:4px}
+
+/* PROJECT GRID */
+.project-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px}
+.project-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px;border-left:4px solid var(--navy3)}
+.proj-head{display:flex;justify-content:space-between;align-items:start;gap:10px;margin-bottom:8px}
+.proj-name{font-size:13px;font-weight:800;color:var(--navy);line-height:1.35}
+.proj-icon{font-size:22px;flex-shrink:0}
+.proj-badge{font-size:9px;padding:3px 8px;border-radius:5px;font-weight:700;white-space:nowrap}
+.bg-green{background:#d1fae5;color:#065f46}
+.bg-blue{background:#dbeafe;color:#1e40af}
+.bg-orange{background:#fed7aa;color:#9a3412}
+.bg-gray{background:#e2e8f0;color:#475569}
+.proj-meta{font-size:10px;color:var(--text2);margin-bottom:6px;line-height:1.55}
+.proj-note{font-size:10px;color:var(--text3);font-style:italic;margin-top:6px;padding-top:6px;border-top:1px dashed #e6ebf2}
+.proj-budget{font-size:11px;color:var(--text2);margin-bottom:6px}
+.proj-budget b{color:var(--navy);font-family:'Inter','Sarabun',sans-serif}
+.proj-progress-label{display:flex;justify-content:space-between;font-size:10px;color:var(--text2);margin-bottom:3px}
+.pb{height:7px;background:#e2e8f0;border-radius:4px;overflow:hidden}
+.pf{height:100%;background:linear-gradient(90deg,var(--navy4),var(--green2));border-radius:4px;transition:width .4s}
+.pf.warn{background:linear-gradient(90deg,var(--orange),var(--gold))}
+
+/* GRID LAYOUT */
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+@media (max-width:900px){.row{grid-template-columns:1fr}}
+
+/* FOOTER */
+footer{margin-top:32px;padding:20px;text-align:center;font-size:11px;color:var(--text3);border-top:1px solid var(--border)}
+footer a{color:var(--navy);font-weight:700}
+
+/* LOADER */
+.loader{padding:60px 20px;text-align:center;color:var(--text3);font-size:14px}
+.loader .sp{display:inline-block;width:32px;height:32px;border:3px solid #cbd5e0;border-top-color:var(--navy3);border-radius:50%;animation:sp .9s linear infinite;margin-bottom:14px}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* SOURCES */
+.sources{background:#f8fafc;border:1px dashed var(--border);border-radius:8px;padding:12px 16px;font-size:10px;color:var(--text3);margin-top:14px}
+.sources b{color:var(--navy);font-weight:700}
+.sources ul{margin-top:6px;padding-left:18px;line-height:1.7}
+
+/* STRATEGY BOX */
+.strat-box{background:linear-gradient(135deg,#fef3c7 0%,#fde68a 100%);border-left:5px solid var(--gold);border-radius:10px;padding:14px 18px;margin-top:12px}
+.strat-box .lab{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:#92400e;font-weight:800;margin-bottom:4px}
+.strat-box .val{font-size:12px;color:var(--navy);font-weight:600;line-height:1.6}
+</style>
+</head>
+<body>
+<script>
+/* Self-contained inline data — works on file:// without fetch */
+window.PROVINCE_CODE = "chiangrai";
+window.PROVINCE_INLINE_DATA = {"code": "chiangrai", "province_code_th": "57", "name_th": "เชียงราย", "name_en": "Chiang Rai", "name_full_th": "จังหวัดเชียงราย", "name_short_th": "จ.เชียงราย", "region": "ภาคเหนือ", "title_long": "PLAT เชียงราย — ระบบบูรณาการเกษตรและสหกรณ์ จ.เชียงราย", "title_short": "AgriChiangRai", "ministry_chain": {"ministry": "กระทรวงเกษตรและสหกรณ์", "office": "สำนักงานปลัดกระทรวงเกษตรและสหกรณ์", "province_office": "สำนักงานเกษตรและสหกรณ์จังหวัดเชียงราย"}, "api_base": "https://g2g-ai-pool.fly.dev/api/chiangrai", "api_key": "chiangrai2026", "agency_prefix": "KST-57", "line_oa_handle": "@chiangrai-ai", "farmer_count_estimate": 230000, "stats": {"districts": 18, "tambon": 124, "village": 1751, "agricultural_household": 230000, "agricultural_area_rai": 4250000, "comment_source": "สนง.เกษตรจังหวัดเชียงราย + สศก. ปีงบ 2567/68"}, "districts": [{"code": "mueang", "name": "เมืองเชียงราย", "tambon": 13, "icon": "🏙️"}, {"code": "wiangchai", "name": "เวียงชัย", "tambon": 5, "icon": "🌾"}, {"code": "chiangkhong", "name": "เชียงของ", "tambon": 7, "icon": "🛶"}, {"code": "thoeng", "name": "เทิง", "tambon": 10, "icon": "🍇"}, {"code": "phan", "name": "พาน", "tambon": 15, "icon": "🍇"}, {"code": "padaet", "name": "ป่าแดด", "tambon": 5, "icon": "🍇"}, {"code": "maechan", "name": "แม่จัน", "tambon": 11, "icon": "🌿"}, {"code": "chiangsaen", "name": "เชียงแสน", "tambon": 6, "icon": "🏯"}, {"code": "maesai", "name": "แม่สาย", "tambon": 8, "icon": "🛂"}, {"code": "maesuai", "name": "แม่สรวย", "tambon": 7, "icon": "🍇"}, {"code": "wiangpapao", "name": "เวียงป่าเป้า", "tambon": 7, "icon": "🏔️"}, {"code": "phayamengrai", "name": "พญาเม็งราย", "tambon": 5, "icon": "🍇"}, {"code": "wiangkaen", "name": "เวียงแก่น", "tambon": 4, "icon": "🌲"}, {"code": "khuntan", "name": "ขุนตาล", "tambon": 3, "icon": "🌳"}, {"code": "maefaluang", "name": "แม่ฟ้าหลวง", "tambon": 4, "icon": "☕"}, {"code": "maelao", "name": "แม่ลาว", "tambon": 5, "icon": "🌾"}, {"code": "wiangchiangrung", "name": "เวียงเชียงรุ้ง", "tambon": 3, "icon": "🌿"}, {"code": "doiluang", "name": "ดอยหลวง", "tambon": 3, "icon": "🏔️"}], "agencies": [{"code": "coord", "id": "KST-57-001", "name": "เกษตรและสหกรณ์จังหวัดเชียงราย", "parent": "สำนักงานปลัดกระทรวงเกษตรและสหกรณ์", "icon": "🏛️"}, {"code": "agri", "id": "KST-57-002", "name": "สำนักงานเกษตรจังหวัดเชียงราย", "parent": "กรมส่งเสริมการเกษตร", "icon": "🌾"}, {"code": "coop", "id": "KST-57-003", "name": "สำนักงานสหกรณ์จังหวัดเชียงราย", "parent": "กรมส่งเสริมสหกรณ์", "icon": "🤝"}, {"code": "cad", "id": "KST-57-004", "name": "สตท.เชียงราย", "parent": "กรมตรวจบัญชีสหกรณ์", "icon": "📊"}, {"code": "live", "id": "KST-57-005", "name": "สนง.ปศุสัตว์จังหวัดเชียงราย", "parent": "กรมปศุสัตว์", "icon": "🐄"}, {"code": "fish", "id": "KST-57-006", "name": "สนง.ประมงจังหวัดเชียงราย", "parent": "กรมประมง", "icon": "🐟"}, {"code": "land", "id": "KST-57-007", "name": "สนง.สปก.จังหวัดเชียงราย", "parent": "ส.ป.ก.", "icon": "📐"}, {"code": "irri", "id": "KST-57-008", "name": "โครงการชลประทาน จ.เชียงราย", "parent": "กรมชลประทาน", "icon": "💧"}, {"code": "ldd", "id": "KST-57-009", "name": "สพด.เชียงราย", "parent": "กรมพัฒนาที่ดิน", "icon": "🌱"}, {"code": "doa", "id": "KST-57-010", "name": "ศูนย์วิจัยพืชสวนเชียงราย", "parent": "กรมวิชาการเกษตร", "icon": "🔬"}, {"code": "rice", "id": "KST-57-011", "name": "ศูนย์วิจัยข้าวเชียงราย", "parent": "กรมการข้าว", "icon": "🌾"}, {"code": "rubber", "id": "KST-57-012", "name": "การยางแห่งประเทศไทย จ.เชียงราย", "parent": "กยท.", "icon": "🌳"}], "key_crops": [{"name": "ลำไย", "rank": 1, "rai": 95000, "yield_ton_per_year": 94671, "season": "ก.ค.–ก.ย. (ในฤดู), พ.ย.–ม.ค. (นอกฤดู)", "price_baht_per_kg": 28, "top_districts": ["แม่สรวย", "ป่าแดด", "พาน", "พญาเม็งราย", "เทิง"], "note": "ผลผลิตปี 2567 = 94,671 ตัน (+11% YoY) — แม่สรวยเป็นพื้นที่ปลูกใหญ่สุด 30,120 ไร่ ส่วนป่าแดดเป็นแหล่งผลิตเข้มข้น (70% ของพื้นที่อำเภอเป็นลำไย) ตลาดส่งออกจีนเป็นหลัก", "gi_status": "ลำไยอบแห้งเนื้อสีทอง (GI ลำพูน-เชียงราย คาบเกี่ยว)", "source": "พาณิชย์จังหวัดเชียงราย / radiochiangrai.prd.go.th (ปี 2567)"}, {"name": "กาแฟอราบิก้า", "rank": 2, "rai": 55415, "yield_ton_per_year": 4850, "season": "เก็บเกี่ยว พ.ย.–ก.พ.", "price_baht_per_kg": 200, "top_districts": ["แม่ฟ้าหลวง (ดอยตุง)", "แม่สรวย (ดอยช้าง)", "เวียงป่าเป้า", "แม่ลาว"], "note": "เชียงรายอันดับ 1 ของไทย — ผลิต ~60% ของกาแฟ Arabica ทั้งประเทศ ปลูกที่ระดับ 1,200–1,400 ม. แบรนด์ดัง: ดอยช้าง ดอยตุง ดอยปางขอน", "gi_status": "กาแฟดอยตุง (GI), กาแฟดอยช้าง (GI)", "source": "Travel & Tour World, ChiangRai Times (ปี 2568)"}, {"name": "ข้าว (นาปี)", "rank": 3, "rai": 1240000, "yield_ton_per_year": 677089, "season": "พ.ค.–พ.ย.", "price_baht_per_kg": 14, "top_districts": ["พาน", "เมืองเชียงราย", "แม่จัน", "เวียงชัย"], "note": "นาปี 1.24 ล้านไร่ ผลผลิต 677,089 ตัน (ปี 2567) — มีทั้งข้าวเหนียวสันป่าตอง ข้าวหอมมะลิเชียงราย และข้าวเหนียวเขี้ยวงู", "gi_status": "ข้าวเหนียวเขี้ยวงูเชียงราย (GI)", "source": "OAE / สศก. (ปี 2567)"}, {"name": "ข้าว (นาปรัง)", "rank": 4, "rai": 365838, "yield_ton_per_year": 357326, "season": "ม.ค.–เม.ย.", "price_baht_per_kg": 13, "top_districts": ["พาน", "แม่จัน", "เมืองเชียงราย"], "note": "นาปรัง 365,838 ไร่ ผลผลิต 357,326 ตัน (ปี 2567)", "source": "OAE / สศก. (ปี 2567)"}, {"name": "ชา (ชาอู่หลง/ชาเมี่ยง/Assam)", "rank": 5, "rai": 165000, "yield_ton_per_year": 12000, "season": "เก็บใบตลอดปี (Peak มี.ค.–พ.ค.)", "price_baht_per_kg": 350, "top_districts": ["แม่ฟ้าหลวง (ดอยแม่สลอง)", "แม่สรวย (วาวี)", "เวียงป่าเป้า"], "note": "ชาอู่หลงคุณภาพระดับโลกที่ดอยแม่สลอง — พื้นที่ปลูกฝิ่นเดิมถูกแทนที่ด้วยชาในโครงการหลวง", "gi_status": "ชาเชียงราย, ชาดอยแม่สลอง", "source": "ChiangRai Times, OBELS"}, {"name": "ลิ้นจี่", "rank": 6, "rai": 55000, "yield_ton_per_year": 32000, "season": "เม.ย.–มิ.ย.", "price_baht_per_kg": 65, "top_districts": ["เวียงเชียงรุ้ง", "แม่จัน", "ดอยหลวง", "เชียงของ"], "note": "ลิ้นจี่เชียงรายมีหลายพันธุ์ทั้ง ฮงฮวย จักรพรรดิ์ โอวเฮี๊ยะ — เก็บเกี่ยวก่อนเชียงใหม่ ทำให้ได้ราคาดี", "source": "ศูนย์วิจัยพืชสวนเชียงราย"}, {"name": "ข้าวโพดเลี้ยงสัตว์", "rank": 7, "rai": 540000, "yield_ton_per_year": 360000, "season": "พ.ค.–ก.ย.", "price_baht_per_kg": 10, "top_districts": ["เวียงป่าเป้า", "แม่สรวย", "เทิง", "แม่จัน"], "note": "พืชเศรษฐกิจรองในพื้นที่ดอย ปัญหา PM2.5 จากการเผาตอซัง"}, {"name": "ยางพารา", "rank": 8, "rai": 195000, "yield_ton_per_year": 47000, "season": "ตลอดปี (ยกเว้นช่วงผลัดใบ มี.ค.–เม.ย.)", "price_baht_per_kg": 58, "top_districts": ["พญาเม็งราย", "เวียงแก่น", "ขุนตาล", "เทิง"], "note": "ภายใต้การดูแล กยท. — เน้นยาง RSS3 และน้ำยางสด"}, {"name": "สับปะรดภูแล + นางแล", "rank": 9, "rai": 28000, "yield_ton_per_year": 95000, "season": "ก.พ.–พ.ค. (Peak), มีตลอดปี", "price_baht_per_kg": 22, "top_districts": ["เมืองเชียงราย (ต.ภูแล, ต.นางแล)"], "note": "GI สินค้าเด่นเฉพาะถิ่น — ภูแลรสหวาน เนื้อกรอบ ส่งออกประเทศ; นางแลรสเปรี้ยวอมหวาน นิยมแปรรูป", "gi_status": "สับปะรดภูแลเชียงราย (GI), สับปะรดนางแล (GI)"}, {"name": "ส้มสายน้ำผึ้ง", "rank": 10, "rai": 22000, "yield_ton_per_year": 38000, "season": "พ.ย.–ก.พ.", "price_baht_per_kg": 45, "top_districts": ["แม่สาย", "ฝาง (คาบเกี่ยว)", "เวียงป่าเป้า"], "note": "ส้มเขียวหวาน เนื้อแน่น น้ำเยอะ ทนต่อโรค Citrus Greening ในระดับหนึ่ง"}, {"name": "ถั่วเหลือง", "rank": 11, "rai": 38000, "yield_ton_per_year": 12500, "season": "ธ.ค.–มี.ค. (ปลูกหลังนา)", "price_baht_per_kg": 19}, {"name": "มันสำปะหลัง", "rank": 12, "rai": 25000, "yield_ton_per_year": 80000, "season": "เก็บ ต.ค.–ก.พ.", "price_baht_per_kg": 2.8}], "key_projects": [{"name": "โครงการลำไยคุณภาพส่งออกจีน — แม่สรวย/ป่าแดด/พาน", "budget": 8500000, "target": "3,500 ราย", "progress": 68, "status": "ดำเนินการ", "agency": "agri", "icon": "🍇", "note": "GAP + ระบบตรวจสอบย้อนกลับ + ห้องเย็น 5 จุด"}, {"name": "โครงการกาแฟอราบิก้าดอยช้าง-ดอยตุง Premium", "budget": 6200000, "target": "850 ราย", "progress": 82, "status": "ดำเนินการ", "agency": "agri", "icon": "☕", "note": "ยกระดับ Specialty Coffee SCA score >85"}, {"name": "โครงการข้าวเหนียวเขี้ยวงู GI เชียงราย", "budget": 3500000, "target": "1,200 ราย", "progress": 58, "status": "ดำเนินการ", "agency": "rice", "icon": "🌾", "note": "ขึ้นทะเบียน GI + จัดตั้งโรงสีชุมชน 3 แห่ง"}, {"name": "โครงการชาดอยแม่สลอง Premium Oolong", "budget": 4800000, "target": "200 สวน", "progress": 65, "status": "ดำเนินการ", "agency": "agri", "icon": "🍃", "note": "Brand Building + ส่งออกไต้หวัน/ฮ่องกง"}, {"name": "โครงการ Smart Farm Border (แม่สาย-เชียงแสน-เชียงของ)", "budget": 2800000, "target": "80 แปลง", "progress": 41, "status": "ดำเนินการ", "agency": "agri", "icon": "💻", "note": "เกษตรอัจฉริยะพื้นที่ชายแดน — IoT + AI พยากรณ์"}, {"name": "โครงการลิ้นจี่นอกฤดูเวียงเชียงรุ้ง", "budget": 2400000, "target": "450 ราย", "progress": 72, "status": "ดำเนินการ", "agency": "agri", "icon": "🍒", "note": "เก็บเกี่ยวก่อนภาคเหนือ — ราคาพรีเมียม"}, {"name": "โครงการสับปะรดภูแล GI ส่งออกตะวันออกกลาง", "budget": 1900000, "target": "120 ราย", "progress": 55, "status": "ดำเนินการ", "agency": "agri", "icon": "🍍", "note": "บรรจุภัณฑ์ระดับส่งออก + ตลาด UAE/ซาอุ"}, {"name": "โครงการประมงน้ำจืดลุ่มน้ำกก-โขง", "budget": 1900000, "target": "150 บ่อ", "progress": 70, "status": "ดำเนินการ", "agency": "fish", "icon": "🐟"}], "geography": {"lat": 19.91, "lng": 99.84, "weather_default": "อากาศเย็น เมฆบางส่วน", "soil_type": "ดินภูเขาสูง / ดินตะกอนแม่น้ำกก-อิง"}, "key_economic_value": {"main_crops_total_baht_year": 3120000000, "longan_pct": 14.5, "coffee_pct": 18.2, "rice_pct": 31.0, "tea_pct": 8.5, "lychee_pct": 4.8, "pineapple_pct": 11.0, "rubber_pct": 6.2, "others_pct": 5.8, "comment_source": "ประมาณการจาก สศก. + กระทรวงพาณิชย์ จังหวัดเชียงราย ปี 2567"}, "_data_sources": ["สำนักงานเกษตรและสหกรณ์จังหวัดเชียงราย (opsmoac.go.th/chiangrai-home)", "สำนักงานเศรษฐกิจการเกษตร พื้นที่เชียงราย (mis-app.oae.go.th)", "พาณิชย์จังหวัดเชียงราย (radiochiangrai.prd.go.th) — สถานการณ์ลำไยปี 2567", "ChiangRai Times — Specialty Coffee article ปี 2568", "Travel & Tour World — Tea & Coffee Tourism ปี 2568", "Heinrich Böll Foundation — Pangkhon Coffee Village ปี 2565"]};
+</script>
+
+
+<div id="topbar" class="topbar">
+  <div class="tb-left">
+    <div class="tb-logo"><img class="province-logo-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Seal_of_Chaing_Rai_Province_%28color_version%2C_Thai_Fine_Art_Department%29.png/250px-Seal_of_Chaing_Rai_Province_%28color_version%2C_Thai_Fine_Art_Department%29.png" style="width:52px;height:52px;object-fit:contain;vertical-align:middle;margin-right:8px;" onerror="this.style.display='none'" alt="ตราจังหวัดเชียงราย">🌾</div>
+    <div class="tb-titles">
+      <div class="t1" id="tbTitle">กำลังโหลด…</div>
+      <div class="t2" id="tbSub">PLAT Province Platform</div>
+    </div>
+  </div>
+  <div class="tb-right">
+    <select id="provinceSwitcher" class="tb-prov-switcher" onchange="switchProvince(this.value)">
+      <option value="">— เลือกจังหวัด —</option>
+      <option value="phrae">🏔️ แพร่</option>
+      <option value="chiangrai">🏔️ เชียงราย</option>
+      <option value="udonthani">🌾 อุดรธานี</option>
+    </select>
+    <a href="/management-chiangrai.html" class="tb-link" style="background:rgba(201,162,39,.15);border:1px solid rgba(201,162,39,.4);color:#e8c55a;font-weight:700">📊 Management เชียงราย</a>
+    <a href="/personnel-registry.html" class="tb-link">👥 Personnel</a>
+  </div>
+</div>
+
+<div id="chainBar" class="chain-bar"></div>
+
+
+<div id="live-panel">
+  <div class="section"><div class="card" style="padding:20px;text-align:center;color:var(--text3)">
+    <div class="sp" style="display:inline-block;margin-right:8px"></div>
+    📡 กำลังโหลดข้อมูล Real-Time (อากาศ · ราคาพืช · แจ้งเตือน)…
+  </div></div>
+</div>
+
+<div class="main" id="main">
+  <div class="loader"><div class="sp"></div><div>กำลังโหลดข้อมูลจังหวัด…</div></div>
+</div>
+
+<footer>
+  ⚙️ <b>province-template.html</b> · Data-driven จาก <code>/province-data/{code}.json</code> ·
+  ดูจังหวัดอื่น: <a href="?p=phrae">แพร่</a> · <a href="?p=chiangrai">เชียงราย</a> · <a href="?p=udonthani">อุดรธานี</a> ·
+  <a href="https://g2g-ai-pool.fly.dev">PLAT Thailand</a>
+</footer>
+
+<script>
+/* ============================================================
+   PROVINCE TEMPLATE LOADER
+   ============================================================ */
+
+const FORMAT = {
+  num: n => (n==null) ? '—' : n.toLocaleString('th-TH'),
+  baht: n => (n==null) ? '—' : n.toLocaleString('th-TH') + ' บ.',
+  rai: n => (n==null) ? '—' : n.toLocaleString('th-TH') + ' ไร่',
+  ton: n => (n==null) ? '—' : n.toLocaleString('th-TH') + ' ตัน',
+  kg: n => (n==null) ? '—' : n.toLocaleString('th-TH') + ' กก.',
+};
+
+function getProvinceCode() {
+  // priority: URL param > window.PROVINCE_CODE > default
+  const urlP = new URLSearchParams(location.search).get('p');
+  if (urlP) return urlP;
+  if (window.PROVINCE_CODE) return window.PROVINCE_CODE;
+  return 'phrae';
+}
+
+function switchProvince(code) {
+  if (!code) return;
+  location.href = '?p=' + encodeURIComponent(code);
+}
+
+async function loadProvince() {
+  const code = getProvinceCode();
+  const sw = document.getElementById('provinceSwitcher');
+  if (sw) sw.value = code;
+  try {
+    let data;
+    // 1) Prefer inline data (works on file:// without fetch)
+    if (window.PROVINCE_INLINE_DATA_ALL && window.PROVINCE_INLINE_DATA_ALL[code]) {
+      data = window.PROVINCE_INLINE_DATA_ALL[code];
+    } else if (window.PROVINCE_INLINE_DATA) {
+      data = window.PROVINCE_INLINE_DATA;
+    } else {
+      // 2) Fall back to fetch (works on http(s)://)
+      const r = await fetch('province-data/' + code + '.json');
+      if (!r.ok) throw new Error('Province not found: ' + code + ' (' + r.status + ')');
+      data = await r.json();
+    }
+    document.title = data.title_long || ('AgriProvince — ' + data.name_full_th);
+    window.__PROV_DATA__ = data;
+    render(data);
+    loadLiveData(data);
+  } catch (e) {
+    const isFile = location.protocol === 'file:';
+    document.getElementById('main').innerHTML =
+      '<div class="card"><div class="card-head"><div class="card-title">⚠️ โหลดข้อมูลไม่สำเร็จ</div></div>' +
+      '<p>' + e.message + '</p>' +
+      (isFile ? '<p style="margin-top:10px;padding:10px;background:#fef3c7;border-radius:6px;font-size:12px">💡 <b>คุณกำลังเปิดแบบ file://</b> ซึ่ง browser block fetch() ตาม CORS security<br>' +
+        '✅ ใช้ลิงก์ online แทน: <a href="https://g2g-ai-pool.fly.dev/' + code + '.html" style="color:#1e3d68;font-weight:700">g2g-ai-pool.fly.dev/' + code + '.html</a></p>' : '') +
+      '<p style="margin-top:10px;font-size:11px;color:var(--text3)">ลองเปลี่ยนจังหวัด: ' +
+      '<a href="?p=phrae">แพร่</a> · <a href="?p=chiangrai">เชียงราย</a> · <a href="?p=udonthani">อุดรธานี</a></p></div>';
+  }
+}
+
+function render(d) {
+  // Topbar
+  document.getElementById('tbTitle').textContent = d.title_long || d.name_full_th;
+  document.getElementById('tbSub').textContent =
+    'จังหวัดรหัส ' + d.province_code_th + ' · ' + d.region + ' · API: ' + (d.api_base||'—');
+
+  // Chain bar
+  const chain = d.ministry_chain || {};
+  document.getElementById('chainBar').innerHTML =
+    '<span class="item">🇹🇭 ' + (chain.ministry||'กระทรวง') + '</span>' +
+    '<span class="arr">▶</span>' +
+    '<span class="item">' + (chain.office||'') + '</span>' +
+    '<span class="arr">▶</span>' +
+    '<span class="item now">📍 ' + (chain.province_office||d.name_full_th) + '</span>' +
+    '<span class="arr">▶</span>' +
+    '<span class="item">รหัสหน่วยงาน: ' + d.agency_prefix + '-xxx</span>' +
+    '<span class="arr">▶</span>' +
+    '<span class="item">LINE: ' + (d.line_oa_handle||'—') + '</span>';
+
+  // Main content
+  const m = document.getElementById('main');
+  m.innerHTML =
+    renderHero(d) +
+    renderKpis(d) +
+    renderStrategicPosition(d) +
+    renderRow(renderAgencies(d), renderDistricts(d)) +
+    renderCrops(d) +
+    renderEconomicValue(d) +
+    renderProjects(d) +
+    renderSources(d);
+}
+
+function renderHero(d) {
+  const s = d.stats || {};
+  return '<div class="hero">' +
+    '<div class="hero-l">' +
+      '<div class="hero-eyebrow">PLAT · จังหวัดรหัส ' + d.province_code_th + '</div>' +
+      '<div class="hero-title">🌾 ' + d.name_full_th + '</div>' +
+      '<div class="hero-sub">' + (d.ministry_chain?.office||'') + ' · ' + d.region + ' · ' +
+        'ระบบบูรณาการเกษตรและสหกรณ์ระดับจังหวัด · ขับเคลื่อนโดย AI</div>' +
+    '</div>' +
+    '<div class="hero-r">' +
+      '<div class="hero-stat"><span>เกษตรกร (ครัวเรือน)</span><b>' + FORMAT.num(s.agricultural_household) + '</b></div>' +
+      '<div class="hero-stat"><span>พื้นที่เกษตร</span><b>' + FORMAT.num(s.agricultural_area_rai) + ' ไร่</b></div>' +
+      '<div class="hero-stat"><span>อำเภอ × ตำบล</span><b>' + s.districts + ' × ' + s.tambon + '</b></div>' +
+    '</div>' +
+  '</div>';
+}
+
+function renderKpis(d) {
+  const s = d.stats || {};
+  const kpis = [
+    { lab: 'อำเภอ',          val: s.districts,                  sub: 'Administrative Districts' },
+    { lab: 'ตำบล',           val: s.tambon,                     sub: 'Sub-Districts' },
+    { lab: 'หมู่บ้าน',         val: s.village,                    sub: 'Villages' },
+    { lab: 'พืชหลัก',         val: (d.key_crops||[]).length,     sub: 'Tracked crops' },
+    { lab: 'หน่วยงาน',        val: (d.agencies||[]).length,      sub: 'กษ. agencies' },
+    { lab: 'โครงการดำเนินการ', val: (d.key_projects||[]).length,  sub: 'Active projects' },
+  ];
+  return '<div class="kpi-row">' +
+    kpis.map(k => '<div class="kpi-card">' +
+      '<div class="kpi-label">' + k.lab + '</div>' +
+      '<div class="kpi-value">' + FORMAT.num(k.val) + '</div>' +
+      '<div class="kpi-sub">' + k.sub + '</div>' +
+    '</div>').join('') +
+  '</div>';
+}
+
+function renderStrategicPosition(d) {
+  if (!d.strategic_position) return '';
+  const sp = d.strategic_position;
+  let out = '<div class="section"><div class="sec-head"><div class="sec-title">🎯 จุดยุทธศาสตร์ของจังหวัด</div></div>';
+  if (sp.border_function)        out += '<div class="strat-box"><div class="lab">บทบาทชายแดน/โลจิสติกส์</div><div class="val">' + sp.border_function + '</div></div>';
+  if (sp.regional_hub)           out += '<div class="strat-box"><div class="lab">Hub ภูมิภาค</div><div class="val">' + sp.regional_hub + '</div></div>';
+  if (sp.agricultural_strength)  out += '<div class="strat-box"><div class="lab">จุดแข็งภาคเกษตร</div><div class="val">' + sp.agricultural_strength + '</div></div>';
+  out += '</div>';
+  return out;
+}
+
+function renderRow(left, right) {
+  return '<div class="row"><div>' + left + '</div><div>' + right + '</div></div>';
+}
+
+function renderAgencies(d) {
+  const ags = d.agencies || [];
+  return '<div class="card"><div class="card-head">' +
+    '<div><div class="card-title">🏛️ หน่วยงาน กษ. ในจังหวัด</div>' +
+    '<div class="card-sub">รหัส ' + d.agency_prefix + '-001 ถึง ' + d.agency_prefix + '-' + String(ags.length).padStart(3,'0') + ' · ทั้งหมด ' + ags.length + ' หน่วย</div></div></div>' +
+    '<div class="agency-grid">' +
+      ags.map(a => '<div class="agency-item">' +
+        '<div class="agency-icon">' + (a.icon||'🏢') + '</div>' +
+        '<div class="agency-info">' +
+          '<div class="agency-id">' + a.id + '</div>' +
+          '<div class="agency-name">' + a.name + '</div>' +
+          '<div class="agency-parent">↳ ' + a.parent + '</div>' +
+        '</div>' +
+      '</div>').join('') +
+    '</div></div>';
+}
+
+function renderDistricts(d) {
+  const dis = d.districts || [];
+  const totalTambon = dis.reduce((s,x)=>s+(x.tambon||0),0);
+  return '<div class="card"><div class="card-head">' +
+    '<div><div class="card-title">📍 รายชื่ออำเภอ</div>' +
+    '<div class="card-sub">' + dis.length + ' อำเภอ · รวม ' + totalTambon + ' ตำบล</div></div></div>' +
+    '<div class="district-grid">' +
+      dis.map(x => '<div class="district-card">' +
+        '<div class="district-icon">' + (x.icon||'📍') + '</div>' +
+        '<div class="district-info">' +
+          '<div class="district-name">' + x.name + '</div>' +
+          '<div class="district-tambon">' + (x.tambon||0) + ' ตำบล</div>' +
+        '</div>' +
+      '</div>').join('') +
+    '</div></div>';
+}
+
+function renderCrops(d) {
+  const crops = d.key_crops || [];
+  if (!crops.length) return '';
+  return '<div class="section"><div class="sec-head">' +
+    '<div><div class="sec-title">🌾 สินค้าเกษตรหลัก (จัดอันดับตามมูลค่า/ผลผลิต)</div>' +
+    '<div class="sec-sub">ข้อมูลจาก สนง.เกษตรและสหกรณ์จังหวัด + สศก. ปีงบประมาณ 2567/68</div></div></div>' +
+    '<div class="card" style="padding:0;overflow-x:auto"><table class="crop-table"><thead><tr>' +
+      '<th style="width:36%">สินค้า</th><th>พื้นที่</th><th>ผลผลิต/ปี</th><th>ราคา</th><th>ฤดูกาล + แหล่ง</th>' +
+    '</tr></thead><tbody>' +
+      crops.map(c => {
+        const rankCls = (c.rank<=3) ? 'top3' : '';
+        const giHtml = c.gi_status ? '<span class="crop-gi">GI: ' + c.gi_status + '</span>' : '';
+        const noteHtml = c.note ? '<div class="crop-note">💡 ' + c.note + '</div>' : '';
+        // Determine units
+        let areaHtml = c.rai ? FORMAT.rai(c.rai) : (c.head_count ? FORMAT.num(c.head_count) + ' ตัว' : (c.ponds ? FORMAT.num(c.ponds) + ' บ่อ' : '—'));
+        let yieldHtml = c.yield_ton_per_year ? FORMAT.ton(c.yield_ton_per_year) :
+                        (c.yield_egg_per_day ? FORMAT.num(c.yield_egg_per_day) + ' ฟอง/วัน' :
+                        (c.yield_kg_silk_per_year ? FORMAT.kg(c.yield_kg_silk_per_year) + '/ปี' : '—'));
+        let priceHtml = c.price_baht_per_kg ? FORMAT.baht(c.price_baht_per_kg) + '/กก.' :
+                        (c.price_baht_per_kg_live ? FORMAT.baht(c.price_baht_per_kg_live) + '/กก.(ชีวิต)' : '—');
+        const topD = c.top_districts ? '<div class="crop-meta">📍 แหล่ง: ' + c.top_districts.slice(0,4).join(' · ') + '</div>' : '';
+        return '<tr>' +
+          '<td>' +
+            '<div class="crop-name"><span class="crop-rank ' + rankCls + '">' + (c.rank||'') + '</span>' + c.name + '</div>' +
+            giHtml +
+            topD +
+            noteHtml +
+          '</td>' +
+          '<td class="numeric">' + areaHtml + '</td>' +
+          '<td class="numeric">' + yieldHtml + '</td>' +
+          '<td class="numeric">' + priceHtml + '</td>' +
+          '<td><div class="crop-meta">⏱️ ' + (c.season||'—') + '</div>' +
+            (c.source ? '<div class="crop-meta" style="opacity:.7">📚 ' + c.source + '</div>' : '') +
+          '</td>' +
+        '</tr>';
+      }).join('') +
+    '</tbody></table></div></div>';
+}
+
+function renderEconomicValue(d) {
+  if (!d.key_economic_value) return '';
+  const e = d.key_economic_value;
+  const totalBaht = (e.main_crops_total_baht_year/1000000000).toFixed(2);
+  const pctEntries = Object.entries(e).filter(([k])=>k.endsWith('_pct'));
+  return '<div class="section"><div class="sec-head">' +
+    '<div><div class="sec-title">💰 มูลค่าเศรษฐกิจการเกษตรของจังหวัด</div>' +
+    '<div class="sec-sub">มูลค่ารวมพืชหลัก ~ ' + totalBaht + ' พันล้านบาท/ปี</div></div></div>' +
+    '<div class="card"><div class="card-head"><div class="card-title">สัดส่วนมูลค่าตามชนิดสินค้า</div></div>' +
+    '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px">' +
+      pctEntries.map(([k,v]) => {
+        const lab = k.replace('_pct','').replace('_',' ');
+        return '<div style="background:#f7f9fc;border-radius:8px;padding:10px 12px;border-left:3px solid var(--navy3)">' +
+          '<div style="font-size:11px;color:var(--text3);text-transform:capitalize">' + lab + '</div>' +
+          '<div style="font-size:18px;font-weight:800;color:var(--navy);font-family:Inter,Sarabun,sans-serif">' + v + '%</div>' +
+        '</div>';
+      }).join('') +
+    '</div>' +
+    (e.comment_source ? '<div style="margin-top:10px;font-size:10px;color:var(--text3)">📚 ' + e.comment_source + '</div>' : '') +
+    '</div></div>';
+}
+
+function renderProjects(d) {
+  const projs = d.key_projects || [];
+  if (!projs.length) return '';
+  return '<div class="section"><div class="sec-head">' +
+    '<div><div class="sec-title">🎯 โครงการสำคัญของจังหวัด</div>' +
+    '<div class="sec-sub">' + projs.length + ' โครงการ · งบรวม ' +
+      FORMAT.baht(projs.reduce((s,p)=>s+(p.budget||0),0)) + '</div></div></div>' +
+    '<div class="project-grid">' +
+      projs.map(p => {
+        const statusCls = p.status==='ดำเนินการ' ? 'bg-blue' : (p.status==='ใกล้เสร็จ' ? 'bg-green' : (p.status==='ล่าช้า' ? 'bg-orange' : 'bg-gray'));
+        const pfCls = (p.progress<50) ? 'warn' : '';
+        return '<div class="project-card">' +
+          '<div class="proj-head">' +
+            '<div><div class="proj-name">' + (p.icon||'📌') + ' ' + p.name + '</div></div>' +
+            '<span class="proj-badge ' + statusCls + '">' + p.status + '</span>' +
+          '</div>' +
+          '<div class="proj-budget">งบ <b>' + FORMAT.baht(p.budget) + '</b> · เป้า ' + p.target + ' · หน่วยงาน: ' + (p.agency||'—') + '</div>' +
+          '<div class="proj-progress-label"><span>ความก้าวหน้า</span><span>' + p.progress + '%</span></div>' +
+          '<div class="pb"><div class="pf ' + pfCls + '" style="width:' + p.progress + '%"></div></div>' +
+          (p.note ? '<div class="proj-note">💡 ' + p.note + '</div>' : '') +
+        '</div>';
+      }).join('') +
+    '</div></div>';
+}
+
+function renderSources(d) {
+  if (!d._data_sources?.length) return '';
+  return '<div class="section"><div class="sources">' +
+    '<b>📚 แหล่งข้อมูลที่ใช้:</b>' +
+    '<ul>' + d._data_sources.map(s=>'<li>' + s + '</li>').join('') + '</ul>' +
+  '</div></div>';
+}
+
+
+/* ============================================================
+   LIVE DATA LOADER — weather / prices / alerts
+   ============================================================ */
+async function loadLiveData(d) {
+  const base = d.api_base;
+  const key  = d.api_key;
+  if (!base || !key) return;
+
+  const hdr = {'x-api-key': key, 'Content-Type': 'application/json'};
+
+  // Fetch all in parallel
+  const [wRes, pRes, aRes] = await Promise.allSettled([
+    fetch(base + '/weather', {headers: hdr}).then(r => r.json()),
+    fetch(base + '/prices',  {headers: hdr}).then(r => r.json()),
+    fetch(base + '/alerts',  {headers: hdr}).then(r => r.json()),
+  ]);
+
+  const weather = wRes.status === 'fulfilled' ? wRes.value : null;
+  const prices  = pRes.status === 'fulfilled' ? pRes.value : null;
+  const alerts  = aRes.status === 'fulfilled' ? aRes.value : null;
+
+  document.getElementById('live-panel').innerHTML = renderLivePanel(weather, prices, alerts, d);
+}
+
+function weatherIcon(code) {
+  if (code == null) return '🌡️';
+  if (code === 0) return '☀️';
+  if (code <= 2) return '⛅';
+  if (code <= 3) return '☁️';
+  if (code <= 48) return '🌫️';
+  if (code <= 67) return '🌧️';
+  if (code <= 77) return '❄️';
+  if (code <= 82) return '⛈️';
+  return '🌩️';
+}
+
+function renderLivePanel(weather, prices, alerts, d) {
+  let html = '<div class="section"><div class="sec-head">' +
+    '<div><div class="sec-title">📡 ข้อมูล Real-Time จังหวัด' + d.name_th + '</div>' +
+    '<div class="sec-sub">อัปเดตอัตโนมัติทุกครั้งที่เปิดหน้า · ' + new Date().toLocaleString("th-TH") + '</div></div>' +
+    '<button onclick="document.getElementById('live-panel').innerHTML='<div style=\"padding:20px;text-align:center\">🔄 กำลังรีเฟรช…</div>';loadLiveData(window.__PROV_DATA__)" style="background:var(--navy3);color:#fff;border:none;border-radius:6px;padding:6px 14px;cursor:pointer;font-size:13px">🔄 รีเฟรช</button>' +
+    '</div>';
+
+  /* === WEATHER === */
+  if (weather && weather.ok) {
+    const cur  = weather.current || {};
+    const fore = weather.forecast || [];
+    html += '<div class="card"><div class="card-head"><div class="card-title">🌤️ พยากรณ์อากาศ 7 วัน</div>' +
+      '<div class="card-sub">lat ' + (d.geography?.lat||'') + ' lon ' + (d.geography?.lng||'') + ' · OpenMeteo API</div></div>';
+
+    // Current weather box
+    html += '<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px">' +
+      '<div style="background:linear-gradient(135deg,#1e3d68,#2e5fa3);color:#fff;border-radius:12px;padding:16px 24px;flex:1;min-width:220px">' +
+        '<div style="font-size:36px">' + weatherIcon(cur.weathercode) + ' <span style="font-size:28px;font-weight:800">' + (cur.temperature||'—') + '°C</span></div>' +
+        '<div style="opacity:.8;margin-top:4px">ลม ' + (cur.windspeed||0) + ' km/h · ' + (cur.is_day ? 'กลางวัน' : 'กลางคืน') + '</div>' +
+        '<div style="opacity:.7;font-size:12px;margin-top:4px">' + (cur.time||'') + '</div>' +
+      '</div>';
+
+    if (weather.cropAnalysis && weather.cropAnalysis !== 'ระบบกำลังวิเคราะห์ — กรุณาลองใหม่อีกครั้ง') {
+      html += '<div style="background:#f0faf4;border:1px solid #c6e6d4;border-radius:12px;padding:14px 18px;flex:2;min-width:260px">' +
+        '<div style="font-weight:700;color:#1e6640;margin-bottom:6px">🤖 AI วิเคราะห์ผลกระทบต่อพืชผล</div>' +
+        '<div style="font-size:13px;line-height:1.6;color:#333">' + weather.cropAnalysis + '</div>' +
+      '</div>';
+    }
+    html += '</div>';
+
+    // 7-day forecast row
+    if (fore.length) {
+      html += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px">';
+      fore.forEach(f => {
+        const d_ = new Date(f.date);
+        const dayName = d_.toLocaleDateString('th-TH', {weekday:'short', day:'numeric', month:'short'});
+        const rainStyle = f.rain > 20 ? 'color:#d32f2f;font-weight:700' : (f.rain > 5 ? 'color:#e65100' : 'color:#388e3c');
+        html += '<div style="background:#f7f9fc;border-radius:10px;padding:10px;text-align:center;border:1px solid #e0e8f0">' +
+          '<div style="font-size:10px;color:var(--text3);margin-bottom:4px">' + dayName + '</div>' +
+          '<div style="font-size:22px">' + weatherIcon(f.weatherCode) + '</div>' +
+          '<div style="font-size:13px;font-weight:700;color:var(--navy)">' + f.maxTemp + '° <span style="color:var(--text3);font-weight:400">' + f.minTemp + '°</span></div>' +
+          '<div style="font-size:11px;' + rainStyle + '">🌧️ ' + f.rain + ' mm</div>' +
+          '<div style="font-size:10px;color:var(--text3)">💧 ' + f.humidMax + '%</div>' +
+        '</div>';
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+  } else {
+    html += '<div class="card"><div style="padding:12px;color:var(--text3)">⚠️ ไม่สามารถโหลดข้อมูลอากาศได้ในขณะนี้</div></div>';
+  }
+
+  /* === PRICES === */
+  if (prices && prices.ok) {
+    const items = prices.prices || [];
+    html += '<div class="card"><div class="card-head"><div class="card-title">💰 ราคาพืชผล ณ วันนี้</div>' +
+      '<div class="card-sub">อัปเดต: ' + (prices.updatedAt ? new Date(prices.updatedAt).toLocaleString("th-TH") : 'ล่าสุด') + '</div></div>';
+    if (items.length) {
+      html += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px">';
+      items.forEach(p => {
+        const trend = p.trend === 'up' ? '📈' : (p.trend === 'down' ? '📉' : '➡️');
+        const tColor = p.trend === 'up' ? '#388e3c' : (p.trend === 'down' ? '#d32f2f' : '#555');
+        html += '<div style="background:#f7f9fc;border-radius:10px;padding:12px;border-left:4px solid ' + tColor + '">' +
+          '<div style="font-size:12px;color:var(--text3)">' + (p.name||p.crop) + '</div>' +
+          '<div style="font-size:20px;font-weight:800;color:var(--navy);font-family:Inter,Sarabun,sans-serif">' + (p.price_baht_per_kg||p.price||'—') + ' <span style="font-size:12px;font-weight:400">บ./กก.</span></div>' +
+          '<div style="font-size:12px;color:' + tColor + '">' + trend + ' ' + (p.change_pct != null ? (p.change_pct > 0 ? '+' : '') + p.change_pct + '%' : '') + '</div>' +
+        '</div>';
+      });
+      html += '</div>';
+    } else {
+      html += '<div style="color:var(--text3);font-size:13px">ยังไม่มีข้อมูลราคา · เจ้าหน้าที่สามารถเพิ่มข้อมูลผ่าน Management</div>';
+    }
+    html += '</div>';
+  }
+
+  /* === ALERTS === */
+  if (alerts && alerts.ok) {
+    const items = alerts.alerts || [];
+    html += '<div class="card"><div class="card-head"><div class="card-title">🚨 แจ้งเตือนโรค/ภัยพิบัติ/แมลง</div>' +
+      '<div class="card-sub">รายการแจ้งเตือนปัจจุบัน</div></div>';
+    if (items.length) {
+      html += '<div style="display:flex;flex-direction:column;gap:8px">';
+      items.forEach(a => {
+        const lvl = a.level || a.severity || 'info';
+        const bg  = lvl==='critical'||lvl==='high' ? '#fff5f5' : (lvl==='warning'||lvl==='medium' ? '#fffbea' : '#f0f9f4');
+        const bdr = lvl==='critical'||lvl==='high' ? '#ef5350' : (lvl==='warning'||lvl==='medium' ? '#ffa000' : '#43a047');
+        const ico = lvl==='critical'||lvl==='high' ? '🔴' : (lvl==='warning'||lvl==='medium' ? '🟡' : '🟢');
+        html += '<div style="background:' + bg + ';border-left:4px solid ' + bdr + ';border-radius:8px;padding:10px 14px">' +
+          '<div style="font-weight:700">' + ico + ' ' + (a.title||a.type||'แจ้งเตือน') + '</div>' +
+          '<div style="font-size:12px;color:#555;margin-top:3px">' + (a.message||a.detail||'') + '</div>' +
+          (a.area ? '<div style="font-size:11px;color:var(--text3);margin-top:2px">📍 พื้นที่: ' + a.area + '</div>' : '') +
+        '</div>';
+      });
+      html += '</div>';
+    } else {
+      html += '<div style="padding:10px;background:#f0f9f4;border-radius:8px;color:#388e3c">✅ ไม่มีแจ้งเตือนในขณะนี้ · สถานการณ์ปกติ</div>';
+    }
+    html += '</div>';
+  }
+
+  html += '</div>';
+  return html;
+}
+
+/* Boot */
+loadProvince();
+</script>
+<!-- AI Chat Float -->
+<button onclick="toggleChat()" style="position:fixed;bottom:80px;right:20px;z-index:9000;background:#1565c0;color:#fff;border:none;border-radius:50%;width:52px;height:52px;font-size:22px;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.3)">🤖</button>
+<div id="chatBox" style="display:none;position:fixed;bottom:145px;right:20px;z-index:9000;width:320px;background:#fff;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,0.2);overflow:hidden">
+  <div style="background:#1565c0;color:#fff;padding:10px 14px;font-weight:600">🤖 ถามน้องเอไอ</div>
+  <div id="chatLog" style="height:240px;overflow-y:auto;padding:10px;font-size:13px"></div>
+  <div style="display:flex;padding:8px;border-top:1px solid #eee">
+    <input id="chatIn" style="flex:1;padding:6px 10px;border:1px solid #ddd;border-radius:6px;font-size:13px" placeholder="พิมพ์คำถาม...">
+    <button onclick="sendAI()" style="margin-left:6px;background:#1565c0;color:#fff;border:none;border-radius:6px;padding:6px 12px;cursor:pointer">ส่ง</button>
+  </div>
+</div>
+<script>
+function toggleChat(){const b=document.getElementById('chatBox');b.style.display=b.style.display==='none'?'block':'none';}
+let chatHist=[];
+async function sendAI(){
+  const inp=document.getElementById('chatIn');
+  const msg=inp.value.trim();if(!msg)return;
+  inp.value='';
+  const log=document.getElementById('chatLog');
+  log.innerHTML+=`<div style="text-align:right;margin:4px 0"><span style="background:#e3f2fd;padding:4px 8px;border-radius:8px;display:inline-block">${msg}</span></div>`;
+  chatHist.push({role:'user',content:msg});
+  try{
+    const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,history:chatHist.slice(-6),context:'province'})});
+    const d=await r.json();
+    const reply=d.reply||d.message||'ขออภัย ระบบไม่สามารถตอบได้ในขณะนี้';
+    log.innerHTML+=`<div style="margin:4px 0"><span style="background:#f5f5f5;padding:4px 8px;border-radius:8px;display:inline-block">${reply}</span></div>`;
+    chatHist.push({role:'assistant',content:reply});
+  }catch(e){log.innerHTML+=`<div style="color:#e53935;font-size:12px">เชื่อมต่อไม่ได้</div>`;}
+  log.scrollTop=log.scrollHeight;
+}
+document.getElementById('chatIn').addEventListener('keydown',e=>{if(e.key==='Enter')sendAI();});
+</script>
+
+<script src="/access-bar.js"></script>
+</body>
+</html>

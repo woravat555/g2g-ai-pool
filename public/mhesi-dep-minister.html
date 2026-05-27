@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>แพลตฟอร์มรัฐมนตรีช่วยว่าการ กระทรวง อว.</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--p1:#6a1b9a;--p2:#8e24aa;--p3:#ab47bc;--p4:#e1bee7;--p5:#f3e5f5;--white:#fff;--gray:#f8f9fa;--border:#e0e0e0;--text:#1a1a2e;--sub:#666}
+body{font-family:'Sarabun',sans-serif;height:100vh;overflow:hidden;display:flex;flex-direction:column;background:var(--p5)}
+#login{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#4a0072 0%,#8e24aa 50%,#ce93d8 100%)}
+.lc{background:#fff;border-radius:20px;padding:40px;width:min(680px,96vw);box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+.lc-logo{text-align:center;margin-bottom:24px}
+.lc-badge{width:72px;height:72px;background:linear-gradient(135deg,var(--p1),var(--p3));border-radius:16px;display:inline-flex;align-items:center;justify-content:center;font-size:28px;color:#fff;margin-bottom:10px}
+.lc h1{font-size:21px;font-weight:700;color:var(--p1);text-align:center}
+.lc p{font-size:13px;color:var(--sub);text-align:center;margin-top:4px}
+.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:24px}
+.role-card{border:2px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;transition:.2s;text-align:center}
+.role-card:hover{border-color:var(--p3);background:var(--p5)}
+.role-card .ri{font-size:28px;margin-bottom:6px}
+.role-card .rn{font-size:14px;font-weight:600;color:var(--text)}
+.role-card .rd{font-size:11px;color:var(--sub)}
+.login-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--p1),var(--p3));color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;margin-top:20px;font-family:'Sarabun',sans-serif}
+#app{display:none;flex-direction:column;height:100vh}
+.topbar{background:linear-gradient(90deg,var(--p1),var(--p2));color:#fff;padding:0 20px;height:56px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.tb-badge{width:36px;height:36px;background:rgba(255,255,255,0.2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.tb-title{font-size:15px;font-weight:700;flex:1}
+.tb-user{font-size:12px;opacity:.85;background:rgba(255,255,255,0.15);padding:4px 12px;border-radius:20px}
+.tb-logout{background:rgba(255,255,255,0.15);border:none;color:#fff;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-family:'Sarabun',sans-serif}
+.main{display:flex;flex:1;overflow:hidden}
+.sidebar{width:210px;background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+.nav-item{padding:12px 16px;cursor:pointer;border-left:3px solid transparent;font-size:13px;color:var(--sub);transition:.15s;display:flex;align-items:center;gap:8px}
+.nav-item:hover{background:var(--p5);color:var(--p1)}
+.nav-item.active{background:var(--p5);color:var(--p1);border-left-color:var(--p1);font-weight:600}
+.content{flex:1;overflow-y:auto;padding:20px;background:var(--gray)}
+.tab-pane{display:none}.tab-pane.active{display:block}
+.page-title{font-size:19px;font-weight:700;color:var(--p1);margin-bottom:16px}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.kpi{background:#fff;border-radius:12px;padding:16px;border-left:4px solid var(--p3)}
+.kpi-val{font-size:22px;font-weight:700;color:var(--p1)}
+.kpi-lbl{font-size:12px;color:var(--sub);margin-top:2px}
+.card{background:#fff;border-radius:12px;padding:18px;margin-bottom:16px}
+.card-title{font-size:15px;font-weight:700;color:var(--p1);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--p4)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--p1);color:#fff;padding:9px 10px;text-align:left}
+td{padding:8px 10px;border-bottom:1px solid var(--border)}
+tr:hover td{background:var(--p5)}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
+.bg{background:#dcfce7;color:#166534}.by{background:#fef9c3;color:#854d0e}
+.bb{background:#dbeafe;color:#1e40af}.br{background:#fee2e2;color:#991b1b}
+.bp{background:#f3e8ff;color:#6b21a8}
+.desc-box{background:var(--p5);border-left:4px solid var(--p3);padding:14px 18px;border-radius:0 10px 10px 0;margin-bottom:12px}
+.desc-box h3{font-size:15px;font-weight:700;color:var(--p1);margin-bottom:6px}
+.desc-box p{font-size:13px;color:var(--sub);line-height:1.6}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.stat-box{background:#fff;border-radius:10px;padding:14px;text-align:center;border:1px solid var(--border)}
+.stat-val{font-size:20px;font-weight:700;color:var(--p1)}
+.stat-lbl{font-size:11px;color:var(--sub);margin-top:3px}
+.ai-box{background:linear-gradient(135deg,var(--p5),#fff);border:2px solid var(--p4);border-radius:12px;padding:20px;text-align:center}
+.ai-icon{font-size:48px;margin-bottom:10px}.ai-name{font-size:20px;font-weight:700;color:var(--p1)}
+.ai-role{font-size:13px;color:var(--sub);margin-top:4px}
+.ai-status{display:inline-flex;align-items:center;gap:6px;margin-top:12px;background:#dcfce7;padding:6px 16px;border-radius:20px;font-size:13px;color:#166534;font-weight:600}
+.ai-dot{width:8px;height:8px;background:#22c55e;border-radius:50%;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.ai-info{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;text-align:left}
+.ai-info-item{background:#fff;padding:10px 14px;border-radius:8px;border:1px solid var(--border)}
+.ai-info-label{font-size:11px;color:var(--sub);margin-bottom:2px}
+.ai-info-val{font-size:13px;font-weight:600;color:var(--text)}
+</style>
+</head>
+<body>
+<div id="login">
+<div class="lc">
+  <div class="lc-logo">
+    <div class="lc-badge">🏅</div>
+    <h1>แพลตฟอร์มรัฐมนตรีช่วยว่าการ</h1>
+    <p>กระทรวงการอุดมศึกษา วิทยาศาสตร์ วิจัยและนวัตกรรม (อว.)</p>
+  </div>
+  <div style="text-align:center;margin:18px 0;padding:18px;background:var(--p5);border-radius:14px;border:2px solid var(--p4)">
+  <div style="font-size:38px;margin-bottom:8px">🏛️</div>
+  <div style="font-size:17px;font-weight:700;color:var(--p1)">รัฐมนตรีช่วยว่าการ อว.</div>
+  <div style="font-size:12px;color:var(--sub);margin-top:4px">แพลตฟอร์มเฉพาะ รัฐมนตรีช่วยว่าการ อว. เท่านั้น</div>
+</div><div class="rn">รัฐมนตรีช่วยว่าการ</div><div class="rd">ผู้บริหาร อว. ระดับรัฐมนตรี</div></div><div class="role-card" onclick="login('เลขานุการ รมช.')"><div class="ri">📋</div><div class="rn">เลขานุการ รมช.</div><div class="rd">ผู้ช่วยงานรัฐมนตรี</div></div><div class="role-card" onclick="login('ที่ปรึกษา')"><div class="ri">🎓</div><div class="rn">ที่ปรึกษา</div><div class="rd">ผู้เชี่ยวชาญนโยบาย</div></div><div class="role-card" onclick="login('ผู้ช่วยรัฐมนตรี')"><div class="ri">🤝</div><div class="rn">ผู้ช่วยรัฐมนตรี</div><div class="rd">ประสานงานนโยบาย</div></div></div>
+  <button class="login-btn" onclick="login('รัฐมนตรีช่วยว่าการ')">เข้าสู่ระบบ</button>
+</div>
+</div>
+<div id="app">
+<div class="topbar">
+  <div class="tb-badge">🏅</div>
+  <div class="tb-title">ศูนย์บริหาร รมช.อว.</div>
+  <div class="tb-user" id="userLabel">—</div>
+  <button class="tb-logout" onclick="logout()">ออกจากระบบ</button>
+</div>
+<div class="main">
+  <div class="sidebar">
+    <div class="nav-item active" onclick="show(0,this)">📊 ภาพรวมงาน</div><div class="nav-item" onclick="show(1,this)">🎯 นโยบายที่รับผิดชอบ</div><div class="nav-item" onclick="show(2,this)">💰 งบประมาณ</div><div class="nav-item" onclick="show(3,this)">📅 ตารางปฏิบัติงาน</div><div class="nav-item" onclick="show(4,this)">📜 กฎหมาย/คำสั่ง</div><div class="nav-item" onclick="show(5,this)">🤖 LINE AI</div>
+    <div style="flex:1"></div>
+    <div style="padding:12px 16px;font-size:11px;color:var(--sub);border-top:1px solid var(--border)">
+      <a href="/mhesi-hub.html" style="color:var(--p3);text-decoration:none">← กลับ Hub อว.</a>
+    </div>
+  </div>
+  <div class="content"><div class="tab-pane active" id="t0"><div class="page-title">📊 ภาพรวมการปฏิบัติงาน รมช.อว.</div><div class="kpi-row"><div class="kpi"><div class="kpi-val">8</div><div class="kpi-lbl">หน่วยงานที่รับผิดชอบ</div></div><div class="kpi"><div class="kpi-val">12,400M</div><div class="kpi-lbl">งบที่กำกับดูแล</div></div><div class="kpi"><div class="kpi-val">24</div><div class="kpi-lbl">โครงการเร่งด่วน</div></div><div class="kpi"><div class="kpi-val">85%</div><div class="kpi-lbl">เบิกจ่ายสะสม</div></div></div><div class="card"><div class="card-title">ภารกิจหลัก รมช.อว.</div><table><tr><th>ภารกิจ</th><th>รายละเอียด</th><th>สถานะ</th></tr><tr><td>กำกับดูแลมหาวิทยาลัยกลุ่ม 1</td><td>จุฬา มธ ม.มหิดล และสถาบันชั้นนำ 8 แห่ง</td><td><span class="badge bg">ปกติ</span></td></tr><tr><td>กำกับ สอวช. และ PMU</td><td>นโยบาย ววน. การจัดสรรทุนวิจัย</td><td><span class="badge bg">ปกติ</span></td></tr><tr><td>ประสานความร่วมมือนานาชาติ</td><td>MOU กับ 5 ประเทศ ปี 2568</td><td><span class="badge by">กำลังดำเนินการ</span></td></tr><tr><td>นโยบาย STEM Talent</td><td>ผลิตบุคลากร STEM 100,000 คน</td><td><span class="badge bb">วางแผน</span></td></tr></table></div></div><div class="tab-pane" id="t1"><div class="page-title">🎯 นโยบายที่รับผิดชอบ</div><div class="card"><div class="card-title">นโยบายหลักที่ รมช. กำกับ</div><table><tr><th>นโยบาย</th><th>เป้าหมาย</th><th>กำหนดเสร็จ</th><th>สถานะ</th></tr><tr><td>Sandbox อุดมศึกษา Phase 2</td><td>100 สถาบัน</td><td>มิ.ย. 2568</td><td><span class="badge by">ดำเนินการ</span></td></tr><tr><td>ทุนวิจัย ววน. กลุ่ม S2</td><td>500 ทุน</td><td>ก.ย. 2568</td><td><span class="badge bb">วางแผน</span></td></tr><tr><td>BCG University Alliance</td><td>30 มหาวิทยาลัย</td><td>ธ.ค. 2568</td><td><span class="badge bg">ดำเนินการ</span></td></tr><tr><td>International Research Hub</td><td>5 ศูนย์วิจัยร่วม</td><td>มี.ค. 2569</td><td><span class="badge bb">วางแผน</span></td></tr></table></div></div><div class="tab-pane" id="t2"><div class="page-title">💰 งบประมาณที่กำกับดูแล</div><div class="kpi-row"><div class="kpi"><div class="kpi-val">12,400M</div><div class="kpi-lbl">งบรวม</div></div><div class="kpi"><div class="kpi-val">10,540M</div><div class="kpi-lbl">อนุมัติแล้ว</div></div><div class="kpi"><div class="kpi-val">8,960M</div><div class="kpi-lbl">เบิกจ่ายแล้ว</div></div><div class="kpi"><div class="kpi-val">1,580M</div><div class="kpi-lbl">คงเหลือ</div></div></div><div class="card"><div class="card-title">สรุปงบรายหน่วยงานที่รับผิดชอบ</div><table><tr><th>หน่วยงาน</th><th>งบ (M)</th><th>%เบิก</th><th>สถานะ</th></tr><tr><td>สอวช.</td><td>480</td><td>66%</td><td><span class="badge by">ติดตาม</span></td></tr><tr><td>บพค.</td><td>1,800</td><td>58%</td><td><span class="badge br">เร่งรัด</span></td></tr><tr><td>บพท.</td><td>1,200</td><td>70%</td><td><span class="badge bg">ปกติ</span></td></tr><tr><td>บพข.</td><td>2,100</td><td>65%</td><td><span class="badge by">ติดตาม</span></td></tr><tr><td>มหาวิทยาลัยกลุ่ม 1 (อุดหนุน)</td><td>6,820</td><td>78%</td><td><span class="badge bg">ปกติ</span></td></tr></table></div></div><div class="tab-pane" id="t3"><div class="page-title">📅 ตารางปฏิบัติงาน</div><div class="card"><div class="card-title">กำหนดการ พ.ค.–มิ.ย. 2568</div><table><tr><th>วัน/เวลา</th><th>กิจกรรม</th><th>สถานที่</th><th>สถานะ</th></tr><tr><td>27 พ.ค. 10:00</td><td>ประชุมคณะกรรมการ ววน.</td><td>สอวช. อาคาร SM Tower</td><td><span class="badge bb">กำลังมา</span></td></tr><tr><td>29 พ.ค. 14:00</td><td>มอบทุนนักวิจัยรุ่นใหม่</td><td>ห้องแกรนด์ อว.</td><td><span class="badge bb">กำลังมา</span></td></tr><tr><td>5 มิ.ย. 09:00</td><td>เยี่ยม TCELS + HAII</td><td>มหิดล วิทยาเขตศาลายา</td><td><span class="badge by">รอยืนยัน</span></td></tr><tr><td>12 มิ.ย. 13:00</td><td>MOU กับ JSPS ญี่ปุ่น</td><td>กรุงเทพ</td><td><span class="badge bb">กำลังมา</span></td></tr></table></div></div><div class="tab-pane" id="t4"><div class="page-title">📜 กฎหมาย/คำสั่ง</div><div class="card"><div class="card-title">คำสั่ง/ประกาศ รมช. ล่าสุด</div><table><tr><th>เลขที่</th><th>เรื่อง</th><th>วันที่</th><th>ประเภท</th></tr><tr><td>รมช.อว. 01/2568</td><td>แต่งตั้ง อนุกรรมการนวัตกรรม</td><td>ม.ค. 68</td><td><span class="badge bp">แต่งตั้ง</span></td></tr><tr><td>รมช.อว. 02/2568</td><td>นโยบาย BCG University</td><td>มี.ค. 68</td><td><span class="badge bb">ประกาศ</span></td></tr><tr><td>รมช.อว. 03/2568</td><td>เกณฑ์ทุนวิจัย ววน. S2</td><td>เม.ย. 68</td><td><span class="badge bg">ระเบียบ</span></td></tr></table></div></div><div class="tab-pane" id="t5"><div class="page-title">🤖 LINE AI ผู้ช่วย รมช.อว.</div><div class="ai-box"><div class="ai-icon">🤖</div><div class="ai-name">น้องผู้ช่วย รมช.</div><div class="ai-role">AI Assistant สำหรับรัฐมนตรีช่วยว่าการ อว.</div><div class="ai-status"><div class="ai-dot"></div>ออนไลน์</div><div class="ai-info"><div class="ai-info-item"><div class="ai-info-label">AI Model</div><div class="ai-info-val">Claude Sonnet 4</div></div><div class="ai-info-item"><div class="ai-info-label">Channel</div><div class="ai-info-val">MHESI03</div></div><div class="ai-info-item"><div class="ai-info-label">บทบาท</div><div class="ai-info-val">ผู้ช่วยนโยบาย + วิเคราะห์</div></div><div class="ai-info-item"><div class="ai-info-label">สถานะ</div><div class="ai-info-val">พร้อมใช้งาน</div></div></div></div></div></div>
+</div>
+</div>
+<script>
+let currentRole='';
+function login(role){currentRole=role||'รัฐมนตรีช่วยว่าการ';document.getElementById('userLabel').textContent=currentRole;document.getElementById('login').style.display='none';document.getElementById('app').style.display='flex';}
+function logout(){document.getElementById('login').style.display='flex';document.getElementById('app').style.display='none';}
+function show(idx,el){document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById('t'+idx).classList.add('active');el.classList.add('active');}
+</script>
+  <script src="/mhesi-delegate.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      MhesiDelegate.init({
+        myId: 'dep-minister',
+        roleName: 'รัฐมนตรีช่วยว่าการ อว.',
+        level: 'dep-minister',
+        reportsTo: "minister",
+        canAssignTo: [{"id": "ps", "name": "ปลัดกระทรวง อว."}, {"id": "deputy-ps", "name": "รองปลัดกระทรวง อว."}, {"id": "nstda", "name": "ผอ.สวทช."}, {"id": "nrct", "name": "ผอ.วช."}, {"id": "nia", "name": "ผอ.NIA"}, {"id": "tistr", "name": "ผอ.วว."}, {"id": "narit", "name": "ผอ.สรอ."}, {"id": "gistda", "name": "ผอ.GISTDA"}, {"id": "tint", "name": "ผอ.TINT"}, {"id": "bsid", "name": "ผอ.BSID"}, {"id": "haii", "name": "ผอ.HAII"}, {"id": "tcels", "name": "ผอ.TCELS"}, {"id": "bpcr", "name": "ผอ.BPCR"}, {"id": "bptp", "name": "ผอ.BPTP"}, {"id": "bpcic", "name": "ผอ.BPCIC"}]
+      });
+    });
+  </script>
+</body></html>

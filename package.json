@@ -1,0 +1,20 @@
+{
+  "name": "g2g-ai-pool",
+  "version": "1.0.0",
+  "description": "G2G AI Pool — multi-provider router with cost+markup metering",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "node-fetch": "^3.3.2",
+    "dotenv": "^16.4.5"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

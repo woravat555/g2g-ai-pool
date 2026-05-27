@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ศูนย์บริหาร อว. — Executive Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --p1:#3d1a78;--p2:#5c2d99;--p3:#7c3aed;--p4:#a78bfa;
+  --gold:#f9a825;--gold2:#ffca28;
+  --green1:#166534;--green2:#22c55e;
+  --red:#dc2626;--blue:#1e40af;--teal:#0d9488;--orange:#ea580c;
+  --bg:#f5f0ff;--bg2:#ede7f6;--border:#d1b3e8;
+  --white:#fff;--text:#1e293b;--sub:#64748b;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Sarabun',sans-serif}
+body{background:var(--bg);color:var(--text);min-height:100vh}
+
+/* HEADER */
+.hdr{background:linear-gradient(135deg,var(--p1) 0%,var(--p2) 55%,var(--p3) 100%);color:#fff;padding:22px 40px 18px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.25)}
+.hdr-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.hdr-left{display:flex;align-items:center;gap:16px}
+.hdr-emblem{width:48px;height:48px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;border:2px solid rgba(255,255,255,.4)}
+.hdr-t1{font-size:18px;font-weight:800}
+.hdr-t2{font-size:11px;opacity:.75;margin-top:2px}
+.hdr-right{display:flex;gap:8px;align-items:center}
+.hdr-btn{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);color:#fff;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;text-decoration:none;font-family:inherit;cursor:pointer;transition:.15s}
+.hdr-btn:hover{background:rgba(255,255,255,.28)}
+.hdr-btn.gold{background:var(--gold);color:var(--p1);border-color:var(--gold)}
+
+/* BREADCRUMB */
+.breadcrumb{background:rgba(255,255,255,.1);border-top:1px solid rgba(255,255,255,.12);padding:7px 40px;font-size:11px;color:rgba(255,255,255,.8)}
+.breadcrumb a{color:rgba(255,255,255,.8);text-decoration:none}
+
+/* MAIN */
+.main{max-width:1400px;margin:0 auto;padding:24px 40px 60px}
+
+/* STATS ROW */
+.stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:24px}
+.stat-card{background:#fff;border-radius:10px;padding:12px 14px;border:1px solid var(--border);text-align:center}
+.stat-v{font-size:18px;font-weight:800;color:var(--p1)}
+.stat-l{font-size:10px;color:var(--sub);margin-top:2px}
+
+/* LOGO QUICK LAUNCH SECTION */
+.quick-launch{background:#fff;border-radius:14px;padding:20px 24px;margin-bottom:24px;border:1.5px solid var(--border);box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.ql-title{font-size:13px;font-weight:800;color:var(--p1);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.ql-title-sub{font-size:11px;font-weight:400;color:var(--sub)}
+.ql-grid{display:flex;gap:10px;flex-wrap:wrap}
+
+/* INDIVIDUAL LOGO TILE */
+.logo-tile{display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;cursor:pointer;transition:.18s;padding:6px;border-radius:10px}
+.logo-tile:hover{background:var(--bg);transform:translateY(-2px)}
+.logo-badge{width:60px;height:60px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:11px;color:#fff;text-align:center;line-height:1.15;letter-spacing:-.3px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.18);border:2px solid rgba(255,255,255,.25)}
+.logo-badge.b-ministry{background:linear-gradient(135deg,#3d1a78,#7c3aed)}
+.logo-badge.b-dept{background:linear-gradient(135deg,#1e40af,#3b82f6)}
+.logo-badge.b-org{background:linear-gradient(135deg,#065f46,#0d9488)}
+.logo-badge.b-pmu{background:linear-gradient(135deg,#c2410c,#ea580c)}
+.logo-badge.b-univ{background:linear-gradient(135deg,#166534,#16a34a)}
+.logo-badge.b-gold{background:linear-gradient(135deg,#92400e,#f9a825)}
+.logo-name{font-size:10px;font-weight:700;color:var(--sub);text-align:center;max-width:60px;line-height:1.3}
+
+/* SEARCH BAR */
+.search-bar{background:#fff;border-radius:12px;padding:14px 18px;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:20px;display:flex;gap:10px;align-items:center}
+.search-inp{border:1.5px solid var(--border);border-radius:8px;padding:9px 14px;font-size:14px;width:100%;outline:none;font-family:inherit}
+.search-inp:focus{border-color:var(--p3)}
+.filter-btn{background:var(--bg);border:1.5px solid var(--border);padding:8px 12px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;transition:.15s}
+.filter-btn.active{background:var(--p1);color:#fff;border-color:var(--p1)}
+.filter-btn:hover:not(.active){border-color:var(--p3)}
+
+/* LEVEL SECTION */
+.level-section{margin-bottom:32px}
+.level-hdr{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--border)}
+.level-badge{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;font-weight:800;font-size:13px;color:#fff;flex-shrink:0}
+.lvl-ministry{background:var(--p1)}.lvl-dept{background:var(--blue)}.lvl-org{background:var(--teal)}.lvl-pmu{background:var(--orange)}.lvl-univ{background:var(--green1)}
+.level-hdr-text{font-size:15px;font-weight:800;color:var(--p1)}
+.level-hdr-sub{font-size:11px;color:var(--sub);margin-left:4px}
+
+/* EXEC GRID — compact cards with visual logos */
+.exec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.exec-card{background:#fff;border-radius:12px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.07);border:1.5px solid var(--border);text-decoration:none;color:var(--text);display:flex;flex-direction:column;gap:10px;transition:.2s;position:relative;overflow:hidden}
+.exec-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.exec-card.ministry::before{background:linear-gradient(90deg,var(--p1),var(--p3))}
+.exec-card.dept::before{background:linear-gradient(90deg,var(--blue),#60a5fa)}
+.exec-card.org::before{background:linear-gradient(90deg,#065f46,var(--teal))}
+.exec-card.pmu::before{background:linear-gradient(90deg,#c2410c,var(--orange))}
+.exec-card.univ::before{background:linear-gradient(90deg,var(--green1),var(--green2))}
+.exec-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.12)}
+
+.exec-top{display:flex;align-items:flex-start;gap:12px}
+.exec-logo{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:10px;color:#fff;text-align:center;line-height:1.2;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.exec-card.ministry .exec-logo{background:linear-gradient(135deg,#3d1a78,#7c3aed)}
+.exec-card.dept .exec-logo{background:linear-gradient(135deg,#1e40af,#3b82f6)}
+.exec-card.org .exec-logo{background:linear-gradient(135deg,#065f46,#0d9488)}
+.exec-card.pmu .exec-logo{background:linear-gradient(135deg,#c2410c,#ea580c)}
+.exec-card.univ .exec-logo{background:linear-gradient(135deg,#166534,#16a34a)}
+
+.exec-title-wrap{flex:1;min-width:0}
+.exec-role{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:3px}
+.exec-role.ministry{color:var(--p2)}.exec-role.dept{color:var(--blue)}.exec-role.org{color:var(--teal)}.exec-role.pmu{color:var(--orange)}.exec-role.univ{color:var(--green1)}
+.exec-name{font-size:13px;font-weight:800;color:var(--text);line-height:1.3}
+.exec-sub{font-size:10px;color:var(--sub);margin-top:2px;line-height:1.4}
+
+.exec-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.exec-stat{background:var(--bg);border-radius:6px;padding:5px 8px;text-align:center}
+.exec-stat-v{font-size:12px;font-weight:800;color:var(--p1)}
+.exec-stat-l{font-size:9px;color:var(--sub)}
+
+.exec-footer{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--bg2);padding-top:8px;margin-top:2px}
+.exec-link{font-size:11px;font-weight:700;display:flex;align-items:center;gap:4px}
+.exec-link.ministry{color:var(--p2)}.exec-link.dept{color:var(--blue)}.exec-link.org{color:var(--teal)}.exec-link.pmu{color:var(--orange)}.exec-link.univ{color:var(--green1)}
+.exec-status{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--sub)}
+.dot-g{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green2)}
+
+/* FOOTER */
+.footer{text-align:center;padding:20px;font-size:11px;color:var(--sub);border-top:1px solid var(--border);background:#fff}
+
+@media(max-width:768px){.main{padding:14px}.stats-row{grid-template-columns:1fr 1fr}.hdr{padding:14px 18px}.breadcrumb{padding:6px 18px}.exec-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-inner">
+    <div class="hdr-left">
+      <div class="hdr-emblem">🎓</div>
+      <div>
+        <div class="hdr-t1">ศูนย์บริหาร — กระทรวงการอุดมศึกษา วิทยาศาสตร์ วิจัยและนวัตกรรม (อว.)</div>
+        <div class="hdr-t2">EXECUTIVE MANAGEMENT PORTAL · แยกแดชบอร์ดตามตำแหน่งผู้บริหาร · G2G AI Platform © 2026</div>
+      </div>
+    </div>
+    <div class="hdr-right">
+      <a href="/mhesi-ps.html" class="hdr-btn">⚙️ ระบบปลัด อว.</a>
+      <a href="/minister-dashboard.html" class="hdr-btn">🏛️ แดชบอร์ดรมว.</a>
+      <a href="/mhesi-bot-admin.html" class="hdr-btn">📱 LINE AI Bot</a>
+      <a href="/platform-overview.html" class="hdr-btn gold">🌐 G2G Platform</a>
+    </div>
+  </div>
+  <div class="breadcrumb">
+    <a href="/platform-overview.html">G2G Platform</a> › กระทรวง อว. › ศูนย์บริหารผู้บริหาร
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- STATS ROW -->
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-v">45,240M</div><div class="stat-l">งบประมาณรวม (บาท)</div></div>
+    <div class="stat-card"><div class="stat-v">342,800</div><div class="stat-l">บุคลากรทั้งหมด</div></div>
+    <div class="stat-card"><div class="stat-v">2,512,400</div><div class="stat-l">นักศึกษา</div></div>
+    <div class="stat-card"><div class="stat-v">170</div><div class="stat-l">สถาบันอุดมศึกษา</div></div>
+    <div class="stat-card"><div class="stat-v">60+</div><div class="stat-l">หน่วยงานในสังกัด</div></div>
+  </div>
+
+  <!-- ═══ LOGO QUICK LAUNCH ═══ -->
+  <div class="quick-launch">
+    <div class="ql-title">🚀 เลือกหน่วยงาน — กดโลโก้เพื่อเข้าสู่ระบบ <span class="ql-title-sub">Quick Access · แยกตามระดับ</span></div>
+
+    <!-- ระดับกระทรวง -->
+    <div style="margin-bottom:14px">
+      <div style="font-size:10px;font-weight:800;color:var(--p1);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;padding-left:4px">🏛️ ระดับกระทรวง</div>
+      <div class="ql-grid">
+        <a href="/mhesi-minister.html" class="logo-tile">
+          <div class="logo-badge b-ministry">รมว.<br>อว.</div>
+          <div class="logo-name">รัฐมนตรี</div>
+        </a>
+        <a href="/mhesi-dep-minister.html" class="logo-tile">
+          <div class="logo-badge b-ministry" style="font-size:9px">รมช.<br>อว.</div>
+          <div class="logo-name">รมช.อว.</div>
+        </a>
+        <a href="/mhesi-ps.html" class="logo-tile">
+          <div class="logo-badge b-ministry">ปลัด<br>อว.</div>
+          <div class="logo-name">ปลัด อว.</div>
+        </a>
+        <a href="/mhesi-deputy-ps.html" class="logo-tile">
+          <div class="logo-badge b-ministry" style="font-size:9px">รอง<br>ปลัด</div>
+          <div class="logo-name">รองปลัด</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- ระดับกรม -->
+    <div style="margin-bottom:14px">
+      <div style="font-size:10px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;padding-left:4px">🏢 กรม / สำนักงาน</div>
+      <div class="ql-grid">
+        <a href="/mhesi-dept.html?dept=sko" class="logo-tile">
+          <div class="logo-badge b-dept">สกอ.</div>
+          <div class="logo-name">สกอ.</div>
+        </a>
+        <a href="/mhesi-dept.html?dept=dss" class="logo-tile">
+          <div class="logo-badge b-dept">วศ.</div>
+          <div class="logo-name">กรม วศ.</div>
+        </a>
+        <a href="/mhesi-dept.html?dept=oaep" class="logo-tile">
+          <div class="logo-badge b-dept">ปส.</div>
+          <div class="logo-name">สนง.ปส.</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- องค์การมหาชน -->
+    <div style="margin-bottom:14px">
+      <div style="font-size:10px;font-weight:800;color:var(--teal);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;padding-left:4px">🔬 องค์การมหาชน / หน่วยวิจัย</div>
+      <div class="ql-grid">
+        <a href="/mhesi-nstda.html" class="logo-tile">
+          <div class="logo-badge b-org" style="font-size:9px">สวทช<br>NSTDA</div>
+          <div class="logo-name">สวทช.</div>
+        </a>
+        <a href="/mhesi-nrct.html" class="logo-tile">
+          <div class="logo-badge b-org">วช.<br><span style="font-size:8px">NRCT</span></div>
+          <div class="logo-name">วช.</div>
+        </a>
+        <a href="/mhesi-nia.html" class="logo-tile">
+          <div class="logo-badge b-org">สนช.<br><span style="font-size:8px">NIA</span></div>
+          <div class="logo-name">สนช.</div>
+        </a>
+        <a href="/mhesi-tistr.html" class="logo-tile">
+          <div class="logo-badge b-org">วว.<br><span style="font-size:8px">TISTR</span></div>
+          <div class="logo-name">วว.</div>
+        </a>
+        <a href="/mhesi-narit.html" class="logo-tile">
+          <div class="logo-badge b-org">สดร.<br><span style="font-size:8px">NARIT</span></div>
+          <div class="logo-name">สดร.</div>
+        </a>
+        <a href="/mhesi-gistda.html" class="logo-tile">
+          <div class="logo-badge b-org" style="font-size:9px">GISTDA</div>
+          <div class="logo-name">จิสด้า</div>
+        </a>
+        <a href="/mhesi-tint.html" class="logo-tile">
+          <div class="logo-badge b-org">สทน.<br><span style="font-size:8px">TINT</span></div>
+          <div class="logo-name">สทน.</div>
+        </a>
+        <a href="/mhesi-bsid.html" class="logo-tile">
+          <div class="logo-badge b-org" style="font-size:9px">สอวช<br>BSID</div>
+          <div class="logo-name">สอวช.</div>
+        </a>
+        <a href="/mhesi-haii.html" class="logo-tile">
+          <div class="logo-badge b-org">สสน.<br><span style="font-size:8px">HAII</span></div>
+          <div class="logo-name">สสน.</div>
+        </a>
+        <a href="/mhesi-tcels.html" class="logo-tile">
+          <div class="logo-badge b-org" style="font-size:9px">TCELS</div>
+          <div class="logo-name">TCELS</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- PMU -->
+    <div style="margin-bottom:14px">
+      <div style="font-size:10px;font-weight:800;color:var(--orange);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;padding-left:4px">💡 หน่วยบริหารทุน PMU</div>
+      <div class="ql-grid">
+        <a href="/mhesi-bpcr.html" class="logo-tile">
+          <div class="logo-badge b-pmu">บพค.</div>
+          <div class="logo-name">บพค.</div>
+        </a>
+        <a href="/mhesi-bptp.html" class="logo-tile">
+          <div class="logo-badge b-pmu">บพท.</div>
+          <div class="logo-name">บพท.</div>
+        </a>
+        <a href="/mhesi-bpcic.html" class="logo-tile">
+          <div class="logo-badge b-pmu">บพข.</div>
+          <div class="logo-name">บพข.</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- มหาวิทยาลัย -->
+    <div>
+      <div style="font-size:10px;font-weight:800;color:var(--green1);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;padding-left:4px">🎓 มหาวิทยาลัย (ตัวอย่าง)</div>
+      <div class="ql-grid">
+        <a href="/mhesi-univ.html?univ=chula" class="logo-tile">
+          <div class="logo-badge b-univ">จุฬาฯ<br><span style="font-size:8px">CU</span></div>
+          <div class="logo-name">จุฬาลงกรณ์</div>
+        </a>
+        <a href="/mhesi-univ.html?univ=mahidol" class="logo-tile">
+          <div class="logo-badge b-univ">มหิดล<br><span style="font-size:8px">MU</span></div>
+          <div class="logo-name">มหิดล</div>
+        </a>
+        <a href="/mhesi-univ.html?univ=ku" class="logo-tile">
+          <div class="logo-badge b-univ">เกษตร<br><span style="font-size:8px">KU</span></div>
+          <div class="logo-name">เกษตรศาสตร์</div>
+        </a>
+        <a href="/mhesi-univ.html?univ=kku" class="logo-tile">
+          <div class="logo-badge b-univ">ขอนแก่น<br><span style="font-size:8px">KKU</span></div>
+          <div class="logo-name">ขอนแก่น</div>
+        </a>
+        <a href="/mhesi-univ.html?univ=cmu" class="logo-tile">
+          <div class="logo-badge b-univ">เชียงใหม่<br><span style="font-size:8px">CMU</span></div>
+          <div class="logo-name">เชียงใหม่</div>
+        </a>
+        <a href="/mhesi-univ.html?univ=all" class="logo-tile">
+          <div class="logo-badge b-gold">170<br>สถาบัน</div>
+          <div class="logo-name">ทั้งหมด</div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEARCH & FILTER -->
+  <div class="search-bar">
+    <input class="search-inp" id="searchInp" placeholder="🔍 ค้นหาตำแหน่ง หน่วยงาน..." oninput="filterCards()">
+    <button class="filter-btn active" onclick="setFilter('all',this)">ทั้งหมด</button>
+    <button class="filter-btn" onclick="setFilter('ministry',this)">กระทรวง</button>
+    <button class="filter-btn" onclick="setFilter('dept',this)">กรม</button>
+    <button class="filter-btn" onclick="setFilter('org',this)">องค์การมหาชน</button>
+    <button class="filter-btn" onclick="setFilter('pmu',this)">PMU</button>
+    <button class="filter-btn" onclick="setFilter('univ',this)">มหาวิทยาลัย</button>
+  </div>
+
+  <!-- ═══ LEVEL 1: ระดับกระทรวง ═══ -->
+  <div class="level-section" id="sec-ministry" data-level="ministry">
+    <div class="level-hdr">
+      <div class="level-badge lvl-ministry">1</div>
+      <div class="level-hdr-text">ระดับกระทรวง</div>
+      <div class="level-hdr-sub">— ผู้บริหารสูงสุดของกระทรวง อว.</div>
+    </div>
+    <div class="exec-grid">
+
+      <a href="/mhesi-minister.html" class="exec-card ministry" data-level="ministry" data-name="รัฐมนตรีว่าการ อว.">
+        <div class="exec-top">
+          <div class="exec-logo">รมว.<br>อว.</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role ministry">รัฐมนตรีว่าการ</div>
+            <div class="exec-name">กระทรวงการอุดมศึกษา วิทยาศาสตร์ฯ</div>
+            <div class="exec-sub">กำหนดนโยบาย · กำกับทิศทาง อว.</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">45,240M</div><div class="exec-stat-l">งบประมาณรวม</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">60+</div><div class="exec-stat-l">หน่วยงาน</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link ministry">🔗 เข้าสู่แดชบอร์ดรัฐมนตรี →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+      <a href="/mhesi-dep-minister.html" class="exec-card ministry" data-level="ministry" data-name="รัฐมนตรีช่วยว่าการ อว.">
+        <div class="exec-top">
+          <div class="exec-logo" style="font-size:9px">รมช.<br>อว.</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role ministry">รัฐมนตรีช่วยว่าการ</div>
+            <div class="exec-name">กระทรวง อว. (ช่วย)</div>
+            <div class="exec-sub">กำกับงานตามมอบหมาย · รับนโยบาย</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">12,000M</div><div class="exec-stat-l">งบในกำกับ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">18</div><div class="exec-stat-l">หน่วยงาน</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link ministry">🔗 เข้าสู่แดชบอร์ด →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+      <a href="/mhesi-ps.html" class="exec-card ministry" data-level="ministry" data-name="ปลัดกระทรวง อว.">
+        <div class="exec-top">
+          <div class="exec-logo">ปลัด<br>อว.</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role ministry">ปลัดกระทรวง อว.</div>
+            <div class="exec-name">สำนักงานปลัดกระทรวง อว.</div>
+            <div class="exec-sub">บูรณาการทั้งระบบ · บริหารองค์กร</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">2,840M</div><div class="exec-stat-l">งบ สป.อว.</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">12,400</div><div class="exec-stat-l">บุคลากร</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link ministry">🔗 เข้าสู่ระบบปลัด →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+      <a href="/mhesi-deputy-ps.html" class="exec-card ministry" data-level="ministry" data-name="รองปลัดกระทรวง อว.">
+        <div class="exec-top">
+          <div class="exec-logo" style="font-size:9px">รอง<br>ปลัด</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role ministry">รองปลัดกระทรวง</div>
+            <div class="exec-name">รองปลัด อว. (4 สายงาน)</div>
+            <div class="exec-sub">อุดมศึกษา / วิจัย / วิทยาศาสตร์ / บริหาร</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">4</div><div class="exec-stat-l">สายงาน</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">8,200</div><div class="exec-stat-l">บุคลากร</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link ministry">🔗 เข้าสู่ระบบรองปลัด →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- ═══ LEVEL 2: กรม/สำนักงาน ═══ -->
+  <div class="level-section" id="sec-dept" data-level="dept">
+    <div class="level-hdr">
+      <div class="level-badge lvl-dept">2</div>
+      <div class="level-hdr-text">ระดับกรม / สำนักงาน</div>
+      <div class="level-hdr-sub">— อธิบดี / เลขาธิการ / ผู้อำนวยการ</div>
+    </div>
+    <div class="exec-grid">
+
+      <a href="/mhesi-dept.html?dept=sko" class="exec-card dept" data-level="dept" data-name="สำนักงานคณะกรรมการการอุดมศึกษา สกอ.">
+        <div class="exec-top">
+          <div class="exec-logo">สกอ.</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role dept">เลขาธิการ สกอ.</div>
+            <div class="exec-name">สำนักงานคณะกรรมการการอุดมศึกษา</div>
+            <div class="exec-sub">กำกับ 170 สถาบัน · HEMIS · มาตรฐาน</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">1,200M</div><div class="exec-stat-l">งบประมาณ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">170</div><div class="exec-stat-l">สถาบัน</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link dept">🔗 เข้าสู่ระบบ สกอ. →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+      <a href="/mhesi-dept.html?dept=dss" class="exec-card dept" data-level="dept" data-name="กรมวิทยาศาสตร์บริการ วศ.">
+        <div class="exec-top">
+          <div class="exec-logo">วศ.</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role dept">อธิบดี</div>
+            <div class="exec-name">กรมวิทยาศาสตร์บริการ (วศ.)</div>
+            <div class="exec-sub">มาตรฐาน · ทดสอบ · สอบเทียบ · วิเคราะห์</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">980M</div><div class="exec-stat-l">งบประมาณ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">1,800</div><div class="exec-stat-l">บุคลากร</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link dept">🔗 เข้าสู่ระบบ วศ. →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+      <a href="/mhesi-dept.html?dept=oaep" class="exec-card dept" data-level="dept" data-name="สำนักงานปรมาณูเพื่อสันติ ปส.">
+        <div class="exec-top">
+          <div class="exec-logo">ปส.</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role dept">เลขาธิการ ปส.</div>
+            <div class="exec-name">สำนักงานปรมาณูเพื่อสันติ (ปส.)</div>
+            <div class="exec-sub">กำกับดูแลนิวเคลียร์ · ความปลอดภัยรังสี</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">640M</div><div class="exec-stat-l">งบประมาณ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">480</div><div class="exec-stat-l">บุคลากร</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link dept">🔗 เข้าสู่ระบบ ปส. →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- ═══ LEVEL 3: องค์การมหาชน ═══ -->
+  <div class="level-section" id="sec-org" data-level="org">
+    <div class="level-hdr">
+      <div class="level-badge lvl-org">3</div>
+      <div class="level-hdr-text">ระดับองค์การมหาชน / หน่วยงานวิจัย</div>
+      <div class="level-hdr-sub">— ประธานบอร์ด + ผู้อำนวยการ แยกกัน</div>
+    </div>
+    <div class="exec-grid">
+
+      <a href="/mhesi-nstda.html" class="exec-card org" data-level="org" data-name="สวทช. NSTDA">
+        <div class="exec-top">
+          <div class="exec-logo" style="font-size:9px">สวทช<br>NSTDA</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role org">ประธานบอร์ด + ผอ. สวทช.</div>
+            <div class="exec-name">สำนักงานพัฒนาวิทยาศาสตร์และเทคโนโลยีแห่งชาติ</div>
+            <div class="exec-sub">วิจัย 4 ศูนย์ BIOTEC/MTEC/NECTEC/NANOTEC</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">8,400M</div><div class="exec-stat-l">งบประมาณ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">6,050</div><div class="exec-stat-l">บุคลากร</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link org">🔗 เข้าสู่ระบบ สวทช. →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+      <a href="/mhesi-nrct.html" class="exec-card org" data-level="org" data-name="วช. NRCT">
+        <div class="exec-top">
+          <div class="exec-logo">วช.<br><span style="font-size:8px">NRCT</span></div>
+          <div class="exec-title-wrap">
+            <div class="exec-role org">ประธานบอร์ด + ผอ. วช.</div>
+            <div class="exec-name">สำนักงานการวิจัยแห่งชาติ (วช.)</div>
+            <div class="exec-sub">ทุนวิจัยแห่งชาติ · คลังข้อมูลวิจัย</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">3,200M</div><div class="exec-stat-l">งบประมาณ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">800</div><div class="exec-stat-l">บุคลากร</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link org">🔗 เข้าสู่ระบบ วช. →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+      <a href="/mhesi-nia.html" class="exec-card org" data-level="org" data-name="สนช. NIA">
+        <div class="exec-top">
+          <div class="exec-logo">สนช.<br><span style="font-size:8px">NIA</span></div>
+          <div class="exec-title-wrap">
+            <div class="exec-role org">ประธานบอร์ด + ผอ. สนช.</div>
+            <div class="exec-name">สำนักงานนวัตกรรมแห่งชาติ (สนช.)</div>
+            <div class="exec-sub">Startup · นวัตกรรมเชิงพาณิชย์</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">1,800M</div><div class="exec-stat-l">งบประมาณ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">500</div><div class="exec-stat-l">บุคลากร</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link org">🔗 เข้าสู่ระบบ สนช. →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+      <a href="/mhesi-tistr.html" class="exec-card org" data-level="org" data-name="วท. TISTR">
+        <div class="exec-top">
+          <div class="exec-logo">วว.<br><span style="font-size:8px">TISTR</span></div>
+          <div class="exec-title-wrap">
+            <div class="exec-role org">ประธานบอร์ด + ผอ. วว.</div>
+            <div class="exec-name">สถาบันวิจัยวิทยาศาสตร์และเทคโนโลยีฯ</div>
+            <div class="exec-sub">วิจัยอุตสาหกรรม · บริการทดสอบ</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">1,400M</div><div class="exec-stat-l">งบประมาณ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">1,600</div><div class="exec-stat-l">บุคลากร</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link org">🔗 เข้าสู่ระบบ วว. →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+      <a href="/mhesi-narit.html" class="exec-card org" data-level="org" data-name="สดร. NARIT">
+        <div class="exec-top">
+          <div class="exec-logo">สดร.<br><span style="font-size:8px">NARIT</span></div>
+          <div class="exec-title-wrap">
+            <div class="exec-role org">ประธานบอร์ด + ผอ. สดร.</div>
+            <div class="exec-name">สถาบันวิจัยดาราศาสตร์แห่งชาติ</div>
+            <div class="exec-sub">กล้องโทรทรรศน์ · ดาราศาสตร์ไทย</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">680M</div><div class="exec-stat-l">งบประมาณ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">300</div><div class="exec-stat-l">บุคลากร</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link org">🔗 เข้าสู่ระบบ สดร. →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+      <a href="/mhesi-gistda.html" class="exec-card org" data-level="org" data-name="GISTDA จิสด้า">
+        <div class="exec-top">
+          <div class="exec-logo" style="font-size:9px">GISTDA</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role org">ประธานบอร์ด + ผอ. GISTDA</div>
+            <div class="exec-name">สำนักงานพัฒนาเทคโนโลยีอวกาศฯ</div>
+            <div class="exec-sub">ดาวเทียม · GIS · Remote Sensing</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">820M</div><div class="exec-stat-l">งบประมาณ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">500</div><div class="exec-stat-l">บุคลากร</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link org">🔗 เข้าสู่ระบบ GISTDA →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+      <a href="/mhesi-tint.html" class="exec-card org" data-level="org" data-name="สทน. TINT">
+        <div class="exec-top">
+          <div class="exec-logo">สทน.<br><span style="font-size:8px">TINT</span></div>
+          <div class="exec-title-wrap">
+            <div class="exec-role org">ประธานบอร์ด + ผอ. สทน.</div>
+            <div class="exec-name">สถาบันเทคโนโลยีนิวเคลียร์แห่งชาติ</div>
+            <div class="exec-sub">นิวเคลียร์ · รังสี · วิจัยประยุกต์</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">680M</div><div class="exec-stat-l">งบประมาณ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">600</div><div class="exec-stat-l">บุคลากร</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link org">🔗 เข้าสู่ระบบ สทน. →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+      <a href="/mhesi-bsid.html" class="exec-card org" data-level="org" data-name="สอวช. BSID">
+        <div class="exec-top">
+          <div class="exec-logo" style="font-size:9px">สอวช<br>BSID</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role org">ประธานบอร์ด + ผอ. สอวช.</div>
+            <div class="exec-name">สำนักงานสภานโยบาย อว. (สอวช.)</div>
+            <div class="exec-sub">นโยบาย ววน. · แผนแม่บท</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">480M</div><div class="exec-stat-l">งบประมาณ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">300</div><div class="exec-stat-l">บุคลากร</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link org">🔗 เข้าสู่ระบบ สอวช. →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+      <a href="/mhesi-haii.html" class="exec-card org" data-level="org" data-name="สสน. HAII">
+        <div class="exec-top">
+          <div class="exec-logo">สสน.<br><span style="font-size:8px">HAII</span></div>
+          <div class="exec-title-wrap">
+            <div class="exec-role org">ประธานบอร์ด + ผอ. สสน.</div>
+            <div class="exec-name">สถาบันสารสนเทศทรัพยากรน้ำ</div>
+            <div class="exec-sub">วิจัยน้ำ · บริหารจัดการน้ำ</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">420M</div><div class="exec-stat-l">งบประมาณ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">350</div><div class="exec-stat-l">บุคลากร</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link org">🔗 เข้าสู่ระบบ สสน. →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+      <a href="/mhesi-tcels.html" class="exec-card org" data-level="org" data-name="TCELS">
+        <div class="exec-top">
+          <div class="exec-logo" style="font-size:9px">TCELS</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role org">ประธานบอร์ด + ผอ. TCELS</div>
+            <div class="exec-name">ศูนย์ความเป็นเลิศด้านชีววิทยาศาสตร์</div>
+            <div class="exec-sub">ชีวเภสัชภัณฑ์ · เครื่องมือแพทย์</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">380M</div><div class="exec-stat-l">งบประมาณ</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">250</div><div class="exec-stat-l">บุคลากร</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link org">🔗 เข้าสู่ระบบ TCELS →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- ═══ LEVEL 4: หน่วยบริหารทุน PMU ═══ -->
+  <div class="level-section" id="sec-pmu" data-level="pmu">
+    <div class="level-hdr">
+      <div class="level-badge lvl-pmu">4</div>
+      <div class="level-hdr-text">หน่วยบริหารและจัดการทุน (PMU)</div>
+      <div class="level-hdr-sub">— ผู้อำนวยการหน่วยบริหารทุน กองทุน ววน.</div>
+    </div>
+    <div class="exec-grid">
+
+      <a href="/mhesi-bpcr.html" class="exec-card pmu" data-level="pmu" data-name="บพค. หน่วยบริหารทุนพัฒนากำลังคน">
+        <div class="exec-top">
+          <div class="exec-logo">บพค.</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role pmu">ผอ. บพค.</div>
+            <div class="exec-name">หน่วยบริหารและจัดการทุน ด้านพัฒนากำลังคน</div>
+            <div class="exec-sub">ทุน ป.โท-เอก · พัฒนาอาจารย์</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">1,800M</div><div class="exec-stat-l">งบทุน ววน.</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">320</div><div class="exec-stat-l">โครงการ</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link pmu">🔗 เข้าสู่ระบบ บพค. →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+      <a href="/mhesi-bptp.html" class="exec-card pmu" data-level="pmu" data-name="บพท. หน่วยบริหารทุนพัฒนาพื้นที่">
+        <div class="exec-top">
+          <div class="exec-logo">บพท.</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role pmu">ผอ. บพท.</div>
+            <div class="exec-name">หน่วยบริหารและจัดการทุน ด้านพัฒนาพื้นที่</div>
+            <div class="exec-sub">วิจัยท้องถิ่น · ม.ราชภัฏ · ชุมชน</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">1,200M</div><div class="exec-stat-l">งบทุน ววน.</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">280</div><div class="exec-stat-l">โครงการ</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link pmu">🔗 เข้าสู่ระบบ บพท. →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+      <a href="/mhesi-bpcic.html" class="exec-card pmu" data-level="pmu" data-name="บพข. หน่วยบริหารทุนขีดความสามารถ">
+        <div class="exec-top">
+          <div class="exec-logo">บพข.</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role pmu">ผอ. บพข.</div>
+            <div class="exec-name">หน่วยบริหารและจัดการทุน ด้านความสามารถแข่งขัน</div>
+            <div class="exec-sub">วิจัย Cluster · ภาคเอกชน · BCG</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">2,100M</div><div class="exec-stat-l">งบทุน ววน.</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">410</div><div class="exec-stat-l">โครงการ</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link pmu">🔗 เข้าสู่ระบบ บพข. →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- ═══ LEVEL 5: มหาวิทยาลัย ═══ -->
+  <div class="level-section" id="sec-univ" data-level="univ">
+    <div class="level-hdr">
+      <div class="level-badge lvl-univ">5</div>
+      <div class="level-hdr-text">ระดับสถาบันอุดมศึกษา</div>
+      <div class="level-hdr-sub">— อธิการบดีมหาวิทยาลัย 170 แห่ง (แสดงมหาวิทยาลัยรัฐ)</div>
+    </div>
+    <div class="exec-grid">
+
+      <a href="/mhesi-univ.html?univ=chula" class="exec-card univ" data-level="univ" data-name="จุฬาลงกรณ์มหาวิทยาลัย">
+        <div class="exec-top">
+          <div class="exec-logo">จุฬาฯ<br><span style="font-size:8px">CU</span></div>
+          <div class="exec-title-wrap">
+            <div class="exec-role univ">อธิการบดี + สภามหาวิทยาลัย</div>
+            <div class="exec-name">จุฬาลงกรณ์มหาวิทยาลัย</div>
+            <div class="exec-sub">มหาวิทยาลัยรัฐในกำกับ · Top 10 ASEAN</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">5,050</div><div class="exec-stat-l">อาจารย์+นักวิจัย</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">38,000</div><div class="exec-stat-l">นักศึกษา</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link univ">🔗 เข้าสู่ระบบ CU →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+      <a href="/mhesi-univ.html?univ=mahidol" class="exec-card univ" data-level="univ" data-name="มหาวิทยาลัยมหิดล">
+        <div class="exec-top">
+          <div class="exec-logo">มหิดล<br><span style="font-size:8px">MU</span></div>
+          <div class="exec-title-wrap">
+            <div class="exec-role univ">อธิการบดี + สภามหาวิทยาลัย</div>
+            <div class="exec-name">มหาวิทยาลัยมหิดล</div>
+            <div class="exec-sub">มหาวิทยาลัยรัฐในกำกับ · สาธารณสุข-การแพทย์</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">8,000</div><div class="exec-stat-l">อาจารย์+นักวิจัย</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">29,000</div><div class="exec-stat-l">นักศึกษา</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link univ">🔗 เข้าสู่ระบบ MU →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+      <a href="/mhesi-univ.html?univ=ku" class="exec-card univ" data-level="univ" data-name="มหาวิทยาลัยเกษตรศาสตร์">
+        <div class="exec-top">
+          <div class="exec-logo">เกษตร<br><span style="font-size:8px">KU</span></div>
+          <div class="exec-title-wrap">
+            <div class="exec-role univ">อธิการบดี + สภามหาวิทยาลัย</div>
+            <div class="exec-name">มหาวิทยาลัยเกษตรศาสตร์</div>
+            <div class="exec-sub">มหาวิทยาลัยรัฐ · เกษตร-สิ่งแวดล้อม</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">5,080</div><div class="exec-stat-l">อาจารย์+นักวิจัย</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">65,000</div><div class="exec-stat-l">นักศึกษา</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link univ">🔗 เข้าสู่ระบบ KU →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+      <a href="/mhesi-univ.html?univ=kku" class="exec-card univ" data-level="univ" data-name="มหาวิทยาลัยขอนแก่น">
+        <div class="exec-top">
+          <div class="exec-logo" style="font-size:9px">ขอนแก่น<br>KKU</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role univ">อธิการบดี + สภามหาวิทยาลัย</div>
+            <div class="exec-name">มหาวิทยาลัยขอนแก่น</div>
+            <div class="exec-sub">ภาคอีสาน · ศูนย์กลางการศึกษา</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">5,900</div><div class="exec-stat-l">อาจารย์+นักวิจัย</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">50,000</div><div class="exec-stat-l">นักศึกษา</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link univ">🔗 เข้าสู่ระบบ KKU →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+      <a href="/mhesi-univ.html?univ=cmu" class="exec-card univ" data-level="univ" data-name="มหาวิทยาลัยเชียงใหม่">
+        <div class="exec-top">
+          <div class="exec-logo" style="font-size:9px">เชียงใหม่<br>CMU</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role univ">อธิการบดี + สภามหาวิทยาลัย</div>
+            <div class="exec-name">มหาวิทยาลัยเชียงใหม่</div>
+            <div class="exec-sub">ภาคเหนือ · AgriTech · ล้านนา</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">5,280</div><div class="exec-stat-l">อาจารย์+นักวิจัย</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">38,000</div><div class="exec-stat-l">นักศึกษา</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link univ">🔗 เข้าสู่ระบบ CMU →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+      <a href="/mhesi-univ.html?univ=all" class="exec-card univ" data-level="univ" data-name="มหาวิทยาลัยทั้งหมด 170 แห่ง">
+        <div class="exec-top">
+          <div class="exec-logo" style="background:linear-gradient(135deg,#92400e,#f9a825);font-size:10px">170<br>สถาบัน</div>
+          <div class="exec-title-wrap">
+            <div class="exec-role univ">ดูมหาวิทยาลัยทั้งหมด</div>
+            <div class="exec-name">170 สถาบันอุดมศึกษา</div>
+            <div class="exec-sub">รัฐ 29 · ราชภัฏ 38 · ราชมงคล 9 · เอกชน 67</div>
+          </div>
+        </div>
+        <div class="exec-stats">
+          <div class="exec-stat"><div class="exec-stat-v">168,450</div><div class="exec-stat-l">อาจารย์ทั้งหมด</div></div>
+          <div class="exec-stat"><div class="exec-stat-v">2.5M</div><div class="exec-stat-l">นักศึกษา</div></div>
+        </div>
+        <div class="exec-footer">
+          <span class="exec-link univ">🔗 ดูทั้งหมด 170 สถาบัน →</span>
+          <span class="exec-status"><span class="dot-g"></span>ออนไลน์</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  ศูนย์บริหาร กระทรวง อว. · G2G AI Platform © 2026 · พัฒนาโดย G2G Gov2Global · <a href="/platform-overview.html" style="color:var(--p3)">ภาพรวมระบบ</a>
+</div>
+
+<script>
+var currentFilter = 'all';
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  applyFilter();
+}
+
+function filterCards() { applyFilter(); }
+
+function applyFilter() {
+  var q = document.getElementById('searchInp').value.toLowerCase();
+  document.querySelectorAll('.exec-card').forEach(function(card){
+    var level = card.dataset.level || '';
+    var name = (card.dataset.name || card.textContent).toLowerCase();
+    var levelOk = (currentFilter === 'all') || (level === currentFilter);
+    var searchOk = !q || name.includes(q);
+    card.style.display = (levelOk && searchOk) ? '' : 'none';
+  });
+  document.querySelectorAll('.level-section').forEach(function(sec){
+    var lvl = sec.dataset.level || '';
+    if (currentFilter === 'all' || lvl === currentFilter) {
+      sec.style.display = '';
+    } else {
+      sec.style.display = 'none';
+    }
+    if (q) sec.style.display = '';
+  });
+}
+</script>
+</body>
+</html>

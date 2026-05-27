@@ -1,0 +1,91 @@
+<!DOCTYPE html><html lang="th"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>แพลตฟอร์มรองปลัดกระทรวง อว.</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--p1:#1565c0;--p2:#1976d2;--p3:#42a5f5;--p4:#bbdefb;--p5:#e3f2fd;--white:#fff;--gray:#f8f9fa;--border:#e0e0e0;--sub:#666}
+body{font-family:'Sarabun',sans-serif;height:100vh;overflow:hidden;display:flex;flex-direction:column}
+#login{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#0d47a1 0%,#1976d2 60%,#90caf9 100%)}
+.lc{background:#fff;border-radius:20px;padding:40px;width:min(680px,96vw);box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.lc-badge{width:72px;height:72px;background:linear-gradient(135deg,var(--p1),var(--p3));border-radius:16px;display:inline-flex;align-items:center;justify-content:center;font-size:28px;color:#fff;margin-bottom:10px}
+.lc-logo{text-align:center;margin-bottom:24px}
+.lc h1{font-size:20px;font-weight:700;color:var(--p1);text-align:center}
+.lc p{font-size:13px;color:var(--sub);text-align:center;margin-top:4px}
+.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+.role-card{border:2px solid var(--border);border-radius:12px;padding:14px;cursor:pointer;transition:.2s;text-align:center}
+.role-card:hover{border-color:var(--p3);background:var(--p5)}
+.ri{font-size:26px;margin-bottom:5px}.rn{font-size:13px;font-weight:600}.rd{font-size:11px;color:var(--sub)}
+.login-btn{width:100%;padding:13px;background:linear-gradient(135deg,var(--p1),var(--p3));color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;margin-top:18px;font-family:'Sarabun',sans-serif}
+#app{display:none;flex-direction:column;height:100vh}
+.topbar{background:linear-gradient(90deg,var(--p1),var(--p2));color:#fff;padding:0 20px;height:54px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.tb-b{width:34px;height:34px;background:rgba(255,255,255,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.tb-t{font-size:15px;font-weight:700;flex:1}
+.tb-u{font-size:12px;opacity:.85;background:rgba(255,255,255,.15);padding:4px 12px;border-radius:20px}
+.tb-lo{background:rgba(255,255,255,.15);border:none;color:#fff;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;font-family:'Sarabun',sans-serif}
+.main{display:flex;flex:1;overflow:hidden}
+.sidebar{width:205px;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+.nav-item{padding:12px 15px;cursor:pointer;border-left:3px solid transparent;font-size:13px;color:var(--sub);transition:.15s}
+.nav-item:hover{background:var(--p5);color:var(--p1)}
+.nav-item.active{background:var(--p5);color:var(--p1);border-left-color:var(--p1);font-weight:600}
+.content{flex:1;overflow-y:auto;padding:18px;background:var(--gray)}
+.tab-pane{display:none}.tab-pane.active{display:block}
+.pt{font-size:19px;font-weight:700;color:var(--p1);margin-bottom:14px}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.kpi{background:#fff;border-radius:10px;padding:14px;border-left:4px solid var(--p3)}
+.kv{font-size:21px;font-weight:700;color:var(--p1)}
+.kl{font-size:11px;color:var(--sub);margin-top:2px}
+.card{background:#fff;border-radius:10px;padding:16px;margin-bottom:14px}
+.ct{font-size:14px;font-weight:700;color:var(--p1);margin-bottom:10px;padding-bottom:7px;border-bottom:2px solid var(--p4)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--p1);color:#fff;padding:8px 10px;text-align:left}
+td{padding:7px 10px;border-bottom:1px solid var(--border)}
+tr:hover td{background:var(--p5)}
+.b{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
+.bg{background:#dcfce7;color:#166534}.by{background:#fef9c3;color:#854d0e}
+.bb{background:#dbeafe;color:#1e40af}.br{background:#fee2e2;color:#991b1b}.bp{background:#f3e8ff;color:#6b21a8}
+.ob{background:linear-gradient(135deg,var(--p5),#fff);border:2px solid var(--p4);border-radius:10px;padding:18px;text-align:center}
+.oi{font-size:46px;margin-bottom:8px}.on{font-size:20px;font-weight:700;color:var(--p1)}
+.or{font-size:13px;color:var(--sub);margin-top:3px}
+.os{display:inline-flex;align-items:center;gap:6px;margin-top:10px;background:#dcfce7;padding:5px 14px;border-radius:20px;font-size:13px;color:#166534;font-weight:600}
+.od{width:8px;height:8px;background:#22c55e;border-radius:50%;animation:p 1.5s infinite}
+@keyframes p{0%,100%{opacity:1}50%{opacity:.4}}
+.og{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;text-align:left}
+.oi2{background:#fff;padding:9px 12px;border-radius:8px;border:1px solid var(--border)}
+.ol{font-size:11px;color:var(--sub);margin-bottom:2px}.ov{font-size:13px;font-weight:600}
+.desc{background:var(--p5);border-left:4px solid var(--p3);padding:12px 16px;border-radius:0 8px 8px 0;margin-bottom:12px}
+.desc h3{font-size:14px;font-weight:700;color:var(--p1);margin-bottom:4px}
+.desc p{font-size:12px;color:var(--sub);line-height:1.6}
+</style></head><body>
+<div id="login"><div class="lc">
+  <div class="lc-logo"><div class="lc-badge">🔷</div><h1>แพลตฟอร์มรองปลัดกระทรวง อว.</h1><p>กระทรวงการอุดมศึกษา วิทยาศาสตร์ วิจัยและนวัตกรรม</p></div>
+  <div style="text-align:center;margin:18px 0;padding:18px;background:var(--p5);border-radius:14px;border:2px solid var(--p4)">
+  <div style="font-size:38px;margin-bottom:8px">⚙️</div>
+  <div style="font-size:17px;font-weight:700;color:var(--p1)">รองปลัดกระทรวง อว.</div>
+  <div style="font-size:12px;color:var(--sub);margin-top:4px">แพลตฟอร์มเฉพาะ รองปลัดกระทรวง อว. เท่านั้น</div>
+</div><div class="rn">รองปลัดฯ สายวิจัย</div><div class="rd">กำกับดูแลงานวิจัยและนวัตกรรม</div></div><div class="role-card" onclick="login('รองปลัดฯ สายอุดมศึกษา')"><div class="ri">📘</div><div class="rn">รองปลัดฯ สายอุดมศึกษา</div><div class="rd">กำกับดูแลมหาวิทยาลัย</div></div><div class="role-card" onclick="login('รองปลัดฯ สายบริหาร')"><div class="ri">⚙️</div><div class="rn">รองปลัดฯ สายบริหาร</div><div class="rd">การเงิน บุคคล IT</div></div><div class="role-card" onclick="login('ผู้ช่วย รองปลัด')"><div class="ri">🤝</div><div class="rn">ผู้ช่วย รองปลัด</div><div class="rd">ประสานงานภายใน</div></div></div>
+  <button class="login-btn" onclick="login('รองปลัดฯ สายวิจัย')">เข้าสู่ระบบ</button>
+</div></div>
+<div id="app">
+<div class="topbar"><div class="tb-b">🔷</div><div class="tb-t">ศูนย์บริหาร รองปลัด อว.</div><div class="tb-u" id="ul">—</div><button class="tb-lo" onclick="logout()">ออกจากระบบ</button></div>
+<div class="main">
+  <div class="sidebar"><div class="nav-item active" onclick="show(0,this)">📊 ภาพรวมสายงาน</div><div class="nav-item" onclick="show(1,this)">🏢 หน่วยงานในกำกับ</div><div class="nav-item" onclick="show(2,this)">💰 งบประมาณ</div><div class="nav-item" onclick="show(3,this)">📋 รายงานปลัด</div><div class="nav-item" onclick="show(4,this)">📅 ตารางงาน</div><div class="nav-item" onclick="show(5,this)">🤖 LINE AI</div><div style="flex:1"></div><div style="padding:11px 15px;font-size:11px;color:var(--sub);border-top:1px solid var(--border)"><a href="/mhesi-hub.html" style="color:var(--p3);text-decoration:none">← กลับ Hub อว.</a></div></div>
+  <div class="content"><div class="tab-pane active" id="t0"><div class="pt">📊 ภาพรวมสายงาน รองปลัด อว.</div><div class="kpi-row"><div class="kpi"><div class="kv">4</div><div class="kl">สายงานกำกับ</div></div><div class="kpi"><div class="kv">18,500M</div><div class="kl">งบที่กำกับ</div></div><div class="kpi"><div class="kv">35</div><div class="kl">หน่วยงานในสังกัด</div></div><div class="kpi"><div class="kv">71%</div><div class="kl">เบิกจ่ายสะสม</div></div></div><div class="card"><div class="ct">สายงาน 4 ด้านของรองปลัด</div><table><tr><th>สายงาน</th><th>รองปลัดฯ</th><th>หน่วยงาน</th><th>งบ (M)</th><th>สถานะ</th></tr><tr><td>สายวิจัยและนวัตกรรม</td><td>รองปลัดฯ ด้านวิจัย</td><td>วช., สอวช., PMU 3 แห่ง</td><td>7,280</td><td><span class="b bg">ปกติ</span></td></tr><tr><td>สายอุดมศึกษา</td><td>รองปลัดฯ ด้านศึกษา</td><td>สกอ., ม.ราชภัฏ 38 แห่ง</td><td>6,820</td><td><span class="b bg">ปกติ</span></td></tr><tr><td>สายวิทยาศาสตร์</td><td>รองปลัดฯ ด้านวิทย์</td><td>สวทช., วว., GISTDA ฯลฯ</td><td>3,200</td><td><span class="b by">ติดตาม</span></td></tr><tr><td>สายบริหาร</td><td>รองปลัดฯ ด้านบริหาร</td><td>กองกลาง, กองคลัง, กองบุคคล</td><td>1,200</td><td><span class="b bg">ปกติ</span></td></tr></table></div></div><div class="tab-pane" id="t1"><div class="pt">🏢 หน่วยงานในกำกับรองปลัด</div><div class="card"><div class="ct">รายชื่อหน่วยงาน</div><table><tr><th>หน่วยงาน</th><th>ประเภท</th><th>สายงาน</th><th>งบ (M)</th></tr><tr><td>สำนักงานวิจัยแห่งชาติ (วช.)</td><td>ส่วนราชการ</td><td>วิจัย</td><td>3,200</td></tr><tr><td>สอวช.</td><td>องค์การมหาชน</td><td>วิจัย</td><td>480</td></tr><tr><td>บพค. / บพท. / บพข.</td><td>หน่วยบริหารจัดการ</td><td>วิจัย</td><td>5,100</td></tr><tr><td>สวทช.</td><td>องค์การมหาชน</td><td>วิทยาศาสตร์</td><td>8,400</td></tr><tr><td>ม.ราชภัฏ 38 แห่ง</td><td>มหาวิทยาลัยของรัฐ</td><td>อุดมศึกษา</td><td>4,200</td></tr></table></div></div><div class="tab-pane" id="t2"><div class="pt">💰 งบประมาณที่กำกับ</div><div class="kpi-row"><div class="kpi"><div class="kv">18,500M</div><div class="kl">งบรวม</div></div><div class="kpi"><div class="kv">13,135M</div><div class="kl">เบิกจ่ายแล้ว</div></div><div class="kpi"><div class="kv">4,810M</div><div class="kl">คงเหลือ</div></div><div class="kpi"><div class="kv">71%</div><div class="kl">%เบิกจ่าย</div></div></div><div class="card"><div class="ct">วิเคราะห์การเบิกจ่ายรายสาย</div><table><tr><th>สาย</th><th>งบ (M)</th><th>เบิก (M)</th><th>%</th><th>ประเมิน</th></tr><tr><td>วิจัยและนวัตกรรม</td><td>7,280</td><td>4,732</td><td>65%</td><td><span class="b by">ต้องเร่ง</span></td></tr><tr><td>อุดมศึกษา</td><td>6,820</td><td>5,456</td><td>80%</td><td><span class="b bg">ดี</span></td></tr><tr><td>วิทยาศาสตร์</td><td>3,200</td><td>2,240</td><td>70%</td><td><span class="b bg">ปกติ</span></td></tr><tr><td>บริหาร</td><td>1,200</td><td>708</td><td>59%</td><td><span class="b br">เร่งรัด</span></td></tr></table></div></div><div class="tab-pane" id="t3"><div class="pt">📋 รายงานถึงปลัดกระทรวง</div><div class="card"><div class="ct">รายงานประจำเดือน พ.ค. 2568</div><table><tr><th>หัวข้อรายงาน</th><th>สาระสำคัญ</th><th>สถานะ</th></tr><tr><td>ผลการเบิกจ่ายรายสาย</td><td>สายวิจัยต้องเร่ง บพค.ต่ำสุด 58%</td><td><span class="b by">แจ้งแล้ว</span></td></tr><tr><td>ความก้าวหน้า Sandbox ม.ชั้นนำ</td><td>ดำเนินการ 42/50 สถาบัน</td><td><span class="b bg">รายงานแล้ว</span></td></tr><tr><td>ปัญหา GISTDA งบล่าช้า</td><td>รอ MOU ต่างประเทศ ล่าช้า 2 เดือน</td><td><span class="b br">รายงานด่วน</span></td></tr></table></div></div><div class="tab-pane" id="t4"><div class="pt">📅 ตารางงาน รองปลัด อว.</div><div class="card"><div class="ct">กำหนดการ พ.ค.–มิ.ย. 2568</div><table><tr><th>วัน</th><th>กิจกรรม</th><th>สถานที่</th><th>สถานะ</th></tr><tr><td>26 พ.ค.</td><td>ประชุมผู้บริหาร อว. รายสัปดาห์</td><td>ห้องประชุมปลัด</td><td><span class="b bb">กำลังมา</span></td></tr><tr><td>2 มิ.ย.</td><td>ตรวจเยี่ยม สอวช.</td><td>SM Tower</td><td><span class="b bb">กำลังมา</span></td></tr><tr><td>9 มิ.ย.</td><td>ประชุม กบศ. ครั้งที่ 3</td><td>ห้องประชุม อว. 4</td><td><span class="b by">รอยืนยัน</span></td></tr></table></div></div><div class="tab-pane" id="t5"><div class="pt">🤖 LINE AI รองปลัด อว.</div><div class="ob"><div class="oi">🤖</div><div class="on">น้องผู้ช่วยรองปลัด</div><div class="or">AI Assistant สำหรับรองปลัดกระทรวง อว.</div><div class="os"><div class="od"></div>ออนไลน์</div><div class="og"><div class="oi2"><div class="ol">Model</div><div class="ov">Claude Sonnet 4</div></div><div class="oi2"><div class="ol">Channel</div><div class="ov">MHESI04</div></div><div class="oi2"><div class="ol">บทบาท</div><div class="ov">ประสาน + วิเคราะห์</div></div><div class="oi2"><div class="ol">สถานะ</div><div class="ov">พร้อมใช้งาน</div></div></div></div></div></div>
+</div></div>
+<script>
+function login(r){document.getElementById('ul').textContent=r;document.getElementById('login').style.display='none';document.getElementById('app').style.display='flex';}
+function logout(){document.getElementById('login').style.display='flex';document.getElementById('app').style.display='none';}
+function show(i,el){document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById('t'+i).classList.add('active');el.classList.add('active');}
+</script>  <script src="/mhesi-delegate.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      MhesiDelegate.init({
+        myId: 'deputy-ps',
+        roleName: 'รองปลัดกระทรวง อว.',
+        level: 'deputy-ps',
+        reportsTo: "ps",
+        canAssignTo: [{"id": "nstda", "name": "ผอ.สวทช."}, {"id": "nrct", "name": "ผอ.วช."}, {"id": "nia", "name": "ผอ.NIA"}, {"id": "tistr", "name": "ผอ.วว."}, {"id": "narit", "name": "ผอ.สรอ."}, {"id": "gistda", "name": "ผอ.GISTDA"}, {"id": "tint", "name": "ผอ.TINT"}, {"id": "bsid", "name": "ผอ.BSID"}, {"id": "haii", "name": "ผอ.HAII"}, {"id": "tcels", "name": "ผอ.TCELS"}, {"id": "bpcr", "name": "ผอ.BPCR"}, {"id": "bptp", "name": "ผอ.BPTP"}, {"id": "bpcic", "name": "ผอ.BPCIC"}]
+      });
+    });
+  </script>
+</body></html>

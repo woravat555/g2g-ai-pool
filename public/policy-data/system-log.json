@@ -1,0 +1,204 @@
+{
+  "logs": [
+    {
+      "action": "system_start",
+      "user": "system",
+      "timestamp": "2026-05-24T08:00:00Z",
+      "detail": "Platform initialized — G2G Oversight v2.0"
+    },
+    {
+      "timestamp": "2026-05-26T01:00:00.107Z",
+      "action": "daily_briefing_run",
+      "detail": "Generated: 15/15, LINE: 0/15",
+      "results": [
+        {
+          "position_id": "DOAE-54-AGR-HEAD",
+          "generated": true,
+          "line_sent": false,
+          "line_note": "no_line_token"
+        },
+        {
+          "position_id": "DOAE-54-AGR-DEP1",
+          "generated": true,
+          "line_sent": false,
+          "line_note": "no_line_token"
+        },
+        {
+          "position_id": "DOAE-54-AGR-DEP2",
+          "generated": true,
+          "line_sent": false,
+          "line_note": "no_line_token"
+        },
+        {
+          "position_id": "DOAE-54-ADM-HEAD",
+          "generated": true,
+          "line_sent": false,
+          "line_note": "no_line_token"
+        },
+        {
+          "position_id": "DOAE-54-EXT-01",
+          "generated": true,
+          "line_sent": false,
+          "line_note": "no_line_token"
+        },
+        {
+          "position_id": "DOAE-54-EXT-02",
+          "generated": true,
+          "line_sent": false,
+          "line_note": "no_line_token"
+        },
+        {
+          "position_id": "DOAE-54-EXT-03",
+          "generated": true,
+          "line_sent": false,
+          "line_note": "no_line_token"
+        },
+        {
+          "position_id": "DOAE-54-DIST-01",
+          "generated": true,
+          "line_sent": false,
+          "line_note": "no_line_token"
+        },
+        {
+          "position_id": "DOAE-54-DIST-02",
+          "generated": true,
+          "line_sent": false,
+          "line_note": "no_line_token"
+        },
+        {
+          "position_id": "DOAE-54-DIST-03",
+          "generated": true,
+          "line_sent": false,
+          "line_note": "no_line_token"
+        },
+        {
+          "position_id": "DOAE-54-DIST-04",
+          "generated": true,
+          "line_sent": false,
+          "line_note": "no_line_token"
+        },
+        {
+          "position_id": "DOAE-54-DIST-05",
+          "generated": true,
+          "line_sent": false,
+          "line_note": "no_line_token"
+        },
+        {
+          "position_id": "DOAE-54-DIST-06",
+          "generated": true,
+          "line_sent": false,
+          "line_note": "no_line_token"
+        },
+        {
+          "position_id": "DOAE-54-DIST-07",
+          "generated": true,
+          "line_sent": false,
+          "line_note": "no_line_token"
+        },
+        {
+          "position_id": "DOAE-54-DIST-08",
+          "generated": true,
+          "line_sent": false,
+          "line_note": "no_line_token"
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-05-27T01:00:00.059Z",
+      "action": "daily_briefing_run",
+      "detail": "Generated: 15/15, LINE: 0/15",
+      "results": [
+        {
+          "position_id": "DOAE-54-AGR-HEAD",
+          "generated": true,
+          "line_sent": false,
+          "line_note": "no_line_token"
+        },
+        {
+          "position_id": "DOAE-54-AGR-DEP1",
+          "generated": true,
+          "line_sent": false,
+          "line_note": "no_line_token"
+        },
+        {
+          "position_id": "DOAE-54-AGR-DEP2",
+          "generated": true,
+          "line_sent": false,
+          "line_note": "no_line_token"
+        },
+        {
+          "position_id": "DOAE-54-ADM-HEAD",
+          "generated": true,
+          "line_sent": false,
+          "line_note": "no_line_token"
+        },
+        {
+          "position_id": "DOAE-54-EXT-01",
+          "generated": true,
+          "line_sent": false,
+          "line_note": "no_line_token"
+        },
+        {
+          "position_id": "DOAE-54-EXT-02",
+          "generated": true,
+          "line_sent": false,
+          "line_note": "no_line_token"
+        },
+        {
+          "position_id": "DOAE-54-EXT-03",
+          "generated": true,
+          "line_sent": false,
+          "line_note": "no_line_token"
+        },
+        {
+          "position_id": "DOAE-54-DIST-01",
+          "generated": true,
+          "line_sent": false,
+          "line_note": "no_line_token"
+        },
+        {
+          "position_id": "DOAE-54-DIST-02",
+          "generated": true,
+          "line_sent": false,
+          "line_note": "no_line_token"
+        },
+        {
+          "position_id": "DOAE-54-DIST-03",
+          "generated": true,
+          "line_sent": false,
+          "line_note": "no_line_token"
+        },
+        {
+          "position_id": "DOAE-54-DIST-04",
+          "generated": true,
+          "line_sent": false,
+          "line_note": "no_line_token"
+        },
+        {
+          "position_id": "DOAE-54-DIST-05",
+          "generated": true,
+          "line_sent": false,
+          "line_note": "no_line_token"
+        },
+        {
+          "position_id": "DOAE-54-DIST-06",
+          "generated": true,
+          "line_sent": false,
+          "line_note": "no_line_token"
+        },
+        {
+          "position_id": "DOAE-54-DIST-07",
+          "generated": true,
+          "line_sent": false,
+          "line_note": "no_line_token"
+        },
+        {
+          "position_id": "DOAE-54-DIST-08",
+          "generated": true,
+          "line_sent": false,
+          "line_note": "no_line_token"
+        }
+      ]
+    }
+  ]
+}

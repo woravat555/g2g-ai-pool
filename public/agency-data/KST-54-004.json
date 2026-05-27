@@ -1,0 +1,25 @@
+{
+  "agency_id": "KST-54-004",
+  "agency_name": "การยางแห่งประเทศไทย จ.แพร่",
+  "dept_name": "การยางแห่งประเทศไทย",
+  "ministry": "กระทรวงเกษตรและสหกรณ์",
+  "personnel": [
+    { "id": "rec6nW0DNbBUDb0OU", "full_name": "นายจักรกรี สุขเพียร", "agency_id": "KST-54-004", "agency_name": "การยางแห่งประเทศไทย จ.แพร่", "dept_name": "การยางแห่งประเทศไทย", "employee_type": "ข้าราชการ", "position_title": "ผู้อำนวยการจังหวัด", "position_level": "ชำนาญการ (ชก.)", "position_id": "RAOT-54-HEAD", "district": "อ.เมืองแพร่", "phone": "054-511345", "status": "ปฏิบัติงาน" },
+    { "id": "rec004per002", "full_name": "นายอภิชัย รักษ์ยาง", "agency_id": "KST-54-004", "agency_name": "การยางแห่งประเทศไทย จ.แพร่", "dept_name": "การยางแห่งประเทศไทย", "employee_type": "พนักงาน กยท.", "position_title": "นักวิชาการเกษตร", "position_level": "ระดับ 4", "district": "อ.เมืองแพร่", "phone": "054-511346", "status": "ปฏิบัติงาน" },
+    { "id": "rec004per003", "full_name": "นางสาวพรรัตน์ ยางดี", "agency_id": "KST-54-004", "agency_name": "การยางแห่งประเทศไทย จ.แพร่", "dept_name": "การยางแห่งประเทศไทย", "employee_type": "พนักงาน กยท.", "position_title": "เจ้าหน้าที่บัญชีและการเงิน", "position_level": "ระดับ 3", "district": "อ.เมืองแพร่", "phone": "054-511347", "status": "ปฏิบัติงาน" }
+  ],
+  "budget": [
+    { "id": "rec9L28VPaMyxNELd", "agency_id": "KST-54-004", "agency_name": "การยางแห่งประเทศไทย จ.แพร่", "dept_name": "การยางแห่งประเทศไทย", "personnel_budget": 6200000, "operating_budget": 4800000, "capital_budget": 1200000, "subsidy_budget": 8500000, "other_budget": 0, "budget_total": 20700000, "disbursed_total": 14900000, "disbursed_pct": 72, "fiscal_year": "2568" }
+  ],
+  "projects": [
+    { "id": "recTw7yqWRXIWSmzi", "project_code": "P2568-KST004-001", "project_name": "โครงการส่งเสริมการปลูกยางพาราจังหวัดแพร่", "agency_id": "KST-54-004", "agency_name": "การยางแห่งประเทศไทย จ.แพร่", "budget_total": 6800000, "kpi_target": "เกษตรกรชาวสวนยาง 800 ราย ได้รับการสนับสนุน", "progress_pct": 78, "status": "กำลังดำเนินการ", "start_date": "2024-10-01", "end_date": "2025-09-30", "strategy_level": "แผนพัฒนาเกษตรกรรม", "fiscal_year": "2568", "description": "สนับสนุนปัจจัยการผลิต อบรมแปรรูปยาง เชื่อมตลาดยางพาราภาคเหนือ" },
+    { "id": "rec004prj002", "project_code": "P2568-KST004-002", "project_name": "โครงการกองทุนพัฒนายางพาราจังหวัดแพร่", "agency_id": "KST-54-004", "agency_name": "การยางแห่งประเทศไทย จ.แพร่", "budget_total": 3500000, "kpi_target": "เกษตรกรกู้ยืมกองทุน 200 ราย วงเงินรวม 15 ล้านบาท", "progress_pct": 55, "status": "กำลังดำเนินการ", "start_date": "2024-10-01", "end_date": "2025-09-30", "strategy_level": "แผนพัฒนาเกษตรกรรม", "fiscal_year": "2568", "description": "ให้สินเชื่อดอกเบี้ยต่ำเพื่อพัฒนาสวนยางและแปรรูปผลิตภัณฑ์ยาง" }
+  ],
+  "contracts": [
+    { "id": "rec004ctr001", "contractor_name": "นายเอกชัย ยางงาม", "agency_id": "KST-54-004", "agency_name": "การยางแห่งประเทศไทย จ.แพร่", "dept_name": "การยางแห่งประเทศไทย", "contract_type": "รายเดือน", "work_description": "ผู้ช่วยส่งเสริมการปลูกยางพารา ประจำอำเภอวังชิ้น", "monthly_rate": 15000, "duration_months": 12, "total_amount": 180000, "procurement_method": "เฉพาะเจาะจง", "egp_number": "67049000040", "fiscal_year": "2568", "status": "มีผลบังคับ" },
+    { "id": "rec004ctr002", "contractor_name": "ห้างหุ้นส่วนจำกัด แพร่รับเบอร์", "agency_id": "KST-54-004", "agency_name": "การยางแห่งประเทศไทย จ.แพร่", "dept_name": "การยางแห่งประเทศไทย", "contract_type": "รายโครงการ", "work_description": "จ้างเหมาบริการฝึกอบรมแปรรูปยางพาราขั้นต้น (ยางแผ่นดิบ, ยางแผ่นรมควัน)", "monthly_rate": 0, "duration_months": 2, "total_amount": 280000, "procurement_method": "เฉพาะเจาะจง", "egp_number": "67049000041", "fiscal_year": "2568", "status": "มีผลบังคับ" }
+  ],
+  "integration": [
+    { "id": "rec004int001", "plan_id": "INTG-2568-005", "plan_name": "แผนบูรณาการพัฒนาตลาดยางพาราและผลิตภัณฑ์เกษตรแปรรูป", "host_agency": "การยางแห่งประเทศไทย จ.แพร่", "partner_agencies": "สำนักงานเกษตรจังหวัดแพร่, สำนักงานสหกรณ์จังหวัดแพร่", "objective": "เชื่อมโยงตลาดยางพาราและผลิตภัณฑ์แปรรูปจากยางพาราสู่ตลาดภาคเหนือและประเทศจีน", "budget": 2500000, "kpi": "ปริมาณยางขายผ่านตลาดกลางเพิ่มขึ้น 30%", "progress_pct": 40, "status": "กำลังดำเนินการ", "fiscal_year": "2568", "district": "อ.เมือง อ.วังชิ้น", "target_group": "เกษตรกรชาวสวนยางและกลุ่มแปรรูป" }
+  ]
+}

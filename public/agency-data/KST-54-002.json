@@ -1,0 +1,26 @@
+{
+  "agency_id": "KST-54-002",
+  "agency_name": "สำนักงานปศุสัตว์จังหวัดแพร่",
+  "dept_name": "กรมปศุสัตว์",
+  "ministry": "กระทรวงเกษตรและสหกรณ์",
+  "personnel": [
+    { "id": "rechYG2stR5TMyVqA", "full_name": "นายสมจิตร แสนสวรรค์", "agency_id": "KST-54-002", "agency_name": "สำนักงานปศุสัตว์จังหวัดแพร่", "dept_name": "กรมปศุสัตว์", "employee_type": "ข้าราชการ", "position_title": "ปศุสัตว์จังหวัด", "position_level": "ชำนาญการ (ชก.)", "position_id": "DLD-54-HEAD", "district": "อ.เมืองแพร่", "phone": "054-511567", "status": "ปฏิบัติงาน" },
+    { "id": "rec002per002", "full_name": "นายวิโรจน์ บุญเลิศ", "agency_id": "KST-54-002", "agency_name": "สำนักงานปศุสัตว์จังหวัดแพร่", "dept_name": "กรมปศุสัตว์", "employee_type": "ข้าราชการ", "position_title": "นายสัตวแพทย์", "position_level": "ชำนาญการ", "district": "อ.เมืองแพร่", "phone": "054-511568", "status": "ปฏิบัติงาน" },
+    { "id": "rec002per003", "full_name": "นางสาวปณิตา สีดาวัน", "agency_id": "KST-54-002", "agency_name": "สำนักงานปศุสัตว์จังหวัดแพร่", "dept_name": "กรมปศุสัตว์", "employee_type": "ข้าราชการ", "position_title": "นักวิชาการสัตวบาล", "position_level": "ปฏิบัติการ", "district": "อ.สูงเม่น", "phone": "054-511569", "status": "ปฏิบัติงาน" }
+  ],
+  "budget": [
+    { "id": "recKLGoBTZJEBrytL", "agency_id": "KST-54-002", "agency_name": "สำนักงานปศุสัตว์จังหวัดแพร่", "dept_name": "กรมปศุสัตว์", "personnel_budget": 9800000, "operating_budget": 6200000, "capital_budget": 1500000, "subsidy_budget": 3200000, "other_budget": 0, "budget_total": 20700000, "disbursed_total": 15100000, "disbursed_pct": 73, "fiscal_year": "2568" }
+  ],
+  "projects": [
+    { "id": "rechJjEYQcN6mSvjL", "project_code": "P2568-KST002-001", "project_name": "โครงการฟาร์มโคเนื้อคุณภาพจังหวัดแพร่", "agency_id": "KST-54-002", "agency_name": "สำนักงานปศุสัตว์จังหวัดแพร่", "budget_total": 4100000, "kpi_target": "โคเนื้อ 1,000 ตัว ได้มาตรฐาน GFM", "progress_pct": 80, "status": "กำลังดำเนินการ", "start_date": "2024-10-01", "end_date": "2025-09-30", "strategy_level": "แผนพัฒนาเกษตรกรรม", "fiscal_year": "2568", "description": "ยกระดับการเลี้ยงโคเนื้อ พัฒนาสายพันธุ์ บริหารฟาร์มมาตรฐาน GFM" },
+    { "id": "rec002prj002", "project_code": "P2568-KST002-002", "project_name": "โครงการควบคุมและป้องกันโรคระบาดสัตว์จังหวัดแพร่", "agency_id": "KST-54-002", "agency_name": "สำนักงานปศุสัตว์จังหวัดแพร่", "budget_total": 1800000, "kpi_target": "ฉีดวัคซีนสัตว์ครอบคลุม 90% ของพื้นที่เสี่ยง", "progress_pct": 65, "status": "กำลังดำเนินการ", "start_date": "2024-10-01", "end_date": "2025-09-30", "strategy_level": "แผนพัฒนาเกษตรกรรม", "fiscal_year": "2568", "description": "ฉีดวัคซีนป้องกันโรคปากและเท้าเปื่อย โรคเฮโมรายิกเซพทิซีเมียในโค กระบือ" }
+  ],
+  "contracts": [
+    { "id": "reci3VNhSGa9r24AC", "contractor_name": "นายประสิทธิ์ ดีงาม", "agency_id": "KST-54-002", "agency_name": "สำนักงานปศุสัตว์จังหวัดแพร่", "dept_name": "กรมปศุสัตว์", "contract_type": "รายเดือน", "work_description": "ผู้ช่วยสัตวแพทย์ ปฏิบัติงานฉีดวัคซีนและตรวจสุขภาพสัตว์อำเภอสูงเม่น", "monthly_rate": 15000, "duration_months": 12, "total_amount": 180000, "procurement_method": "เฉพาะเจาะจง", "egp_number": "67049000010", "fiscal_year": "2568", "status": "มีผลบังคับ" },
+    { "id": "rec002ctr002", "contractor_name": "นางสุดารัตน์ ทวีชัย", "agency_id": "KST-54-002", "agency_name": "สำนักงานปศุสัตว์จังหวัดแพร่", "dept_name": "กรมปศุสัตว์", "contract_type": "รายเดือน", "work_description": "ผู้ช่วยนักวิชาการสัตวบาล ประจำอำเภอร้องกวาง ส่งเสริมการเลี้ยงไก่พื้นเมือง", "monthly_rate": 15000, "duration_months": 12, "total_amount": 180000, "procurement_method": "เฉพาะเจาะจง", "egp_number": "67049000011", "fiscal_year": "2568", "status": "มีผลบังคับ" }
+  ],
+  "integration": [
+    { "id": "recfisbsQ5iXiqaZX_002", "plan_id": "INTG-2568-002", "plan_name": "แผนบูรณาการพัฒนาเกษตรอินทรีย์จังหวัดแพร่", "host_agency": "สำนักงานเกษตรจังหวัดแพร่", "partner_agencies": "ศูนย์วิจัยข้าวแพร่, สำนักงานปศุสัตว์จังหวัดแพร่, สำนักงานสหกรณ์จังหวัดแพร่", "objective": "พัฒนาการผลิตสินค้าเกษตรอินทรีย์ครบวงจร ตั้งแต่การผลิตถึงการตลาด", "budget": 6200000, "kpi": "พื้นที่เกษตรอินทรีย์ 3,000 ไร่ ได้รับรอง Organic Thailand", "progress_pct": 50, "status": "กำลังดำเนินการ", "fiscal_year": "2568", "district": "อ.เมือง อ.สูงเม่น อ.วังชิ้น", "target_group": "เกษตรกรที่เข้าร่วมโครงการเกษตรอินทรีย์", "role": "หน่วยงานร่วม" },
+    { "id": "reclUIGLYeLnsQD9f_002", "plan_id": "INTG-2568-004", "plan_name": "แผนบูรณาการจัดการน้ำเพื่อการเกษตรลุ่มน้ำยม จ.แพร่", "host_agency": "สำนักงานเกษตรจังหวัดแพร่", "partner_agencies": "สำนักงานปศุสัตว์จังหวัดแพร่, สำนักงานประมงจังหวัดแพร่, ส.ป.ก.แพร่", "objective": "บริหารจัดการน้ำในลุ่มน้ำยมให้เพียงพอสำหรับการเกษตรตลอดปี", "budget": 8500000, "kpi": "พื้นที่เกษตรชลประทาน 15,000 ไร่ ได้น้ำเพียงพอ", "progress_pct": 25, "status": "กำลังดำเนินการ", "fiscal_year": "2568", "district": "อ.เมือง อ.สูงเม่น อ.ร้องกวาง", "target_group": "เกษตรกรในพื้นที่ชลประทาน", "role": "หน่วยงานร่วม" }
+  ]
+}

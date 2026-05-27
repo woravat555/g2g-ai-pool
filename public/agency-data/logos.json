@@ -1,0 +1,69 @@
+{
+  "ministry": {
+    "moac": "https://upload.wikimedia.org/wikipedia/commons/d/d0/Emblem_of_the_Ministry_of_Agriculture_and_Cooperatives.svg",
+    "mhesi": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Thai_MHESI_emblem.svg/250px-Thai_MHESI_emblem.svg.png",
+    "moi": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Seal_of_the_Ministry_of_Interior_of_Thailand.svg/250px-Seal_of_the_Ministry_of_Interior_of_Thailand.svg.png",
+    "mdes": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Emblem_of_the_Ministry_of_Digital_Economy_and_Society_of_Thailand.svg/250px-Emblem_of_the_Ministry_of_Digital_Economy_and_Society_of_Thailand.svg.png",
+    "moph": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Seal_of_the_Ministry_of_Public_Health_of_Thailand.svg/250px-Seal_of_the_Ministry_of_Public_Health_of_Thailand.svg.png",
+    "moc": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Seal_of_Ministry_of_Commerce_%28Thailand%29.svg/250px-Seal_of_Ministry_of_Commerce_%28Thailand%29.svg.png"
+  },
+  "department": {
+    "doae": {
+      "name": "กรมส่งเสริมการเกษตร",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/c/c2/Emblem_of_the_Department_of_Agricultural_Extension.svg",
+      "status": "HTTP 200 confirmed"
+    },
+    "doa": {
+      "name": "กรมวิชาการเกษตร",
+      "url": "https://upload.wikimedia.org/wikipedia/th/2/2a/%E0%B8%95%E0%B8%A3%E0%B8%B2%E0%B8%81%E0%B8%A3%E0%B8%A1%E0%B8%A7%E0%B8%B4%E0%B8%8A%E0%B8%B2%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%80%E0%B8%81%E0%B8%A9%E0%B8%95%E0%B8%A3.svg",
+      "note": "Hosted on th.wikipedia.org (local, not Commons)",
+      "status": "HTTP 200 confirmed"
+    },
+    "fisheries": {
+      "name": "กรมประมง",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Seal_of_Department_of_Fisheries_Thailand.png",
+      "status": "HTTP 200 confirmed"
+    },
+    "livestock": {
+      "name": "กรมปศุสัตว์",
+      "url": "",
+      "note": "No dedicated logo found on Wikimedia Commons. Thai Wikipedia page only shows MOAC emblem.",
+      "status": "NOT FOUND"
+    },
+    "ldd": {
+      "name": "กรมพัฒนาที่ดิน",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/9/9a/Emblem_of_the_Land_Development_Department.svg",
+      "status": "HTTP 200 confirmed"
+    },
+    "rid": {
+      "name": "กรมชลประทาน",
+      "url": "/logos/logo-rid.svg",
+      "status": "local"
+    },
+    "acfs": {
+      "name": "สำนักงานมาตรฐานสินค้าเกษตรและอาหารแห่งชาติ (มกอช.)",
+      "url": "/logos/logo-acfs.png",
+      "status": "local"
+    },
+    "raot": {
+      "name": "การยางแห่งประเทศไทย (กยท.)",
+      "url": "/logos/logo-raot.png",
+      "status": "local"
+    },
+    "baac": {
+      "name": "ธนาคารเพื่อการเกษตรและสหกรณ์การเกษตร (ธ.ก.ส.)",
+      "url": "/logos/logo-baac.png",
+      "status": "local"
+    },
+    "alro": {
+      "name": "สำนักงานการปฏิรูปที่ดินเพื่อเกษตรกรรม (ส.ป.ก.)",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/9/92/Emblem_of_Agricultural_Land_Reform_Office.png",
+      "status": "HTTP 200 confirmed"
+    }
+  },
+  "province": {
+    "chiangrai": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Seal_of_Chaing_Rai_Province_%28color_version%2C_Thai_Fine_Art_Department%29.png/250px-Seal_of_Chaing_Rai_Province_%28color_version%2C_Thai_Fine_Art_Department%29.png",
+    "udonthani": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Seal_Udon_Thani.png/250px-Seal_Udon_Thani.png",
+    "phrae": "/logos/logo-phrae.png"
+  }
+}

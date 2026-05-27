@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>คู่มือตั้งค่า LINE AI Bot กระทรวง อว.</title>
+  <style>
+    :root {
+      --gov-blue: #1a237e;
+      --gov-blue-mid: #283593;
+      --gov-blue-light: #3949ab;
+      --gov-blue-pale: #e8eaf6;
+      --gov-gold: #f9a825;
+      --gov-gold-light: #fff8e1;
+      --text-dark: #1a1a2e;
+      --text-mid: #37474f;
+      --text-light: #607d8b;
+      --border: #c5cae9;
+      --success: #2e7d32;
+      --success-bg: #e8f5e9;
+      --warning: #e65100;
+      --warning-bg: #fff3e0;
+      --white: #ffffff;
+      --surface: #f5f6fa;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Sarabun', 'Noto Sans Thai', 'Segoe UI', sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-dark);
+      background: var(--surface);
+    }
+
+    /* ===== HEADER ===== */
+    .site-header {
+      background: linear-gradient(135deg, var(--gov-blue) 0%, var(--gov-blue-mid) 60%, var(--gov-blue-light) 100%);
+      color: var(--white);
+      padding: 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(26,35,126,0.4);
+    }
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px 32px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .header-emblem {
+      width: 56px;
+      height: 56px;
+      background: var(--white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .header-text h1 {
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      line-height: 1.3;
+    }
+    .header-text .subtitle {
+      font-size: 0.9rem;
+      opacity: 0.82;
+      margin-top: 3px;
+    }
+    .header-badge {
+      margin-left: auto;
+      background: var(--gov-gold);
+      color: var(--gov-blue);
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 4px 14px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    /* ===== LAYOUT ===== */
+    .page-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 36px 32px 60px;
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    /* ===== SIDEBAR NAV ===== */
+    .sidebar {
+      position: sticky;
+      top: 96px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(26,35,126,0.07);
+    }
+    .sidebar-title {
+      background: var(--gov-blue);
+      color: var(--white);
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 12px 16px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .sidebar nav a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 16px;
+      font-size: 0.88rem;
+      color: var(--text-mid);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s, color 0.15s;
+    }
+    .sidebar nav a:last-child { border-bottom: none; }
+    .sidebar nav a:hover { background: var(--gov-blue-pale); color: var(--gov-blue); }
+    .sidebar nav a .nav-num {
+      background: var(--gov-blue-pale);
+      color: var(--gov-blue);
+      font-size: 0.72rem;
+      font-weight: 700;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    .main-content { min-width: 0; }
+
+    /* ===== SECTION ===== */
+    .section {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 28px;
+      box-shadow: 0 2px 8px rgba(26,35,126,0.06);
+    }
+    .section-header {
+      background: linear-gradient(90deg, var(--gov-blue) 0%, var(--gov-blue-mid) 100%);
+      color: var(--white);
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .section-num {
+      background: rgba(255,255,255,0.18);
+      border: 2px solid rgba(255,255,255,0.5);
+      color: var(--white);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .section-header h2 {
+      font-size: 1.08rem;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+    .section-header .section-icon {
+      margin-left: auto;
+      font-size: 1.5rem;
+      opacity: 0.8;
+    }
+    .section-body { padding: 24px; }
+
+    /* ===== BOT GRID ===== */
+    .bot-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+    .bot-card {
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      background: var(--gov-blue-pale);
+      transition: box-shadow 0.15s, border-color 0.15s;
+    }
+    .bot-card:hover {
+      border-color: var(--gov-blue-light);
+      box-shadow: 0 4px 12px rgba(26,35,126,0.12);
+    }
+    .bot-id {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--gov-blue);
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 8px;
+      display: inline-block;
+      margin-bottom: 6px;
+      letter-spacing: 0.04em;
+    }
+    .bot-name {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--gov-blue);
+      margin-bottom: 3px;
+    }
+    .bot-role {
+      font-size: 0.8rem;
+      color: var(--text-mid);
+      margin-bottom: 4px;
+    }
+    .bot-target {
+      font-size: 0.76rem;
+      color: var(--text-light);
+    }
+    .bot-target::before { content: "เป้าหมาย: "; font-weight: 600; color: var(--gov-blue-light); }
+
+    /* ===== STEPS ===== */
+    .steps { list-style: none; counter-reset: step-counter; }
+    .steps li {
+      counter-increment: step-counter;
+      display: flex;
+      gap: 16px;
+      margin-bottom: 18px;
+      padding-bottom: 18px;
+      border-bottom: 1px dashed var(--border);
+    }
+    .steps li:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .step-num {
+      width: 32px;
+      height: 32px;
+      background: var(--gov-blue);
+      color: var(--white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .step-content { flex: 1; }
+    .step-content strong { color: var(--gov-blue); display: block; margin-bottom: 4px; }
+
+    /* ===== WEBHOOK TABLE ===== */
+    .webhook-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+      font-size: 0.88rem;
+    }
+    .webhook-table thead {
+      background: var(--gov-blue);
+      color: var(--white);
+    }
+    .webhook-table th {
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 600;
+    }
+    .webhook-table td {
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    .webhook-table tr:nth-child(even) td { background: var(--gov-blue-pale); }
+    .webhook-table tr:hover td { background: #dde1f5; }
+    .url-cell {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.8rem;
+      color: var(--success);
+      word-break: break-all;
+    }
+    .badge-vip {
+      background: var(--gov-gold);
+      color: #5d4037;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    /* ===== CODE BLOCK ===== */
+    .code-block {
+      background: #1e2233;
+      color: #a8e063;
+      border-radius: 8px;
+      padding: 16px 20px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.85rem;
+      line-height: 1.8;
+      overflow-x: auto;
+      margin: 12px 0;
+      border-left: 4px solid var(--gov-gold);
+    }
+    .code-block .comment { color: #607d8b; }
+    .code-block .cmd { color: #80cbc4; }
+    .code-block .flag { color: #ffcc80; }
+    .code-block .val { color: #f48fb1; }
+
+    /* ===== CALLOUT BOXES ===== */
+    .callout {
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin: 14px 0;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      font-size: 0.9rem;
+    }
+    .callout-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+    .callout.info { background: var(--gov-blue-pale); border-left: 4px solid var(--gov-blue-light); }
+    .callout.info .callout-icon { color: var(--gov-blue); }
+    .callout.success { background: var(--success-bg); border-left: 4px solid var(--success); }
+    .callout.success .callout-icon { color: var(--success); }
+    .callout.warning { background: var(--warning-bg); border-left: 4px solid var(--warning); }
+    .callout.warning .callout-icon { color: var(--warning); }
+
+    /* ===== FEATURE CARDS ===== */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .feature-card {
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+      background: var(--white);
+      border-top: 4px solid var(--gov-blue-light);
+      transition: box-shadow 0.15s;
+    }
+    .feature-card:hover { box-shadow: 0 4px 16px rgba(26,35,126,0.1); }
+    .feature-icon { font-size: 2rem; margin-bottom: 10px; }
+    .feature-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--gov-blue);
+      margin-bottom: 6px;
+    }
+    .feature-desc { font-size: 0.85rem; color: var(--text-mid); line-height: 1.6; }
+
+    /* ===== STAT STRIP ===== */
+    .stat-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .stat-box {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+      border-top: 3px solid var(--gov-blue);
+    }
+    .stat-num {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--gov-blue);
+      line-height: 1.1;
+    }
+    .stat-label { font-size: 0.78rem; color: var(--text-light); margin-top: 4px; }
+
+    /* ===== FOOTER ===== */
+    .site-footer {
+      background: var(--gov-blue);
+      color: rgba(255,255,255,0.7);
+      text-align: center;
+      padding: 20px 32px;
+      font-size: 0.82rem;
+      margin-top: 20px;
+    }
+    .site-footer strong { color: var(--white); }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 820px) {
+      .page-wrap { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .stat-strip { grid-template-columns: repeat(2, 1fr); }
+      .header-badge { display: none; }
+    }
+    @media (max-width: 520px) {
+      .header-inner { padding: 16px 20px; }
+      .page-wrap { padding: 20px 16px 40px; }
+      .stat-strip { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-emblem">🎓</div>
+    <div class="header-text">
+      <h1>คู่มือตั้งค่า LINE AI Bot กระทรวง อว.</h1>
+      <div class="subtitle">Ministry of Higher Education, Science, Research and Innovation (MHESI) — 11 AI Bots System</div>
+    </div>
+    <div class="header-badge">v1.0 | พ.ค. 2569</div>
+  </div>
+</header>
+
+<!-- ===== PAGE WRAP ===== -->
+<div class="page-wrap">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-title">สารบัญ</div>
+    <nav>
+      <a href="#overview"><span class="nav-num">1</span> ภาพรวมระบบ</a>
+      <a href="#create-oa"><span class="nav-num">2</span> สร้าง LINE OA</a>
+      <a href="#webhook"><span class="nav-num">3</span> ตั้งค่า Webhook</a>
+      <a href="#secrets"><span class="nav-num">4</span> ตั้งค่า Secrets</a>
+      <a href="#test"><span class="nav-num">5</span> ทดสอบระบบ</a>
+      <a href="#features"><span class="nav-num">6</span> คุณสมบัติพิเศษ</a>
+    </nav>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <main class="main-content">
+
+    <!-- STAT STRIP -->
+    <div class="stat-strip">
+      <div class="stat-box">
+        <div class="stat-num">11</div>
+        <div class="stat-label">LINE AI Bots</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">170</div>
+        <div class="stat-label">มหาวิทยาลัย</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">2.5M</div>
+        <div class="stat-label">นักศึกษา</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">342K</div>
+        <div class="stat-label">บุคลากร</div>
+      </div>
+    </div>
+
+    <!-- SECTION 1: ภาพรวม -->
+    <section class="section" id="overview">
+      <div class="section-header">
+        <div class="section-num">1</div>
+        <h2>ภาพรวมระบบ — 11 LINE AI Bots กระทรวง อว.</h2>
+        <span class="section-icon">🏛️</span>
+      </div>
+      <div class="section-body">
+        <p style="margin-bottom:16px;">
+          ระบบ LINE AI Bot กระทรวงการอุดมศึกษา วิทยาศาสตร์ วิจัยและนวัตกรรม (อว.) ประกอบด้วย
+          <strong>11 บอทเฉพาะทาง</strong> แต่ละตัวมีบุคลิก บทบาท และกลุ่มเป้าหมายที่แตกต่างกัน
+          ทั้งหมดทำงานบน <strong>Fly.io (g2g-ai-pool)</strong> โดยใช้ Claude AI เป็นแกนกลาง
+          และจดจำบริบทผู้ใช้ข้ามการสนทนา
+        </p>
+
+        <div class="bot-grid">
+          <div class="bot-card">
+            <span class="bot-id">MHESI01</span>
+            <div class="bot-name">ผู้ช่วยปลัดศุภชัย</div>
+            <div class="bot-role">VIP Executive Assistant</div>
+            <div class="bot-target">ปลัดกระทรวง</div>
+          </div>
+          <div class="bot-card">
+            <span class="bot-id">MHESI02</span>
+            <div class="bot-name">น้องอาว</div>
+            <div class="bot-role">Staff Assistant</div>
+            <div class="bot-target">เจ้าหน้าที่ / ประชาชน</div>
+          </div>
+          <div class="bot-card">
+            <span class="bot-id">MHESI03</span>
+            <div class="bot-name">น้องวิทย์</div>
+            <div class="bot-role">Science & Research</div>
+            <div class="bot-target">นักวิจัย</div>
+          </div>
+          <div class="bot-card">
+            <span class="bot-id">MHESI04</span>
+            <div class="bot-name">น้องวิจัย</div>
+            <div class="bot-role">Research Fund</div>
+            <div class="bot-target">ผู้ขอทุนวิจัย</div>
+          </div>
+          <div class="bot-card">
+            <span class="bot-id">MHESI05</span>
+            <div class="bot-name">น้องนวัต</div>
+            <div class="bot-role">Innovation</div>
+            <div class="bot-target">สตาร์ทอัพ</div>
+          </div>
+          <div class="bot-card">
+            <span class="bot-id">MHESI06</span>
+            <div class="bot-name">น้องมหา</div>
+            <div class="bot-role">University Affairs</div>
+            <div class="bot-target">มหาวิทยาลัย</div>
+          </div>
+          <div class="bot-card">
+            <span class="bot-id">MHESI07</span>
+            <div class="bot-name">น้องทุน</div>
+            <div class="bot-role">Scholarships</div>
+            <div class="bot-target">นักศึกษา</div>
+          </div>
+          <div class="bot-card">
+            <span class="bot-id">MHESI08</span>
+            <div class="bot-name">น้องวช</div>
+            <div class="bot-role">National Research</div>
+            <div class="bot-target">นักวิจัย / วช.</div>
+          </div>
+          <div class="bot-card">
+            <span class="bot-id">MHESI09</span>
+            <div class="bot-name">น้องเทค</div>
+            <div class="bot-role">Technology</div>
+            <div class="bot-target">หน่วยงานเทคโนโลยี</div>
+          </div>
+          <div class="bot-card">
+            <span class="bot-id">MHESI10</span>
+            <div class="bot-name">น้องสวทช</div>
+            <div class="bot-role">NSTDA Affairs</div>
+            <div class="bot-target">สวทช.</div>
+          </div>
+          <div class="bot-card">
+            <span class="bot-id">MHESI11</span>
+            <div class="bot-name">น้องดาว</div>
+            <div class="bot-role">Public Service</div>
+            <div class="bot-target">ประชาชนทั่วไป</div>
+          </div>
+        </div>
+
+        <div class="callout info" style="margin-top:20px;">
+          <span class="callout-icon">ℹ️</span>
+          <div>
+            <strong>สถาปัตยกรรมระบบ:</strong> Bot ทั้ง 11 ตัวทำงานบน endpoint เดียวกันที่
+            <code>https://g2g-ai-pool.fly.dev</code> แยกด้วย channel ID (<code>MHESI01</code>–<code>MHESI11</code>)
+            ทำให้บริหารจัดการและอัปเดตได้จากจุดเดียว
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: สร้าง LINE OA -->
+    <section class="section" id="create-oa">
+      <div class="section-header">
+        <div class="section-num">2</div>
+        <h2>ขั้นตอนการสร้าง LINE Official Account</h2>
+        <span class="section-icon">📱</span>
+      </div>
+      <div class="section-body">
+        <div class="callout warning">
+          <span class="callout-icon">⚠️</span>
+          <div>ต้องสร้าง LINE OA แยกกัน <strong>11 บัญชี</strong> สำหรับแต่ละ Bot — ทำซ้ำขั้นตอนนี้ 11 ครั้ง</div>
+        </div>
+
+        <ol class="steps" style="margin-top:20px;">
+          <li>
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <strong>เข้าสู่ LINE Business Manager</strong>
+              ไปที่ <a href="https://manager.line.biz" target="_blank" style="color:var(--gov-blue);font-weight:600;">manager.line.biz</a>
+              แล้ว Login ด้วยบัญชี LINE ขององค์กร (แนะนำให้ใช้อีเมลราชการ)
+            </div>
+          </li>
+          <li>
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <strong>สร้าง Account ใหม่</strong>
+              คลิก "สร้างบัญชี" → เลือกประเภท <strong>"Messaging API"</strong>
+              (ไม่ใช่ LINE Official Account แบบทั่วไป เพื่อให้รองรับ Webhook)
+            </div>
+          </li>
+          <li>
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <strong>กรอกชื่อ Account</strong>
+              ตั้งชื่อตาม Bot เช่น <em>"ผู้ช่วยปลัดศุภชัย — กระทรวง อว."</em> หรือ <em>"น้องอาว อว."</em>
+              ชื่อนี้จะแสดงใน LINE ของผู้ใช้
+            </div>
+          </li>
+          <li>
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <strong>เลือกหมวดหมู่</strong>
+              เลือก <strong>"หน่วยงานภาครัฐ"</strong> หรือ <strong>"การศึกษา"</strong> ตามบริบทของ Bot
+            </div>
+          </li>
+          <li>
+            <div class="step-num">5</div>
+            <div class="step-content">
+              <strong>ขอสถานะ Verified Account (สำหรับราชการ)</strong>
+              ไปที่ <strong>LINE Business Center</strong> → ยื่นคำขอ Verified Badge
+              โดยแนบเอกสารราชการ (หนังสือรับรองหน่วยงาน) เพื่อได้ตราสัญลักษณ์ความน่าเชื่อถือ
+            </div>
+          </li>
+          <li>
+            <div class="step-num">6</div>
+            <div class="step-content">
+              <strong>บันทึก Channel ID และ Channel Secret</strong>
+              หลังสร้างเสร็จ ให้คัดลอก <strong>Channel ID</strong>, <strong>Channel Secret</strong>
+              และ <strong>Channel Access Token</strong> เก็บไว้ใช้ในขั้นตอนถัดไป
+            </div>
+          </li>
+        </ol>
+
+        <div class="callout success">
+          <span class="callout-icon">✅</span>
+          <div>
+            <strong>เสร็จสิ้น:</strong> ทำขั้นตอนข้างต้นซ้ำอีก 10 ครั้งสำหรับ MHESI02–MHESI11
+            แล้วรวบรวม Token ทั้งหมดก่อนไปขั้นตอนต่อไป
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: Webhook -->
+    <section class="section" id="webhook">
+      <div class="section-header">
+        <div class="section-num">3</div>
+        <h2>ตั้งค่า Webhook สำหรับแต่ละ Bot</h2>
+        <span class="section-icon">🔗</span>
+      </div>
+      <div class="section-body">
+        <ol class="steps">
+          <li>
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <strong>เข้า LINE Developers Console</strong>
+              ไปที่ <a href="https://developers.line.biz" target="_blank" style="color:var(--gov-blue);font-weight:600;">developers.line.biz</a>
+              → Login → เลือก Provider ขององค์กร → คลิกที่ Channel ที่ต้องการตั้งค่า
+            </div>
+          </li>
+          <li>
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <strong>เปิดแท็บ Messaging API</strong>
+              คลิกที่ <strong>"Messaging API"</strong> tab → เลื่อนลงไปส่วน <strong>"Webhook settings"</strong>
+            </div>
+          </li>
+          <li>
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <strong>กรอก Webhook URL ตาม Bot</strong>
+              ใช้ URL ตามตารางด้านล่าง แล้วกด <strong>"Update"</strong>
+            </div>
+          </li>
+          <li>
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <strong>เปิดใช้งาน Webhook</strong>
+              Toggle <strong>"Use webhook"</strong> ให้เป็น <span style="color:var(--success);font-weight:700;">ON</span>
+              แล้วกด <strong>"Verify"</strong> เพื่อทดสอบการเชื่อมต่อ — ต้องได้ผลลัพธ์ <strong>Success</strong>
+            </div>
+          </li>
+          <li>
+            <div class="step-num">5</div>
+            <div class="step-content">
+              <strong>ปิด Auto-reply และ Greeting message</strong>
+              ในส่วน <strong>"LINE Official Account features"</strong> → ปิด Auto-reply messages
+              เพื่อให้ Bot AI ตอบแทน (ไม่เช่นนั้น LINE จะตอบอัตโนมัติแทน AI)
+            </div>
+          </li>
+        </ol>
+
+        <h3 style="color:var(--gov-blue);margin:24px 0 8px;font-size:1rem;">ตาราง Webhook URL ทั้ง 11 Bots</h3>
+
+        <table class="webhook-table">
+          <thead>
+            <tr>
+              <th>Bot ID</th>
+              <th>ชื่อ</th>
+              <th>Webhook URL</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>MHESI01</strong> <span class="badge-vip">VIP</span></td>
+              <td>ผู้ช่วยปลัดศุภชัย</td>
+              <td class="url-cell">https://g2g-ai-pool.fly.dev/line/webhook/MHESI01</td>
+            </tr>
+            <tr>
+              <td><strong>MHESI02</strong></td>
+              <td>น้องอาว</td>
+              <td class="url-cell">https://g2g-ai-pool.fly.dev/line/webhook/MHESI02</td>
+            </tr>
+            <tr>
+              <td><strong>MHESI03</strong></td>
+              <td>น้องวิทย์</td>
+              <td class="url-cell">https://g2g-ai-pool.fly.dev/line/webhook/MHESI03</td>
+            </tr>
+            <tr>
+              <td><strong>MHESI04</strong></td>
+              <td>น้องวิจัย</td>
+              <td class="url-cell">https://g2g-ai-pool.fly.dev/line/webhook/MHESI04</td>
+            </tr>
+            <tr>
+              <td><strong>MHESI05</strong></td>
+              <td>น้องนวัต</td>
+              <td class="url-cell">https://g2g-ai-pool.fly.dev/line/webhook/MHESI05</td>
+            </tr>
+            <tr>
+              <td><strong>MHESI06</strong></td>
+              <td>น้องมหา</td>
+              <td class="url-cell">https://g2g-ai-pool.fly.dev/line/webhook/MHESI06</td>
+            </tr>
+            <tr>
+              <td><strong>MHESI07</strong></td>
+              <td>น้องทุน</td>
+              <td class="url-cell">https://g2g-ai-pool.fly.dev/line/webhook/MHESI07</td>
+            </tr>
+            <tr>
+              <td><strong>MHESI08</strong></td>
+              <td>น้องวช</td>
+              <td class="url-cell">https://g2g-ai-pool.fly.dev/line/webhook/MHESI08</td>
+            </tr>
+            <tr>
+              <td><strong>MHESI09</strong></td>
+              <td>น้องเทค</td>
+              <td class="url-cell">https://g2g-ai-pool.fly.dev/line/webhook/MHESI09</td>
+            </tr>
+            <tr>
+              <td><strong>MHESI10</strong></td>
+              <td>น้องสวทช</td>
+              <td class="url-cell">https://g2g-ai-pool.fly.dev/line/webhook/MHESI10</td>
+            </tr>
+            <tr>
+              <td><strong>MHESI11</strong></td>
+              <td>น้องดาว</td>
+              <td class="url-cell">https://g2g-ai-pool.fly.dev/line/webhook/MHESI11</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout info" style="margin-top:16px;">
+          <span class="callout-icon">ℹ️</span>
+          <div>
+            ถ้ากด <strong>Verify</strong> แล้วได้ผลลัพธ์ว่า <em>Error</em> — ให้ตรวจสอบว่า Fly.io app
+            ยังทำงานอยู่ด้วยคำสั่ง <code>flyctl status --app g2g-ai-pool</code>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: Fly.io Secrets -->
+    <section class="section" id="secrets">
+      <div class="section-header">
+        <div class="section-num">4</div>
+        <h2>ตั้งค่า Fly.io Secrets — Channel Access Token</h2>
+        <span class="section-icon">🔐</span>
+      </div>
+      <div class="section-body">
+        <p style="margin-bottom:16px;">
+          ทุก Bot ต้องการ <strong>Channel Access Token</strong> จาก LINE Developers Console
+          เก็บเป็น environment secret บน Fly.io ใช้คำสั่ง <code>flyctl</code> ดังนี้:
+        </p>
+
+        <h3 style="color:var(--gov-blue);margin-bottom:8px;font-size:0.95rem;">ตั้งค่า Token ทีละตัว (ปลอดภัยสูงสุด)</h3>
+        <div class="code-block">
+<span class="comment"># ตั้งค่า Token สำหรับ Bot 1 (ปลัดศุภชัย)</span>
+<span class="cmd">flyctl</span> <span class="flag">secrets set</span> <span class="val">LINE_TOKEN_MHESI01</span>=&lt;Channel_Access_Token_01&gt; <span class="flag">--app</span> g2g-ai-pool
+
+<span class="comment"># Bot 2</span>
+<span class="cmd">flyctl</span> <span class="flag">secrets set</span> <span class="val">LINE_TOKEN_MHESI02</span>=&lt;Channel_Access_Token_02&gt; <span class="flag">--app</span> g2g-ai-pool
+
+<span class="comment"># Bot 3</span>
+<span class="cmd">flyctl</span> <span class="flag">secrets set</span> <span class="val">LINE_TOKEN_MHESI03</span>=&lt;Channel_Access_Token_03&gt; <span class="flag">--app</span> g2g-ai-pool
+
+<span class="comment"># ... ทำซ้ำสำหรับ MHESI04 ถึง MHESI11 ...</span>
+
+<span class="comment"># Bot 11</span>
+<span class="cmd">flyctl</span> <span class="flag">secrets set</span> <span class="val">LINE_TOKEN_MHESI11</span>=&lt;Channel_Access_Token_11&gt; <span class="flag">--app</span> g2g-ai-pool</div>
+
+        <h3 style="color:var(--gov-blue);margin:20px 0 8px;font-size:0.95rem;">ตั้งค่าทีเดียวหลายตัว (รวดเร็ว)</h3>
+        <div class="code-block">
+<span class="cmd">flyctl</span> <span class="flag">secrets set</span> \
+  <span class="val">LINE_TOKEN_MHESI01</span>=&lt;token_01&gt; \
+  <span class="val">LINE_TOKEN_MHESI02</span>=&lt;token_02&gt; \
+  <span class="val">LINE_TOKEN_MHESI03</span>=&lt;token_03&gt; \
+  <span class="val">LINE_TOKEN_MHESI04</span>=&lt;token_04&gt; \
+  <span class="val">LINE_TOKEN_MHESI05</span>=&lt;token_05&gt; \
+  <span class="val">LINE_TOKEN_MHESI06</span>=&lt;token_06&gt; \
+  <span class="val">LINE_TOKEN_MHESI07</span>=&lt;token_07&gt; \
+  <span class="val">LINE_TOKEN_MHESI08</span>=&lt;token_08&gt; \
+  <span class="val">LINE_TOKEN_MHESI09</span>=&lt;token_09&gt; \
+  <span class="val">LINE_TOKEN_MHESI10</span>=&lt;token_10&gt; \
+  <span class="val">LINE_TOKEN_MHESI11</span>=&lt;token_11&gt; \
+  <span class="flag">--app</span> g2g-ai-pool</div>
+
+        <h3 style="color:var(--gov-blue);margin:20px 0 8px;font-size:0.95rem;">ตรวจสอบว่า Secrets ถูกบันทึกแล้ว</h3>
+        <div class="code-block">
+<span class="cmd">flyctl</span> <span class="flag">secrets list</span> <span class="flag">--app</span> g2g-ai-pool</div>
+
+        <div class="callout warning">
+          <span class="callout-icon">⚠️</span>
+          <div>
+            <strong>ข้อควรระวัง:</strong> Channel Access Token มีอายุ และต้อง Generate ใหม่จาก LINE Developers Console
+            เมื่อหมดอายุ ควรตั้ง Expiry เป็น <strong>"ไม่มีกำหนดหมดอายุ"</strong> (Stateless) หรือ
+            ตั้ง Long-lived token เพื่อลดภาระการจัดการ
+          </div>
+        </div>
+
+        <div class="callout success" style="margin-top:12px;">
+          <span class="callout-icon">✅</span>
+          <div>
+            หลังตั้งค่า Secrets แล้ว Fly.io จะ <strong>Restart app อัตโนมัติ</strong>
+            ไม่ต้อง Deploy ใหม่ — Bot พร้อมใช้งานทันที
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: ทดสอบ -->
+    <section class="section" id="test">
+      <div class="section-header">
+        <div class="section-num">5</div>
+        <h2>ทดสอบระบบและแก้ไขปัญหา</h2>
+        <span class="section-icon">🧪</span>
+      </div>
+      <div class="section-body">
+        <h3 style="color:var(--gov-blue);margin-bottom:12px;font-size:0.95rem;">การทดสอบเบื้องต้น</h3>
+        <ol class="steps">
+          <li>
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <strong>เพิ่ม Bot เป็นเพื่อน</strong>
+              สแกน QR Code จาก LINE Developers Console หรือค้นหาด้วย Line ID ของ Bot
+            </div>
+          </li>
+          <li>
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <strong>ส่งข้อความทดสอบ</strong>
+              พิมพ์ <em>"สวัสดีครับ"</em> หรือ <em>"ทดสอบระบบ"</em>
+              — Bot ควรตอบกลับภายใน <strong>3 วินาที</strong>
+            </div>
+          </li>
+          <li>
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <strong>ทดสอบคำถามเฉพาะทาง</strong>
+              ลองถามเกี่ยวกับบทบาทของ Bot นั้น เช่น น้องวิจัย → ถามเรื่องทุน ววน.
+            </div>
+          </li>
+        </ol>
+
+        <h3 style="color:var(--gov-blue);margin:24px 0 8px;font-size:0.95rem;">กรณี Bot ไม่ตอบ — ขั้นตอนวิเคราะห์ปัญหา</h3>
+
+        <div class="callout warning">
+          <span class="callout-icon">🔍</span>
+          <div>
+            <strong>ตรวจสอบ Fly.io Logs ก่อนเสมอ:</strong>
+          </div>
+        </div>
+
+        <div class="code-block">
+<span class="comment"># ดู logs แบบ real-time</span>
+<span class="cmd">flyctl</span> <span class="flag">logs</span> <span class="flag">--app</span> g2g-ai-pool
+
+<span class="comment"># กรอง error เฉพาะ</span>
+<span class="cmd">flyctl</span> <span class="flag">logs</span> <span class="flag">--app</span> g2g-ai-pool | grep <span class="val">ERROR</span>
+
+<span class="comment"># ดูสถานะ app</span>
+<span class="cmd">flyctl</span> <span class="flag">status</span> <span class="flag">--app</span> g2g-ai-pool</div>
+
+        <h3 style="color:var(--gov-blue);margin:20px 0 10px;font-size:0.95rem;">ตารางแก้ไขปัญหาพบบ่อย</h3>
+
+        <table class="webhook-table">
+          <thead>
+            <tr><th>ปัญหา</th><th>สาเหตุที่เป็นไปได้</th><th>วิธีแก้</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Bot ไม่ตอบเลย</td>
+              <td>Webhook ไม่ถึง Fly.io</td>
+              <td>ตรวจสอบ Webhook URL ใน LINE Console ให้ถูกต้อง</td>
+            </tr>
+            <tr>
+              <td>ตอบว่า "ขออภัย"</td>
+              <td>Token หมดอายุ / ไม่ถูกต้อง</td>
+              <td>Generate Token ใหม่ → <code>flyctl secrets set</code></td>
+            </tr>
+            <tr>
+              <td>Verify ล้มเหลว</td>
+              <td>App ไม่ทำงาน / URL ผิด</td>
+              <td><code>flyctl status</code> → ตรวจสอบ app running</td>
+            </tr>
+            <tr>
+              <td>ตอบช้ากว่า 10 วิ</td>
+              <td>Instance sleeping / cold start</td>
+              <td>ตั้งค่า <code>min_machines_running = 1</code> ใน fly.toml</td>
+            </tr>
+            <tr>
+              <td>Bot ตอบผิดบุคลิก</td>
+              <td>Channel ID routing ผิด</td>
+              <td>ตรวจสอบ routing logic ใน server code</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION 6: คุณสมบัติพิเศษ -->
+    <section class="section" id="features">
+      <div class="section-header">
+        <div class="section-num">6</div>
+        <h2>คุณสมบัติพิเศษของระบบ AI Bot</h2>
+        <span class="section-icon">✨</span>
+      </div>
+      <div class="section-body">
+        <div class="feature-grid">
+          <div class="feature-card">
+            <div class="feature-icon">🧠</div>
+            <div class="feature-title">User Memory ข้ามการสนทนา</div>
+            <div class="feature-desc">Bot จดจำชื่อ ตำแหน่ง และบริบทของผู้ใช้แต่ละคน ทำให้การสนทนาครั้งต่อไปราบรื่นและเป็นส่วนตัวมากขึ้น</div>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🏛️</div>
+            <div class="feature-title">ฐานความรู้กระทรวง อว.</div>
+            <div class="feature-desc">Bot รู้ข้อมูลครบถ้วน — กฎหมาย พรบ. 5 ฉบับ, งบประมาณ, หน่วยงานในสังกัด 50+ แห่ง, มหาวิทยาลัย 170 แห่ง</div>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">💬</div>
+            <div class="feature-title">ตอบได้ไม่จำกัดหัวข้อ</div>
+            <div class="feature-desc">บริหารองค์กร, กฎหมายราชการ, วิชาการ, งานวิจัย, ทุนการศึกษา, นวัตกรรม, และให้บริการประชาชนทั่วไป</div>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <div class="feature-title">ตอบเร็วภายใน 3 วินาที</div>
+            <div class="feature-desc">ใช้ Claude AI ผ่าน Fly.io ภูมิภาค Asia-Pacific ลด latency — เหมาะสำหรับการใช้งานในราชการที่ต้องการความรวดเร็ว</div>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🔒</div>
+            <div class="feature-title">ปลอดภัยระดับองค์กร</div>
+            <div class="feature-desc">Secret management บน Fly.io, ไม่มีการเก็บบทสนทนาใน server, รองรับ LINE Signature Verification ทุก request</div>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🎯</div>
+            <div class="feature-title">บุคลิกเฉพาะทางต่อหน่วยงาน</div>
+            <div class="feature-desc">แต่ละ Bot มี System Prompt ที่กำหนดบุคลิก ความเชี่ยวชาญ และกลุ่มเป้าหมายชัดเจน เพื่อตอบตรงจุดที่สุด</div>
+          </div>
+        </div>
+
+        <div class="callout success" style="margin-top:24px;">
+          <span class="callout-icon">🚀</span>
+          <div>
+            <strong>พร้อมใช้งาน:</strong> เมื่อตั้งค่าครบทั้ง 3 ขั้นตอน (สร้าง OA → ตั้ง Webhook → บันทึก Secret)
+            ระบบจะพร้อมให้บริการทันที สามารถเพิ่มบุคลากรเข้ากลุ่มหรือแชร์ QR Code ได้เลย
+          </div>
+        </div>
+
+        <div style="margin-top:24px;padding:20px;background:var(--gov-blue-pale);border-radius:10px;border:1px solid var(--border);">
+          <h3 style="color:var(--gov-blue);margin-bottom:12px;font-size:0.95rem;">ติดต่อทีม G2G AI Pool</h3>
+          <p style="font-size:0.88rem;color:var(--text-mid);">
+            หากพบปัญหาในการตั้งค่าหรือต้องการปรับแต่งบุคลิก Bot เพิ่มเติม ติดต่อทีมพัฒนาได้ที่<br>
+            <strong style="color:var(--gov-blue);">g2g@gov2global.com</strong> หรือผ่านช่องทางภายในกระทรวง
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer class="site-footer">
+  <strong>ระบบ LINE AI Bot กระทรวง อว. (MHESI)</strong> —
+  พัฒนาโดย G2G AI Pool | Powered by Claude AI + Fly.io |
+  อัปเดตล่าสุด: 26 พฤษภาคม 2569
+</footer>
+
+<script src="/access-bar.js"></script>
+</body>
+</html>

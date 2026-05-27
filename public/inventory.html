@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ระบบบริหารพัสดุ-ครุภัณฑ์ — G2G AgriTech</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy1:#0d2d5a;--navy2:#1a4480;--navy3:#2563a8;--navy4:#3b82c4;
+  --gold:#c9a227;--gold2:#e4b83a;--gold3:#f5d06a;
+  --green1:#166534;--green2:#22c55e;--green3:#bbf7d0;
+  --red:#dc2626;--orange:#ea580c;--purple:#7c3aed;
+  --bg:#f0f4f8;--bg2:#e8edf4;--border:#ccd6e0;
+  --white:#fff;--text:#1e293b;--sub:#64748b;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Sarabun',sans-serif}
+body{background:var(--bg);color:var(--text);min-height:100vh}
+
+/* TOPBAR */
+.topbar{background:var(--navy1);color:#fff;padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.tb-left{display:flex;align-items:center;gap:14px}
+.tb-logo{font-size:28px}
+.tb-t1{font-size:15px;font-weight:700;line-height:1.2}
+.tb-t2{font-size:11px;opacity:.7;line-height:1.2}
+.tb-right{display:flex;align-items:center;gap:10px}
+.prov-switch{display:flex;gap:4px;background:rgba(255,255,255,.1);padding:3px;border-radius:8px}
+.prov-btn{background:transparent;color:#fff;border:none;padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s}
+.prov-btn:hover{background:rgba(255,255,255,.15)}
+.prov-btn.active{background:var(--gold);color:var(--navy1);font-weight:700}
+.tb-status{font-size:11px;background:rgba(34,197,94,.2);color:#bbf7d0;padding:3px 10px;border-radius:12px;border:1px solid rgba(34,197,94,.4)}
+.tb-status.off{background:rgba(220,38,38,.2);color:#fecaca;border-color:rgba(220,38,38,.4)}
+
+/* TABS */
+.tabs{background:var(--navy2);display:flex;padding:0 20px;gap:2px;overflow-x:auto;height:48px;align-items:flex-end}
+.tab{padding:11px 18px;font-size:13px;font-weight:600;color:rgba(255,255,255,.65);cursor:pointer;border-radius:8px 8px 0 0;white-space:nowrap;transition:.15s;border:none;background:transparent;font-family:inherit;display:flex;align-items:center;gap:6px}
+.tab:hover{background:rgba(255,255,255,.1);color:#fff}
+.tab.active{background:var(--bg);color:var(--navy1);font-weight:700}
+.tab .cnt{background:rgba(255,255,255,.2);color:inherit;font-size:10px;padding:1px 6px;border-radius:8px;font-weight:700}
+.tab.active .cnt{background:var(--navy1);color:#fff}
+
+/* MAIN */
+.main{padding:20px 24px;max-width:1600px;margin:0 auto}
+.page{display:none}
+.page.active{display:block}
+
+/* CARDS */
+.card{background:#fff;border-radius:12px;padding:18px 20px;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:16px}
+.card-h{font-size:15px;font-weight:700;color:var(--navy1);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.card-h .left{display:flex;align-items:center;gap:8px}
+.card-h .badge{font-size:11px;background:var(--bg2);color:var(--sub);padding:2px 10px;border-radius:10px;font-weight:500}
+
+/* KPI */
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px}
+.kpi-card{background:#fff;border-radius:10px;padding:14px 16px;border:1px solid var(--border)}
+.kpi-card.gold{border-color:var(--gold);background:#fffbe6}
+.kpi-card.red{border-color:var(--red);background:#fef2f2}
+.kpi-card.green{border-color:var(--green2);background:#f0fdf4}
+.kpi-v{font-size:24px;font-weight:800;color:var(--navy1)}
+.kpi-l{font-size:12px;color:var(--sub);margin-top:2px}
+.kpi-sub{font-size:10px;color:var(--sub);margin-top:1px}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{background:var(--navy1);color:#fff;padding:10px;text-align:left;font-weight:600;position:sticky;top:0}
+.tbl td{padding:9px 10px;border-bottom:1px solid var(--bg2);vertical-align:middle}
+.tbl tr:hover td{background:var(--bg2)}
+.tbl .num{text-align:right;font-variant-numeric:tabular-nums}
+
+.scroll-x{overflow-x:auto;border-radius:8px;border:1px solid var(--border)}
+
+/* BUTTONS */
+.btn{background:var(--navy1);color:#fff;border:none;padding:8px 16px;border-radius:7px;cursor:pointer;font-size:13px;font-family:inherit;font-weight:600;transition:.15s}
+.btn:hover{background:var(--navy2)}
+.btn-g{background:var(--green1)}
+.btn-g:hover{background:#14532d}
+.btn-gold{background:var(--gold);color:var(--navy1)}
+.btn-gold:hover{background:var(--gold2)}
+.btn-red{background:var(--red)}
+.btn-red:hover{background:#b91c1c}
+.btn-sm{padding:5px 11px;font-size:12px}
+.btn-out{background:#fff;color:var(--navy1);border:1px solid var(--border)}
+.btn-out:hover{background:var(--bg2)}
+.btn-row{display:flex;gap:4px;flex-wrap:wrap}
+
+/* INPUTS */
+.inp{border:1px solid var(--border);border-radius:7px;padding:7px 11px;font-size:13px;outline:none;font-family:inherit;background:#fff}
+.inp:focus{border-color:var(--navy3)}
+.row-wrap{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:12px}
+
+/* STATUS PILLS */
+.pill{display:inline-block;font-size:11px;padding:2px 9px;border-radius:10px;font-weight:600;white-space:nowrap}
+.pill-ok{background:#dcfce7;color:#166534}
+.pill-warn{background:#fef9c3;color:#854d0e}
+.pill-broken{background:#fed7aa;color:#9a3412}
+.pill-sold{background:#fecaca;color:#991b1b}
+.pill-destroyed{background:#e5e5e5;color:#525252}
+.pill-low{background:#fee2e2;color:#991b1b}
+
+/* MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center;padding:20px}
+.modal-bg.show{display:flex}
+.modal{background:#fff;border-radius:12px;padding:24px;width:min(640px,95vw);max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.modal h3{font-size:17px;font-weight:700;color:var(--navy1);margin-bottom:14px}
+.modal-row{display:grid;grid-template-columns:140px 1fr;gap:10px;margin-bottom:10px;align-items:center}
+.modal-row label{font-size:13px;font-weight:600;color:var(--text)}
+.modal-foot{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;padding-top:14px;border-top:1px solid var(--bg2)}
+
+/* QR / BARCODE */
+.qr-cell{display:flex;align-items:center;gap:6px}
+.qr-svg{width:40px;height:40px;background:#fff;border:1px solid var(--border);border-radius:4px;padding:2px}
+.asset-no{font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:var(--navy1);background:var(--bg2);padding:3px 7px;border-radius:4px}
+
+/* PROGRESS BAR for reorder */
+.pb{background:var(--bg2);border-radius:4px;height:6px;overflow:hidden;width:80px;display:inline-block}
+.pf{height:100%;border-radius:4px;transition:.3s}
+.pf.g{background:var(--green2)}.pf.y{background:var(--gold)}.pf.r{background:var(--red)}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--navy1);color:#fff;padding:12px 18px;border-radius:8px;box-shadow:0 4px 14px rgba(0,0,0,.3);z-index:200;display:none;font-size:13px;max-width:380px}
+.toast.show{display:block}
+.toast.err{background:var(--red)}
+.toast.ok{background:var(--green1)}
+
+@media(max-width:900px){
+  .kpi-row{grid-template-columns:repeat(2,1fr)}
+  .modal-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="tb-left">
+    <div class="tb-logo">📦</div>
+    <div>
+      <div class="tb-t1">ระบบบริหารพัสดุ-ครุภัณฑ์ภาครัฐ</div>
+      <div class="tb-t2">ตามระเบียบกระทรวงการคลังว่าด้วยการจัดซื้อจัดจ้างและการบริหารพัสดุภาครัฐ พ.ศ. 2560</div>
+    </div>
+  </div>
+  <div class="tb-right">
+    <div class="prov-switch">
+      <button class="prov-btn active" data-prov="phrae" onclick="switchProvince('phrae')">🏞️ แพร่</button>
+      <button class="prov-btn" data-prov="chiangrai" onclick="switchProvince('chiangrai')">🐘 เชียงราย</button>
+      <button class="prov-btn" data-prov="udonthani" onclick="switchProvince('udonthani')">🌾 อุดรธานี</button>
+    </div>
+    <div class="tb-status" id="apiStatus">● Connected</div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" data-tab="items" onclick="switchTab('items')">📦 พัสดุสิ้นเปลือง <span class="cnt" id="cnt-items">0</span></button>
+  <button class="tab" data-tab="assets" onclick="switchTab('assets')">🖥️ ครุภัณฑ์ <span class="cnt" id="cnt-assets">0</span></button>
+  <button class="tab" data-tab="receiving" onclick="switchTab('receiving')">📥 ใบรับพัสดุ <span class="cnt" id="cnt-receiving">0</span></button>
+  <button class="tab" data-tab="withdrawal" onclick="switchTab('withdrawal')">📤 ใบเบิกพัสดุ <span class="cnt" id="cnt-withdrawal">0</span></button>
+  <button class="tab" data-tab="audit" onclick="switchTab('audit')">📋 การตรวจนับ <span class="cnt" id="cnt-audit">0</span></button>
+  <button class="tab" data-tab="balance" onclick="switchTab('balance')">📊 รายงานคงเหลือ</button>
+</div>
+
+<div class="main">
+
+<!-- ========== ITEMS (พัสดุสิ้นเปลือง) ========== -->
+<div id="page-items" class="page active">
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="kpi-v" id="kpi-items-total">−</div><div class="kpi-l">รายการพัสดุทั้งหมด</div></div>
+    <div class="kpi-card green"><div class="kpi-v" id="kpi-items-value">−</div><div class="kpi-l">มูลค่ารวม (บ.)</div></div>
+    <div class="kpi-card red"><div class="kpi-v" id="kpi-items-reorder">−</div><div class="kpi-l">ต่ำกว่าจุดสั่งซื้อ</div><div class="kpi-sub">ต้องเติมสต๊อก</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="kpi-items-cat">−</div><div class="kpi-l">หมวดพัสดุ</div></div>
+    <div class="kpi-card gold"><div class="kpi-v" id="kpi-items-recent">−</div><div class="kpi-l">เคลื่อนไหวเดือนนี้</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-h">
+      <div class="left">📦 ทะเบียนพัสดุสิ้นเปลือง <span class="badge">หมวดค่าวัสดุ — งบดำเนินงาน</span></div>
+      <button class="btn btn-sm btn-g" onclick="openItemModal()">➕ เพิ่มพัสดุ</button>
+    </div>
+    <div class="row-wrap">
+      <select id="f-item-cat" class="inp" onchange="renderItems()">
+        <option value="">— ทุกหมวด —</option>
+      </select>
+      <select id="f-item-agency" class="inp" onchange="renderItems()">
+        <option value="">— ทุกหน่วยงาน —</option>
+        <option value="agri">เกษตรจังหวัด</option>
+        <option value="coop">สหกรณ์จังหวัด</option>
+        <option value="live">ปศุสัตว์จังหวัด</option>
+        <option value="fish">ประมงจังหวัด</option>
+        <option value="irri">ชลประทาน</option>
+        <option value="ldd">พัฒนาที่ดิน</option>
+        <option value="doa">วิจัยการเกษตร</option>
+      </select>
+      <select id="f-item-status" class="inp" onchange="renderItems()">
+        <option value="">— ทุกสถานะ —</option>
+        <option value="ปกติ">ปกติ</option>
+        <option value="ชำรุด">ชำรุด</option>
+        <option value="จำหน่าย">จำหน่าย</option>
+        <option value="ทำลาย">ทำลาย</option>
+      </select>
+      <input id="f-item-search" class="inp" placeholder="🔍 ค้นชื่อพัสดุ..." oninput="renderItems()" style="flex:1;min-width:200px">
+    </div>
+    <div class="scroll-x">
+      <table class="tbl">
+        <thead><tr>
+          <th>รหัส</th><th>ชื่อพัสดุ</th><th>หมวด</th><th>หน่วย</th><th class="num">ราคา/หน่วย</th>
+          <th class="num">คงเหลือ</th><th>สถานะคลัง</th><th>สถานะ</th><th>หน่วยงาน</th><th>การจัดการ</th>
+        </tr></thead>
+        <tbody id="items-tbody"><tr><td colspan="10" style="text-align:center;padding:24px;color:var(--sub)">⏳ กำลังโหลด...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ========== ASSETS (ครุภัณฑ์) ========== -->
+<div id="page-assets" class="page">
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="kpi-v" id="kpi-asset-total">−</div><div class="kpi-l">ครุภัณฑ์ทั้งหมด</div></div>
+    <div class="kpi-card green"><div class="kpi-v" id="kpi-asset-ok">−</div><div class="kpi-l">สถานะปกติ</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="kpi-asset-broken">−</div><div class="kpi-l">ชำรุด</div></div>
+    <div class="kpi-card red"><div class="kpi-v" id="kpi-asset-sold">−</div><div class="kpi-l">จำหน่าย / ทำลาย</div></div>
+    <div class="kpi-card gold"><div class="kpi-v" id="kpi-asset-bv">−</div><div class="kpi-l">มูลค่าตามบัญชี (บ.)</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-h">
+      <div class="left">🖥️ ทะเบียนครุภัณฑ์ <span class="badge">รูปแบบเลข: KST-{prov}-{seq}/{yy} (พ.ศ.)</span></div>
+      <button class="btn btn-sm btn-g" onclick="openAssetModal()">➕ เพิ่มครุภัณฑ์</button>
+    </div>
+    <div class="row-wrap">
+      <select id="f-asset-cat" class="inp" onchange="renderAssets()">
+        <option value="">— ทุกหมวด —</option>
+      </select>
+      <select id="f-asset-agency" class="inp" onchange="renderAssets()">
+        <option value="">— ทุกหน่วยงาน —</option>
+        <option value="agri">เกษตรจังหวัด</option>
+        <option value="coop">สหกรณ์จังหวัด</option>
+        <option value="live">ปศุสัตว์จังหวัด</option>
+        <option value="irri">ชลประทาน</option>
+        <option value="ldd">พัฒนาที่ดิน</option>
+        <option value="doa">วิจัยการเกษตร</option>
+      </select>
+      <select id="f-asset-status" class="inp" onchange="renderAssets()">
+        <option value="">— ทุกสถานะ —</option>
+        <option value="ปกติ">ปกติ</option>
+        <option value="ชำรุด">ชำรุด</option>
+        <option value="จำหน่าย">จำหน่าย</option>
+        <option value="ทำลาย">ทำลาย</option>
+      </select>
+      <input id="f-asset-search" class="inp" placeholder="🔍 ค้นเลขครุภัณฑ์ / ชื่อ..." oninput="renderAssets()" style="flex:1;min-width:240px">
+    </div>
+    <div class="scroll-x">
+      <table class="tbl">
+        <thead><tr>
+          <th>QR</th><th>เลขครุภัณฑ์</th><th>ชื่อ / ยี่ห้อ / รุ่น</th><th>หมวด</th><th>ผู้ใช้ / สถานที่</th>
+          <th class="num">ราคาทุน</th><th class="num">ค่าเสื่อม/ปี</th><th class="num">มูลค่าคงเหลือ</th>
+          <th>สถานะ</th><th>การจัดการ</th>
+        </tr></thead>
+        <tbody id="assets-tbody"><tr><td colspan="10" style="text-align:center;padding:24px;color:var(--sub)">⏳ กำลังโหลด...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ========== RECEIVING ========== -->
+<div id="page-receiving" class="page">
+  <div class="card">
+    <div class="card-h">
+      <div class="left">📥 ใบรับพัสดุ (รพ.) <span class="badge">บันทึกการรับมอบจากผู้ขาย</span></div>
+      <button class="btn btn-sm btn-g" onclick="openRecModal()">➕ ออกใบรับใหม่</button>
+    </div>
+    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px">
+      <strong>⚖️ ขั้นตอน:</strong> ผู้ขายส่งของ → คณะกรรมการตรวจรับ → เจ้าหน้าที่พัสดุออกใบรับ (รพ.) → บันทึกเข้าคลัง (stock_balance +qty)
+    </div>
+    <div class="scroll-x">
+      <table class="tbl">
+        <thead><tr>
+          <th>เลขที่เอกสาร</th><th>วันที่</th><th>ผู้ขาย</th><th>เลข PO</th>
+          <th>หน่วยงาน</th><th>จำนวนรายการ</th><th class="num">มูลค่ารวม (บ.)</th>
+          <th>ผู้ตรวจรับ</th><th>สถานะ</th>
+        </tr></thead>
+        <tbody id="receiving-tbody"><tr><td colspan="9" style="text-align:center;padding:24px;color:var(--sub)">⏳ กำลังโหลด...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ========== WITHDRAWAL ========== -->
+<div id="page-withdrawal" class="page">
+  <div class="card">
+    <div class="card-h">
+      <div class="left">📤 ใบเบิกพัสดุ (บก.) <span class="badge">บันทึกการเบิกใช้จากคลัง</span></div>
+      <button class="btn btn-sm btn-g" onclick="openWdModal()">➕ ออกใบเบิกใหม่</button>
+    </div>
+    <div style="background:#fffbe6;border:1px solid var(--gold);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px">
+      <strong>⚖️ ขั้นตอน:</strong> หน่วยงานยื่นใบเบิก → หัวหน้าหน่วยอนุมัติ → เจ้าหน้าที่พัสดุจ่ายของ (stock_balance −qty) → ผู้เบิกลงชื่อรับของ
+    </div>
+    <div class="scroll-x">
+      <table class="tbl">
+        <thead><tr>
+          <th>เลขที่เอกสาร</th><th>วันที่</th><th>ผู้เบิก</th><th>ฝ่าย</th>
+          <th>วัตถุประสงค์</th><th>จำนวนรายการ</th><th class="num">มูลค่า (บ.)</th>
+          <th>ผู้อนุมัติ</th><th>สถานะ</th>
+        </tr></thead>
+        <tbody id="withdrawal-tbody"><tr><td colspan="9" style="text-align:center;padding:24px;color:var(--sub)">⏳ กำลังโหลด...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ========== AUDIT ========== -->
+<div id="page-audit" class="page">
+  <div class="card">
+    <div class="card-h">
+      <div class="left">📋 การตรวจนับพัสดุ-ครุภัณฑ์ประจำปี <span class="badge">มาตรา 50-65 ระเบียบฯ พ.ศ. 2560</span></div>
+      <button class="btn btn-sm btn-g" onclick="openAuditModal()">➕ บันทึกการตรวจนับใหม่</button>
+    </div>
+    <div style="background:#dbeafe;border:1px solid #93c5fd;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px">
+      <strong>⚖️ ระเบียบ:</strong> หัวหน้าหน่วยแต่งตั้งคณะกรรมการตรวจสอบพัสดุประจำปี (ก่อน 30 ก.ย. ของทุกปี) →
+      รายงานผลภายใน 30 วันหลังสิ้นปีงบประมาณ → หากชำรุด/เสื่อมสภาพ เสนอจำหน่ายตามวิธี (ขายทอดตลาด / แปรสภาพ / โอน / ทำลาย)
+    </div>
+    <div class="scroll-x">
+      <table class="tbl">
+        <thead><tr>
+          <th>เลขที่</th><th>ปีงบประมาณ</th><th>วันที่ตรวจ</th><th>คณะกรรมการ</th>
+          <th class="num">ตรวจนับ</th><th class="num">ตรงบัญชี</th><th class="num">ขาด</th>
+          <th class="num">เกิน</th><th class="num">ชำรุด</th><th>สถานะ</th>
+        </tr></thead>
+        <tbody id="audit-tbody"><tr><td colspan="10" style="text-align:center;padding:24px;color:var(--sub)">⏳ กำลังโหลด...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ========== BALANCE REPORT ========== -->
+<div id="page-balance" class="page">
+  <div class="kpi-row">
+    <div class="kpi-card"><div class="kpi-v" id="bal-items">−</div><div class="kpi-l">ชนิดพัสดุ</div></div>
+    <div class="kpi-card green"><div class="kpi-v" id="bal-value">−</div><div class="kpi-l">มูลค่าพัสดุคงคลัง (บ.)</div></div>
+    <div class="kpi-card red"><div class="kpi-v" id="bal-reorder">−</div><div class="kpi-l">ต้องสั่งซื้อ</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="bal-rec">−</div><div class="kpi-l">ใบรับสะสม</div></div>
+    <div class="kpi-card"><div class="kpi-v" id="bal-wd">−</div><div class="kpi-l">ใบเบิกสะสม</div></div>
+  </div>
+  <div class="card">
+    <div class="card-h">
+      <div class="left">📊 รายงานยอดคงเหลือพัสดุ (คำนวณจาก: ยอดยกมา + รับ − เบิก)</div>
+      <button class="btn btn-sm btn-out" onclick="exportBalanceCSV()">📥 ส่งออก CSV</button>
+    </div>
+    <div class="scroll-x">
+      <table class="tbl">
+        <thead><tr>
+          <th>รหัส</th><th>ชื่อพัสดุ</th><th>หมวด</th>
+          <th class="num">รับสะสม</th><th class="num">เบิกสะสม</th>
+          <th class="num">คงเหลือ</th><th class="num">จุดสั่งซื้อ</th>
+          <th>สถานะคลัง</th><th class="num">มูลค่า (บ.)</th>
+        </tr></thead>
+        <tbody id="balance-tbody"><tr><td colspan="9" style="text-align:center;padding:24px;color:var(--sub)">⏳ กำลังโหลด...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<!-- ===== MODAL ===== -->
+<div class="modal-bg" id="modal-bg" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <h3 id="modal-title">เพิ่ม</h3>
+    <div id="modal-body"></div>
+    <div class="modal-foot">
+      <button class="btn btn-out btn-sm" onclick="closeModal()">ยกเลิก</button>
+      <button class="btn btn-sm" id="modal-save" onclick="submitModal()">💾 บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ========================================================
+   STATE + API CONFIG
+   ======================================================== */
+const API_KEYS = { phrae: 'phrae2026', chiangrai: 'chiangrai2026', udonthani: 'udonthani2026' };
+let PROV = 'phrae';
+let CURRENT_TAB = 'items';
+let DATA = { items: [], assets: [], receiving: [], withdrawal: [], audit: [], balance: null };
+
+function apiHeaders() {
+  return { 'Content-Type': 'application/json', 'x-api-key': API_KEYS[PROV] };
+}
+function api(path, opts = {}) {
+  return fetch(`/api/${PROV}/inventory${path}`, { ...opts, headers: { ...apiHeaders(), ...(opts.headers || {}) } })
+    .then(async r => {
+      const j = await r.json().catch(() => ({ ok: false, error: 'invalid JSON' }));
+      if (!r.ok || j.ok === false) throw new Error(j.error || ('HTTP ' + r.status));
+      return j;
+    });
+}
+
+function toast(msg, kind = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + kind;
+  setTimeout(() => t.className = 'toast ' + kind, 2800);
+}
+
+function setStatus(ok, label) {
+  const el = document.getElementById('apiStatus');
+  el.className = 'tb-status' + (ok ? '' : ' off');
+  el.textContent = ok ? ('● ' + (label || 'Connected')) : '● ' + (label || 'Offline');
+}
+
+function fmt(n) {
+  if (n == null || isNaN(n)) return '−';
+  return Number(n).toLocaleString('th-TH', { maximumFractionDigits: 2 });
+}
+
+/* ========================================================
+   PROVINCE + TAB SWITCH
+   ======================================================== */
+async function switchProvince(p) {
+  PROV = p;
+  document.querySelectorAll('.prov-btn').forEach(b => b.classList.toggle('active', b.dataset.prov === p));
+  await loadAll();
+  renderCurrent();
+}
+
+function switchTab(t) {
+  CURRENT_TAB = t;
+  document.querySelectorAll('.tab').forEach(x => x.classList.toggle('active', x.dataset.tab === t));
+  document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === 'page-' + t));
+  renderCurrent();
+}
+
+function renderCurrent() {
+  ({ items: renderItems, assets: renderAssets, receiving: renderReceiving,
+    withdrawal: renderWithdrawal, audit: renderAudit, balance: renderBalance }[CURRENT_TAB])();
+}
+
+/* ========================================================
+   LOAD ALL
+   ======================================================== */
+async function loadAll() {
+  try {
+    const [it, as, rc, wd, ad, ba] = await Promise.all([
+      api('/items'), api('/assets'), api('/receiving'),
+      api('/withdrawal'), api('/audit'), api('/balance')
+    ]);
+    DATA.items = it.items || [];
+    DATA.assets = as.assets || [];
+    DATA.receiving = rc.receiving || [];
+    DATA.withdrawal = wd.withdrawal || [];
+    DATA.audit = ad.audit || [];
+    DATA.balance = ba;
+    document.getElementById('cnt-items').textContent = DATA.items.length;
+    document.getElementById('cnt-assets').textContent = DATA.assets.length;
+    document.getElementById('cnt-receiving').textContent = DATA.receiving.length;
+    document.getElementById('cnt-withdrawal').textContent = DATA.withdrawal.length;
+    document.getElementById('cnt-audit').textContent = DATA.audit.length;
+    // populate filter dropdowns
+    populateCategoryFilters();
+    setStatus(true, PROV.toUpperCase());
+  } catch (e) {
+    console.error('[INVENTORY] loadAll error:', e);
+    setStatus(false, 'API error');
+    toast('โหลดข้อมูลล้มเหลว: ' + e.message, 'err');
+  }
+}
+
+function populateCategoryFilters() {
+  const itemCats = [...new Set(DATA.items.map(i => i.category).filter(Boolean))].sort();
+  const assetCats = [...new Set(DATA.assets.map(a => a.category).filter(Boolean))].sort();
+  const fItemCat = document.getElementById('f-item-cat');
+  const cur1 = fItemCat.value;
+  fItemCat.innerHTML = '<option value="">— ทุกหมวด —</option>' + itemCats.map(c => `<option value="${c}">${c}</option>`).join('');
+  fItemCat.value = cur1;
+  const fAssetCat = document.getElementById('f-asset-cat');
+  const cur2 = fAssetCat.value;
+  fAssetCat.innerHTML = '<option value="">— ทุกหมวด —</option>' + assetCats.map(c => `<option value="${c}">${c}</option>`).join('');
+  fAssetCat.value = cur2;
+}
+
+function statusPill(s) {
+  const cls = { 'ปกติ': 'pill-ok', 'ชำรุด': 'pill-broken', 'จำหน่าย': 'pill-sold', 'ทำลาย': 'pill-destroyed',
+    'รับเรียบร้อย': 'pill-ok', 'เบิกแล้ว': 'pill-ok', 'กำลังตรวจสอบ': 'pill-warn',
+    'อนุมัติแล้ว': 'pill-ok', 'รออนุมัติ': 'pill-warn', 'ยกเลิก': 'pill-destroyed' }[s] || 'pill-warn';
+  return `<span class="pill ${cls}">${s || '—'}</span>`;
+}
+
+/* ========================================================
+   ITEMS RENDER
+   ======================================================== */
+function renderItems() {
+  const tb = document.getElementById('items-tbody');
+  const fcat = document.getElementById('f-item-cat').value;
+  const fag = document.getElementById('f-item-agency').value;
+  const fst = document.getElementById('f-item-status').value;
+  const q = (document.getElementById('f-item-search').value || '').toLowerCase().trim();
+  let rows = DATA.items.filter(it =>
+    (!fcat || it.category === fcat) &&
+    (!fag || it.agency === fag) &&
+    (!fst || it.status === fst) &&
+    (!q || (it.name + ' ' + it.code).toLowerCase().includes(q))
+  );
+  // KPI
+  document.getElementById('kpi-items-total').textContent = DATA.items.length;
+  const totalValue = DATA.items.reduce((s, i) => s + (i.stock_balance || 0) * (i.unit_price || 0), 0);
+  document.getElementById('kpi-items-value').textContent = fmt(totalValue);
+  document.getElementById('kpi-items-reorder').textContent = DATA.items.filter(i => (i.stock_balance || 0) <= (i.reorder_point || 0)).length;
+  document.getElementById('kpi-items-cat').textContent = [...new Set(DATA.items.map(i => i.category))].length;
+  const recent = DATA.items.filter(i => i.last_updated && i.last_updated >= '2026-05-01').length;
+  document.getElementById('kpi-items-recent').textContent = recent;
+
+  if (!rows.length) {
+    tb.innerHTML = '<tr><td colspan="10" style="text-align:center;padding:20px;color:var(--sub)">ไม่พบข้อมูล</td></tr>';
+    return;
+  }
+  tb.innerHTML = rows.map(it => {
+    const pct = it.reorder_point ? Math.min(100, ((it.stock_balance || 0) / (it.reorder_point * 3)) * 100) : 100;
+    const cls = (it.stock_balance || 0) <= (it.reorder_point || 0) ? 'r' : (it.stock_balance <= (it.reorder_point || 0) * 2 ? 'y' : 'g');
+    const low = (it.stock_balance || 0) <= (it.reorder_point || 0);
+    return `<tr>
+      <td><code style="font-size:11px;color:var(--navy3)">${it.code || it.id}</code></td>
+      <td><div style="font-weight:600">${it.name}</div><div style="font-size:11px;color:var(--sub)">${it.location || ''}</div></td>
+      <td><span style="font-size:11px;color:var(--sub)">${it.category}</span></td>
+      <td>${it.unit}</td>
+      <td class="num">${fmt(it.unit_price)}</td>
+      <td class="num"><strong>${fmt(it.stock_balance)}</strong></td>
+      <td><div class="pb"><div class="pf ${cls}" style="width:${pct}%"></div></div>
+          ${low ? '<span class="pill pill-low" style="margin-left:6px">ต่ำ</span>' : ''}</td>
+      <td>${statusPill(it.status)}</td>
+      <td><span style="font-size:11px">${it.agency || '—'}</span></td>
+      <td><div class="btn-row">
+        <button class="btn btn-sm btn-out" onclick='editItem(${JSON.stringify(it.id)})'>✏️</button>
+        <button class="btn btn-sm btn-red" onclick='deleteItem(${JSON.stringify(it.id)})'>🗑️</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+/* ========================================================
+   ASSETS RENDER (with inline-SVG QR placeholder)
+   ======================================================== */
+function makeQRSVG(text) {
+  // Simple deterministic 7x7 dot pattern derived from string (visual barcode-like marker — not a scannable QR)
+  let hash = 0;
+  for (let i = 0; i < text.length; i++) { hash = ((hash << 5) - hash) + text.charCodeAt(i); hash |= 0; }
+  const cells = [];
+  for (let i = 0; i < 49; i++) {
+    const bit = (Math.abs(hash >> (i % 30)) + i * 7) % 2;
+    cells.push(bit);
+  }
+  let rects = '';
+  for (let r = 0; r < 7; r++) for (let c = 0; c < 7; c++) {
+    if (cells[r * 7 + c]) rects += `<rect x="${c}" y="${r}" width="1" height="1" fill="#0d2d5a"/>`;
+  }
+  // Add three position markers
+  const marker = (x, y) => `<rect x="${x}" y="${y}" width="3" height="3" fill="#0d2d5a"/><rect x="${x+1}" y="${y+1}" width="1" height="1" fill="#fff"/>`;
+  return `<svg class="qr-svg" viewBox="0 0 7 7" xmlns="http://www.w3.org/2000/svg">${rects}${marker(0,0)}${marker(4,0)}${marker(0,4)}</svg>`;
+}
+
+function renderAssets() {
+  const tb = document.getElementById('assets-tbody');
+  const fcat = document.getElementById('f-asset-cat').value;
+  const fag = document.getElementById('f-asset-agency').value;
+  const fst = document.getElementById('f-asset-status').value;
+  const q = (document.getElementById('f-asset-search').value || '').toLowerCase().trim();
+  let rows = DATA.assets.filter(a =>
+    (!fcat || a.category === fcat) &&
+    (!fag || a.agency === fag) &&
+    (!fst || a.status === fst) &&
+    (!q || (a.name + ' ' + a.asset_no + ' ' + (a.brand || '')).toLowerCase().includes(q))
+  );
+  // KPI
+  document.getElementById('kpi-asset-total').textContent = DATA.assets.length;
+  document.getElementById('kpi-asset-ok').textContent = DATA.assets.filter(a => a.status === 'ปกติ').length;
+  document.getElementById('kpi-asset-broken').textContent = DATA.assets.filter(a => a.status === 'ชำรุด').length;
+  document.getElementById('kpi-asset-sold').textContent = DATA.assets.filter(a => ['จำหน่าย','ทำลาย'].includes(a.status)).length;
+  const bv = DATA.assets.reduce((s, a) => s + (a.book_value || 0), 0);
+  document.getElementById('kpi-asset-bv').textContent = fmt(bv);
+
+  if (!rows.length) {
+    tb.innerHTML = '<tr><td colspan="10" style="text-align:center;padding:20px;color:var(--sub)">ไม่พบข้อมูล</td></tr>';
+    return;
+  }
+  tb.innerHTML = rows.map(a => `<tr>
+    <td>${makeQRSVG(a.asset_no || a.id)}</td>
+    <td>
+      <div class="asset-no">${a.asset_no || '—'}</div>
+      <div style="font-size:10px;color:var(--sub);margin-top:2px">S/N: ${a.serial || '—'}</div>
+    </td>
+    <td>
+      <div style="font-weight:600">${a.name}</div>
+      <div style="font-size:11px;color:var(--sub)">${a.brand || ''} ${a.model || ''} ${a.license_plate ? ' · 🚗 ' + a.license_plate : ''}</div>
+    </td>
+    <td><span style="font-size:11px;color:var(--sub)">${a.category}</span></td>
+    <td>
+      <div style="font-size:12px">${a.user || '—'}</div>
+      <div style="font-size:11px;color:var(--sub)">📍 ${a.location || '—'}</div>
+    </td>
+    <td class="num">${fmt(a.unit_price)}</td>
+    <td class="num"><span style="font-size:11px;color:var(--sub)">${fmt(a.depreciation_per_year)}</span></td>
+    <td class="num"><strong>${fmt(a.book_value)}</strong></td>
+    <td>${statusPill(a.status)}${a.damage_note ? `<div style="font-size:10px;color:var(--red);margin-top:2px">⚠️ ${a.damage_note.slice(0,32)}…</div>` : ''}</td>
+    <td><div class="btn-row">
+      <button class="btn btn-sm btn-out" onclick='editAsset(${JSON.stringify(a.id)})'>✏️</button>
+      <button class="btn btn-sm btn-gold" onclick='changeAssetStatus(${JSON.stringify(a.id)})'>🔄</button>
+    </div></td>
+  </tr>`).join('');
+}
+
+/* ========================================================
+   RECEIVING RENDER
+   ======================================================== */
+function renderReceiving() {
+  const tb = document.getElementById('receiving-tbody');
+  if (!DATA.receiving.length) {
+    tb.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:20px;color:var(--sub)">ไม่พบข้อมูล</td></tr>';
+    return;
+  }
+  tb.innerHTML = DATA.receiving.map(r => `<tr>
+    <td><strong style="color:var(--navy1)">${r.doc_no}</strong></td>
+    <td>${r.date}</td>
+    <td>${r.supplier}</td>
+    <td><code style="font-size:11px">${r.po_no || '—'}</code></td>
+    <td>${r.agency || '—'}</td>
+    <td>${(r.items || []).length}</td>
+    <td class="num"><strong>${fmt(r.total_amount)}</strong></td>
+    <td><div style="font-size:12px">${r.received_by || '—'}</div>
+        <div style="font-size:10px;color:var(--sub)">${r.inspector || ''}</div></td>
+    <td>${statusPill(r.status)}</td>
+  </tr>`).join('');
+}
+
+/* ========================================================
+   WITHDRAWAL RENDER
+   ======================================================== */
+function renderWithdrawal() {
+  const tb = document.getElementById('withdrawal-tbody');
+  if (!DATA.withdrawal.length) {
+    tb.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:20px;color:var(--sub)">ไม่พบข้อมูล</td></tr>';
+    return;
+  }
+  tb.innerHTML = DATA.withdrawal.map(w => `<tr>
+    <td><strong style="color:var(--navy1)">${w.doc_no}</strong></td>
+    <td>${w.date}</td>
+    <td>${w.requester}</td>
+    <td>${w.department || '—'}</td>
+    <td><div style="font-size:12px;max-width:280px">${w.purpose || '—'}</div></td>
+    <td>${(w.items || []).length}</td>
+    <td class="num"><strong>${fmt(w.total_amount)}</strong></td>
+    <td>${w.approver || '—'}</td>
+    <td>${statusPill(w.status)}</td>
+  </tr>`).join('');
+}
+
+/* ========================================================
+   AUDIT RENDER
+   ======================================================== */
+function renderAudit() {
+  const tb = document.getElementById('audit-tbody');
+  if (!DATA.audit.length) {
+    tb.innerHTML = '<tr><td colspan="10" style="text-align:center;padding:20px;color:var(--sub)">ไม่พบข้อมูล</td></tr>';
+    return;
+  }
+  tb.innerHTML = DATA.audit.map(a => `<tr>
+    <td><strong>${a.id}</strong></td>
+    <td><strong>${a.fiscal_year}</strong></td>
+    <td>${a.audit_date}</td>
+    <td><div style="font-size:12px">${a.committee || '—'}</div>
+        <div style="font-size:11px;color:var(--sub)">${a.approved_by || ''}</div></td>
+    <td class="num">${a.total_items_audited}</td>
+    <td class="num" style="color:var(--green1);font-weight:700">${a.matched}</td>
+    <td class="num" style="color:var(--red)">${a.shortage}</td>
+    <td class="num">${a.surplus}</td>
+    <td class="num" style="color:var(--orange)">${a.damaged}</td>
+    <td>${statusPill(a.status)}</td>
+  </tr>`).join('');
+}
+
+/* ========================================================
+   BALANCE RENDER
+   ======================================================== */
+function renderBalance() {
+  const tb = document.getElementById('balance-tbody');
+  if (!DATA.balance) {
+    tb.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:20px;color:var(--sub)">⏳</td></tr>';
+    return;
+  }
+  const s = DATA.balance.summary;
+  document.getElementById('bal-items').textContent = s.total_items;
+  document.getElementById('bal-value').textContent = fmt(s.total_value);
+  document.getElementById('bal-reorder').textContent = s.reorder_count;
+  document.getElementById('bal-rec').textContent = s.receiving_count;
+  document.getElementById('bal-wd').textContent = s.withdrawal_count;
+
+  tb.innerHTML = (DATA.balance.balance || []).map(b => {
+    const it = b.item;
+    const lowPill = b.reorder_alert ? '<span class="pill pill-low">⚠️ ต้องสั่งซื้อ</span>' : '<span class="pill pill-ok">เพียงพอ</span>';
+    return `<tr>
+      <td><code style="font-size:11px">${it.code || it.id}</code></td>
+      <td><div style="font-weight:600">${it.name}</div></td>
+      <td><span style="font-size:11px;color:var(--sub)">${it.category}</span></td>
+      <td class="num" style="color:var(--green1)">+${b.received}</td>
+      <td class="num" style="color:var(--red)">−${b.withdrawn}</td>
+      <td class="num"><strong>${fmt(b.current)} ${it.unit}</strong></td>
+      <td class="num">${it.reorder_point || 0}</td>
+      <td>${lowPill}</td>
+      <td class="num"><strong>${fmt(b.value)}</strong></td>
+    </tr>`;
+  }).join('');
+}
+
+function exportBalanceCSV() {
+  if (!DATA.balance) return;
+  const header = ['code','name','category','received','withdrawn','current','unit','reorder_point','value'];
+  const rows = (DATA.balance.balance || []).map(b => [
+    b.item.code || b.item.id, b.item.name, b.item.category,
+    b.received, b.withdrawn, b.current, b.item.unit, b.item.reorder_point || 0, b.value
+  ]);
+  const csv = [header, ...rows].map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob(["﻿" + csv], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `inventory-balance-${PROV}-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  toast('ส่งออก CSV เรียบร้อย', 'ok');
+}
+
+/* ========================================================
+   MODAL — generic
+   ======================================================== */
+let MODAL_CONTEXT = null;
+
+function openModal(title, body, onSave) {
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-body').innerHTML = body;
+  MODAL_CONTEXT = { onSave };
+  document.getElementById('modal-bg').classList.add('show');
+}
+function closeModal() {
+  document.getElementById('modal-bg').classList.remove('show');
+  MODAL_CONTEXT = null;
+}
+async function submitModal() {
+  if (!MODAL_CONTEXT) return;
+  const btn = document.getElementById('modal-save');
+  btn.disabled = true; btn.textContent = '⏳ กำลังบันทึก...';
+  try {
+    await MODAL_CONTEXT.onSave();
+    closeModal();
+  } catch (e) {
+    toast('บันทึกล้มเหลว: ' + e.message, 'err');
+  } finally {
+    btn.disabled = false; btn.textContent = '💾 บันทึก';
+  }
+}
+
+function fld(label, name, val = '', type = 'text', extra = '') {
+  return `<div class="modal-row"><label>${label}</label><input class="inp" name="${name}" type="${type}" value="${val ?? ''}" ${extra}></div>`;
+}
+function sel(label, name, opts, val = '') {
+  return `<div class="modal-row"><label>${label}</label><select class="inp" name="${name}">${opts.map(o => `<option value="${o.v}" ${o.v === val ? 'selected' : ''}>${o.l}</option>`).join('')}</select></div>`;
+}
+
+/* ===== ITEM modal ===== */
+function openItemModal(rec = null) {
+  const r = rec || {};
+  const body = [
+    fld('รหัสพัสดุ', 'code', r.code || ''),
+    fld('ชื่อพัสดุ', 'name', r.name || '', 'text', 'required'),
+    fld('หมวด', 'category', r.category || ''),
+    fld('หน่วย', 'unit', r.unit || ''),
+    fld('ราคา/หน่วย', 'unit_price', r.unit_price || 0, 'number'),
+    fld('คงเหลือ', 'stock_balance', r.stock_balance || 0, 'number'),
+    fld('จุดสั่งซื้อ', 'reorder_point', r.reorder_point || 0, 'number'),
+    sel('หน่วยงาน', 'agency', ['agri','coop','live','fish','irri','ldd','doa'].map(v => ({v, l: v})), r.agency || 'agri'),
+    fld('สถานที่จัดเก็บ', 'location', r.location || ''),
+    fld('ผู้ขาย', 'supplier', r.supplier || ''),
+    sel('สถานะ', 'status', ['ปกติ','ชำรุด','จำหน่าย','ทำลาย'].map(v => ({v,l:v})), r.status || 'ปกติ'),
+  ].join('');
+  openModal((rec ? 'แก้ไข' : 'เพิ่ม') + 'พัสดุสิ้นเปลือง', body, async () => {
+    const form = document.querySelectorAll('#modal-body [name]');
+    const data = {}; form.forEach(f => data[f.name] = f.type === 'number' ? Number(f.value) : f.value);
+    if (rec) {
+      const j = await api('/items/' + rec.id, { method: 'PUT', body: JSON.stringify(data) });
+      Object.assign(rec, j.record);
+      toast('แก้ไขพัสดุเรียบร้อย', 'ok');
+    } else {
+      const j = await api('/items', { method: 'POST', body: JSON.stringify(data) });
+      DATA.items.push(j.record);
+      toast('เพิ่มพัสดุเรียบร้อย', 'ok');
+    }
+    renderItems();
+  });
+}
+function editItem(id) {
+  const rec = DATA.items.find(i => i.id === id);
+  if (rec) openItemModal(rec);
+}
+async function deleteItem(id) {
+  if (!confirm('ลบรายการพัสดุนี้?')) return;
+  try {
+    await api('/items/' + id, { method: 'DELETE' });
+    DATA.items = DATA.items.filter(i => i.id !== id);
+    toast('ลบเรียบร้อย', 'ok');
+    renderItems();
+  } catch (e) { toast('ลบล้มเหลว: ' + e.message, 'err'); }
+}
+
+/* ===== ASSET modal ===== */
+function openAssetModal(rec = null) {
+  const r = rec || {};
+  const body = [
+    fld('เลขครุภัณฑ์', 'asset_no', r.asset_no || '', 'text', r.asset_no ? '' : 'placeholder="(เว้นว่างเพื่อ auto-gen)"'),
+    fld('ชื่อครุภัณฑ์', 'name', r.name || '', 'text', 'required'),
+    fld('หมวด', 'category', r.category || ''),
+    fld('ยี่ห้อ', 'brand', r.brand || ''),
+    fld('รุ่น', 'model', r.model || ''),
+    fld('Serial number', 'serial', r.serial || ''),
+    fld('ทะเบียน (ยานพาหนะ)', 'license_plate', r.license_plate || ''),
+    fld('ราคาทุน', 'unit_price', r.unit_price || 0, 'number'),
+    fld('วันที่ได้มา', 'acquire_date', r.acquire_date || '', 'date'),
+    sel('วิธีการได้มา', 'acquire_method', ['เฉพาะเจาะจง','สืบราคา e-price','ประกวดราคา e-bidding','รับโอน','รับบริจาค'].map(v=>({v,l:v})), r.acquire_method || 'เฉพาะเจาะจง'),
+    fld('ปีงบประมาณ (พ.ศ.)', 'budget_year', r.budget_year || 2568, 'number'),
+    sel('หน่วยงาน', 'agency', ['agri','coop','live','fish','irri','ldd','doa'].map(v=>({v,l:v})), r.agency || 'agri'),
+    fld('ผู้ใช้/ผู้รับผิดชอบ', 'user', r.user || ''),
+    fld('สถานที่ตั้ง', 'location', r.location || ''),
+    fld('อายุการใช้งาน (ปี)', 'useful_life_years', r.useful_life_years || 5, 'number'),
+    fld('ค่าเสื่อม/ปี', 'depreciation_per_year', r.depreciation_per_year || 0, 'number'),
+    fld('มูลค่าตามบัญชี', 'book_value', r.book_value || 0, 'number'),
+    sel('สถานะ', 'status', ['ปกติ','ชำรุด','จำหน่าย','ทำลาย'].map(v=>({v,l:v})), r.status || 'ปกติ'),
+  ].join('');
+  openModal((rec ? 'แก้ไข' : 'เพิ่ม') + 'ครุภัณฑ์', body, async () => {
+    const form = document.querySelectorAll('#modal-body [name]');
+    const data = {}; form.forEach(f => { if (f.value === '') return; data[f.name] = f.type === 'number' ? Number(f.value) : f.value; });
+    if (rec) {
+      const j = await api('/assets/' + rec.id, { method: 'PUT', body: JSON.stringify(data) });
+      Object.assign(rec, j.record);
+      toast('แก้ไขครุภัณฑ์เรียบร้อย', 'ok');
+    } else {
+      const j = await api('/assets', { method: 'POST', body: JSON.stringify(data) });
+      DATA.assets.push(j.record);
+      toast('เพิ่มครุภัณฑ์เรียบร้อย (เลข: ' + j.record.asset_no + ')', 'ok');
+    }
+    renderAssets();
+  });
+}
+function editAsset(id) {
+  const rec = DATA.assets.find(a => a.id === id);
+  if (rec) openAssetModal(rec);
+}
+function changeAssetStatus(id) {
+  const rec = DATA.assets.find(a => a.id === id);
+  if (!rec) return;
+  const wf = ['ปกติ','ชำรุด','จำหน่าย','ทำลาย'];
+  const cur = wf.indexOf(rec.status || 'ปกติ');
+  if (cur === wf.length - 1) { toast('สถานะถึงปลายทาง (ทำลาย) แล้ว — ไม่สามารถเปลี่ยนได้', 'err'); return; }
+  const next = wf[cur + 1];
+  const note = prompt(`เปลี่ยนสถานะจาก "${rec.status}" → "${next}"\nหมายเหตุ (ถ้ามี):`, rec.damage_note || '');
+  if (note === null) return;
+  api('/assets/' + rec.id, { method: 'PUT', body: JSON.stringify({ status: next, damage_note: note || rec.damage_note }) })
+    .then(j => { Object.assign(rec, j.record); toast(`เปลี่ยนสถานะเป็น "${next}" แล้ว`, 'ok'); renderAssets(); })
+    .catch(e => toast('เปลี่ยนสถานะล้มเหลว: ' + e.message, 'err'));
+}
+
+/* ===== RECEIVING modal ===== */
+function openRecModal() {
+  const itemOpts = DATA.items.map(i => ({ v: i.id, l: `${i.name} (${i.unit}) @ ${i.unit_price} บ.` }));
+  const body = [
+    fld('เลขที่เอกสาร', 'doc_no', '', 'text', 'placeholder="(เว้นว่างเพื่อ auto-gen)"'),
+    fld('วันที่', 'date', new Date().toISOString().slice(0,10), 'date'),
+    fld('ผู้ขาย', 'supplier', '', 'text', 'required'),
+    fld('เลข PO', 'po_no', ''),
+    sel('หน่วยงาน', 'agency', ['agri','coop','live','fish','irri','ldd','doa'].map(v=>({v,l:v})), 'agri'),
+    fld('ผู้ตรวจรับ', 'received_by', ''),
+    fld('คณะกรรมการตรวจรับ', 'inspector', 'คณะกรรมการตรวจรับพัสดุ ชุดที่ 1'),
+    `<div class="modal-row"><label>รายการพัสดุ</label>
+      <div>
+        ${sel('', 'item_id', [{v:'',l:'— เลือกพัสดุ —'}, ...itemOpts], '').replace('modal-row','').replace('<label></label>','')}
+        ${fld('', 'qty', 1, 'number', 'min="1" placeholder="จำนวน"')}
+      </div>
+    </div>`
+  ].join('');
+  openModal('ออกใบรับพัสดุใหม่', body, async () => {
+    const F = id => document.querySelector(`#modal-body [name="${id}"]`);
+    const itemId = F('item_id').value;
+    const qty = Number(F('qty').value) || 0;
+    if (!itemId || qty <= 0) throw new Error('เลือกพัสดุและกรอกจำนวน');
+    const it = DATA.items.find(i => i.id === itemId);
+    const data = {
+      doc_no: F('doc_no').value || undefined,
+      date: F('date').value,
+      supplier: F('supplier').value,
+      po_no: F('po_no').value,
+      agency: F('agency').value,
+      received_by: F('received_by').value,
+      inspector: F('inspector').value,
+      items: [{ item_id: itemId, qty, unit_price: it.unit_price || 0, amount: qty * (it.unit_price || 0) }]
+    };
+    const j = await api('/receiving', { method: 'POST', body: JSON.stringify(data) });
+    DATA.receiving.push(j.record);
+    // refresh items + balance because stock changed
+    const itResp = await api('/items'); DATA.items = itResp.items || [];
+    const bal = await api('/balance'); DATA.balance = bal;
+    toast(`รับเข้าคลังเรียบร้อย: ${j.record.doc_no}`, 'ok');
+    renderReceiving();
+  });
+}
+
+/* ===== WITHDRAWAL modal ===== */
+function openWdModal() {
+  const itemOpts = DATA.items.map(i => ({ v: i.id, l: `${i.name} (คงเหลือ ${i.stock_balance} ${i.unit})` }));
+  const body = [
+    fld('เลขที่เอกสาร', 'doc_no', '', 'text', 'placeholder="(เว้นว่างเพื่อ auto-gen)"'),
+    fld('วันที่', 'date', new Date().toISOString().slice(0,10), 'date'),
+    fld('ผู้เบิก', 'requester', '', 'text', 'required'),
+    fld('ฝ่าย', 'department', ''),
+    fld('วัตถุประสงค์', 'purpose', ''),
+    sel('หน่วยงาน', 'agency', ['agri','coop','live','fish','irri','ldd','doa'].map(v=>({v,l:v})), 'agri'),
+    fld('ผู้อนุมัติ', 'approver', ''),
+    `<div class="modal-row"><label>รายการเบิก</label>
+      <div>
+        ${sel('', 'item_id', [{v:'',l:'— เลือกพัสดุ —'}, ...itemOpts], '').replace('modal-row','').replace('<label></label>','')}
+        ${fld('', 'qty', 1, 'number', 'min="1" placeholder="จำนวน"')}
+      </div>
+    </div>`
+  ].join('');
+  openModal('ออกใบเบิกพัสดุใหม่', body, async () => {
+    const F = id => document.querySelector(`#modal-body [name="${id}"]`);
+    const itemId = F('item_id').value;
+    const qty = Number(F('qty').value) || 0;
+    if (!itemId || qty <= 0) throw new Error('เลือกพัสดุและกรอกจำนวน');
+    const it = DATA.items.find(i => i.id === itemId);
+    const data = {
+      doc_no: F('doc_no').value || undefined,
+      date: F('date').value,
+      requester: F('requester').value,
+      department: F('department').value,
+      purpose: F('purpose').value,
+      agency: F('agency').value,
+      approver: F('approver').value,
+      items: [{ item_id: itemId, qty, unit_price: it.unit_price || 0, amount: qty * (it.unit_price || 0) }]
+    };
+    const j = await api('/withdrawal', { method: 'POST', body: JSON.stringify(data) });
+    DATA.withdrawal.push(j.record);
+    const itResp = await api('/items'); DATA.items = itResp.items || [];
+    const bal = await api('/balance'); DATA.balance = bal;
+    toast(`เบิกพัสดุเรียบร้อย: ${j.record.doc_no}`, 'ok');
+    renderWithdrawal();
+  });
+}
+
+/* ===== AUDIT modal ===== */
+function openAuditModal() {
+  const yr = new Date().getFullYear() - 1957;
+  const body = [
+    fld('ปีงบประมาณ (พ.ศ.)', 'fiscal_year', yr, 'number'),
+    fld('วันที่ตรวจ', 'audit_date', new Date().toISOString().slice(0,10), 'date'),
+    fld('คณะกรรมการ', 'committee', `คณะกรรมการตรวจนับพัสดุประจำปี ${yr}`),
+    fld('ตรงบัญชี', 'matched', 0, 'number'),
+    fld('ขาด', 'shortage', 0, 'number'),
+    fld('เกิน', 'surplus', 0, 'number'),
+    fld('ชำรุด', 'damaged', 0, 'number'),
+    fld('ผู้อนุมัติ', 'approved_by', ''),
+    fld('หมายเหตุ', 'notes', ''),
+  ].join('');
+  openModal('บันทึกการตรวจนับพัสดุประจำปี', body, async () => {
+    const form = document.querySelectorAll('#modal-body [name]');
+    const data = {}; form.forEach(f => data[f.name] = f.type === 'number' ? Number(f.value) : f.value);
+    const j = await api('/audit', { method: 'POST', body: JSON.stringify(data) });
+    DATA.audit.push(j.record);
+    toast('บันทึกการตรวจนับเรียบร้อย', 'ok');
+    renderAudit();
+  });
+}
+
+/* ========================================================
+   INIT
+   ======================================================== */
+window.addEventListener('DOMContentLoaded', async () => {
+  await loadAll();
+  renderItems();
+});
+</script>
+<script src="/access-bar.js"></script>
+</body>
+</html>

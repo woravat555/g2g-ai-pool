@@ -1,0 +1,154 @@
+<!DOCTYPE html><html lang="th"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>แพลตฟอร์ม นักวิทยาศาสตร์ / เจ้าหน้าที่ TCELS</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--p1:#880e4f;--p2:#880e4fcc;--p3:#880e4f99;--p4:#e8e8f0;--p5:#f4f4fb;--gray:#f8f9fa;--border:#e0e0e0;--sub:#666}
+body{font-family:'Sarabun',sans-serif;height:100vh;overflow:hidden;display:flex;flex-direction:column}
+#login{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#880e4f 0%,#880e4f99 60%,#b0bec5 100%)}
+.lc{background:#fff;border-radius:20px;padding:36px;width:min(520px,96vw);box-shadow:0 20px 60px rgba(0,0,0,.3);text-align:center}
+.lc-logo{margin-bottom:18px}
+.lb{width:68px;height:68px;background:linear-gradient(135deg,var(--p1),var(--p3));border-radius:14px;display:inline-flex;align-items:center;justify-content:center;font-size:28px;color:#fff;margin-bottom:8px}
+.lc h1{font-size:18px;font-weight:700;color:var(--p1)}
+.lc p{font-size:12px;color:var(--sub);margin-top:3px}
+.role-display{margin:20px 0;padding:16px;background:var(--p5);border-radius:14px;border:2px solid var(--p4)}
+.rd-emoji{font-size:36px;margin-bottom:6px}.rd-name{font-size:16px;font-weight:700;color:var(--p1)}
+.rd-sub{font-size:11px;color:var(--sub);margin-top:3px}
+.lb-btn{width:100%;padding:13px;background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Sarabun',sans-serif}
+#app{display:none;flex-direction:column;height:100vh}
+.topbar{background:linear-gradient(90deg,var(--p1),var(--p2));color:#fff;padding:0 18px;height:52px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.tb-b{width:32px;height:32px;background:rgba(255,255,255,.2);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.tb-t{font-size:14px;font-weight:700;flex:1}.tb-u{font-size:11px;background:rgba(255,255,255,.18);padding:3px 10px;border-radius:18px}
+.tb-lo{background:rgba(255,255,255,.15);border:none;color:#fff;padding:5px 11px;border-radius:7px;cursor:pointer;font-size:11px;font-family:'Sarabun',sans-serif}
+.main{display:flex;flex:1;overflow:hidden}
+.sidebar{width:200px;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+.nav-item{padding:11px 14px;cursor:pointer;border-left:3px solid transparent;font-size:12px;color:var(--sub);transition:.15s}
+.nav-item:hover,.nav-item.active{background:var(--p5);color:var(--p1)}
+.nav-item.active{border-left-color:var(--p1);font-weight:600}
+.content{flex:1;overflow-y:auto;padding:16px;background:var(--gray)}
+.tab-pane{display:none}.tab-pane.active{display:block}
+.pt{font-size:18px;font-weight:700;color:var(--p1);margin-bottom:13px}
+.kr{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.kpi{background:#fff;border-radius:10px;padding:13px;border-left:4px solid var(--p1)}
+.kv{font-size:20px;font-weight:700;color:var(--p1)}.kl{font-size:11px;color:var(--sub);margin-top:1px}
+.card{background:#fff;border-radius:10px;padding:15px;margin-bottom:12px}
+.ct{font-size:14px;font-weight:700;color:var(--p1);margin-bottom:9px;padding-bottom:7px;border-bottom:2px solid var(--p4)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:var(--p1);color:#fff;padding:8px 9px;text-align:left}
+td{padding:7px 9px;border-bottom:1px solid var(--border)}
+tr:hover td{background:var(--p5)}
+.b{display:inline-block;padding:2px 7px;border-radius:9px;font-size:11px;font-weight:600}
+.bg{background:#dcfce7;color:#166534}.by{background:#fef9c3;color:#854d0e}
+.bb{background:#dbeafe;color:#1e40af}.br{background:#fee2e2;color:#991b1b}
+</style></head><body>
+<div id="login"><div class="lc">
+  <div class="lc-logo"><div class="lb">🧬</div>
+    <h1>นักวิทยาศาสตร์ / เจ้าหน้าที่ TCELS</h1><p>ศูนย์ความเป็นเลิศด้านชีววิทยาศาสตร์</p></div>
+  <div class="role-display">
+    <div class="rd-emoji">👨‍💼</div>
+    <div class="rd-name">นักวิทยาศาสตร์ / เจ้าหน้าที่ TCELS</div>
+    <div class="rd-sub">พัฒนาเทคโนโลยีชีวภาพและการแพทย์</div>
+  </div>
+  <button class="lb-btn" onclick="doLogin()">🔐 เข้าสู่ระบบ</button>
+  <div style="margin-top:12px;font-size:11px;color:var(--sub)">
+    <a href="/mhesi-tcels.html" style="color:var(--p1)">← แพลตฟอร์ม ผู้อำนวยการ TCELS</a> &nbsp;|&nbsp;
+    <a href="/mhesi-hub.html" style="color:var(--p1)">Hub อว.</a>
+  </div>
+</div></div>
+<div id="app">
+<div class="topbar">
+  <div class="tb-b">🧬</div>
+  <div class="tb-t">ศูนย์ปฏิบัติงาน TCELS — นักวิทยาศาสตร์ / เจ้าหน้าที่ TCELS</div>
+  <div class="tb-u">นักวิทยาศาสตร์ / เจ้าหน้าที่ TCELS</div>
+  <button class="tb-lo" onclick="doLogout()">ออกระบบ</button>
+</div>
+<div class="main">
+<div class="sidebar">
+  <div class="nav-item active" onclick="show(0,this)">📋 งานของฉัน</div>
+  <div class="nav-item" onclick="show(1,this)">📁 โครงการที่รับผิดชอบ</div>
+  <div class="nav-item" onclick="show(2,this)">📝 บันทึกรายงาน</div>
+  <div class="nav-item" onclick="show(3,this)">📅 ตารางงาน</div>
+  <div class="nav-item" onclick="show(4,this)">🤖 AI ช่วยงาน</div>
+  <div style="flex:1"></div>
+  <div style="padding:10px 14px;font-size:11px;color:var(--sub);border-top:1px solid var(--border)">
+    <a href="/mhesi-tcels.html" style="color:var(--p1);text-decoration:none">← ผอ. TCELS</a> &nbsp;|&nbsp;
+    <a href="/mhesi-hub.html" style="color:var(--p1);text-decoration:none">Hub อว.</a>
+  </div>
+</div>
+<div class="content">
+<div class="tab-pane active" id="t0">
+<div class="pt">📋 งานของฉัน — นักวิทยาศาสตร์ / เจ้าหน้าที่ TCELS</div>
+<div class="kr">
+  <div class="kpi"><div class="kv">5</div><div class="kl">งานที่ต้องทำวันนี้</div></div>
+  <div class="kpi"><div class="kv">2</div><div class="kl">รายงานที่ค้างส่ง</div></div>
+  <div class="kpi"><div class="kv">3</div><div class="kl">ประชุมสัปดาห์นี้</div></div>
+  <div class="kpi"><div class="kv">87%</div><div class="kl">%งานสำเร็จรายเดือน</div></div>
+</div>
+<div class="card"><div class="ct">รายการงานวันนี้</div>
+<table><tr><th>งาน</th><th>กำหนด</th><th>ความสำคัญ</th><th>สถานะ</th></tr>
+<tr><td>จัดทำรายงานประจำเดือน</td><td>วันนี้ 17:00</td><td><span class="b br">ด่วน</span></td><td><span class="b bb">กำลังทำ</span></td></tr>
+<tr><td>อัพเดทฐานข้อมูล</td><td>พรุ่งนี้</td><td><span class="b by">ปกติ</span></td><td><span class="b by">รอดำเนินการ</span></td></tr>
+<tr><td>เตรียมเอกสารประชุม</td><td>27 พ.ค.</td><td><span class="b by">ปกติ</span></td><td><span class="b by">รอดำเนินการ</span></td></tr>
+</table></div></div>
+<div class="tab-pane" id="t1">
+<div class="pt">📁 โครงการที่รับผิดชอบ</div>
+<div class="card"><div class="ct">โครงการในความดูแล</div>
+<table><tr><th>โครงการ</th><th>งบ (M)</th><th>%เบิก</th><th>สถานะ</th></tr>
+<tr><td>โครงการ A — วิจัยและพัฒนา</td><td>45</td><td>68%</td><td><span class="b bg">ปกติ</span></td></tr>
+<tr><td>โครงการ B — ถ่ายทอดเทคโนโลยี</td><td>28</td><td>82%</td><td><span class="b bg">ปกติ</span></td></tr>
+<tr><td>โครงการ C — พัฒนาบุคลากร</td><td>12</td><td>50%</td><td><span class="b by">ติดตาม</span></td></tr>
+</table></div></div>
+<div class="tab-pane" id="t2">
+<div class="pt">📝 บันทึกรายงาน</div>
+<div class="card"><div class="ct">บันทึกรายงานความก้าวหน้า</div>
+<textarea style="width:100%;height:100px;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:Sarabun,sans-serif;resize:vertical" placeholder="บันทึกรายงานความก้าวหน้า..."></textarea>
+<button onclick="alert('บันทึกรายงานเรียบร้อย')" style="margin-top:8px;background:var(--p1);color:#fff;border:none;padding:9px 20px;border-radius:8px;cursor:pointer;font-size:13px;font-family:Sarabun,sans-serif">💾 บันทึก</button>
+</div>
+<div class="card"><div class="ct">ประวัติรายงานที่ส่งแล้ว</div>
+<table><tr><th>รายงาน</th><th>วันที่ส่ง</th><th>ถึง</th><th>สถานะ</th></tr>
+<tr><td>รายงานเดือน เม.ย. 2568</td><td>5 พ.ค. 2568</td><td>รอง ผอ.</td><td><span class="b bg">รับแล้ว</span></td></tr>
+<tr><td>สรุปโครงการ Q1</td><td>2 เม.ย. 2568</td><td>ผอ. TCELS</td><td><span class="b bg">รับแล้ว</span></td></tr>
+</table></div></div>
+<div class="tab-pane" id="t3">
+<div class="pt">📅 ตารางงานประจำสัปดาห์</div>
+<div class="card"><div class="ct">ตารางสัปดาห์ที่ 22 (26–30 พ.ค. 2568)</div>
+<table><tr><th>วัน</th><th>กิจกรรม</th><th>เวลา</th></tr>
+<tr><td>จ 26 พ.ค.</td><td>ประชุมทีม TCELS</td><td>09:00–10:00</td></tr>
+<tr><td>อ 27 พ.ค.</td><td>ส่งรายงานความก้าวหน้า</td><td>17:00 (deadline)</td></tr>
+<tr><td>พ 28 พ.ค.</td><td>อบรมระบบ E-Budget</td><td>13:00–16:00</td></tr>
+<tr><td>พฤ 29 พ.ค.</td><td>ประเมิน KPI ส่วนตัว</td><td>09:00–10:00</td></tr>
+<tr><td>ศ 30 พ.ค.</td><td>สรุปงานประจำสัปดาห์</td><td>15:00–16:00</td></tr>
+</table></div></div>
+<div class="tab-pane" id="t4">
+<div class="pt">🤖 AI ช่วยงาน TCELS</div>
+<div style="background:var(--p5);border-radius:12px;padding:18px;text-align:center;border:2px solid var(--p4)">
+  <div style="font-size:40px;margin-bottom:8px">🤖</div>
+  <div style="font-size:17px;font-weight:700;color:var(--p1)">AI ช่วยงาน TCELS</div>
+  <div style="font-size:12px;color:var(--sub);margin-top:4px">ช่วยร่างเอกสาร สรุปรายงาน และตอบคำถามงาน</div>
+  <div style="margin-top:10px;display:inline-flex;align-items:center;gap:5px;background:#dcfce7;padding:5px 13px;border-radius:18px;font-size:12px;color:#166534;font-weight:600">
+    <span style="width:7px;height:7px;background:#22c55e;border-radius:50%;display:inline-block"></span>ออนไลน์
+  </div>
+  <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:left;font-size:12px">
+    <div style="background:#fff;padding:8px 12px;border-radius:7px;border:1px solid var(--border)"><div style="color:var(--sub);font-size:10px">LINE Channel</div><div style="font-weight:600">MHESI07</div></div>
+    <div style="background:#fff;padding:8px 12px;border-radius:7px;border:1px solid var(--border)"><div style="color:var(--sub);font-size:10px">AI Model</div><div style="font-weight:600">Claude Sonnet 4</div></div>
+  </div>
+</div></div>
+</div></div></div>
+<script>
+function doLogin(){document.getElementById('login').style.display='none';document.getElementById('app').style.display='flex';}
+function doLogout(){document.getElementById('login').style.display='flex';document.getElementById('app').style.display='none';}
+function show(i,el){document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById('t'+i).classList.add('active');el.classList.add('active');}
+</script>  <script src="/mhesi-delegate.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      MhesiDelegate.init({
+        myId: 'tcels-staff',
+        roleName: 'นักวิจัย/นักวิชาการ TCELS',
+        level: 'staff',
+        reportsTo: "tcels-deputy",
+        canAssignTo: []
+      });
+    });
+  </script>
+</body></html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ทะเบียนประวัติบุคลากร — จังหวัดแพร่ G2G AgriTech</title>
+<style>
+:root{--bg:#0f172a;--card:#1e293b;--border:#334155;--accent:#22c55e;--warn:#f59e0b;--text:#e2e8f0;--muted:#94a3b8;--blue:#3b82f6;--red:#ef4444;--purple:#a855f7}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);padding:20px;font-size:14px}
+h1{text-align:center;font-size:1.5rem;color:var(--accent);margin-bottom:4px}
+.subtitle{text-align:center;color:var(--muted);font-size:0.85rem;margin-bottom:20px}
+.stats{display:flex;gap:12px;justify-content:center;margin-bottom:20px;flex-wrap:wrap}
+.stat{background:var(--card);border:1px solid var(--border);padding:10px 20px;border-radius:8px;text-align:center}
+.stat .n{font-size:1.8rem;font-weight:700;color:var(--accent)}
+.stat .l{font-size:0.75rem;color:var(--muted)}
+.section{margin-bottom:28px}
+.section-title{font-size:1rem;font-weight:700;color:var(--accent);border-bottom:1px solid var(--border);padding-bottom:6px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;position:relative;transition:box-shadow .2s}
+.card:hover{box-shadow:0 0 0 1px var(--accent)}
+.card.confirmed{border-left:3px solid var(--accent)}
+.card.unknown{border-left:3px solid var(--warn);opacity:.85}
+.badge{position:absolute;top:8px;right:8px;font-size:0.65rem;padding:2px 8px;border-radius:20px;font-weight:700}
+.badge.ok{background:rgba(34,197,94,.15);color:var(--accent)}
+.badge.pending{background:rgba(245,158,11,.15);color:var(--warn)}
+.badge.gov{background:rgba(59,130,246,.15);color:var(--blue)}
+.badge.district{background:rgba(168,85,247,.15);color:var(--purple)}
+.name{font-size:1rem;font-weight:700;color:#fff;margin-bottom:2px}
+.position{font-size:0.8rem;color:var(--accent);margin-bottom:4px}
+.dept{font-size:0.75rem;color:var(--muted);margin-bottom:6px}
+.meta{font-size:0.72rem;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap}
+.meta span{display:flex;align-items:center;gap:3px}
+.source{font-size:0.65rem;color:var(--muted);margin-top:6px;font-style:italic}
+.updated{text-align:right;color:var(--muted);font-size:0.75rem;margin-top:20px}
+.legend{display:flex;gap:16px;font-size:0.75rem;color:var(--muted);margin-bottom:16px;flex-wrap:wrap}
+.legend span{display:flex;align-items:center;gap:5px}
+.dot{width:10px;height:10px;border-radius:50%}
+table{width:100%;border-collapse:collapse;font-size:0.8rem}
+th{background:#1a2740;color:var(--muted);padding:8px 12px;text-align:left;font-weight:600;border-bottom:2px solid var(--border)}
+td{padding:7px 12px;border-bottom:1px solid var(--border)}
+tr:hover td{background:rgba(255,255,255,.03)}
+.tag{display:inline-block;padding:1px 8px;border-radius:20px;font-size:0.7rem;font-weight:700}
+.tag.civil{background:rgba(59,130,246,.15);color:var(--blue)}
+.tag.head{background:rgba(168,85,247,.15);color:var(--purple)}
+.search-box{width:100%;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.9rem;margin-bottom:16px;font-family:inherit}
+.search-box:focus{outline:none;border-color:var(--accent)}
+.no-result{text-align:center;color:var(--muted);padding:30px;font-size:0.9rem}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<h1>🏛️ ทะเบียนประวัติบุคลากร จังหวัดแพร่</h1>
+<p class="subtitle">ระบบบริหารราชการแผ่นดิน | G2G AgriTech Platform | อัปเดต พ.ค. 2569</p>
+<div class="stats">
+  <div class="stat"><div class="n">24</div><div class="l">รายชื่อที่ยืนยันแล้ว</div></div>
+  <div class="stat"><div class="n">8</div><div class="l">หน่วยงาน กษ.</div></div>
+  <div class="stat"><div class="n">8</div><div class="l">อำเภอ</div></div>
+  <div class="stat"><div class="n" style="color:var(--warn)">7</div><div class="l">รอการยืนยัน</div></div>
+</div>
+<div class="legend">
+  <span><div class="dot" style="background:var(--accent)"></div> ยืนยันแล้ว (จากเว็บราชการ)</span>
+  <span><div class="dot" style="background:var(--warn)"></div> รอยืนยัน (ต้องอัปเดต)</span>
+  <span><div class="dot" style="background:var(--blue)"></div> ผู้ว่าฯ / รองผู้ว่าฯ</span>
+</div>
+<input type="text" class="search-box" id="search" placeholder="🔍 ค้นหาชื่อ ตำแหน่ง หน่วยงาน..." oninput="filterCards()">
+<div id="all-content">
+
+<!-- ผู้บริหารระดับจังหวัด -->
+<div class="section">
+  <div class="section-title">⭐ ผู้บริหารระดับจังหวัด</div>
+  <div class="grid">
+    <div class="card confirmed" data-search="สมชัย เลิศประสิทธิพันธ์ ผู้ว่าราชการ จังหวัด">
+      <span class="badge gov">กระทรวงมหาดไทย</span>
+      <div class="name">นายสมชัย เลิศประสิทธิพันธ์</div>
+      <div class="position">ผู้ว่าราชการจังหวัดแพร่</div>
+      <div class="dept">กรมการปกครอง กระทรวงมหาดไทย</div>
+      <div class="meta"><span>📍 ศาลากลางจังหวัดแพร่</span><span class="tag head">ผู้ว่าฯ</span></div>
+      <div class="source">✅ สวท.แพร่ / Facebook ยืนยัน 2568</div>
+    </div>
+    <div class="card confirmed" data-search="คุณากร คชหิรัญ รองผู้ว่าราชการ">
+      <span class="badge gov">กระทรวงมหาดไทย</span>
+      <div class="name">นายคุณากร คชหิรัญ</div>
+      <div class="position">รองผู้ว่าราชการจังหวัดแพร่</div>
+      <div class="dept">กระทรวงมหาดไทย</div>
+      <div class="meta"><span class="tag head">รองผู้ว่าฯ</span></div>
+      <div class="source">✅ สปก.แพร่ เว็บไซต์ทางการ 2569</div>
+    </div>
+    <div class="card confirmed" data-search="ชินกร ดีสุยา ท้องถิ่นจังหวัด">
+      <span class="badge gov">สถ.</span>
+      <div class="name">นายชินกร ดีสุยา</div>
+      <div class="position">ท้องถิ่นจังหวัดแพร่</div>
+      <div class="dept">กรมส่งเสริมการปกครองท้องถิ่น</div>
+      <div class="meta"><span class="tag head">ท้องถิ่นจังหวัด</span></div>
+      <div class="source">✅ phraelocal.go.th 2569</div>
+    </div>
+    <div class="card unknown" data-search="เกษตรและสหกรณ์จังหวัด ประสานงาน">
+      <span class="badge pending">รอยืนยัน</span>
+      <div class="name" style="color:var(--warn)">— ยังไม่พบชื่อ —</div>
+      <div class="position">เกษตรและสหกรณ์จังหวัดแพร่</div>
+      <div class="dept">สำนักงานปลัดกระทรวงเกษตรและสหกรณ์</div>
+      <div class="meta"><span>📞 054-521-043</span><span class="tag head">ประสานงาน</span></div>
+      <div class="source">⚠️ opsmoac.go.th/phrae-about-board ยังไม่แสดงชื่อ</div>
+    </div>
+  </div>
+</div>
+<!-- หน่วยงาน กษ. -->
+<div class="section">
+  <div class="section-title">🌾 หัวหน้าหน่วยงาน กษ. ระดับจังหวัด (9 หน่วยงาน)</div>
+  <div class="grid">
+    <div class="card confirmed" data-search="สร้อยเพชร ตันติรัตนานนท์ เกษตรจังหวัด">
+      <span class="badge ok">ยืนยันแล้ว</span>
+      <div class="name">นางสาวสร้อยเพชร ตันติรัตนานนท์</div>
+      <div class="position">เกษตรจังหวัดแพร่</div>
+      <div class="dept">กรมส่งเสริมการเกษตร</div>
+      <div class="meta"><span>📞 054-511-214</span><span class="tag civil">ข้าราชการ</span></div>
+      <div class="source">✅ phrae.doae.go.th 2569</div>
+    </div>
+    <div class="card confirmed" data-search="สมศักดิ์ ปานดอนไพร สหกรณ์จังหวัด">
+      <span class="badge ok">ยืนยันแล้ว</span>
+      <div class="name">นายสมศักดิ์ ปานดอนไพร</div>
+      <div class="position">สหกรณ์จังหวัดแพร่</div>
+      <div class="dept">กรมส่งเสริมสหกรณ์</div>
+      <div class="meta"><span class="tag civil">ข้าราชการ</span></div>
+      <div class="source">✅ Facebook สหกรณ์จังหวัดแพร่ 2568</div>
+    </div>
+    <div class="card unknown" data-search="ปฏิรูปที่ดิน สปก">
+      <span class="badge pending">รอยืนยัน</span>
+      <div class="name" style="color:var(--warn)">— ยังไม่พบชื่อ —</div>
+      <div class="position">ปฏิรูปที่ดินจังหวัดแพร่</div>
+      <div class="dept">สปก.</div>
+      <div class="meta"><span>📞 086-429-3365</span></div>
+      <div class="source">⚠️ alro.go.th/th/phrae ไม่แสดงชื่อสาธารณะ</div>
+    </div>
+    <div class="card unknown" data-search="ข้าว ศูนย์วิจัยข้าว">
+      <span class="badge pending">รอยืนยัน</span>
+      <div class="name" style="color:var(--warn)">— ยังไม่พบชื่อ —</div>
+      <div class="position">ผู้อำนวยการศูนย์วิจัยข้าวแพร่</div>
+      <div class="dept">กรมการข้าว</div>
+      <div class="source">⚠️ ต้องค้นจาก rice.go.th</div>
+    </div>
+    <div class="card unknown" data-search="ปศุสัตว์จังหวัด">
+      <span class="badge pending">รอยืนยัน</span>
+      <div class="name" style="color:var(--warn)">— ยังไม่พบชื่อ —</div>
+      <div class="position">ปศุสัตว์จังหวัดแพร่</div>
+      <div class="dept">กรมปศุสัตว์</div>
+      <div class="meta"><span>📞 054-511-098</span></div>
+      <div class="source">⚠️ region5.dld.go.th ไม่แสดงชื่อหัวหน้า</div>
+    </div>
+    <div class="card unknown" data-search="ประมงจังหวัด">
+      <span class="badge pending">รอยืนยัน</span>
+      <div class="name" style="color:var(--warn)">— ยังไม่พบชื่อ —</div>
+      <div class="position">ประมงจังหวัดแพร่</div>
+      <div class="dept">กรมประมง</div>
+      <div class="source">⚠️ ต้องค้นจาก fisheries.go.th</div>
+    </div>
+    <div class="card unknown" data-search="การยาง กยท">
+      <span class="badge pending">รอยืนยัน</span>
+      <div class="name" style="color:var(--warn)">— ยังไม่พบชื่อ —</div>
+      <div class="position">ผู้จัดการการยางฯ จ.แพร่</div>
+      <div class="dept">การยางแห่งประเทศไทย (กยท.)</div>
+      <div class="source">⚠️ ต้องค้นจาก raot.go.th</div>
+    </div>
+    <div class="card confirmed" data-search="ณัฎพสิษฐ์ เถระรัชชานนท์ พัฒนาที่ดิน">
+      <span class="badge ok">ยืนยันแล้ว</span>
+      <div class="name">นายณัฎพสิษฐ์ เถระรัชชานนท์</div>
+      <div class="position">ผู้อำนวยการสถานีพัฒนาที่ดินแพร่</div>
+      <div class="dept">กรมพัฒนาที่ดิน</div>
+      <div class="meta"><span class="tag civil">ข้าราชการ</span></div>
+      <div class="source">✅ รายงานประจำปี 2568 กรมพัฒนาที่ดิน</div>
+    </div>
+    <div class="card confirmed" data-search="อัสนี จารุชาต ชลประทาน">
+      <span class="badge ok">ยืนยันแล้ว</span>
+      <div class="name">นายอัสนี จารุชาต</div>
+      <div class="position">ผู้อำนวยการโครงการชลประทานแพร่</div>
+      <div class="dept">กรมชลประทาน</div>
+      <div class="meta"><span>📞 054-530-793</span><span class="tag civil">ข้าราชการ</span></div>
+      <div class="source">✅ irrigation.rid.go.th + Facebook 2568</div>
+    </div>
+  </div>
+</div>
+
+<!-- หัวหน้ากลุ่ม/ฝ่าย -->
+<div class="section">
+  <div class="section-title">🌿 หัวหน้ากลุ่ม/ฝ่าย สำนักงานเกษตรจังหวัดแพร่</div>
+  <div class="grid">
+    <div class="card confirmed" data-search="หนึ่งฤทัย กองนำ ยุทธศาสตร์"><span class="badge ok">ยืนยันแล้ว</span><div class="name">นางหนึ่งฤทัย กองนำ</div><div class="position">หัวหน้ากลุ่มยุทธศาสตร์และสารสนเทศ</div><div class="dept">สำนักงานเกษตรจังหวัดแพร่</div><div class="source">✅ phrae.doae.go.th 2569</div></div>
+    <div class="card confirmed" data-search="กรณ์สิรี อภิสิริรัชฎ์ พัฒนาการผลิต"><span class="badge ok">ยืนยันแล้ว</span><div class="name">นางสาวกรณ์สิรี อภิสิริรัชฎ์</div><div class="position">หัวหน้ากลุ่มส่งเสริมและพัฒนาการผลิต</div><div class="dept">สำนักงานเกษตรจังหวัดแพร่</div><div class="source">✅ phrae.doae.go.th 2569</div></div>
+    <div class="card confirmed" data-search="พนัชกร จันทร์ทวี อารักขาพืช"><span class="badge ok">ยืนยันแล้ว</span><div class="name">นางพนัชกร จันทร์ทวี</div><div class="position">หัวหน้ากลุ่มอารักขาพืช</div><div class="dept">สำนักงานเกษตรจังหวัดแพร่</div><div class="source">✅ phrae.doae.go.th 2569</div></div>
+    <div class="card confirmed" data-search="สรภัส เพ็ชรดวงดี บริหารทั่วไป"><span class="badge ok">ยืนยันแล้ว</span><div class="name">นายสรภัส เพ็ชรดวงดี</div><div class="position">หัวหน้าฝ่ายบริหารทั่วไป</div><div class="dept">สำนักงานเกษตรจังหวัดแพร่</div><div class="source">✅ phrae.doae.go.th 2569</div></div>
+  </div>
+</div>
+<!-- นายอำเภอ -->
+<div class="section">
+  <div class="section-title">🗺️ นายอำเภอ 8 อำเภอ จังหวัดแพร่</div>
+  <div class="grid">
+    <div class="card confirmed" data-search="สมศักดิ์ สุขประเสริฐ นายอำเภอเมือง"><span class="badge district">เมืองแพร่</span><div class="name">นายสมศักดิ์ สุขประเสริฐ</div><div class="position">นายอำเภอเมืองแพร่</div><div class="dept">ที่ทำการปกครองอำเภอเมืองแพร่</div><div class="meta"><span>📍 รหัส 5401</span></div><div class="source">✅ Facebook ที่ทำการปกครองอำเภอเมืองแพร่ 2568</div></div>
+    <div class="card confirmed" data-search="ธีระ แก้วมา นายอำเภอร้องกวาง"><span class="badge district">ร้องกวาง</span><div class="name">นายธีระ แก้วมา</div><div class="position">นายอำเภอร้องกวาง</div><div class="dept">ที่ทำการปกครองอำเภอร้องกวาง</div><div class="meta"><span>📍 รหัส 5402</span></div><div class="source">✅ Facebook สมาคมคนแพร่ กรกฎาคม 2568</div></div>
+    <div class="card confirmed" data-search="สามารถ อินทปัญญา นายอำเภอลอง"><span class="badge district">ลอง</span><div class="name">นายสามารถ อินทปัญญา</div><div class="position">นายอำเภอลอง</div><div class="dept">ที่ทำการปกครองอำเภอลอง</div><div class="meta"><span>📍 รหัส 5403</span></div><div class="source">✅ Facebook อำเภอลอง + thunglang.go.th</div></div>
+    <div class="card confirmed" data-search="นคร สายยืด นายอำเภอสูงเม่น"><span class="badge district">สูงเม่น</span><div class="name">นายนคร สายยืด</div><div class="position">นายอำเภอสูงเม่น</div><div class="dept">ที่ทำการปกครองอำเภอสูงเม่น</div><div class="meta"><span>📍 รหัส 5404</span></div><div class="source">✅ Chiang Mai News มกราคม 2568</div></div>
+    <div class="card unknown" data-search="นายอำเภอเด่นชัย"><span class="badge pending">รอยืนยัน</span><div class="name" style="color:var(--warn)">— ยังไม่พบชื่อ —</div><div class="position">นายอำเภอเด่นชัย</div><div class="dept">ที่ทำการปกครองอำเภอเด่นชัย</div><div class="meta"><span>📍 รหัส 5405</span></div></div>
+    <div class="card unknown" data-search="นายอำเภอสอง"><span class="badge pending">รอยืนยัน</span><div class="name" style="color:var(--warn)">— ยังไม่พบชื่อ —</div><div class="position">นายอำเภอสอง</div><div class="dept">ที่ทำการปกครองอำเภอสอง</div><div class="meta"><span>📍 รหัส 5406</span></div></div>
+    <div class="card confirmed" data-search="หฤฑีฐ์ ศรีเอียด นายอำเภอวังชิ้น"><span class="badge district">วังชิ้น</span><div class="name">นายหฤฑีฐ์ ศรีเอียด</div><div class="position">นายอำเภอวังชิ้น</div><div class="dept">ที่ทำการปกครองอำเภอวังชิ้น</div><div class="meta"><span>📍 รหัส 5407</span></div><div class="source">✅ Facebook อำเภอวังชิ้น 2568</div></div>
+    <div class="card unknown" data-search="นายอำเภอหนองม่วงไข่"><span class="badge pending">รอยืนยัน</span><div class="name" style="color:var(--warn)">— ยังไม่พบชื่อ —</div><div class="position">นายอำเภอหนองม่วงไข่</div><div class="dept">ที่ทำการปกครองอำเภอหนองม่วงไข่</div><div class="meta"><span>📍 รหัส 5408</span></div></div>
+  </div>
+</div>
+<!-- เกษตรอำเภอ -->
+<div class="section">
+  <div class="section-title">🌱 เกษตรอำเภอ 8 อำเภอ จังหวัดแพร่</div>
+  <div class="grid">
+    <div class="card confirmed" data-search="จรรฎา ดีปาละ เกษตรอำเภอเมือง"><span class="badge district">เมืองแพร่</span><div class="name">นางจรรฎา ดีปาละ</div><div class="position">เกษตรอำเภอเมืองแพร่</div><div class="dept">สำนักงานเกษตรอำเภอเมืองแพร่</div><div class="source">✅ phrae.doae.go.th 2569</div></div>
+    <div class="card confirmed" data-search="ภูเบศ สิริธราพงศ์ เกษตรอำเภอร้องกวาง"><span class="badge district">ร้องกวาง</span><div class="name">นายภูเบศ สิริธราพงศ์</div><div class="position">เกษตรอำเภอร้องกวาง</div><div class="dept">สำนักงานเกษตรอำเภอร้องกวาง</div><div class="source">✅ phrae.doae.go.th 2569</div></div>
+    <div class="card confirmed" data-search="ศุภาพร ต่อสกุล เกษตรอำเภอลอง"><span class="badge district">ลอง</span><div class="name">นางศุภาพร ต่อสกุล</div><div class="position">เกษตรอำเภอลอง</div><div class="dept">สำนักงานเกษตรอำเภอลอง</div><div class="source">✅ phrae.doae.go.th 2569</div></div>
+    <div class="card confirmed" data-search="สมบูรณ์ ผามะณี เกษตรอำเภอสูงเม่น"><span class="badge district">สูงเม่น</span><div class="name">นายสมบูรณ์ ผามะณี</div><div class="position">เกษตรอำเภอสูงเม่น</div><div class="dept">สำนักงานเกษตรอำเภอสูงเม่น</div><div class="source">✅ phrae.doae.go.th 2569</div></div>
+    <div class="card confirmed" data-search="ปฏิวัติ วงศ์รัตนธรรม เกษตรอำเภอเด่นชัย"><span class="badge district">เด่นชัย</span><div class="name">นายปฏิวัติ วงศ์รัตนธรรม</div><div class="position">เกษตรอำเภอเด่นชัย</div><div class="dept">สำนักงานเกษตรอำเภอเด่นชัย</div><div class="source">✅ phrae.doae.go.th 2569</div></div>
+    <div class="card confirmed" data-search="นงเยาว์ แก้ววิเศษ เกษตรอำเภอสอง"><span class="badge district">สอง</span><div class="name">นางสาวนงเยาว์ แก้ววิเศษ</div><div class="position">เกษตรอำเภอสอง</div><div class="dept">สำนักงานเกษตรอำเภอสอง</div><div class="source">✅ phrae.doae.go.th 2569</div></div>
+    <div class="card confirmed" data-search="ตุลย์ ทิพยจันทร์ เกษตรอำเภอวังชิ้น"><span class="badge district">วังชิ้น</span><div class="name">นายตุลย์ ทิพยจันทร์</div><div class="position">เกษตรอำเภอวังชิ้น</div><div class="dept">สำนักงานเกษตรอำเภอวังชิ้น</div><div class="source">✅ phrae.doae.go.th 2569</div></div>
+    <div class="card confirmed" data-search="ธเนศพล วงศ์เจริญ เกษตรอำเภอหนองม่วงไข่"><span class="badge district">หนองม่วงไข่</span><div class="name">นายธเนศพล วงศ์เจริญ</div><div class="position">เกษตรอำเภอหนองม่วงไข่</div><div class="dept">สำนักงานเกษตรอำเภอหนองม่วงไข่</div><div class="source">✅ phrae.doae.go.th 2569</div></div>
+  </div>
+</div>
+
+<!-- ตารางบุคลากรวิชาการ -->
+<div class="section">
+  <div class="section-title">👥 บุคลากรวิชาการ สำนักงานเกษตรจังหวัดแพร่ (25 คน)</div>
+  <div style="overflow-x:auto"><table id="staff-table">
+    <thead><tr><th>#</th><th>ชื่อ-สกุล</th><th>ตำแหน่ง</th><th>กลุ่ม/ฝ่าย</th><th>ระดับ</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>นางสาวแพงมณี ขัดนันตา</td><td>นักวิชาการส่งเสริมการเกษตร</td><td>กลุ่มยุทธศาสตร์ฯ</td><td><span class="tag civil">ชำนาญการ</span></td></tr>
+      <tr><td>2</td><td>นายกฤตภาส จันจินา</td><td>นักวิชาการส่งเสริมการเกษตร</td><td>กลุ่มยุทธศาสตร์ฯ</td><td><span class="tag civil">ชำนาญการ</span></td></tr>
+      <tr><td>3</td><td>นายวัชระ อินโองการ</td><td>นักวิชาการส่งเสริมการเกษตร</td><td>กลุ่มยุทธศาสตร์ฯ</td><td><span class="tag civil">ชำนาญการ</span></td></tr>
+      <tr><td>4</td><td>นางสาวกชกร พัดมีเทศ</td><td>นักวิชาการส่งเสริมการเกษตร</td><td>กลุ่มยุทธศาสตร์ฯ</td><td><span class="tag civil">ปฏิบัติการ</span></td></tr>
+      <tr><td>5</td><td>นางสาวรุ่งฤทัย รังษี</td><td>นักวิชาการส่งเสริมการเกษตร</td><td>กลุ่มส่งเสริมพัฒนาการผลิต</td><td><span class="tag civil">ชำนาญการ</span></td></tr>
+      <tr><td>6</td><td>นายณัฐพงษ์ วงศ์สายแก้ว</td><td>นักวิชาการส่งเสริมการเกษตร</td><td>กลุ่มส่งเสริมพัฒนาการผลิต</td><td><span class="tag civil">ชำนาญการ</span></td></tr>
+      <tr><td>7</td><td>นางศุภาภรณ์ เกษมสุข</td><td>นักวิชาการส่งเสริมการเกษตร</td><td>กลุ่มส่งเสริมพัฒนาการผลิต</td><td><span class="tag civil">ชำนาญการ</span></td></tr>
+      <tr><td>8</td><td>นางสาวสายธารรัตน์ หิ่งคำ</td><td>นักวิชาการส่งเสริมการเกษตร</td><td>กลุ่มส่งเสริมพัฒนาการผลิต</td><td><span class="tag civil">ปฏิบัติการ</span></td></tr>
+      <tr><td>9</td><td>นายสุรเชษฐ์ พินทรากุล</td><td>นักวิชาการส่งเสริมการเกษตร</td><td>กลุ่มอารักขาพืช</td><td><span class="tag civil">ชำนาญการ</span></td></tr>
+      <tr><td>10</td><td>นายธีระพงษ์ กำหนด</td><td>นักวิชาการส่งเสริมการเกษตร</td><td>กลุ่มอารักขาพืช</td><td><span class="tag civil">ชำนาญการ</span></td></tr>
+      <tr><td>11</td><td>ว่าที่ ร.ต.หญิง พัชรินทร์ สอนปันดิ</td><td>นักวิชาการส่งเสริมการเกษตร</td><td>กลุ่มอารักขาพืช</td><td><span class="tag civil">ชำนาญการ</span></td></tr>
+      <tr><td>12</td><td>นางสาวปรียานุช ปิยะโกศล</td><td>นักวิชาการส่งเสริมการเกษตร</td><td>กลุ่มอารักขาพืช</td><td><span class="tag civil">ชำนาญการ</span></td></tr>
+      <tr><td>13</td><td>นายชูพงศ์ ธนะไพศาขมาส</td><td>นักวิชาการส่งเสริมการเกษตร</td><td>กลุ่มส่งเสริมพัฒนาเกษตรกร</td><td><span class="tag civil">ชำนาญการ</span></td></tr>
+      <tr><td>14</td><td>นางลัดดาวัลย์ พรวญหาญ</td><td>นักวิชาการส่งเสริมการเกษตร</td><td>กลุ่มส่งเสริมพัฒนาเกษตรกร</td><td><span class="tag civil">ชำนาญการ</span></td></tr>
+      <tr><td>15</td><td>นางสาวหทัยรัตน์ ยิ้วเหี้ยง</td><td>นักวิชาการส่งเสริมการเกษตร</td><td>กลุ่มส่งเสริมพัฒนาเกษตรกร</td><td><span class="tag civil">ชำนาญการ</span></td></tr>
+      <tr><td>16</td><td>นางสาวนนทกานต์ อุ่นลื้อ</td><td>นักวิชาการส่งเสริมการเกษตร</td><td>กลุ่มส่งเสริมพัฒนาเกษตรกร</td><td><span class="tag civil">ชำนาญการ</span></td></tr>
+      <tr><td>17</td><td>นางสาวชุติกาญจน์ ชุ่มดวง</td><td>นักวิชาการส่งเสริมการเกษตร</td><td>กลุ่มส่งเสริมพัฒนาเกษตรกร</td><td><span class="tag civil">ชำนาญการ</span></td></tr>
+      <tr><td>18</td><td>นางทิพวรรณ ผลเงิน</td><td>เจ้าพนักงานการเงินและบัญชี</td><td>ฝ่ายบริหารทั่วไป</td><td><span class="tag civil">ชำนาญงาน</span></td></tr>
+      <tr><td>19</td><td>นางสาวศุภลักษณ์ สำเภา</td><td>เจ้าพนักงานการเงินและบัญชี</td><td>ฝ่ายบริหารทั่วไป</td><td><span class="tag civil">ชำนาญงาน</span></td></tr>
+      <tr><td>20</td><td>นางสาวเปมิกา คำปินมาระ</td><td>เจ้าพนักงานธุรการ</td><td>ฝ่ายบริหารทั่วไป</td><td><span class="tag civil">ชำนาญงาน</span></td></tr>
+      <tr><td>21</td><td>นางสาวรัตนวรรณ ชื่นบาน</td><td>เจ้าพนักงานธุรการ</td><td>ฝ่ายบริหารทั่วไป</td><td><span class="tag civil">ชำนาญงาน</span></td></tr>
+      <tr><td>22</td><td>นางเรณู สุขทรัพย์</td><td>เจ้าพนักงานธุรการ</td><td>ฝ่ายบริหารทั่วไป</td><td><span class="tag civil">ปฏิบัติงาน</span></td></tr>
+      <tr><td>23</td><td>นางสาวรัตน์วดี ผุยผัน</td><td>เจ้าพนักงานธุรการ</td><td>ฝ่ายบริหารทั่วไป</td><td><span class="tag civil">ปฏิบัติงาน</span></td></tr>
+      <tr><td>24</td><td>นางระพีพรรณ โทบุราณ</td><td>เจ้าพนักงานธุรการ</td><td>ฝ่ายบริหารทั่วไป</td><td><span class="tag civil">ปฏิบัติงาน</span></td></tr>
+      <tr><td>25</td><td>นางสาวพิมพ์ภัสร์ บุญขันธ์</td><td>เจ้าพนักงานธุรการ</td><td>ฝ่ายบริหารทั่วไป</td><td><span class="tag civil">ปฏิบัติงาน</span></td></tr>
+    </tbody>
+  </table></div>
+</div>
+</div><!-- end all-content -->
+<div id="no-result" class="no-result" style="display:none">ไม่พบข้อมูลที่ตรงกับการค้นหา</div>
+<div class="updated">
+  📅 รวบรวม: 24 พ.ค. 2569 | แหล่ง: phrae.doae.go.th, opsmoac.go.th, region5.dld.go.th, ldd.go.th, irrigation.rid.go.th, alro.go.th, phraelocal.go.th<br>
+  ⚠️ ข้อมูลอาจเปลี่ยนแปลงตามการย้าย/โอน ควรตรวจสอบทุก 6 เดือน | 
+  🔗 <a href="/phrae.html" style="color:var(--accent)">phrae.html</a> | <a href="/management.html" style="color:var(--accent)">management.html</a>
+</div>
+<script>
+function filterCards(){
+  const q=document.getElementById('search').value.toLowerCase().trim();
+  if(!q){document.querySelectorAll('.card').forEach(c=>c.style.display='');document.querySelectorAll('#staff-table tbody tr').forEach(r=>r.style.display='');document.getElementById('no-result').style.display='none';return;}
+  let any=false;
+  document.querySelectorAll('.card').forEach(c=>{const show=((c.dataset.search||'')+c.innerText).toLowerCase().includes(q);c.style.display=show?'':'none';if(show)any=true;});
+  document.querySelectorAll('#staff-table tbody tr').forEach(r=>{const show=r.innerText.toLowerCase().includes(q);r.style.display=show?'':'none';if(show)any=true;});
+  document.getElementById('no-result').style.display=any?'none':'block';
+}
+</script>
+<script src="/access-bar.js"></script>
+</body></html>

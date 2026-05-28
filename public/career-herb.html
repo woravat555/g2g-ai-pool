@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<meta name="theme-color" content="#06040f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>G2G Farm AI · เกษตรกรสมุนไพร</title>
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg0:#06040f;--bg1:#0e0a22;--bg2:#160f30;--bg3:#1e1540;
+  --gold:#d4a843;--gold2:#f0c060;--gold3:rgba(212,168,67,0.15);
+  --glass:rgba(255,255,255,0.05);--glass2:rgba(255,255,255,0.08);--glass3:rgba(255,255,255,0.12);
+  --border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.18);
+  --text:#e8e4f0;--text2:#a99cc0;--text3:#6b5f80;
+  --green:#22c55e;--emerald:#10b981;--jade:#16a34a;
+}
+html,body{min-height:100vh;background:var(--bg0);color:var(--text);font-family:'Bai Jamjuree','Sarabun',sans-serif;font-size:14px;line-height:1.6;overflow-x:hidden}
+body{background:linear-gradient(160deg,var(--bg0) 0%,var(--bg1) 40%,var(--bg2) 70%,var(--bg3) 100%);min-height:100vh}
+
+/* SPLASH */
+#splash{position:fixed;inset:0;background:linear-gradient(160deg,#06040f,#0e0a22,#160f30);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .5s ease}
+#splash.fade-out{opacity:0;pointer-events:none}
+.splash-icon{font-size:72px;margin-bottom:16px;animation:bob 2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.splash-title{font-size:28px;font-weight:800;letter-spacing:.08em;color:#fff;margin-bottom:6px}
+.splash-sub{font-size:14px;color:var(--text2);letter-spacing:.04em}
+.splash-bar{width:160px;height:3px;background:rgba(255,255,255,0.1);border-radius:4px;margin-top:32px;overflow:hidden}
+.splash-fill{height:100%;width:0;background:linear-gradient(90deg,var(--jade),var(--green),var(--gold));animation:fill 1.8s ease forwards}
+@keyframes fill{to{width:100%}}
+
+/* HEADER */
+.header{background:rgba(14,10,34,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:12px 16px;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;max-width:480px;margin:0 auto;width:100%}
+.header-logo{font-size:18px;font-weight:800;color:#fff;letter-spacing:.04em;display:flex;align-items:center;gap:8px}
+.header-logo span{color:var(--gold)}
+.header-badge{background:var(--glass2);border:1px solid var(--border);border-radius:20px;padding:4px 10px;font-size:11px;color:var(--text2)}
+
+/* MAIN */
+.app{max-width:480px;margin:0 auto;padding-bottom:90px}
+
+/* HERO BANNER */
+.hero{margin:12px;border-radius:16px;overflow:hidden;position:relative;min-height:120px;display:flex;align-items:flex-end}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(135deg,#0a1a0a 0%,#1a3a1a 60%,rgba(34,197,94,0.2) 100%)}
+.hero-content{position:relative;z-index:2;padding:16px;width:100%}
+.hero-eyebrow{font-size:10px;letter-spacing:.15em;color:var(--gold);text-transform:uppercase;font-weight:700;margin-bottom:4px}
+.hero-phase{font-size:20px;font-weight:800;color:#fff;margin-bottom:4px}
+.hero-week{font-size:12px;color:rgba(255,255,255,0.6)}
+.hero-badge{display:inline-block;padding:4px 12px;background:rgba(34,197,94,0.2);border:1px solid rgba(34,197,94,0.4);border-radius:20px;font-size:11px;color:#86efac;font-weight:600;margin-top:8px}
+
+/* CROP SELECTOR */
+.crop-section{padding:12px 16px}
+.section-label{font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--text3);text-transform:uppercase;margin-bottom:10px}
+.crop-chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.crop-chips::-webkit-scrollbar{display:none}
+.crop-chip{flex-shrink:0;background:var(--glass);border:1px solid var(--border);border-radius:20px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .15s;color:var(--text2);white-space:nowrap}
+.crop-chip:hover{border-color:var(--green);color:var(--text)}
+.crop-chip.active{border-color:var(--crop-color,var(--green));background:var(--crop-glass,rgba(34,197,94,0.1));color:#fff}
+
+/* TABS */
+.tab-bar{display:flex;gap:0;border-bottom:1px solid var(--border);padding:0 16px;overflow-x:auto;scrollbar-width:none}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab-btn{flex-shrink:0;padding:10px 14px;font-size:12px;font-weight:600;color:var(--text3);border-bottom:2px solid transparent;cursor:pointer;transition:all .15s;white-space:nowrap;background:transparent;border-top:0;border-left:0;border-right:0}
+.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
+
+/* SCREENS */
+.screen{display:none;padding:12px 16px}
+.screen.active{display:block}
+
+/* WEEK STRIP */
+.week-strip-wrap{background:var(--glass);border:1px solid var(--border);border-radius:12px;padding:10px;margin-bottom:14px;overflow-x:auto;scrollbar-width:none}
+.week-strip-wrap::-webkit-scrollbar{display:none}
+.week-strip{display:flex;gap:4px;min-width:max-content}
+.wk-btn{min-width:32px;padding:7px 4px;border:1px solid var(--border);border-radius:6px;background:rgba(255,255,255,0.03);font-size:10px;font-weight:700;cursor:pointer;color:var(--text3);text-align:center;transition:.12s;white-space:nowrap}
+.wk-btn:hover{background:var(--glass2);color:var(--text)}
+.wk-btn.active{background:linear-gradient(135deg,var(--jade),var(--green));border-color:var(--green);color:#fff;box-shadow:0 2px 10px rgba(34,197,94,.3)}
+.wk-btn.today-wk{outline:2px solid var(--gold);outline-offset:1px}
+
+/* DETAIL CARD */
+.detail-card{background:var(--glass);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:14px}
+.detail-banner{padding:20px;min-height:100px;display:flex;align-items:flex-end;position:relative;overflow:hidden}
+.detail-banner::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(6,4,15,0.7),transparent)}
+.detail-banner-content{position:relative;z-index:2}
+.detail-phase{font-size:18px;font-weight:800;color:#fff;margin-bottom:2px}
+.detail-week-label{font-size:11px;color:rgba(255,255,255,0.6)}
+.detail-body{padding:16px}
+
+/* CARDS */
+.card{background:var(--glass);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:12px}
+.card-title{font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.card-title-icon{font-size:16px}
+
+/* TASK LIST */
+.task-list{list-style:none}
+.task-item{padding:9px 12px;background:rgba(34,197,94,0.05);border-left:3px solid rgba(34,197,94,0.4);border-radius:0 8px 8px 0;font-size:13px;margin-bottom:6px;color:var(--text);line-height:1.5}
+.task-item::before{content:'▸ ';color:var(--green);font-size:12px}
+.watch-item{padding:7px 12px;background:rgba(212,168,67,0.08);border-left:3px solid rgba(212,168,67,0.4);border-radius:0 8px 8px 0;font-size:12px;margin-bottom:5px;color:var(--text2)}
+.alert-item{padding:7px 12px;background:rgba(239,68,68,0.1);border-left:3px solid rgba(239,68,68,0.5);border-radius:0 8px 8px 0;font-size:12px;margin-bottom:5px;color:#fca5a5;font-weight:600}
+
+/* GAP CHECKLIST */
+.gap-section{margin-bottom:16px}
+.gap-category{background:var(--glass);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;overflow:hidden}
+.gap-header{padding:12px 14px;font-size:13px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px;cursor:pointer;background:var(--glass2)}
+.gap-header .badge{margin-left:auto;font-size:10px;background:rgba(34,197,94,0.2);color:#86efac;border:1px solid rgba(34,197,94,0.3);border-radius:10px;padding:2px 8px}
+.gap-items{padding:10px 14px 14px}
+.gap-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);cursor:pointer}
+.gap-item:last-child{border-bottom:0}
+.gap-check{width:20px;height:20px;border-radius:5px;border:2px solid var(--border2);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:.15s;background:transparent}
+.gap-item.checked .gap-check{background:var(--green);border-color:var(--green)}
+.gap-item.checked .gap-check::after{content:'✓';color:#fff;font-size:12px;font-weight:700}
+.gap-item.checked .gap-text{color:var(--text3);text-decoration:line-through}
+.gap-text{font-size:12px;color:var(--text2);line-height:1.5}
+.gap-progress{height:4px;background:rgba(255,255,255,0.08);border-radius:2px;margin:10px 14px;overflow:hidden}
+.gap-progress-bar{height:100%;background:linear-gradient(90deg,var(--jade),var(--green));border-radius:2px;transition:width .3s}
+
+/* PROCESS / DRYING */
+.process-step{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.process-step:last-child{border-bottom:0}
+.step-num{width:28px;height:28px;border-radius:50%;background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--green);flex-shrink:0}
+.step-content{flex:1}
+.step-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px}
+.step-desc{font-size:11px;color:var(--text2)}
+.step-params{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.step-param{background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:4px 10px;font-size:11px;color:var(--text2)}
+.step-param strong{color:var(--gold)}
+
+/* IOT SENSORS */
+.sensor-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.sensor-card{background:var(--glass2);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center}
+.sensor-icon{font-size:24px;margin-bottom:6px}
+.sensor-value{font-size:22px;font-weight:800;color:#fff;margin-bottom:2px}
+.sensor-unit{font-size:10px;color:var(--text3);margin-bottom:4px}
+.sensor-label{font-size:11px;color:var(--text2)}
+.sensor-bar{height:4px;background:rgba(255,255,255,0.08);border-radius:2px;margin-top:8px;overflow:hidden}
+.sensor-fill{height:100%;border-radius:2px;transition:width 1s ease}
+.sensor-status{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;margin-top:4px}
+.status-ok{background:rgba(34,197,94,0.15);color:#86efac}
+.status-warn{background:rgba(212,168,67,0.15);color:#fcd34d}
+.status-alert{background:rgba(239,68,68,0.15);color:#fca5a5}
+
+/* MARKET */
+.market-crop{margin-bottom:16px}
+.market-crop-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.market-crop-name{font-size:14px;font-weight:700;color:#fff}
+.market-rows{background:var(--glass);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.market-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border)}
+.market-row:last-child{border-bottom:0}
+.market-product{font-size:12px;color:var(--text2)}
+.market-price{font-size:13px;font-weight:700;color:var(--gold)}
+.market-unit{font-size:10px;color:var(--text3)}
+.price-trend{font-size:10px;padding:2px 6px;border-radius:8px;margin-left:6px}
+.trend-up{background:rgba(34,197,94,0.15);color:#86efac}
+.trend-down{background:rgba(239,68,68,0.15);color:#fca5a5}
+.trend-stable{background:rgba(156,163,175,0.15);color:#9ca3af}
+
+/* TOOLS */
+.tool-card{background:var(--glass);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:12px}
+.tool-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.input-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.input-label{font-size:12px;color:var(--text2);min-width:120px}
+.input-field{flex:1;background:rgba(255,255,255,0.06);border:1px solid var(--border2);border-radius:8px;padding:8px 12px;font-size:13px;color:#fff;font-family:'Bai Jamjuree',sans-serif}
+.input-field:focus{outline:none;border-color:var(--green);background:rgba(34,197,94,0.05)}
+.calc-btn{width:100%;padding:10px;background:linear-gradient(135deg,rgba(22,163,74,0.3),rgba(34,197,94,0.2));border:1px solid rgba(34,197,94,0.4);border-radius:10px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:'Bai Jamjuree',sans-serif;transition:.15s}
+.calc-btn:hover{background:linear-gradient(135deg,rgba(22,163,74,0.5),rgba(34,197,94,0.35))}
+.calc-result{margin-top:10px;padding:12px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:8px;font-size:13px;color:var(--text);display:none}
+
+/* QUALITY TABLE */
+.quality-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:10px}
+.quality-table th{padding:8px 10px;background:rgba(255,255,255,0.05);color:var(--text3);font-weight:700;text-align:left;border-bottom:1px solid var(--border)}
+.quality-table td{padding:8px 10px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text2)}
+.quality-table tr:last-child td{border-bottom:0}
+.quality-table td:last-child{color:var(--gold);font-weight:600}
+
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:rgba(14,10,34,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--border);padding:8px 0 max(8px,env(safe-area-inset-bottom));display:flex;z-index:200}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;cursor:pointer;transition:.15s}
+.nav-item .nav-icon{font-size:20px;line-height:1}
+.nav-item .nav-label{font-size:9px;color:var(--text3);font-weight:600;letter-spacing:.04em}
+.nav-item.active .nav-label{color:var(--gold)}
+.nav-item.active .nav-icon{filter:drop-shadow(0 0 6px var(--gold))}
+
+/* RECORD LOG */
+.record-form{background:var(--glass);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px}
+.record-form textarea{width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border2);border-radius:8px;padding:10px;font-size:12px;color:var(--text);font-family:'Bai Jamjuree',sans-serif;resize:none;min-height:80px}
+.record-form textarea:focus{outline:none;border-color:var(--green)}
+.record-form select{width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border2);border-radius:8px;padding:9px 12px;font-size:12px;color:var(--text);font-family:'Bai Jamjuree',sans-serif;margin-bottom:8px}
+.record-form select option{background:#160f30}
+.log-entry{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px}
+.log-entry .log-meta{font-size:10px;color:var(--text3);margin-bottom:4px;display:flex;justify-content:space-between}
+.log-entry .log-text{font-size:12px;color:var(--text2)}
+
+/* PILL */
+.pill{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700}
+.pill-green{background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.25);color:#86efac}
+.pill-gold{background:rgba(212,168,67,0.12);border:1px solid rgba(212,168,67,0.25);color:var(--gold2)}
+.pill-orange{background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.25);color:#fdba74}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px}
+
+/* ANIMATIONS */
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{animation:fadeIn .25s ease}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-icon">🌿</div>
+  <div class="splash-title">G2G FARM AI</div>
+  <div class="splash-sub">ระบบจัดการฟาร์มสมุนไพรครบวงจร</div>
+  <div class="splash-bar"><div class="splash-fill"></div></div>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-logo">🌿 <span>G2G</span> FARM</div>
+  <div class="header-badge" id="headerBadge">สัปดาห์ 1</div>
+</div>
+
+<!-- APP -->
+<div class="app">
+
+  <!-- HERO BANNER -->
+  <div class="hero" id="heroBanner">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow" id="heroEyebrow">ขมิ้นชัน · ปีที่ 1</div>
+      <div class="hero-phase" id="heroPhase">🌱 เตรียมดิน</div>
+      <div class="hero-week" id="heroWeek">สัปดาห์ที่ 1 — ระยะเตรียมพื้นที่</div>
+      <div class="hero-badge" id="heroBadge">GAP Standard</div>
+    </div>
+  </div>
+
+  <!-- CROP SELECTOR -->
+  <div class="crop-section">
+    <div class="section-label">เลือกพืชสมุนไพร</div>
+    <div class="crop-chips" id="cropChips"></div>
+  </div>
+
+  <!-- TAB BAR -->
+  <div class="tab-bar" id="tabBar">
+    <button class="tab-btn active" data-tab="calendar">📅 ปฏิทิน</button>
+    <button class="tab-btn" data-tab="gap">🌿 GAP/มาตรฐาน</button>
+    <button class="tab-btn" data-tab="process">🔥 แปรรูป</button>
+    <button class="tab-btn" data-tab="iot">📡 IoT</button>
+    <button class="tab-btn" data-tab="market">📊 ตลาด</button>
+    <button class="tab-btn" data-tab="tools">🔧 เครื่องมือ</button>
+  </div>
+
+  <!-- SCREEN: CALENDAR -->
+  <div class="screen active" id="screen-calendar">
+    <div class="week-strip-wrap">
+      <div class="week-strip" id="weekStrip"></div>
+    </div>
+    <div class="detail-card" id="detailCard">
+      <div class="detail-banner" id="detailBanner">
+        <div class="detail-banner-content">
+          <div class="detail-phase" id="detailPhase">เตรียมดิน</div>
+          <div class="detail-week-label" id="detailWeekLabel">สัปดาห์ที่ 1-4</div>
+        </div>
+      </div>
+      <div class="detail-body" id="detailBody"></div>
+    </div>
+  </div>
+
+  <!-- SCREEN: GAP -->
+  <div class="screen" id="screen-gap">
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-title"><span class="card-title-icon">📋</span>ความคืบหน้า GAP/มาตรฐาน</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap" id="gapProgress"></div>
+    </div>
+    <div id="gapSections"></div>
+  </div>
+
+  <!-- SCREEN: PROCESS -->
+  <div class="screen" id="screen-process">
+    <div class="card">
+      <div class="card-title"><span class="card-title-icon">🌡️</span>พารามิเตอร์การอบแห้ง</div>
+      <div id="dryingParams"></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="card-title-icon">⚙️</span>ขั้นตอนการแปรรูป</div>
+      <div id="processSteps"></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="card-title-icon">✅</span>Quality Control Checkpoints</div>
+      <div id="qcChecks"></div>
+    </div>
+  </div>
+
+  <!-- SCREEN: IOT -->
+  <div class="screen" id="screen-iot">
+    <div class="card" style="margin-bottom:0;border-radius:12px 12px 0 0;border-bottom:0">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="card-title" style="margin-bottom:0"><span class="card-title-icon">📡</span>ระบบ IoT Live</div>
+        <div id="iotStatus" class="sensor-status status-ok">● ออนไลน์</div>
+      </div>
+    </div>
+    <div style="background:var(--glass);border:1px solid var(--border);border-radius:0 0 12px 12px;padding:14px;margin-bottom:14px">
+      <div class="sensor-grid" id="sensorGrid"></div>
+      <button class="calc-btn" onclick="refreshSensors()">🔄 รีเฟรชข้อมูล</button>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="card-title-icon">📝</span>บันทึกการใช้สาร/ปุ๋ย</div>
+      <div class="record-form">
+        <select id="recordType">
+          <option>ปุ๋ยอินทรีย์</option>
+          <option>ปุ๋ยเคมี</option>
+          <option>สารป้องกันกำจัดศัตรูพืช</option>
+          <option>ฮอร์โมน/สารเร่ง</option>
+          <option>การให้น้ำ</option>
+        </select>
+        <textarea id="recordText" placeholder="รายละเอียด เช่น ปุ๋ยคอก 200 กก./ไร่ แปลง A3..."></textarea>
+        <button class="calc-btn" style="margin-top:8px" onclick="saveRecord()">💾 บันทึก</button>
+      </div>
+      <div id="recordLog"></div>
+    </div>
+  </div>
+
+  <!-- SCREEN: MARKET -->
+  <div class="screen" id="screen-market">
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-title"><span class="card-title-icon">📆</span>ราคาตลาดสมุนไพร 2568</div>
+      <div style="font-size:11px;color:var(--text3)">อัปเดต: พ.ค. 2568 · ราคาเกษตรกรขายได้</div>
+    </div>
+    <div id="marketSection"></div>
+  </div>
+
+  <!-- SCREEN: TOOLS -->
+  <div class="screen" id="screen-tools">
+    <div class="tool-card">
+      <div class="tool-title">🌱 คำนวณอัตราการปลูก</div>
+      <div class="input-row">
+        <div class="input-label">ขนาดแปลง (ไร่)</div>
+        <input class="input-field" id="plotRai" type="number" placeholder="1.5" step="0.5" min="0.5">
+      </div>
+      <div class="input-row">
+        <div class="input-label">ระยะปลูก (ซม.)</div>
+        <input class="input-field" id="plotSpacing" type="number" placeholder="30" min="10">
+      </div>
+      <button class="calc-btn" onclick="calcPlanting()">คำนวณ</button>
+      <div class="calc-result" id="plantingResult"></div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-title">🌿 คำนวณปุ๋ยอินทรีย์</div>
+      <div class="input-row">
+        <div class="input-label">พื้นที่ (ไร่)</div>
+        <input class="input-field" id="fertRai" type="number" placeholder="1" step="0.5" min="0.5">
+      </div>
+      <div class="input-row">
+        <div class="input-label">ระยะ</div>
+        <select class="input-field" id="fertStage" style="appearance:none">
+          <option value="prep">เตรียมดิน</option>
+          <option value="grow">เจริญเติบโต</option>
+          <option value="max">สูงสุด</option>
+        </select>
+      </div>
+      <button class="calc-btn" onclick="calcFert()">คำนวณ</button>
+      <div class="calc-result" id="fertResult"></div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-title">📊 % สารสำคัญ vs วิธีอบแห้ง</div>
+      <table class="quality-table">
+        <thead>
+          <tr><th>วิธีอบแห้ง</th><th>อุณหภูมิ</th><th>% Curcumin</th><th>ความชื้น</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>ตากแดด</td><td>35-45°C</td><td>1.5-2.5%</td><td>10-14%</td></tr>
+          <tr><td>อบลมร้อน</td><td>40-50°C</td><td>2.5-3.5%</td><td>&lt;12%</td></tr>
+          <tr><td>อบลมร้อน</td><td>55-60°C</td><td>2.0-3.0%</td><td>&lt;10%</td></tr>
+          <tr><td>Freeze Dry</td><td>-50°C (vacuum)</td><td>3.5-5.0%</td><td>&lt;8%</td></tr>
+          <tr><td>อบไมโครเวฟ</td><td>—</td><td>1.8-2.8%</td><td>&lt;12%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-title">💰 คำนวณรายได้โดยประมาณ</div>
+      <div class="input-row">
+        <div class="input-label">ผลผลิต (กก.สด)</div>
+        <input class="input-field" id="yieldKg" type="number" placeholder="500" min="1">
+      </div>
+      <div class="input-row">
+        <div class="input-label">จำหน่ายแบบ</div>
+        <select class="input-field" id="sellType" style="appearance:none">
+          <option value="fresh">สด (15-25 บ./กก.)</option>
+          <option value="dry">แห้ง (80-150 บ./กก.)</option>
+          <option value="powder">ผง (200-400 บ./กก.)</option>
+        </select>
+      </div>
+      <button class="calc-btn" onclick="calcIncome()">คำนวณ</button>
+      <div class="calc-result" id="incomeResult"></div>
+    </div>
+  </div>
+
+</div><!-- end .app -->
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav" id="bottomNav">
+  <div class="nav-item active" data-nav="calendar">
+    <span class="nav-icon">📅</span>
+    <span class="nav-label">ปฏิทิน</span>
+  </div>
+  <div class="nav-item" data-nav="gap">
+    <span class="nav-icon">🌿</span>
+    <span class="nav-label">GAP</span>
+  </div>
+  <div class="nav-item" data-nav="process">
+    <span class="nav-icon">🔥</span>
+    <span class="nav-label">แปรรูป</span>
+  </div>
+  <div class="nav-item" data-nav="iot">
+    <span class="nav-icon">📡</span>
+    <span class="nav-label">IoT</span>
+  </div>
+  <div class="nav-item" data-nav="market">
+    <span class="nav-icon">📊</span>
+    <span class="nav-label">ตลาด</span>
+  </div>
+  <div class="nav-item" data-nav="tools">
+    <span class="nav-icon">🔧</span>
+    <span class="nav-label">เครื่องมือ</span>
+  </div>
+</div>
+
+<script>
+// ==================== DATA ====================
+const CROPS = {
+  turmeric:{key:'turmeric',name:'ขมิ้นชัน',emoji:'🌿',color:'#f59e0b',soft:'#fcd34d',dark:'#92400e',glass:'rgba(245,158,11,0.15)'},
+  galangal:{key:'galangal',name:'ข่า',emoji:'🌱',color:'#22c55e',soft:'#86efac',dark:'#14532d',glass:'rgba(34,197,94,0.15)'},
+  lemongrass:{key:'lemongrass',name:'ตะไคร้',emoji:'🍃',color:'#84cc16',soft:'#bef264',dark:'#365314',glass:'rgba(132,204,22,0.15)'},
+  ginger:{key:'ginger',name:'ขิง',emoji:'🫚',color:'#f97316',soft:'#fdba74',dark:'#9a3412',glass:'rgba(249,115,22,0.15)'},
+  holy_basil:{key:'holy_basil',name:'กะเพรา',emoji:'🌿',color:'#10b981',soft:'#6ee7b7',dark:'#064e3b',glass:'rgba(16,185,129,0.15)'},
+  moringa:{key:'moringa',name:'มะรุม',emoji:'🌳',color:'#16a34a',soft:'#86efac',dark:'#14532d',glass:'rgba(22,163,74,0.15)'},
+};
+
+// ==================== FARM PERIODS ====================
+function buildPeriods() {
+  const P = {};
+
+  // ขมิ้นชัน
+  P.turmeric = [];
+  for(let w=1;w<=52;w++) {
+    let phase,season,tasks=[],watch=[],alerts=[];
+    if(w>=1&&w<=4){
+      phase='เตรียมดิน';season='เตรียมดิน';
+      tasks=['ไถลึก 40-50 ซม. ด้วยรถไถเดินตาม','วัดและปรับ pH ดิน ให้อยู่ช่วง 5.5-7.0','ใส่ปุ๋ยคอก/ปุ๋ยหมัก 2-4 ตัน/ไร่','ยกร่องแปลงสูง 20-30 ซม. ระบายน้ำดี'];
+      watch=['ตรวจสอบการระบายน้ำของแปลง','ตรวจ pH ทุกจุดก่อนปลูก'];
+    } else if(w>=5&&w<=8){
+      phase='ปลูกเหง้าพันธุ์';season='ปลูก';
+      tasks=['คัดเลือกเหง้าพันธุ์ที่แข็งแรง น้ำหนัก 25-30 กรัม','แช่เหง้าในสารละลายป้องกันเชื้อรา (Thiram) 30 นาที','ปลูกลึก 5-7 ซม. ระยะปลูก 30×30 ซม.','คลุมแปลงด้วยฟางข้าวหรือพลาสติกคลุมดิน'];
+      watch=['ความชื้นดินควรอยู่ที่ 60-70% WHC','อย่าปลูกในดินที่ยังเปียกแฉะ'];
+      alerts=['ระวังเชื้อรา Fusarium ในระยะนี้'];
+    } else if(w>=9&&w<=16){
+      phase='ดูแลรักษา';season='ดูแลรักษา';
+      tasks=['ให้น้ำสม่ำเสมอ 3-5 วัน/ครั้ง','ใส่ปุ๋ย N สูง (21-0-0 หรือปุ๋ยชีวภาพ) 20-30 กก./ไร่','กำจัดวัชพืชรอบโคนต้น','คลุมดินเพิ่มเพื่อรักษาความชื้น'];
+      watch=['สังเกตอาการใบเหลืองซีด = ขาด N'];
+    } else if(w>=17&&w<=24){
+      phase='เจริญเติบโตสูงสุด';season='เจริญเติบโตสูงสุด';
+      tasks=['ใส่ปุ๋ย K สูง (0-0-60) 15 กก./ไร่ เพื่อเสริมการสะสมแป้ง','กำจัดวัชพืชอย่างน้อย 2 ครั้ง','ให้น้ำแบบ Drip หรือสปริงเกลอร์','ตรวจดูโรคใบจุด ใบไหม้'];
+      watch=['ต้นสูงสุด 60-100 ซม. เป็นปกติ'];
+    } else if(w>=25&&w<=36){
+      phase='สะสมสาร Curcumin';season='สะสมสาร Curcumin';
+      tasks=['ลดปริมาณน้ำลง 50% เพื่อกระตุ้นสะสม Curcumin','ตรวจป้องกันโรคเหง้าเน่า (Pythium)','งดปุ๋ย N เพิ่มเติม','สังเกตสีใบเริ่มเปลี่ยนเป็นเหลืองเล็กน้อย'];
+      watch=['ความชื้นดินไม่ควรเกิน 50% WHC','ห้ามขังน้ำในแปลง'];
+      alerts=['โรคเหง้าเน่า — ป้องกันด้วย Mancozeb ถ้าพบอาการ'];
+    } else if(w>=37&&w<=44){
+      phase='เก็บเกี่ยว';season='เก็บเกี่ยว';
+      tasks=['ขุดเหง้าหลังใบแห้งสมบูรณ์ 80-90%','ใช้จอบหรือรถขุดขนาดเล็กขุดอย่างระมัดระวัง','ล้างดินออกด้วยน้ำสะอาด','คัดขนาดและตัดแต่งเหง้า'];
+      watch=['เหง้าสมบูรณ์หนัก 400-600 กรัม/ต้น','ผลผลิตเฉลี่ย 1,500-2,500 กก./ไร่'];
+    } else if(w>=45&&w<=48){
+      phase='แปรรูปเบื้องต้น';season='แปรรูปเบื้องต้น';
+      tasks=['หั่นเหง้าเป็นแว่นหนา 2-3 มม.','อบแห้งที่ 40-45°C นาน 8-12 ชั่วโมง','ตรวจวัดความชื้น ต้องต่ำกว่า 12-14%','บดผงหยาบด้วยเครื่องบด'];
+      watch=['ความชื้นสูงเกิน 14% เสี่ยงราขึ้น'];
+    } else {
+      phase='เตรียมรอบใหม่';season='เตรียมดิน';
+      tasks=['เก็บเหง้าพันธุ์ส่วนที่สมบูรณ์ที่สุด','เตรียมดินสำหรับฤดูใหม่','ใส่ปุ๋ยหมักเพื่อฟื้นฟูดิน','วางแผนพื้นที่ปลูกฤดูหน้า'];
+    }
+    P.turmeric.push({week:w,phase,season,tasks,watch,alerts});
+  }
+
+  // ข่า — อายุ 12+ เดือน
+  P.galangal = [];
+  for(let w=1;w<=52;w++){
+    let phase,season,tasks=[],watch=[],alerts=[];
+    if(w>=1&&w<=4){phase='เตรียมดิน';season='เตรียมดิน';tasks=['ไถลึก 30-40 ซม.','ปรับ pH ดิน 5.5-6.5','ใส่ปุ๋ยคอก 3 ตัน/ไร่','ยกร่องสูง 25 ซม.'];}
+    else if(w>=5&&w<=8){phase='ปลูกเหง้า';season='ปลูก';tasks=['แยกเหง้าแก่ที่มีตา 2-3 ตา','ปลูกลึก 10 ซม. ระยะ 40×40 ซม.','รดน้ำทันทีหลังปลูก','คลุมด้วยฟางข้าว'];alerts=['ป้องกันมดและปลวกในระยะแรก'];}
+    else if(w>=9&&w<=20){phase='แตกหน่อและเจริญเติบโต';season='ดูแลรักษา';tasks=['ให้น้ำทุก 3-4 วัน','ใส่ปุ๋ยหมักรอบโคน','กำจัดวัชพืช','สังเกตหน่อใหม่'];watch=['หน่อแรกงอกใน 2-4 สัปดาห์'];}
+    else if(w>=21&&w<=36){phase='เจริญเติบโตสูงสุด';season='เจริญเติบโตสูงสุด';tasks=['ใส่ปุ๋ย K เพื่อกระตุ้นเหง้า','กำจัดวัชพืชทุก 4 สัปดาห์','ให้น้ำสม่ำเสมอ','ตัดดอกออกถ้าไม่ต้องการเมล็ด'];}
+    else if(w>=37&&w<=48){phase='เก็บเกี่ยว';season='เก็บเกี่ยว';tasks=['ขุดต้นที่อายุ 10-12 เดือน','แยกเหง้าอ่อน/เหง้าแก่','ล้างและตัดแต่ง','จำหน่ายสดหรืออบแห้ง'];watch=['เหง้าอ่อน (ข่าอ่อน) ราคาดีกว่า'];}
+    else{phase='เตรียมรอบใหม่';season='เตรียมดิน';tasks=['คัดเหง้าพันธุ์','ปรับปรุงดิน','วางแผนรอบถัดไป'];}
+    P.galangal.push({week:w,phase,season,tasks,watch,alerts});
+  }
+
+  // ตะไคร้ — เก็บต่อเนื่อง
+  P.lemongrass = [];
+  for(let w=1;w<=52;w++){
+    let phase,season,tasks=[],watch=[],alerts=[];
+    if(w>=1&&w<=4){phase='เตรียมดินและปลูก';season='ปลูก';tasks=['เตรียมดิน ไถ 20-30 ซม.','ปลูกแยกกอ ระยะ 50×50 ซม.','ใส่ปุ๋ยหมักรองก้นหลุม','รดน้ำให้ชุ่ม'];}
+    else if(w>=5&&w<=12){phase='แตกกอ';season='แตกกอ';tasks=['ให้น้ำทุก 2-3 วัน','ใส่ปุ๋ย N กระตุ้นการแตกกอ','กำจัดวัชพืช','สังเกตการแตกกอใหม่'];}
+    else{
+      // เก็บเกี่ยวหมุนเวียน
+      const cycle = Math.floor((w-13)/6);
+      if((w-13)%6 < 2){phase='เก็บเกี่ยว';season='เก็บเกี่ยว';tasks=['ตัดต้นสูง 5-10 ซม. จากดิน','มัดเป็นกำๆ น้ำหนัก 250-500 กรัม','ล้างและตัดแต่งใบแห้ง','บรรจุถุงสะอาด'];}
+      else{phase=`บำรุงหลังเก็บ (รอบ ${cycle+1})`;season='ดูแลรักษา';tasks=['ใส่ปุ๋ยหมักหลังตัด 1 สัปดาห์','ให้น้ำสม่ำเสมอ','กำจัดวัชพืช','รอแตกกอใหม่'];}
+    }
+    P.lemongrass.push({week:w,phase,season,tasks,watch,alerts});
+  }
+
+  // ขิง
+  P.ginger = [];
+  for(let w=1;w<=52;w++){
+    let phase,season,tasks=[],watch=[],alerts=[];
+    if(w>=1&&w<=3){phase='เตรียมดิน';season='เตรียมดิน';tasks=['ไถลึก 30-40 ซม.','ปรับ pH 5.5-6.5','ใส่ปุ๋ยคอกสลายตัวดีแล้ว 3-4 ตัน/ไร่','เตรียมแปลงยกร่อง'];}
+    else if(w>=4&&w<=7){phase='ปลูกแง่งพันธุ์';season='ปลูก';tasks=['คัดแง่งสมบูรณ์ มี 2-3 ตา','แช่แง่งในน้ำอุ่น 30 นาที ก่อนปลูก','ปลูกลึก 5-8 ซม. ระยะ 25×40 ซม.','คลุมแปลงด้วยฟาง'];alerts=['ป้องกันโรคเหง้าเน่า Pythium ระยะนี้'];}
+    else if(w>=8&&w<=18){phase='ดูแลรักษา';season='ดูแลรักษา';tasks=['ให้น้ำทุก 3-5 วัน','ใส่ปุ๋ย N-P-K 15-15-15 รอบแรก','พูนดินรอบโคนต้น','กำจัดวัชพืช'];}
+    else if(w>=19&&w<=30){phase='เจริญเติบโตสูงสุด';season='เจริญเติบโตสูงสุด';tasks=['ใส่ปุ๋ย K สูงช่วงสะสมอาหาร','พูนดิน 2 ครั้ง ห่างกัน 4 สัปดาห์','ให้น้ำแต่ระวังน้ำขัง','ตรวจโรคและแมลง'];}
+    else if(w>=31&&w<=42){phase='สะสมแง่งและเก็บเกี่ยว';season='เก็บเกี่ยว';tasks=['ลดน้ำเมื่อใบเริ่มเหลือง','ขุดแง่งขิงอ่อน (w31-36) หรือแก่ (w37-42)','ล้างดิน แยกขนาด','จำหน่ายสดหรือแปรรูป'];}
+    else{phase='พักแปลง';season='เตรียมดิน';tasks=['เก็บแง่งพันธุ์','ไถพรวนเพื่อพักดิน','ใส่ปุ๋ยหมักฟื้นฟูดิน'];}
+    P.ginger.push({week:w,phase,season,tasks,watch,alerts});
+  }
+
+  // กะเพรา — หลายรอบ
+  P.holy_basil = [];
+  for(let w=1;w<=52;w++){
+    let phase,season,tasks=[],watch=[],alerts=[];
+    const round = Math.floor((w-1)/13)+1;
+    const wInCycle = ((w-1)%13)+1;
+    if(wInCycle<=2){phase='เตรียมและปลูก';season='ปลูก';tasks=['เตรียมดิน ใส่ปุ๋ยหมัก','หว่านเมล็ดหรือย้ายกล้าอายุ 14 วัน','ระยะปลูก 20×20 ซม.','รดน้ำเช้า-เย็น'];}
+    else if(wInCycle<=6){phase='เจริญเติบโต';season='ดูแลรักษา';tasks=['ให้น้ำทุกวันตอนเช้า','ใส่ปุ๋ย N สูง','เด็ดยอดกระตุ้นการแตกกิ่ง','กำจัดวัชพืช'];}
+    else if(wInCycle<=9){phase='เก็บเกี่ยว';season='เก็บเกี่ยว';tasks=[`เก็บยอดกะเพรา (รอบ ${round}) ยาว 10-15 ซม.`,'มัดเป็นกำ 200-250 กรัม','เก็บตอนเช้าก่อน 9 โมง','บรรจุถุงเย็นทันที'];}
+    else{phase='บำรุงหลังเก็บ';season='ดูแลรักษา';tasks=['ตัดแต่งกิ่งที่ออกดอก','ใส่ปุ๋ยหมักกระตุ้น','รดน้ำสม่ำเสมอ','รอยอดใหม่'];watch=['กะเพราออกดอกมากเกินไป = อายุสั้นลง'];}
+    P.holy_basil.push({week:w,phase,season,tasks,watch,alerts});
+  }
+
+  // มะรุม — ไม้ยืนต้น
+  P.moringa = [];
+  for(let w=1;w<=52;w++){
+    let phase,season,tasks=[],watch=[],alerts=[];
+    if(w>=1&&w<=4){phase='ปลูกและตั้งตัว';season='ปลูก';tasks=['ขุดหลุม 50×50×50 ซม.','ใส่ปุ๋ยหมัก 5 กก./หลุม','ปลูกกิ่งตัดชำหรือต้นกล้า','รดน้ำทุกวัน'];}
+    else if(w>=5&&w<=12){phase='เจริญเติบโต';season='ดูแลรักษา';tasks=['ตัดแต่งยอดที่ 1 เมตร เพื่อกระตุ้นกิ่ง','ให้น้ำ 2-3 วัน/ครั้ง','ใส่ปุ๋ยหมักรอบโคน','กำจัดวัชพืช'];}
+    else{
+      const isHarvest = w%4 === 0 || w%4 === 1;
+      if(isHarvest){phase='เก็บใบและฝัก';season='เก็บเกี่ยว';tasks=['เก็บใบอ่อน ยาว 15-20 ซม.','เก็บฝักอ่อน เส้นผ่าศูนย์กลาง < 1 ซม.','ล้างน้ำสะอาด แยกใบเสีย','บรรจุถุงเย็น หรืออบแห้งใบ'];}
+      else{phase='บำรุงต้น';season='ดูแลรักษา';tasks=['ใส่ปุ๋ยหมักรอบโคน','ตัดแต่งกิ่งแห้ง','ให้น้ำช่วงแล้ง','ตรวจหนอนและแมลง'];watch=['มะรุมทนแล้งแต่ต้องการน้ำในช่วงออกดอก'];}
+    }
+    P.moringa.push({week:w,phase,season,tasks,watch,alerts});
+  }
+
+  return P;
+}
+const FARM_PERIODS = buildPeriods();
+
+// ==================== GAP DATA ====================
+const GAP_DATA = {
+  sections: [
+    {
+      id:'soil',title:'🌍 การจัดการดินและน้ำ',items:[
+        'ตรวจวิเคราะห์ดินก่อนปลูกทุกฤดูกาล',
+        'ปรับ pH ดินให้เหมาะสมกับพืช',
+        'ไม่ใช้น้ำที่ปนเปื้อนสารพิษ/โลหะหนัก',
+        'มีระบบระบายน้ำที่ดี ไม่มีน้ำขัง',
+        'บันทึกการใช้น้ำและปุ๋ย',
+      ]
+    },
+    {
+      id:'seed',title:'🌱 พันธุ์และวัสดุปลูก',items:[
+        'ใช้พันธุ์ที่ผ่านการรับรอง หรือคัดจากแหล่งที่เชื่อถือได้',
+        'ไม่ใช้วัสดุปลูกที่มีเชื้อโรค',
+        'บันทึกแหล่งที่มาของพันธุ์',
+        'เก็บรักษาพันธุ์ในสภาพที่เหมาะสม',
+      ]
+    },
+    {
+      id:'chemical',title:'⚗️ การใช้สารเคมีและปุ๋ย',items:[
+        'ใช้เฉพาะสารที่ขึ้นทะเบียนและอนุญาตโดย อย.',
+        'ปฏิบัติตามคำแนะนำบนฉลากอย่างเคร่งครัด',
+        'สวมอุปกรณ์ป้องกันทุกครั้งที่ใช้สาร',
+        'บันทึกชนิด ปริมาณ วันที่ใช้สาร',
+        'รักษาระยะปลอดภัยก่อนเก็บเกี่ยว (PHI)',
+        'เก็บสารเคมีในที่มิดชิด ปลอดภัย',
+      ]
+    },
+    {
+      id:'harvest',title:'🧺 การเก็บเกี่ยวและหลังเก็บเกี่ยว',items:[
+        'ใช้อุปกรณ์ที่สะอาดและไม่เป็นสนิม',
+        'เก็บเกี่ยวในระยะที่เหมาะสม',
+        'ล้างผลผลิตด้วยน้ำสะอาด',
+        'เก็บรักษาในอุณหภูมิที่เหมาะสม',
+        'ป้องกันการปนเปื้อน สัตว์ แมลง',
+        'มีห้องเก็บแยกจากสารเคมี',
+      ]
+    },
+    {
+      id:'organic',title:'🌿 มาตรฐานอินทรีย์',items:[
+        'ไม่ใช้สารเคมีสังเคราะห์ 3 ปีก่อนขอรับรอง',
+        'ใช้เฉพาะปุ๋ยอินทรีย์ที่ผ่านการรับรอง',
+        'มีแนวกั้น Buffer zone กับแปลงเคมี',
+        'บันทึกกิจกรรมทุกอย่างครบถ้วน',
+        'ผ่านการตรวจประเมินจากหน่วยรับรอง',
+        'ใช้วิธีกำจัดศัตรูพืชแบบชีวภาพ',
+      ]
+    },
+  ]
+};
+
+// ==================== PROCESSING DATA ====================
+const DRYING_PARAMS = {
+  turmeric: {temp:'40-45°C', time:'8-12 ชม.', moisture:'<12%', note:'อบที่ 40°C รักษา Curcumin ได้ดีที่สุด'},
+  galangal: {temp:'45-55°C', time:'10-16 ชม.', moisture:'<13%', note:'อบต่ำกว่า 55°C ป้องกัน Essential oil ระเหย'},
+  lemongrass: {temp:'40-50°C', time:'6-10 ชม.', moisture:'<12%', note:'ตากแดด 2-3 วัน หรืออบ 40°C ได้ผลดี'},
+  ginger: {temp:'50-60°C', time:'10-20 ชม.', moisture:'<12%', note:'อบที่ 50°C รักษา Gingerol ได้ดี'},
+  holy_basil: {temp:'35-40°C', time:'4-8 ชม.', moisture:'<11%', note:'อบอุณหภูมิต่ำป้องกัน Eugenol สูญเสีย'},
+  moringa: {temp:'40-45°C', time:'4-8 ชม.', moisture:'<10%', note:'ใบมะรุมอบที่ 40°C คงคุณค่าโภชนาการ'},
+};
+
+// ==================== MARKET DATA ====================
+const MARKET_DATA = [
+  {crop:'turmeric',name:'ขมิ้นชัน',emoji:'🌿',rows:[
+    {product:'ขมิ้นชันสด',price:'15-25',unit:'บ./กก.',trend:'up'},
+    {product:'ขมิ้นชันแห้ง',price:'80-150',unit:'บ./กก.',trend:'stable'},
+    {product:'ขมิ้นผง (ทั่วไป)',price:'200-300',unit:'บ./กก.',trend:'up'},
+    {product:'ขมิ้นผง (organic)',price:'350-500',unit:'บ./กก.',trend:'up'},
+    {product:'สารสกัด Curcumin',price:'1,200-3,000',unit:'บ./กก.',trend:'up'},
+  ]},
+  {crop:'ginger',name:'ขิง',emoji:'🫚',rows:[
+    {product:'ขิงสด (อ่อน)',price:'30-50',unit:'บ./กก.',trend:'stable'},
+    {product:'ขิงสด (แก่)',price:'20-35',unit:'บ./กก.',trend:'stable'},
+    {product:'ขิงแห้ง',price:'100-180',unit:'บ./กก.',trend:'up'},
+    {product:'ผงขิง',price:'250-400',unit:'บ./กก.',trend:'up'},
+  ]},
+  {crop:'lemongrass',name:'ตะไคร้',emoji:'🍃',rows:[
+    {product:'ตะไคร้สด (กำ)',price:'15-30',unit:'บ./กก.',trend:'stable'},
+    {product:'ตะไคร้แห้ง',price:'80-140',unit:'บ./กก.',trend:'stable'},
+    {product:'น้ำมันหอมตะไคร้',price:'800-1,500',unit:'บ./ลิตร',trend:'up'},
+  ]},
+  {crop:'galangal',name:'ข่า',emoji:'🌱',rows:[
+    {product:'ข่าอ่อนสด',price:'25-45',unit:'บ./กก.',trend:'stable'},
+    {product:'ข่าแก่สด',price:'15-25',unit:'บ./กก.',trend:'stable'},
+    {product:'ข่าแห้งบด',price:'120-200',unit:'บ./กก.',trend:'up'},
+  ]},
+  {crop:'holy_basil',name:'กะเพรา',emoji:'🌿',rows:[
+    {product:'กะเพราสด',price:'30-60',unit:'บ./กก.',trend:'up'},
+    {product:'กะเพราแห้งบด',price:'200-350',unit:'บ./กก.',trend:'up'},
+  ]},
+  {crop:'moringa',name:'มะรุม',emoji:'🌳',rows:[
+    {product:'ใบมะรุมสด',price:'50-100',unit:'บ./กก.',trend:'up'},
+    {product:'ใบมะรุมอบแห้ง',price:'200-400',unit:'บ./กก.',trend:'up'},
+    {product:'ผงมะรุม',price:'400-800',unit:'บ./กก.',trend:'up'},
+    {product:'ฝักมะรุมสด',price:'40-80',unit:'บ./กก.',trend:'stable'},
+  ]},
+];
+
+// ==================== APP STATE ====================
+let state = {
+  crop:'turmeric',
+  week: getCurrentWeek(),
+  gapChecked: JSON.parse(localStorage.getItem('gapChecked')||'{}'),
+  records: JSON.parse(localStorage.getItem('records')||'[]'),
+};
+
+function getCurrentWeek(){
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 1);
+  return Math.ceil(((now - start) / 86400000 + start.getDay() + 1) / 7);
+}
+
+// ==================== GRADIENTS ====================
+function getPhaseGradient(crop, season) {
+  const c = CROPS[crop] || {};
+  const color = c.color || '#22c55e';
+  const dark = c.dark || '#14532d';
+  if(season.includes('เตรียมดิน')||season.includes('เตรียม'))
+    return `linear-gradient(135deg,#0a1a0a 0%,#1a3a1a 60%,${color}22 100%)`;
+  if(season.includes('ปลูก')||season.includes('แตกกอ'))
+    return `linear-gradient(135deg,#0d2b18 0%,${color}44 60%,rgba(6,4,15,0.8) 100%)`;
+  if(season.includes('ดูแล')||season.includes('เจริญ')||season.includes('บำรุง'))
+    return `linear-gradient(135deg,#0d2b18 0%,#1e5530 50%,${color}33 100%)`;
+  if(season.includes('สะสม')||season.includes('สูงสุด'))
+    return `linear-gradient(135deg,${dark}cc 0%,${color}55 60%,rgba(6,4,15,0.8) 100%)`;
+  if(season.includes('เก็บ')||season.includes('เกี่ยว'))
+    return `linear-gradient(135deg,#2a1a00 0%,#7a5500 50%,#d4a84333 100%)`;
+  if(season.includes('แปรรูป')||season.includes('อบ'))
+    return `linear-gradient(135deg,#2a1500 0%,#7a3500 50%,${color}22 100%)`;
+  return `linear-gradient(135deg,${dark}aa 0%,${color}44 100%)`;
+}
+
+// ==================== RENDER CROPS ====================
+function renderCropChips() {
+  const el = document.getElementById('cropChips');
+  el.innerHTML = Object.values(CROPS).map(c => `
+    <div class="crop-chip ${state.crop===c.key?'active':''}"
+         style="--crop-color:${c.color};--crop-glass:${c.glass}"
+         onclick="selectCrop('${c.key}')">
+      ${c.emoji} ${c.name}
+    </div>
+  `).join('');
+}
+
+function selectCrop(key) {
+  state.crop = key;
+  renderCropChips();
+  renderHero();
+  renderWeekStrip();
+  renderDetail();
+  renderProcess();
+}
+
+// ==================== RENDER HERO ====================
+function renderHero() {
+  const data = FARM_PERIODS[state.crop];
+  if(!data) return;
+  const entry = data[state.week-1] || data[0];
+  const c = CROPS[state.crop];
+  document.getElementById('heroBg').style.background = getPhaseGradient(state.crop, entry.season);
+  document.getElementById('heroEyebrow').textContent = `${c.name} · ปีเกษตร 2568`;
+  document.getElementById('heroPhase').textContent = `${c.emoji} ${entry.phase}`;
+  document.getElementById('heroWeek').textContent = `สัปดาห์ที่ ${state.week} — ${entry.season}`;
+  document.getElementById('heroBadge').textContent = `GAP Standard · อินทรีย์`;
+  document.getElementById('headerBadge').textContent = `สัปดาห์ ${state.week}`;
+}
+
+// ==================== RENDER WEEK STRIP ====================
+function renderWeekStrip() {
+  const el = document.getElementById('weekStrip');
+  const today = getCurrentWeek();
+  el.innerHTML = Array.from({length:52},(_,i)=>i+1).map(w => {
+    let cls = 'wk-btn';
+    if(w===state.week) cls+=' active';
+    if(w===today) cls+=' today-wk';
+    return `<div class="${cls}" onclick="selectWeek(${w})">W${w}</div>`;
+  }).join('');
+  // scroll to active
+  setTimeout(()=>{
+    const active = el.querySelector('.active');
+    if(active) active.scrollIntoView({inline:'center',behavior:'smooth'});
+  },100);
+}
+
+function selectWeek(w) {
+  state.week = w;
+  renderHero();
+  renderWeekStrip();
+  renderDetail();
+}
+
+// ==================== RENDER DETAIL ====================
+function renderDetail() {
+  const data = FARM_PERIODS[state.crop];
+  if(!data) return;
+  const entry = data[state.week-1] || data[0];
+  const c = CROPS[state.crop];
+
+  document.getElementById('detailBanner').style.background = getPhaseGradient(state.crop, entry.season);
+  document.getElementById('detailPhase').textContent = `${c.emoji} ${entry.phase}`;
+  document.getElementById('detailWeekLabel').textContent = `สัปดาห์ที่ ${state.week}`;
+
+  let html = '';
+
+  // Tasks
+  if(entry.tasks.length) {
+    html += `<div class="card-title"><span class="card-title-icon">✅</span>งานประจำสัปดาห์</div>`;
+    html += `<ul class="task-list">`;
+    entry.tasks.forEach(t => html += `<li class="task-item">${t}</li>`);
+    html += `</ul>`;
+  }
+
+  // Watch
+  if(entry.watch && entry.watch.length) {
+    html += `<div class="card-title" style="margin-top:14px"><span class="card-title-icon">👁️</span>สังเกตและติดตาม</div>`;
+    entry.watch.forEach(w => html += `<div class="watch-item">⚠️ ${w}</div>`);
+  }
+
+  // Alerts
+  if(entry.alerts && entry.alerts.length) {
+    html += `<div class="card-title" style="margin-top:14px"><span class="card-title-icon">🚨</span>แจ้งเตือนสำคัญ</div>`;
+    entry.alerts.forEach(a => html += `<div class="alert-item">🚨 ${a}</div>`);
+  }
+
+  // Quick tip
+  const tips = {
+    turmeric:'💡 ขมิ้นชัน GAP: บันทึกการใช้สารทุกครั้ง ระยะ PHI ≥ 14 วัน',
+    galangal:'💡 ข่า: เหง้าอ่อนอายุ 8-10 เดือน มีราคาดีกว่าเหง้าแก่',
+    lemongrass:'💡 ตะไคร้: เก็บตอนเช้า ความชื้นสูงสุด น้ำหนักดี',
+    ginger:'💡 ขิง: Gingerol สูงในขิงอ่อน สำหรับอาหาร — ขิงแก่ใช้แปรรูป',
+    holy_basil:'💡 กะเพรา: เด็ดดอกออก ยืดอายุต้น เพิ่มรอบเก็บเกี่ยว',
+    moringa:'💡 มะรุม: ใบอ่อน < 3 ซม. มีโปรตีนและ Vitamin C สูงสุด',
+  };
+  html += `<div style="margin-top:14px;padding:12px;background:rgba(212,168,67,0.08);border:1px solid rgba(212,168,67,0.2);border-radius:8px;font-size:12px;color:var(--text2)">${tips[state.crop]||''}</div>`;
+
+  document.getElementById('detailBody').innerHTML = html;
+}
+
+// ==================== RENDER GAP ====================
+function renderGap() {
+  // Progress
+  const progEl = document.getElementById('gapProgress');
+  const cats = ['soil','seed','chemical','harvest','organic'];
+  const labels = {soil:'ดิน/น้ำ',seed:'พันธุ์',chemical:'สาร/ปุ๋ย',harvest:'เก็บเกี่ยว',organic:'อินทรีย์'};
+  progEl.innerHTML = cats.map(cat => {
+    const items = (GAP_DATA.sections.find(s=>s.id===cat)||{items:[]}).items;
+    const checked = items.filter((_,i) => state.gapChecked[`${cat}_${i}`]).length;
+    const pct = items.length ? Math.round(checked/items.length*100) : 0;
+    const col = pct===100?'var(--green)':pct>=50?'var(--gold)':'var(--text3)';
+    return `<div style="text-align:center;min-width:60px">
+      <div style="font-size:18px;font-weight:800;color:${col}">${pct}%</div>
+      <div style="font-size:10px;color:var(--text3)">${labels[cat]}</div>
+    </div>`;
+  }).join('');
+
+  // Sections
+  const el = document.getElementById('gapSections');
+  el.innerHTML = GAP_DATA.sections.map(sec => {
+    const total = sec.items.length;
+    const checked = sec.items.filter((_,i) => state.gapChecked[`${sec.id}_${i}`]).length;
+    const pct = Math.round(checked/total*100);
+    return `<div class="gap-category">
+      <div class="gap-header">
+        ${sec.title}
+        <span class="badge">${checked}/${total}</span>
+      </div>
+      <div class="gap-progress"><div class="gap-progress-bar" style="width:${pct}%"></div></div>
+      <div class="gap-items">
+        ${sec.items.map((item,i) => {
+          const key = `${sec.id}_${i}`;
+          const isChecked = state.gapChecked[key];
+          return `<div class="gap-item ${isChecked?'checked':''}" onclick="toggleGap('${key}')">
+            <div class="gap-check"></div>
+            <div class="gap-text">${item}</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleGap(key) {
+  state.gapChecked[key] = !state.gapChecked[key];
+  localStorage.setItem('gapChecked', JSON.stringify(state.gapChecked));
+  renderGap();
+}
+
+// ==================== RENDER PROCESS ====================
+function renderProcess() {
+  const p = DRYING_PARAMS[state.crop] || DRYING_PARAMS.turmeric;
+  const c = CROPS[state.crop];
+
+  document.getElementById('dryingParams').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div style="background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2);border-radius:10px;padding:12px;text-align:center">
+        <div style="font-size:22px;font-weight:800;color:#fdba74">${p.temp}</div>
+        <div style="font-size:10px;color:var(--text3)">อุณหภูมิอบแห้ง</div>
+      </div>
+      <div style="background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);border-radius:10px;padding:12px;text-align:center">
+        <div style="font-size:22px;font-weight:800;color:#93c5fd">${p.time}</div>
+        <div style="font-size:10px;color:var(--text3)">เวลาอบแห้ง</div>
+      </div>
+      <div style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);border-radius:10px;padding:12px;text-align:center">
+        <div style="font-size:22px;font-weight:800;color:#86efac">${p.moisture}</div>
+        <div style="font-size:10px;color:var(--text3)">ความชื้นเป้าหมาย</div>
+      </div>
+      <div style="background:rgba(212,168,67,0.1);border:1px solid rgba(212,168,67,0.2);border-radius:10px;padding:12px;text-align:center">
+        <div style="font-size:14px;font-weight:700;color:var(--gold)">มาตรฐาน</div>
+        <div style="font-size:10px;color:var(--text3)">GACP/GMP</div>
+      </div>
+    </div>
+    <div style="margin-top:12px;padding:10px 12px;background:rgba(255,255,255,0.03);border-radius:8px;font-size:12px;color:var(--text2)">
+      💡 ${p.note}
+    </div>
+  `;
+
+  const steps = [
+    {num:1,title:'ล้างทำความสะอาด',desc:'ล้างด้วยน้ำสะอาด 2-3 รอบ แช่น้ำเกลือ 0.9% 5 นาที',params:[{k:'น้ำ',v:'สะอาด'},{k:'เกลือ',v:'0.9%'},{k:'เวลา',v:'5 นาที'}]},
+    {num:2,title:'หั่น/บั้น/แยก',desc:'หั่นเป็นชิ้นสม่ำเสมอ ช่วยให้แห้งทั่วถึง',params:[{k:'ความหนา',v:'2-5 มม.'},{k:'สม่ำเสมอ',v:'≥90%'}]},
+    {num:3,title:'อบแห้ง',desc:`อบที่ ${p.temp} นาน ${p.time}`,params:[{k:'อุณหภูมิ',v:p.temp},{k:'เวลา',v:p.time},{k:'ความชื้น',v:p.moisture}]},
+    {num:4,title:'บดและร่อน',desc:'บดด้วยเครื่อง Hammer Mill ร่อนตะแกรง 80-100 mesh',params:[{k:'ขนาดผง',v:'80-100 mesh'},{k:'สี',v:'สม่ำเสมอ'}]},
+    {num:5,title:'บรรจุภัณฑ์',desc:'บรรจุในบรรจุภัณฑ์ที่ปิดสนิท ป้องกันความชื้น พร้อม label',params:[{k:'ชนิด',v:'Aluminium foil'},{k:'Label',v:'GAP/Organic'}]},
+  ];
+  document.getElementById('processSteps').innerHTML = steps.map(s=>`
+    <div class="process-step">
+      <div class="step-num">${s.num}</div>
+      <div class="step-content">
+        <div class="step-title">${s.title}</div>
+        <div class="step-desc">${s.desc}</div>
+        <div class="step-params">
+          ${s.params.map(p=>`<div class="step-param"><strong>${p.k}:</strong> ${p.v}</div>`).join('')}
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  const qcs = [
+    '✅ ตรวจสีและกลิ่น — ต้องไม่มีกลิ่นเหม็นอับ',
+    '✅ วัดความชื้น — เครื่อง Moisture Meter <14%',
+    '✅ ตรวจสิ่งแปลกปลอม — เศษดิน หิน แมลง',
+    '✅ ตรวจสาร Aflatoxin — ทุก Lot ที่ส่งออก',
+    '✅ ตรวจโลหะหนัก — Cd, Pb, Hg ตามมาตรฐาน อย.',
+    '✅ บันทึก Lot Number และวันผลิต',
+    '✅ เก็บตัวอย่างอ้างอิง (Reference Sample) ทุก Lot',
+  ];
+  document.getElementById('qcChecks').innerHTML = qcs.map(q=>`
+    <div style="padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;color:var(--text2)">${q}</div>
+  `).join('');
+}
+
+// ==================== RENDER IOT ====================
+function generateSensorData() {
+  return {
+    dryTemp: (42 + (Math.random()-0.5)*6).toFixed(1),
+    dryRH: (35 + (Math.random()-0.5)*10).toFixed(1),
+    dryTime: (8 + (Math.random()-0.5)*4).toFixed(1),
+    soilMoisture: (55 + (Math.random()-0.5)*20).toFixed(1),
+    curcumin: (3.2 + (Math.random()-0.5)*1.2).toFixed(2),
+  };
+}
+
+function renderSensors(data) {
+  const sensors = [
+    {icon:'🌡️',value:data.dryTemp,unit:'°C',label:'อุณหภูมิห้องอบ',min:35,max:60,ok:[38,50],fill:`linear-gradient(90deg,#f97316,#ef4444)`},
+    {icon:'💧',value:data.dryRH,unit:'RH%',label:'ความชื้นสัมพัทธ์',min:20,max:80,ok:[25,45],fill:`linear-gradient(90deg,#3b82f6,#60a5fa)`},
+    {icon:'⏱️',value:data.dryTime,unit:'ชม.',label:'เวลาอบแห้ง',min:0,max:20,ok:[6,16],fill:`linear-gradient(90deg,var(--jade),var(--green))`},
+    {icon:'🌱',value:data.soilMoisture,unit:'%WHC',label:'ความชื้นดิน',min:0,max:100,ok:[45,70],fill:`linear-gradient(90deg,#10b981,#22c55e)`},
+    {icon:'📊',value:data.curcumin+'%',unit:'',label:'Curcumin/EO',min:0,max:6,ok:[2,5],fill:`linear-gradient(90deg,var(--gold),var(--gold2))`},
+    {icon:'🌡️',value:(30+(Math.random()-0.5)*5).toFixed(1),unit:'°C',label:'อุณหภูมิแปลง',min:20,max:45,ok:[25,38],fill:`linear-gradient(90deg,#84cc16,#22c55e)`},
+  ];
+  const el = document.getElementById('sensorGrid');
+  el.innerHTML = sensors.map(s => {
+    const val = parseFloat(s.value);
+    const pct = Math.min(100,Math.max(0,(val-s.min)/(s.max-s.min)*100));
+    const isOk = val>=s.ok[0] && val<=s.ok[1];
+    const isWarn = !isOk && Math.abs(val-s.ok[0])<5;
+    const statusCls = isOk?'status-ok':isWarn?'status-warn':'status-alert';
+    const statusTxt = isOk?'ปกติ':isWarn?'ระวัง':'ผิดปกติ';
+    return `<div class="sensor-card">
+      <div class="sensor-icon">${s.icon}</div>
+      <div class="sensor-value">${s.value}</div>
+      <div class="sensor-unit">${s.unit}</div>
+      <div class="sensor-label">${s.label}</div>
+      <div class="sensor-bar"><div class="sensor-fill" style="width:${pct}%;background:${s.fill}"></div></div>
+      <div class="sensor-status ${statusCls}">${statusTxt}</div>
+    </div>`;
+  }).join('');
+}
+
+function refreshSensors() {
+  renderSensors(generateSensorData());
+}
+
+function renderRecordLog() {
+  const el = document.getElementById('recordLog');
+  const recent = state.records.slice(-5).reverse();
+  el.innerHTML = recent.map(r=>`
+    <div class="log-entry">
+      <div class="log-meta"><span>${r.type}</span><span>${r.date}</span></div>
+      <div class="log-text">${r.text}</div>
+    </div>
+  `).join('') || `<div style="font-size:12px;color:var(--text3);padding:8px">ยังไม่มีบันทึก</div>`;
+}
+
+function saveRecord() {
+  const type = document.getElementById('recordType').value;
+  const text = document.getElementById('recordText').value.trim();
+  if(!text) return;
+  const now = new Date();
+  state.records.push({type,text,date:`${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()+543}`});
+  localStorage.setItem('records', JSON.stringify(state.records));
+  document.getElementById('recordText').value = '';
+  renderRecordLog();
+}
+
+// ==================== RENDER MARKET ====================
+function renderMarket() {
+  const el = document.getElementById('marketSection');
+  el.innerHTML = MARKET_DATA.map(m=>`
+    <div class="market-crop">
+      <div class="market-crop-header">
+        <div style="font-size:20px">${m.emoji}</div>
+        <div class="market-crop-name">${m.name}</div>
+        <div class="pill pill-green">2568</div>
+      </div>
+      <div class="market-rows">
+        ${m.rows.map(r=>`
+          <div class="market-row">
+            <div class="market-product">${r.product}</div>
+            <div>
+              <span class="market-price">${r.price}</span>
+              <span class="market-unit"> ${r.unit}</span>
+              <span class="price-trend ${r.trend==='up'?'trend-up':r.trend==='down'?'trend-down':'trend-stable'}">
+                ${r.trend==='up'?'↑':r.trend==='down'?'↓':'→'}
+              </span>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+// ==================== TOOLS ====================
+function calcPlanting() {
+  const rai = parseFloat(document.getElementById('plotRai').value);
+  const spacing = parseFloat(document.getElementById('plotSpacing').value);
+  if(!rai||!spacing) return;
+  const sqm = rai * 1600;
+  const plants = Math.floor(sqm / ((spacing/100) * (spacing/100)));
+  const rhizomes = Math.round(plants * 1.1);
+  const el = document.getElementById('plantingResult');
+  el.style.display = 'block';
+  el.innerHTML = `📐 พื้นที่ ${sqm.toLocaleString()} ตร.ม. → <strong>${plants.toLocaleString()} ต้น/หน่อ</strong><br>
+🌱 เผื่อสำรอง 10%: <strong>${rhizomes.toLocaleString()} หน่อพันธุ์</strong><br>
+⚖️ เหง้าพันธุ์โดยประมาณ: <strong>${Math.round(rhizomes*0.03).toLocaleString()} กก.</strong>`;
+}
+
+function calcFert() {
+  const rai = parseFloat(document.getElementById('fertRai').value);
+  const stage = document.getElementById('fertStage').value;
+  if(!rai) return;
+  const rates = {prep:{compost:2000,bio:50,lime:100},grow:{compost:500,bio:30,npk:20},max:{compost:300,bio:20,k:15}};
+  const r = rates[stage];
+  const el = document.getElementById('fertResult');
+  el.style.display = 'block';
+  if(stage==='prep'){
+    el.innerHTML = `🌿 ปุ๋ยหมัก/คอก: <strong>${(r.compost*rai).toLocaleString()} กก.</strong><br>
+🦠 ปุ๋ยชีวภาพ: <strong>${(r.bio*rai).toLocaleString()} กก.</strong><br>
+🪨 ปูนขาว (ปรับ pH): <strong>${(r.lime*rai).toLocaleString()} กก.</strong>`;
+  } else if(stage==='grow'){
+    el.innerHTML = `🌿 ปุ๋ยหมัก: <strong>${(r.compost*rai).toLocaleString()} กก.</strong><br>
+🦠 ปุ๋ยชีวภาพ: <strong>${(r.bio*rai).toLocaleString()} กก.</strong><br>
+💊 ปุ๋ยเคมี 15-15-15 (ถ้าไม่ทำ organic): <strong>${(r.npk*rai).toLocaleString()} กก.</strong>`;
+  } else {
+    el.innerHTML = `🌿 ปุ๋ยหมัก: <strong>${(r.compost*rai).toLocaleString()} กก.</strong><br>
+🦠 ปุ๋ยชีวภาพ: <strong>${(r.bio*rai).toLocaleString()} กก.</strong><br>
+🔑 ปุ๋ย K (0-0-60): <strong>${(r.k*rai).toLocaleString()} กก.</strong>`;
+  }
+}
+
+function calcIncome() {
+  const kg = parseFloat(document.getElementById('yieldKg').value);
+  const type = document.getElementById('sellType').value;
+  if(!kg) return;
+  const prices = {fresh:{low:15,high:25,ratio:1},dry:{low:80,high:150,ratio:0.2},powder:{low:200,high:400,ratio:0.18}};
+  const p = prices[type];
+  const finalKg = kg * p.ratio;
+  const lo = Math.round(finalKg * p.low);
+  const hi = Math.round(finalKg * p.high);
+  const el = document.getElementById('incomeResult');
+  el.style.display = 'block';
+  el.innerHTML = `⚖️ ผลผลิตหลังแปรรูป: <strong>${finalKg.toLocaleString()} กก.</strong><br>
+💰 รายได้โดยประมาณ: <strong>${lo.toLocaleString()} - ${hi.toLocaleString()} บาท</strong><br>
+📈 ราคาเฉลี่ย: <strong>${Math.round((p.low+p.high)/2)} บ./กก.</strong>`;
+}
+
+// ==================== TABS ====================
+function initTabs() {
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', ()=> switchTab(btn.dataset.tab));
+  });
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', ()=> switchTab(item.dataset.nav));
+  });
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab===tab));
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.toggle('active', b.dataset.nav===tab));
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const target = document.getElementById('screen-'+tab);
+  if(target) target.classList.add('active');
+
+  // lazy render
+  if(tab==='gap') renderGap();
+  if(tab==='process') renderProcess();
+  if(tab==='market') renderMarket();
+  if(tab==='iot'){renderSensors(generateSensorData());renderRecordLog();}
+}
+
+// ==================== INIT ====================
+function init() {
+  renderCropChips();
+  renderHero();
+  renderWeekStrip();
+  renderDetail();
+  initTabs();
+
+  // dismiss splash
+  setTimeout(() => {
+    document.getElementById('splash').classList.add('fade-out');
+    setTimeout(()=>{document.getElementById('splash').style.display='none'},600);
+  }, 2200);
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

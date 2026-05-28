@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>G2G Farm AI · ชาวนา</title>
+<link rel="manifest" href="data:application/json,{}">
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@400;600;700&family=Sarabun:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg0:#06040f;--bg1:#0e0a22;--bg2:#160f30;--bg3:#1e1540;
+  --glass:rgba(255,255,255,0.05);--glass2:rgba(255,255,255,0.09);
+  --border:rgba(255,255,255,0.10);--border2:rgba(255,255,255,0.18);
+  --gold:#d4a843;--gold-s:#f0c960;--gold-d:#8a6820;--gold-pale:rgba(212,168,67,0.15);
+  --text:#f0eaf8;--text2:rgba(220,200,255,0.65);--text3:rgba(180,160,240,0.4);
+  --cr-color:#eab308;--cr-soft:#fde047;--cr-dark:#713f12;--cr-glass:rgba(234,179,8,0.15);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg0);color:var(--text);font-family:'Sarabun',sans-serif;min-height:100vh;max-width:480px;margin:0 auto;overflow-x:hidden}
+#splash{position:fixed;inset:0;background:linear-gradient(160deg,var(--bg0) 0%,var(--bg2) 50%,#1a1000 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;transition:opacity .5s}
+.splash-icon{font-size:72px;margin-bottom:16px;filter:drop-shadow(0 0 24px #eab30899)}
+.splash-brand{font-family:'Bai Jamjuree',sans-serif;font-size:28px;font-weight:700;background:linear-gradient(90deg,var(--gold),var(--gold-s),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px}
+.splash-sub{color:var(--text2);font-size:15px;margin-top:8px}
+.splash-loader{width:120px;height:3px;background:var(--glass2);border-radius:4px;margin-top:32px;overflow:hidden}
+.splash-loader::after{content:'';display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-s));border-radius:4px;animation:load 1.4s ease forwards}
+@keyframes load{from{width:0}to{width:100%}}
+#app{display:none;flex-direction:column;min-height:100vh}
+.top-bar{background:linear-gradient(180deg,var(--bg1) 0%,transparent 100%);padding:16px 16px 8px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.top-logo{font-family:'Bai Jamjuree',sans-serif;font-size:16px;font-weight:700;color:var(--gold)}
+.top-week{font-size:12px;color:var(--text2);text-align:right}
+.crop-tabs{display:flex;gap:8px;padding:0 16px 8px;overflow-x:auto;scrollbar-width:none}
+.crop-tabs::-webkit-scrollbar{display:none}
+.ctab{flex-shrink:0;padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--glass);font-size:13px;color:var(--text2);cursor:pointer;transition:all .2s;font-family:'Sarabun',sans-serif}
+.ctab.active{border-color:var(--cr-color);background:var(--cr-glass);color:var(--cr-soft);font-weight:600}
+.phase-banner{margin:0 16px 12px;border-radius:16px;padding:16px;border:1px solid var(--border2);transition:background .4s}
+.phase-season{font-size:22px;margin-bottom:4px}
+.phase-stage{font-size:13px;color:var(--text2)}
+.phase-period{font-size:12px;color:var(--text3);margin-top:2px}
+.nav-tabs{display:flex;padding:0 16px;gap:6px;margin-bottom:4px}
+.ntab{flex:1;padding:8px 4px;border-radius:12px;border:1px solid var(--border);background:var(--glass);font-size:12px;color:var(--text2);cursor:pointer;text-align:center;transition:all .2s;font-family:'Sarabun',sans-serif}
+.ntab.active{border-color:var(--border2);background:var(--glass2);color:var(--text)}
+.tab-content{display:none;padding:0 16px 80px;flex:1}
+.tab-content.active{display:block}
+.week-card{background:var(--glass);border:1px solid var(--border);border-radius:14px;margin-bottom:8px;overflow:hidden;transition:all .2s}
+.week-card.current{border-color:rgba(212,168,67,0.4)}
+.wc-header{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+.wc-num{font-size:11px;color:var(--text3)}
+.wc-season{font-size:14px;font-weight:600}
+.wc-badge{font-size:10px;padding:2px 8px;border-radius:10px;background:var(--gold-pale);color:var(--gold)}
+.wc-arrow{color:var(--text3);font-size:14px;transition:transform .2s}
+.wc-body{display:none;padding:0 14px 12px;border-top:1px solid var(--border)}
+.task-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.task-item:last-child{border-bottom:none}
+.task-check{width:20px;height:20px;border-radius:6px;border:1px solid var(--border2);background:var(--glass);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .2s;margin-top:1px}
+.task-check.done{background:var(--cr-glass);border-color:var(--cr-color);color:var(--cr-soft)}
+.task-text{flex:1}
+.task-title{font-size:13px;color:var(--text)}
+.task-title.done{text-decoration:line-through;color:var(--text3)}
+.task-desc{font-size:11px;color:var(--text3);margin-top:2px}
+.section-title{font-family:'Bai Jamjuree',sans-serif;font-size:14px;font-weight:600;color:var(--text2);margin:16px 0 10px;letter-spacing:.5px}
+.tool-card{background:var(--glass);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px}
+.tool-title{font-size:14px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.input-row{display:flex;gap:8px;margin-bottom:10px;align-items:center}
+.input-label{font-size:12px;color:var(--text2);min-width:64px}
+.num-input{flex:1;background:var(--glass2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--text);font-size:14px;font-family:'Sarabun',sans-serif;outline:none}
+.num-input:focus{border-color:var(--border2)}
+.calc-btn{width:100%;padding:10px;border-radius:10px;border:1px solid var(--cr-color);background:var(--cr-glass);color:var(--cr-soft);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;font-weight:600}
+.result-box{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;margin-top:10px;font-size:13px;line-height:1.8;color:var(--text2);display:none}
+.market-card{background:var(--glass);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.mc-name{font-size:14px;font-weight:600}
+.mc-type{font-size:11px;color:var(--text3);margin-top:2px}
+.mc-price{text-align:right}
+.mc-val{font-size:16px;font-weight:700;color:var(--cr-soft)}
+.mc-unit{font-size:10px;color:var(--text3)}
+.mc-trend{font-size:11px;margin-top:2px}
+.trend-up{color:#22c55e}.trend-dn{color:#ef4444}
+.iot-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.iot-card{background:var(--glass);border:1px solid var(--border);border-radius:14px;padding:14px;text-align:center}
+.iot-icon{font-size:28px;margin-bottom:6px}
+.iot-val{font-size:22px;font-weight:700;font-family:'Bai Jamjuree',sans-serif}
+.iot-lbl{font-size:11px;color:var(--text2);margin-top:2px}
+.iot-sub{font-size:10px;color:var(--text3)}
+.alert-card{background:rgba(234,179,8,0.1);border:1px solid rgba(234,179,8,0.3);border-radius:12px;padding:12px 14px;margin-bottom:10px;font-size:13px;display:flex;gap:10px;align-items:flex-start}
+.alert-icon{font-size:18px;flex-shrink:0}
+.iot-update{font-size:11px;color:var(--text3);text-align:center;margin-top:8px}
+</style>
+</head>
+<body>
+<div id="splash">
+  <div class="splash-icon">🌾</div>
+  <div class="splash-brand">G2G FARM AI</div>
+  <div class="splash-sub">ระบบจัดการนาข้าวอัจฉริยะ</div>
+  <div class="splash-loader"></div>
+</div>
+<div id="app">
+  <div class="top-bar">
+    <div class="top-logo">🌾 G2G Farm AI</div>
+    <div class="top-week" id="topWeek"></div>
+  </div>
+  <div class="crop-tabs" id="cropTabs"></div>
+  <div class="phase-banner" id="phaseBanner">
+    <div class="phase-season" id="phaseSeason"></div>
+    <div class="phase-stage" id="phaseStage"></div>
+    <div class="phase-period" id="phasePeriod"></div>
+  </div>
+  <div class="nav-tabs">
+    <button class="ntab active" onclick="switchTab('week',this)">📅 สัปดาห์</button>
+    <button class="ntab" onclick="switchTab('tools',this)">🧪 เครื่องมือ</button>
+    <button class="ntab" onclick="switchTab('market',this)">📊 ตลาด</button>
+    <button class="ntab" onclick="switchTab('iot',this)">📡 IoT</button>
+  </div>
+  <div id="tab-week" class="tab-content active"></div>
+  <div id="tab-tools" class="tab-content"></div>
+  <div id="tab-market" class="tab-content"></div>
+  <div id="tab-iot" class="tab-content"></div>
+</div>
+<script>
+const CROPS={
+  jasmine:{key:'jasmine',name:'ข้าวหอมมะลิ',emoji:'🌾',color:'#eab308',soft:'#fde047',dark:'#713f12',glass:'rgba(234,179,8,0.15)'},
+  sticky:{key:'sticky',name:'ข้าวเหนียว',emoji:'🍚',color:'#f97316',soft:'#fdba74',dark:'#9a3412',glass:'rgba(249,115,22,0.15)'},
+  pathumthani:{key:'pathumthani',name:'ปทุมธานี1',emoji:'🌿',color:'#22c55e',soft:'#86efac',dark:'#14532d',glass:'rgba(34,197,94,0.15)'},
+};
+
+const FARM_PERIODS={
+  jasmine:[
+    {w:[1,3],season:'🌱 เตรียมแปลง',stage:'ไถดะ ไถแปร คันนา ทำเทือก',period:'🗓 นาปี — เตรียมแปลง',tasks:[{t:'ไถดะและไถแปรดิน',d:'ไถลึก 15-20 ซม.'},{t:'ซ่อมคันนา',d:'ปิดรอยรั่ว กำจัดวัชพืชคันนา'},{t:'ปรับระดับพื้นนา',d:'ให้น้ำขังได้สม่ำเสมอ'},{t:'ใส่ปูนขาว',d:'อัตรา 100 กก./ไร่ ถ้า pH < 5.5'}]},
+    {w:[4,6],season:'🌿 หว่านกล้า',stage:'คัดเมล็ดพันธุ์ หว่านน้ำตม',period:'🗓 นาปี — หว่านกล้า',tasks:[{t:'คัดเมล็ดพันธุ์หอมมะลิ 105',d:'แช่น้ำ 24 ชม. บ่ม 48 ชม.'},{t:'หว่านน้ำตม',d:'อัตรา 50 กก./ไร่'},{t:'ควบคุมน้ำในแปลง',d:'ให้น้ำตื้น 2-3 ซม. หลังหว่าน'},{t:'ป้องกันนกและหนู',d:'ติดตาข่าย หรือไล่นก'}]},
+    {w:[7,12],season:'🌿 แตกกอ',stage:'ใส่ปุ๋ย ป้องกันวัชพืช',period:'🗓 นาปี — ระยะแตกกอ',tasks:[{t:'ใส่ปุ๋ย 46-0-0',d:'อัตรา 5 กก./ไร่ สัปดาห์ที่ 7'},{t:'กำจัดวัชพืช',d:'ใช้สารเคมีหรือดายมือ'},{t:'รักษาระดับน้ำ',d:'3-5 ซม. ไม่ให้ขาดน้ำ'},{t:'สำรวจแมลง',d:'ตรวจโรคไหม้และหนอนกออ้อย'}]},
+    {w:[13,16],season:'🌿 เจริญเติบโต',stage:'ใส่ปุ๋ยครั้งที่ 2 ป้องกันโรค',period:'🗓 นาปี — เจริญเติบโต',tasks:[{t:'ใส่ปุ๋ย 16-20-0',d:'อัตรา 10 กก./ไร่'},{t:'ป้องกันโรคไหม้',d:'ฉีดสารอะมิสตาร์ทอปถ้าพบ'},{t:'ตรวจระดับน้ำ',d:'รักษา 5-7 ซม.'},{t:'บันทึกการเจริญเติบโต',d:'วัดความสูง นับจำนวนกอ'}]},
+    {w:[17,20],season:'🌸 ตั้งท้อง',stage:'รักษาระดับน้ำ ป้องกันเพลี้ย',period:'🗓 นาปี — ตั้งท้อง',tasks:[{t:'รักษาระดับน้ำ 5-10 ซม.',d:'ห้ามขาดน้ำในระยะนี้'},{t:'ป้องกันเพลี้ยกระโดดสีน้ำตาล',d:'ตรวจแปลงทุกสัปดาห์'},{t:'ใส่ปุ๋ยโพแทสเซียม',d:'ช่วยให้ข้าวแข็งแรง'},{t:'หยุดสารกำจัดวัชพืช',d:'ห้ามใช้หลังตั้งท้อง'}]},
+    {w:[21,24],season:'🌸 ออกรวง',stage:'ห้ามขาดน้ำ ป้องกันโรคใบจุด',period:'🗓 นาปี — ออกรวง',tasks:[{t:'ห้ามขาดน้ำเด็ดขาด',d:'รักษา 5-10 ซม. ตลอด'},{t:'ป้องกันโรคใบจุดสีน้ำตาล',d:'ฉีดยาถ้าพบอาการ'},{t:'ป้องกันแมลงบั่ว',d:'ตรวจยอดข้าวทุกวัน'},{t:'บันทึกวันออกรวง',d:'สำหรับคำนวณวันเก็บเกี่ยว'}]},
+    {w:[25,28],season:'🍃 พัฒนาเมล็ด',stage:'ใส่ปุ๋ย 0-0-60 ลดน้ำ',period:'🗓 นาปี — พัฒนาเมล็ด',tasks:[{t:'ใส่ปุ๋ย 0-0-60',d:'อัตรา 2 กก./ไร่'},{t:'ลดระดับน้ำทีละน้อย',d:'เริ่มลดจาก 5 เหลือ 2 ซม.'},{t:'สำรวจโรคเมล็ดด่าง',d:'เก็บตัวอย่างส่งตรวจ'},{t:'เตรียมแผนเก็บเกี่ยว',d:'นัดรถเกี่ยวล่วงหน้า'}]},
+    {w:[29,32],season:'🧺 เก็บเกี่ยว',stage:'รถเกี่ยว ตากข้าว บรรจุถุง',period:'🗓 นาปี — เก็บเกี่ยว',tasks:[{t:'ระบายน้ำออก',d:'ก่อนเกี่ยว 7-10 วัน'},{t:'เกี่ยวข้าวด้วยรถเกี่ยว',d:'ความชื้นเมล็ด 25-28%'},{t:'ตากข้าว 3-5 วัน',d:'ให้ความชื้นเหลือ 15%'},{t:'บรรจุถุง ชั่งน้ำหนัก',d:'บันทึกผลผลิต กก./ไร่'}]},
+    {w:[33,40],season:'🌱 พักแปลง',stage:'ไถกลบฟาง ปุ๋ยพืชสด',period:'🗓 พักแปลง — เตรียมนาปรัง',tasks:[{t:'ไถกลบฟางข้าว',d:'เพิ่มอินทรียวัตถุในดิน'},{t:'ปลูกพืชปุ๋ยสด',d:'โสนแอฟริกัน ปอเทือง'},{t:'ตรวจสอบและซ่อมคันนา',d:'เตรียมพร้อมฤดูหน้า'},{t:'วิเคราะห์ต้นทุน-กำไร',d:'บันทึกรายรับรายจ่าย'}]},
+    {w:[41,44],season:'🌱 เตรียมนาปรัง',stage:'ไถ ทำเทือก สูบน้ำ',period:'🗓 นาปรัง — เตรียมแปลง',tasks:[{t:'สูบน้ำเข้าแปลง',d:'ให้น้ำขังพอดี'},{t:'ไถดะ ไถแปร',d:'เตรียมดินสำหรับนาปรัง'},{t:'ทำเทือกและปรับระดับ',d:'ให้สม่ำเสมอ'},{t:'จัดหาเมล็ดพันธุ์',d:'หอมมะลิ 105 รุ่นใหม่'}]},
+    {w:[45,48],season:'🌿 นาปรัง',stage:'หว่านกล้า ดูแลรักษา',period:'🗓 นาปรัง — ปลูกและดูแล',tasks:[{t:'หว่านและดูแลกล้า',d:'เหมือนนาปีแต่เร่งกว่า'},{t:'ใส่ปุ๋ยตามแผน',d:'46-0-0 ตอนแตกกอ'},{t:'ควบคุมน้ำอย่างเข้มงวด',d:'ใช้น้ำชลประทานอย่างมีประสิทธิภาพ'},{t:'ตรวจโรคและแมลง',d:'นาปรังมีความเสี่ยงสูงกว่า'}]},
+    {w:[49,52],season:'🧺 เก็บเกี่ยวนาปรัง',stage:'รถเกี่ยว บันทึกผลผลิต',period:'🗓 นาปรัง — เก็บเกี่ยว',tasks:[{t:'ระบายน้ำและเตรียมเกี่ยว',d:'นัดรถเกี่ยว'},{t:'เก็บเกี่ยวผลผลิต',d:'บันทึกน้ำหนักต่อไร่'},{t:'ตากและเก็บข้าว',d:'ความชื้นไม่เกิน 15%'},{t:'สรุปผลการทำนาทั้งปี',d:'วางแผนปีหน้า'}]},
+  ],
+  sticky:[
+    {w:[1,4],season:'🌱 เตรียมแปลง',stage:'ไถดะ ทำเทือก ปรับระดับ',period:'🗓 นาปี — เตรียมแปลง กข.6',tasks:[{t:'ไถดะและทำเทือก',d:'ข้าวเหนียวต้องการดินร่วนซุย'},{t:'ปรับค่า pH ดิน',d:'ให้อยู่ที่ 5.5-6.5'},{t:'ซ่อมคันนาให้แน่น',d:'ข้าวเหนียวต้องการน้ำสม่ำเสมอ'},{t:'เตรียมเมล็ดพันธุ์ กข.6',d:'แช่น้ำ 24 ชม.'}]},
+    {w:[5,8],season:'🌿 หว่านกล้า',stage:'หว่านน้ำตม 60 กก./ไร่',period:'🗓 นาปี — หว่านกล้า',tasks:[{t:'หว่านน้ำตม',d:'อัตรา 60 กก./ไร่'},{t:'ควบคุมน้ำ 2-3 ซม.',d:'หลังหว่าน 3 วัน'},{t:'ป้องกันนก',d:'ใช้ไล่นก หรือตาข่าย'},{t:'ตรวจการงอก',d:'งอก 80% ถือว่าดี'}]},
+    {w:[9,14],season:'🌿 แตกกอ',stage:'ใส่ปุ๋ย ควบคุมวัชพืช',period:'🗓 นาปี — แตกกอ',tasks:[{t:'ใส่ปุ๋ย 46-0-0',d:'5 กก./ไร่ อายุ 15 วัน'},{t:'กำจัดวัชพืช',d:'สำรวจและกำจัดในสัปดาห์ที่ 10'},{t:'รักษาระดับน้ำ 5 ซม.',d:'ไม่ให้แห้งหรือท่วม'},{t:'ตรวจหนอนกอ',d:'ป้องกันก่อนระบาด'}]},
+    {w:[15,20],season:'🌸 ตั้งท้อง-ออกรวง',stage:'ห้ามขาดน้ำ ป้องกันเพลี้ย',period:'🗓 นาปี — ตั้งท้องถึงออกรวง',tasks:[{t:'รักษาน้ำ 5-10 ซม.',d:'ระยะวิกฤตที่สุด'},{t:'ใส่ปุ๋ย 16-20-0',d:'8 กก./ไร่ ก่อนตั้งท้อง'},{t:'ป้องกันเพลี้ยกระโดด',d:'ตรวจสัปดาห์ละ 2 ครั้ง'},{t:'บันทึกการออกรวง',d:'คำนวณวันเก็บเกี่ยว'}]},
+    {w:[21,26],season:'🍃 พัฒนาเมล็ด',stage:'ลดน้ำ เตรียมเก็บเกี่ยว',period:'🗓 นาปี — พัฒนาเมล็ด',tasks:[{t:'ลดน้ำทีละน้อย',d:'จาก 5 ซม. เหลือ 0 ใน 2 สัปดาห์'},{t:'ใส่ปุ๋ย 0-0-60',d:'2 กก./ไร่ เพิ่มคุณภาพ'},{t:'เตรียมรถเกี่ยว',d:'นัดล่วงหน้า 2 สัปดาห์'},{t:'สำรวจโรคเมล็ดด่าง',d:'ฉีดยาป้องกันถ้าพบ'}]},
+    {w:[27,32],season:'🧺 เก็บเกี่ยว',stage:'รถเกี่ยว บรรจุ จำหน่าย',period:'🗓 นาปี — เก็บเกี่ยว',tasks:[{t:'ระบายน้ำ 7-10 วันก่อนเกี่ยว',d:''},{t:'เกี่ยวและนวดข้าว',d:'ความชื้น 25%'},{t:'ตากข้าว 3 วัน',d:'ลดความชื้นเหลือ 15%'},{t:'ชั่งน้ำหนักบันทึกผล',d:'เปรียบเทียบกับปีก่อน'}]},
+    {w:[33,40],season:'🌱 พักและเตรียมนาปรัง',stage:'ไถกลบ ปุ๋ยพืชสด',period:'🗓 พักแปลง',tasks:[{t:'ไถกลบตอซัง',d:'ฝังลึก 15-20 ซม.'},{t:'ปลูกพืชปุ๋ยสด',d:'โสนแอฟริกัน'},{t:'ตรวจซ่อมคันนา',d:''},{t:'วางแผนนาปรัง',d:'จัดซื้อปุ๋ยและเมล็ดพันธุ์'}]},
+    {w:[41,46],season:'🌿 นาปรัง กข.6',stage:'หว่าน ดูแล ใส่ปุ๋ย',period:'🗓 นาปรัง — ปลูกดูแล',tasks:[{t:'เตรียมแปลง สูบน้ำ',d:''},{t:'หว่านเมล็ดพันธุ์',d:'50 กก./ไร่'},{t:'ใส่ปุ๋ยตามแผน',d:'สัปดาห์ที่ 3 และ 6'},{t:'ป้องกันโรคและแมลง',d:'ตรวจแปลงทุกสัปดาห์'}]},
+    {w:[47,52],season:'🧺 เก็บเกี่ยวนาปรัง',stage:'รถเกี่ยว สรุปผล',period:'🗓 นาปรัง — เก็บเกี่ยวและสรุป',tasks:[{t:'เกี่ยวข้าวเหนียวนาปรัง',d:''},{t:'ตากและบรรจุ',d:'ความชื้น < 15%'},{t:'บันทึกผลผลิตทั้งปี',d:''},{t:'สรุปต้นทุนและกำไร',d:'วางแผนปีหน้า'}]},
+  ],
+  pathumthani:[
+    {w:[1,3],season:'🌱 เตรียมแปลง',stage:'ไถดะ ปรับระดับ คันนา',period:'🗓 นาปี — ปทุมธานี1',tasks:[{t:'ไถดะลึก 20-25 ซม.',d:'ปทุมธานีต้องการดินที่อุดม'},{t:'ทำเทือกและปรับระดับ',d:'สำคัญมากสำหรับพันธุ์ high-yield'},{t:'ใส่ปูนขาวถ้าจำเป็น',d:'ตรวจค่า pH ก่อน'},{t:'ซ่อมระบบน้ำ',d:'ปทุมธานี1 ต้องการน้ำมาก'}]},
+    {w:[4,7],season:'🌿 หว่านกล้า',stage:'หว่านน้ำตม 45 กก./ไร่',period:'🗓 นาปี — หว่านกล้า',tasks:[{t:'หว่านน้ำตม',d:'อัตรา 45 กก./ไร่ น้อยกว่าพันธุ์อื่น'},{t:'ควบคุมน้ำ 2-3 ซม.',d:''},{t:'ตรวจการงอก',d:'งอก 85% ถือว่าดีมาก'},{t:'วางแผนใส่ปุ๋ยครั้งแรก',d:'จะใส่อายุ 20 วัน'}]},
+    {w:[8,13],season:'🌿 แตกกอ',stage:'ใส่ปุ๋ย ควบคุมวัชพืชเข้มงวด',period:'🗓 นาปี — แตกกอ',tasks:[{t:'ใส่ปุ๋ย 46-0-0',d:'8 กก./ไร่ ปทุมธานีต้องการมากกว่า'},{t:'กำจัดวัชพืชทันที',d:'สัปดาห์ที่ 8-9'},{t:'รักษาน้ำ 5 ซม.',d:''},{t:'ตรวจโรคไหม้คอรวง',d:'เสี่ยงสูงกว่าพันธุ์อื่น'}]},
+    {w:[14,18],season:'🌿 เจริญเติบโต',stage:'ใส่ปุ๋ยครั้ง 2 ป้องกันโรค',period:'🗓 นาปี — เจริญเติบโต',tasks:[{t:'ใส่ปุ๋ย 16-20-0',d:'12 กก./ไร่'},{t:'ป้องกันโรคไหม้',d:'ฉีดยาป้องกันในสัปดาห์ที่ 15'},{t:'วัดความสูงต้นข้าว',d:'ควรสูง 60-70 ซม. ที่อายุ 45 วัน'},{t:'ตรวจแปลง',d:'นับ tillers ต่อกอ'}]},
+    {w:[19,23],season:'🌸 ตั้งท้อง-ออกรวง',stage:'รักษาน้ำเข้มงวด ป้องกันเพลี้ย',period:'🗓 นาปี — ตั้งท้อง',tasks:[{t:'รักษาน้ำ 7-10 ซม.',d:'ปทุมธานีต้องการน้ำมากในระยะนี้'},{t:'ป้องกันเพลี้ยกระโดด',d:'ฉีดยาป้องกันทันที'},{t:'ใส่ปุ๋ย 0-0-60',d:'3 กก./ไร่ เพิ่มความแข็งแกร่ง'},{t:'บันทึกวันออกรวง',d:''}]},
+    {w:[24,28],season:'🍃 พัฒนาเมล็ด',stage:'ลดน้ำ เตรียมเก็บเกี่ยว',period:'🗓 นาปี — พัฒนาเมล็ด',tasks:[{t:'ลดน้ำทีละน้อย',d:''},{t:'ป้องกันโรคเมล็ดด่าง',d:'ฉีดยาป้องกัน'},{t:'สำรวจผลผลิตคาดการณ์',d:'ประมาณผลก่อนเก็บเกี่ยว'},{t:'นัดรถเกี่ยว',d:'ล่วงหน้า 2 สัปดาห์'}]},
+    {w:[29,33],season:'🧺 เก็บเกี่ยว',stage:'ผลผลิตสูง รถเกี่ยว บรรจุ',period:'🗓 นาปี — เก็บเกี่ยว',tasks:[{t:'ระบายน้ำและเก็บเกี่ยว',d:'ผลผลิตคาด 700-900 กก./ไร่'},{t:'ตากข้าว 3-4 วัน',d:''},{t:'บรรจุและชั่งน้ำหนัก',d:''},{t:'ส่งตัวอย่างตรวจคุณภาพ',d:''}]},
+    {w:[34,40],season:'🌱 พักแปลง',stage:'ไถกลบ ปุ๋ยพืชสด',period:'🗓 พักแปลง',tasks:[{t:'ไถกลบฟาง',d:''},{t:'ปลูกพืชปุ๋ยสด',d:''},{t:'ตรวจซ่อมระบบน้ำ',d:'สำคัญมากสำหรับนาปรัง'},{t:'วางแผนนาปรัง',d:''}]},
+    {w:[41,45],season:'🌱 เตรียมนาปรัง',stage:'สูบน้ำ ไถ ทำเทือก',period:'🗓 นาปรัง — เตรียม',tasks:[{t:'สูบน้ำเข้าแปลง',d:''},{t:'ไถและทำเทือก',d:''},{t:'ตรวจระบบน้ำชลประทาน',d:''},{t:'จัดหาปัจจัยการผลิต',d:'ปุ๋ย ยา เมล็ดพันธุ์'}]},
+    {w:[46,49],season:'🌿 นาปรัง ปทุมธานี1',stage:'หว่าน ดูแล ใส่ปุ๋ย',period:'🗓 นาปรัง — ดูแล',tasks:[{t:'หว่านเมล็ดพันธุ์',d:'45 กก./ไร่'},{t:'ใส่ปุ๋ยตามกำหนด',d:''},{t:'ตรวจโรคและแมลง',d:''},{t:'ควบคุมวัชพืช',d:''}]},
+    {w:[50,52],season:'🧺 เก็บเกี่ยวนาปรัง',stage:'รถเกี่ยว สรุปผลปี',period:'🗓 นาปรัง — เก็บเกี่ยว',tasks:[{t:'เก็บเกี่ยวผลผลิต',d:''},{t:'ตากและบรรจุ',d:''},{t:'บันทึกผลผลิต',d:''},{t:'วางแผนปีหน้า',d:''}]},
+  ],
+};
+
+function getPeriodForWeek(crop,week){
+  const periods=FARM_PERIODS[crop]||FARM_PERIODS.jasmine;
+  return periods.find(p=>week>=p.w[0]&&week<=p.w[1])||periods[0];
+}
+
+function getPhaseGradient(crop,season){
+  const c=CROPS[crop]||{};const color=c.color||'#eab308';const dark=c.dark||'#713f12';
+  if(season.includes('เตรียม')||season.includes('พัก'))return`linear-gradient(135deg,#0a2010 0%,#1a4a20 60%,${color}22 100%)`;
+  if(season.includes('หว่าน')||season.includes('ปักดำ'))return`linear-gradient(135deg,#0d2b18 0%,#1e5530 50%,${color}33 100%)`;
+  if(season.includes('แตกกอ')||season.includes('เจริญ'))return`linear-gradient(135deg,#0d2b18 0%,${color}44 60%,rgba(6,4,15,0.8) 100%)`;
+  if(season.includes('ตั้งท้อง')||season.includes('ออกรวง'))return`linear-gradient(135deg,#2a0a1a 0%,#7a1a4a 50%,${color}44 100%)`;
+  if(season.includes('พัฒนา'))return`linear-gradient(135deg,${dark}cc 0%,${color}55 60%,rgba(6,4,15,0.8) 100%)`;
+  if(season.includes('เก็บ'))return`linear-gradient(135deg,#2a1a00 0%,#7a4400 50%,#d4a84333 100%)`;
+  return`linear-gradient(135deg,${dark}aa 0%,${color}44 100%)`;
+}
+
+let currentCrop='jasmine';
+const currentWeek=(()=>{const now=new Date();const start=new Date(now.getFullYear(),0,1);return Math.min(52,Math.ceil((now-start)/604800000));})();
+
+function buildCropTabs(){
+  const el=document.getElementById('cropTabs');
+  el.innerHTML=Object.values(CROPS).map(c=>`<button class="ctab${c.key===currentCrop?' active':''}" onclick="selectCrop('${c.key}')">${c.emoji} ${c.name}</button>`).join('');
+}
+
+function selectCrop(key){
+  currentCrop=key;
+  document.querySelectorAll('.ctab').forEach((b,i)=>{
+    b.classList.toggle('active',Object.keys(CROPS)[i]===key);
+  });
+  const c=CROPS[key];
+  document.querySelectorAll('.ctab').forEach(b=>{
+    if(b.textContent.includes(c.name)){
+      b.style.borderColor=c.color;b.style.background=c.glass;b.style.color=c.soft;
+    } else {b.style.borderColor='';b.style.background='';b.style.color='';}
+  });
+  updateBanner();renderWeeks();
+}
+
+function updateBanner(){
+  const p=getPeriodForWeek(currentCrop,currentWeek);
+  const banner=document.getElementById('phaseBanner');
+  banner.style.background=getPhaseGradient(currentCrop,p.season);
+  document.getElementById('phaseSeason').textContent=p.season;
+  document.getElementById('phaseStage').textContent=p.stage;
+  document.getElementById('phasePeriod').textContent=p.period;
+}
+
+function getTaskKey(crop,week,idx){return`tk_${crop}_${week}_${idx}`;}
+
+function toggleTask(dk,idx){
+  const key=`${dk}_${idx}`;
+  const done=localStorage.getItem(key)==='1';
+  localStorage.setItem(key,done?'0':'1');
+  const check=document.querySelector(`[data-tk="${key}"]`);
+  const title=document.querySelector(`[data-tt="${key}"]`);
+  if(check){check.classList.toggle('done',!done);check.textContent=done?'':' ✓';}
+  if(title){title.classList.toggle('done',!done);}
+}
+
+function toggleCard(w){
+  const body=document.getElementById(`wbody_${w}`);
+  const arrow=document.getElementById(`warrow_${w}`);
+  if(!body)return;
+  const open=body.style.display==='block';
+  body.style.display=open?'none':'block';
+  if(arrow)arrow.style.transform=open?'':'rotate(90deg)';
+}
+
+function renderWeeks(){
+  const el=document.getElementById('tab-week');
+  const periods=FARM_PERIODS[currentCrop];
+  const c=CROPS[currentCrop];
+  let html='';
+  periods.forEach(p=>{
+    for(let w=p.w[0];w<=p.w[1];w++){
+      const isCurrent=w===currentWeek;
+      const dk=`tk_${currentCrop}_${w}`;
+      const tasksDone=p.tasks.filter((_,i)=>localStorage.getItem(`${dk}_${i}`)==='1').length;
+      const pct=Math.round(tasksDone/p.tasks.length*100);
+      html+=`<div class="week-card${isCurrent?' current':''}" id="wcard_${w}">
+        <div class="wc-header" onclick="toggleCard(${w})">
+          <div><div class="wc-num">สัปดาห์ที่ ${w}${isCurrent?' · สัปดาห์นี้':''}</div><div class="wc-season">${p.season}</div></div>
+          <div style="display:flex;align-items:center;gap:8px">
+            ${pct>0?`<div class="wc-badge">${pct}%</div>`:''}
+            <div class="wc-arrow" id="warrow_${w}"${isCurrent?' style="transform:rotate(90deg)"':''}>›</div>
+          </div>
+        </div>
+        <div class="wc-body" id="wbody_${w}" style="display:${isCurrent?'block':'none'}">
+          ${p.tasks.map((t,i)=>{const done=localStorage.getItem(`${dk}_${i}`)==='1';return`<div class="task-item">
+            <div class="task-check${done?' done':''}" data-tk="${dk}_${i}" onclick="toggleTask('${dk}',${i})">${done?' ✓':''}</div>
+            <div class="task-text"><div class="task-title${done?' done':''}" data-tt="${dk}_${i}">${t.t}</div>${t.d?`<div class="task-desc">${t.d}</div>`:''}</div>
+          </div>`}).join('')}
+        </div>
+      </div>`;
+    }
+  });
+  el.innerHTML=html;
+}
+
+function renderTools(){
+  document.getElementById('tab-tools').innerHTML=`
+  <div class="section-title">🧪 คำนวณปุ๋ย NPK</div>
+  <div class="tool-card">
+    <div class="tool-title">🌿 คำนวณปุ๋ย</div>
+    <div class="input-row"><span class="input-label">พื้นที่ (ไร่)</span><input class="num-input" id="npk-rai" type="number" placeholder="10" value="10"></div>
+    <div class="input-row"><span class="input-label">ปุ๋ยสูตร</span>
+      <select class="num-input" id="npk-type">
+        <option value="46-0-0">46-0-0 (ยูเรีย)</option>
+        <option value="16-20-0">16-20-0</option>
+        <option value="0-0-60">0-0-60 (โพแทช)</option>
+      </select>
+    </div>
+    <div class="input-row"><span class="input-label">อัตรา (กก./ไร่)</span><input class="num-input" id="npk-rate" type="number" placeholder="5" value="5"></div>
+    <button class="calc-btn" onclick="calcNPK()">คำนวณ</button>
+    <div class="result-box" id="npk-result"></div>
+  </div>
+  <div class="section-title">💧 คำนวณน้ำ</div>
+  <div class="tool-card">
+    <div class="tool-title">💧 ปริมาณน้ำที่ต้องการ</div>
+    <div class="input-row"><span class="input-label">พื้นที่ (ไร่)</span><input class="num-input" id="w-rai" type="number" placeholder="10" value="10"></div>
+    <div class="input-row"><span class="input-label">ระดับน้ำ (ซม.)</span><input class="num-input" id="w-cm" type="number" placeholder="5" value="5"></div>
+    <button class="calc-btn" onclick="calcWater()">คำนวณ</button>
+    <div class="result-box" id="w-result"></div>
+  </div>`;
+}
+
+function calcNPK(){
+  const rai=parseFloat(document.getElementById('npk-rai').value)||0;
+  const rate=parseFloat(document.getElementById('npk-rate').value)||0;
+  const type=document.getElementById('npk-type').value;
+  const total=rai*rate;
+  const cost=type==='46-0-0'?total*14:type==='16-20-0'?total*18:total*20;
+  const r=document.getElementById('npk-result');
+  r.style.display='block';
+  r.innerHTML=`ปุ๋ย ${type} สำหรับ ${rai} ไร่<br>อัตรา ${rate} กก./ไร่<br><b style="color:var(--cr-soft)">ต้องการ: ${total.toLocaleString()} กก.</b><br>ต้นทุนประมาณ: ฿${cost.toLocaleString()}`;
+}
+
+function calcWater(){
+  const rai=parseFloat(document.getElementById('w-rai').value)||0;
+  const cm=parseFloat(document.getElementById('w-cm').value)||0;
+  const sqm=rai*1600;const liters=sqm*cm*10;const cubic=liters/1000;
+  const r=document.getElementById('w-result');
+  r.style.display='block';
+  r.innerHTML=`พื้นที่ ${rai} ไร่ ระดับน้ำ ${cm} ซม.<br>ปริมาณน้ำที่ต้องการ:<br><b style="color:var(--cr-soft)">${cubic.toLocaleString()} ลบ.ม. (${liters.toLocaleString()} ลิตร)</b>`;
+}
+
+function renderMarket(){
+  const prices=[
+    {n:'ข้าวเปลือกหอมมะลิ',emoji:'🌾',type:'ข้าวเปลือก',lo:12000,hi:14000,trend:'+3.2%',up:true},
+    {n:'ข้าวเปลือกเหนียว',emoji:'🍚',type:'ข้าวเปลือก',lo:8500,hi:10500,trend:'-1.5%',up:false},
+    {n:'ข้าวเปลือกปทุมธานี1',emoji:'🌿',type:'ข้าวเปลือก',lo:9000,hi:11000,trend:'+1.8%',up:true},
+    {n:'ข้าวสารหอมมะลิ',emoji:'✨',type:'ข้าวสาร',lo:28000,hi:32000,trend:'+5.1%',up:true},
+  ];
+  document.getElementById('tab-market').innerHTML=`
+  <div class="section-title">📊 ราคาตลาด ปี 2568</div>
+  ${prices.map(p=>`<div class="market-card">
+    <div><div class="mc-name">${p.emoji} ${p.n}</div><div class="mc-type">${p.type}</div></div>
+    <div class="mc-price">
+      <div class="mc-val">${p.lo.toLocaleString()}-${p.hi.toLocaleString()}</div>
+      <div class="mc-unit">บาท/ตัน</div>
+      <div class="mc-trend ${p.up?'trend-up':'trend-dn'}">${p.trend}</div>
+    </div>
+  </div>`).join('')}
+  <div style="font-size:11px;color:var(--text3);text-align:center;margin-top:8px">ราคาโดยประมาณ อ้างอิงตลาดกลางข้าวปี 2568</div>`;
+}
+
+let iotInterval=null;
+function randomInRange(min,max){return(Math.random()*(max-min)+min).toFixed(1);}
+function renderIoT(){
+  const temp=randomInRange(28,36);const humid=randomInRange(60,90);
+  const water=randomInRange(3,12);const soil=randomInRange(30,65);
+  const alerts=[];
+  if(parseFloat(water)<4)alerts.push({icon:'💧',msg:'ระดับน้ำต่ำ ควรเพิ่มน้ำในแปลง'});
+  if(parseFloat(temp)>34)alerts.push({icon:'🌡',msg:'อุณหภูมิสูง ระวังความเครียดของพืช'});
+  document.getElementById('tab-iot').innerHTML=`
+  <div class="section-title">📡 เซ็นเซอร์อัจฉริยะ</div>
+  <div class="iot-grid">
+    <div class="iot-card"><div class="iot-icon">🌡</div><div class="iot-val" style="color:#f97316">${temp}°C</div><div class="iot-lbl">อุณหภูมิ</div><div class="iot-sub">อากาศ</div></div>
+    <div class="iot-card"><div class="iot-icon">💧</div><div class="iot-val" style="color:#38bdf8">${water} ซม.</div><div class="iot-lbl">ระดับน้ำ</div><div class="iot-sub">ในแปลง</div></div>
+    <div class="iot-card"><div class="iot-icon">🌊</div><div class="iot-val" style="color:#818cf8">${humid}%</div><div class="iot-lbl">ความชื้น</div><div class="iot-sub">อากาศ</div></div>
+    <div class="iot-card"><div class="iot-icon">🌱</div><div class="iot-val" style="color:#22c55e">${soil}%</div><div class="iot-lbl">ความชื้น</div><div class="iot-sub">ดิน</div></div>
+  </div>
+  ${alerts.map(a=>`<div class="alert-card"><div class="alert-icon">${a.icon}</div><div>${a.msg}</div></div>`).join('')}
+  <div class="iot-update">อัปเดตอัตโนมัติทุก 30 วินาที</div>`;
+  if(!iotInterval)iotInterval=setInterval(()=>{if(document.getElementById('tab-iot').classList.contains('active'))renderIoT();},30000);
+}
+
+function switchTab(name,btn){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.ntab').forEach(b=>b.classList.remove('active'));
+  document.getElementById(`tab-${name}`).classList.add('active');
+  btn.classList.add('active');
+  if(name==='iot')renderIoT();
+}
+
+function init(){
+  const now=new Date();
+  document.getElementById('topWeek').innerHTML=`สัปดาห์ที่ ${currentWeek}<br>${now.toLocaleDateString('th-TH',{day:'numeric',month:'short'})}`;
+  buildCropTabs();selectCrop('jasmine');renderTools();renderMarket();
+}
+
+function startApp(){
+  document.getElementById('splash').style.opacity='0';
+  setTimeout(()=>{document.getElementById('splash').style.display='none';const app=document.getElementById('app');app.style.display='flex';init();},500);
+}
+setTimeout(startApp,1500);
+</script>
+</body>
+</html>

@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<meta name="theme-color" content="#06040f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>G2G Farm AI · ชาวประมง</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg0:#06040f;--bg1:#0e0a22;--bg2:#160f30;--bg3:#1e1540;
+  --gold:#d4a843;--gold2:#f0c97a;--gold3:#7a5a1a;
+  --glass:rgba(255,255,255,0.05);--glass2:rgba(255,255,255,0.08);--glass3:rgba(255,255,255,0.12);
+  --border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.15);
+  --text:#e8e4f4;--text2:#a89fc0;--text3:#6b6085;
+  --teal:#06b6d4;--teal2:#67e8f9;--teal3:rgba(6,182,212,0.15);
+  --ocean:#0ea5e9;--ocean2:#7dd3fc;
+  --danger:#ef4444;--warn:#f97316;--success:#10b981;
+  --r:12px;--r2:16px;
+}
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:'Bai Jamjuree','Sarabun',sans-serif;
+  background:var(--bg0);color:var(--text);
+  font-size:14px;line-height:1.5;
+  display:flex;flex-direction:column;
+  max-width:480px;margin:0 auto;
+  position:relative;
+}
+
+/* SPLASH */
+#splash{
+  position:fixed;inset:0;z-index:999;
+  background:linear-gradient(160deg,var(--bg0) 0%,var(--bg1) 40%,var(--bg2) 80%,#0a1f3a 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+  transition:opacity .5s;
+}
+.splash-emoji{font-size:72px;animation:bob 2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.splash-brand{font-size:11px;letter-spacing:.35em;color:var(--gold);font-weight:700;text-transform:uppercase;margin-bottom:4px}
+.splash-title{font-size:26px;font-weight:700;color:#fff;letter-spacing:.05em}
+.splash-sub{font-size:13px;color:var(--text2);text-align:center;max-width:260px;line-height:1.6}
+.splash-bar{width:200px;height:3px;background:var(--glass2);border-radius:2px;overflow:hidden;margin-top:8px}
+.splash-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));border-radius:2px;animation:load 1.8s ease-out forwards}
+@keyframes load{from{width:0}to{width:100%}}
+.splash-wave{position:absolute;bottom:0;left:0;right:0;height:80px;overflow:hidden}
+.splash-wave svg{width:100%;height:100%}
+
+/* HEADER */
+#header{
+  background:linear-gradient(135deg,var(--bg1) 0%,rgba(6,182,212,0.1) 100%);
+  border-bottom:1px solid var(--border);
+  padding:12px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+}
+.hdr-left{display:flex;align-items:center;gap:10px}
+.hdr-emoji{font-size:26px}
+.hdr-brand{font-size:9px;letter-spacing:.2em;color:var(--gold);font-weight:700;text-transform:uppercase}
+.hdr-title{font-size:15px;font-weight:700;color:#fff;line-height:1.2}
+.hdr-week{
+  background:var(--glass2);border:1px solid var(--border2);
+  border-radius:20px;padding:4px 12px;font-size:11px;color:var(--teal2);font-weight:600;
+}
+
+/* SPECIES CHIPS */
+.species-wrap{
+  padding:10px 12px;
+  background:var(--bg1);
+  border-bottom:1px solid var(--border);
+  overflow-x:auto;flex-shrink:0;
+}
+.species-wrap::-webkit-scrollbar{display:none}
+.species-row{display:flex;gap:6px;min-width:max-content}
+.sp-chip{
+  display:flex;align-items:center;gap:5px;
+  padding:6px 12px;border-radius:20px;
+  border:1px solid var(--border);
+  background:var(--glass);
+  font-size:12px;font-weight:600;color:var(--text2);
+  cursor:pointer;transition:.15s;white-space:nowrap;
+}
+.sp-chip:hover{background:var(--glass2)}
+.sp-chip.active{background:var(--glass3);border-color:currentColor;color:#fff}
+.sp-chip span:first-child{font-size:16px}
+
+/* MAIN SCROLL */
+#app{flex:1;overflow:hidden;display:flex;flex-direction:column}
+#content{flex:1;overflow-y:auto;padding-bottom:80px}
+#content::-webkit-scrollbar{width:3px}
+#content::-webkit-scrollbar-thumb{background:var(--glass3);border-radius:2px}
+
+/* BOTTOM NAV */
+#nav{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:480px;
+  background:rgba(6,4,15,0.95);
+  border-top:1px solid var(--border);
+  backdrop-filter:blur(20px);
+  display:flex;z-index:100;
+  padding:6px 0 8px;
+}
+.nav-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
+  background:none;border:none;cursor:pointer;padding:4px 0;
+  color:var(--text3);font-size:10px;font-family:inherit;transition:.15s;
+}
+.nav-btn .ic{font-size:20px}
+.nav-btn.active{color:var(--teal)}
+.nav-btn:hover{color:var(--text2)}
+
+/* SCREENS */
+.screen{display:none;padding:14px}
+.screen.active{display:block}
+
+/* PHASE BANNER */
+.phase-banner{
+  border-radius:var(--r2);overflow:hidden;margin-bottom:14px;
+  padding:18px 16px;position:relative;min-height:100px;
+}
+.pb-crop{font-size:11px;letter-spacing:.15em;color:rgba(255,255,255,0.6);font-weight:600;text-transform:uppercase;margin-bottom:4px}
+.pb-phase{font-size:20px;font-weight:700;color:#fff;margin-bottom:6px}
+.pb-week{font-size:12px;color:rgba(255,255,255,0.7)}
+.pb-emoji{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:52px;opacity:.4}
+
+/* WEEK STRIP */
+.week-strip-box{
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:var(--r);padding:10px;margin-bottom:14px;
+  overflow-x:auto;
+}
+.week-strip-box::-webkit-scrollbar{display:none}
+.week-row{display:flex;gap:4px;min-width:max-content}
+.wk{
+  min-width:34px;padding:7px 4px;text-align:center;
+  border:1px solid var(--border);border-radius:7px;
+  background:var(--glass);font-size:10px;font-weight:700;
+  color:var(--text3);cursor:pointer;transition:.12s;
+}
+.wk:hover{background:var(--glass2);color:var(--text)}
+.wk.active{background:linear-gradient(135deg,var(--teal),var(--ocean));border-color:var(--teal);color:#fff;box-shadow:0 2px 10px rgba(6,182,212,.4)}
+.wk.now{outline:2px solid var(--gold);outline-offset:1px}
+
+/* TASK CARD */
+.task-card{
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:var(--r);padding:14px;margin-bottom:12px;
+}
+.tc-head{font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.task-list{list-style:none}
+.task-list li{
+  padding:8px 12px 8px 14px;margin-bottom:6px;
+  background:rgba(255,255,255,0.03);
+  border-left:3px solid var(--teal);
+  border-radius:0 8px 8px 0;
+  font-size:13px;color:var(--text);
+}
+.task-list li.warn{border-left-color:var(--warn)}
+.task-list li.danger{border-left-color:var(--danger)}
+.task-list li.success{border-left-color:var(--success)}
+
+/* MARKET CARDS */
+.market-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.mkt-card{
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:var(--r);padding:12px;
+}
+.mkt-species{font-size:11px;color:var(--text2);margin-bottom:4px}
+.mkt-price{font-size:18px;font-weight:700;color:var(--gold)}
+.mkt-unit{font-size:10px;color:var(--text3);margin-top:2px}
+.mkt-tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;margin-top:6px}
+.tag-up{background:rgba(16,185,129,.15);color:#6ee7b7;border:1px solid rgba(16,185,129,.3)}
+.tag-down{background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.3)}
+.tag-flat{background:rgba(212,168,67,.15);color:var(--gold2);border:1px solid rgba(212,168,67,.3)}
+.mkt-emoji{font-size:24px;float:right;margin-top:-4px}
+
+/* IOT PANEL */
+.iot-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.iot-card{
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:var(--r);padding:12px;
+}
+.iot-label{font-size:10px;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.iot-val{font-size:22px;font-weight:700;color:#fff}
+.iot-unit{font-size:11px;color:var(--text3);margin-left:4px;font-weight:400}
+.iot-bar{height:4px;border-radius:2px;background:var(--glass2);margin:8px 0;overflow:hidden}
+.iot-fill{height:100%;border-radius:2px;transition:.3s}
+.iot-status{font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;display:inline-block;margin-top:4px}
+.status-ok{background:rgba(16,185,129,.15);color:#6ee7b7}
+.status-warn{background:rgba(249,115,22,.15);color:#fdba74}
+.status-crit{background:rgba(239,68,68,.15);color:#fca5a5}
+
+/* WEATHER */
+.weather-main{
+  background:linear-gradient(135deg,#041428 0%,#0a2a4a 60%,rgba(6,182,212,0.15) 100%);
+  border:1px solid rgba(6,182,212,0.2);
+  border-radius:var(--r2);padding:16px;margin-bottom:12px;
+}
+.wx-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.wx-emoji{font-size:48px}
+.wx-temp{font-size:36px;font-weight:700;color:#fff}
+.wx-desc{font-size:13px;color:var(--text2);margin-top:2px}
+.wx-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.wx-item{text-align:center;background:var(--glass);border-radius:8px;padding:8px 4px}
+.wx-item .ic{font-size:18px;margin-bottom:3px}
+.wx-item .val{font-size:13px;font-weight:700;color:#fff}
+.wx-item .lbl{font-size:9px;color:var(--text3)}
+.tide-card{
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:var(--r);padding:14px;margin-bottom:12px;
+}
+.tide-title{font-size:12px;color:var(--teal2);font-weight:700;margin-bottom:10px}
+.tide-row{display:flex;align-items:center;gap:12px;margin-bottom:8px;padding:8px;border-radius:8px;background:rgba(255,255,255,0.03)}
+.tide-time{font-size:12px;color:var(--text2);min-width:50px}
+.tide-type{font-size:13px;font-weight:700}
+.tide-h{font-size:12px;color:var(--text2);margin-left:auto}
+.tide-bar-wrap{flex:1;height:6px;background:var(--glass2);border-radius:3px;overflow:hidden}
+.tide-bar{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--ocean),var(--teal))}
+.warn-banner{
+  background:linear-gradient(135deg,rgba(239,68,68,0.15) 0%,rgba(249,115,22,0.1) 100%);
+  border:1px solid rgba(239,68,68,0.3);
+  border-radius:var(--r);padding:12px 14px;margin-bottom:12px;
+  display:flex;align-items:center;gap:10px;
+}
+.wb-icon{font-size:24px}
+.wb-text{font-size:12px;color:#fca5a5;font-weight:600}
+
+/* TOOLS */
+.tool-card{
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:var(--r2);padding:16px;margin-bottom:14px;
+}
+.tool-title{font-size:14px;font-weight:700;color:var(--teal2);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.form-group{margin-bottom:12px}
+.form-label{font-size:11px;color:var(--text2);font-weight:600;margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em}
+.form-input{
+  width:100%;padding:10px 12px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid var(--border);
+  border-radius:8px;color:var(--text);
+  font-family:inherit;font-size:13px;
+  outline:none;
+}
+.form-input:focus{border-color:var(--teal);background:rgba(6,182,212,0.08)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.calc-btn{
+  width:100%;padding:11px;
+  background:linear-gradient(135deg,var(--teal),var(--ocean));
+  border:none;border-radius:8px;
+  color:#fff;font-family:inherit;font-size:13px;font-weight:700;
+  cursor:pointer;margin-top:4px;
+}
+.calc-result{
+  margin-top:12px;padding:12px;
+  background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.25);
+  border-radius:8px;display:none;
+}
+.cr-val{font-size:22px;font-weight:700;color:var(--teal2)}
+.cr-label{font-size:11px;color:var(--text2);margin-top:3px}
+.chem-table{width:100%;border-collapse:collapse;font-size:12px}
+.chem-table th{background:var(--glass2);color:var(--gold);font-size:10px;text-transform:uppercase;letter-spacing:.05em;padding:7px 10px;text-align:left;border-bottom:1px solid var(--border)}
+.chem-table td{padding:7px 10px;border-bottom:1px solid var(--border);color:var(--text)}
+.chem-table tr:last-child td{border-bottom:none}
+.chem-table tr:hover td{background:var(--glass)}
+
+/* SECTION LABELS */
+.sec-label{
+  font-size:10px;font-weight:700;color:var(--gold);
+  text-transform:uppercase;letter-spacing:.12em;
+  margin-bottom:8px;display:flex;align-items:center;gap:6px;
+}
+
+/* ALERT STRIP */
+.alert-strip{
+  background:linear-gradient(135deg,rgba(249,115,22,0.12) 0%,rgba(239,68,68,0.08) 100%);
+  border:1px solid rgba(249,115,22,0.25);
+  border-radius:var(--r);padding:10px 12px;margin-bottom:12px;
+  font-size:12px;color:#fdba74;
+  display:flex;gap:8px;align-items:flex-start;
+}
+
+/* SECTION DIVIDER */
+.divider{height:1px;background:var(--border);margin:14px 0}
+
+/* SCROLLABLE CONTAINER */
+.scroll-x{overflow-x:auto}
+.scroll-x::-webkit-scrollbar{display:none}
+
+/* STAT PILL */
+.stat-pill{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;
+  background:var(--glass2);color:var(--text2);
+}
+.stat-pill.ok{background:rgba(16,185,129,.12);color:#6ee7b7}
+.stat-pill.warn{background:rgba(249,115,22,.12);color:#fdba74}
+
+/* TODAY BADGE */
+.today-badge{
+  background:linear-gradient(135deg,var(--teal3),rgba(14,165,233,0.15));
+  border:1px solid rgba(6,182,212,0.25);
+  border-radius:var(--r);padding:10px 14px;margin-bottom:12px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.tb-date{font-size:11px;color:var(--teal2);font-weight:600}
+.tb-week{font-size:13px;color:#fff;font-weight:700}
+
+/* RESPONSIVE TWEAKS */
+@media(max-width:360px){
+  .iot-grid{grid-template-columns:1fr 1fr}
+  .market-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-emoji">🐟</div>
+  <div class="splash-brand">G2G Farm AI</div>
+  <div class="splash-title">ชาวประมง</div>
+  <div class="splash-sub">ระบบจัดการฟาร์มเพาะเลี้ยงสัตว์น้ำ</div>
+  <div class="splash-bar"><div class="splash-fill"></div></div>
+  <div class="splash-wave">
+    <svg viewBox="0 0 480 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,40 C80,10 160,70 240,40 C320,10 400,70 480,40 L480,80 L0,80 Z" fill="rgba(6,182,212,0.08)"/>
+      <path d="M0,55 C100,25 200,75 300,50 C380,30 440,65 480,50 L480,80 L0,80 Z" fill="rgba(6,182,212,0.05)"/>
+    </svg>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div id="header">
+  <div class="hdr-left">
+    <div class="hdr-emoji">🐟</div>
+    <div>
+      <div class="hdr-brand">G2G Farm AI</div>
+      <div class="hdr-title">ชาวประมง &amp; เพาะเลี้ยงสัตว์น้ำ</div>
+    </div>
+  </div>
+  <div class="hdr-week" id="hdrWeek">สัปดาห์ 1</div>
+</div>
+
+<!-- SPECIES CHIPS -->
+<div class="species-wrap">
+  <div class="species-row" id="speciesRow"></div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div id="content">
+
+    <!-- SCREEN: CALENDAR -->
+    <div class="screen active" id="screen-cal">
+      <div class="today-badge">
+        <div>
+          <div class="tb-date" id="todayDate">วันนี้</div>
+          <div class="tb-week" id="todayWeek">สัปดาห์ที่ <span id="nowWeekNum">1</span> ของปี</div>
+        </div>
+        <div class="stat-pill ok" id="phasePill">—</div>
+      </div>
+
+      <div id="phaseBanner" class="phase-banner">
+        <div class="pb-crop" id="pbCrop"></div>
+        <div class="pb-phase" id="pbPhase"></div>
+        <div class="pb-week" id="pbWeek"></div>
+        <div class="pb-emoji" id="pbEmoji"></div>
+      </div>
+
+      <div class="week-strip-box">
+        <div class="week-row" id="weekRow"></div>
+      </div>
+
+      <div id="taskContainer"></div>
+    </div>
+
+    <!-- SCREEN: TOOLS -->
+    <div class="screen" id="screen-tools">
+      <!-- Feed Calculator -->
+      <div class="tool-card">
+        <div class="tool-title">🍽️ เครื่องคำนวณอาหาร</div>
+        <div class="form-row">
+          <div class="form-group">
+            <div class="form-label">ขนาดบ่อ (ไร่)</div>
+            <input type="number" class="form-input" id="pondArea" placeholder="1.0" step="0.1" value="1">
+          </div>
+          <div class="form-group">
+            <div class="form-label">ความหนาแน่น (ตัว/ตร.ม.)</div>
+            <input type="number" class="form-input" id="density" placeholder="80" value="80">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <div class="form-label">น้ำหนักเฉลี่ย (กรัม)</div>
+            <input type="number" class="form-input" id="avgWeight" placeholder="10" value="10">
+          </div>
+          <div class="form-group">
+            <div class="form-label">FCR</div>
+            <input type="number" class="form-input" id="fcr" placeholder="1.3" step="0.1" value="1.3">
+          </div>
+        </div>
+        <button class="calc-btn" onclick="calcFeed()">คำนวณ</button>
+        <div class="calc-result" id="feedResult">
+          <div class="cr-val" id="feedVal"></div>
+          <div class="cr-label">กิโลกรัม/วัน</div>
+          <div style="margin-top:8px;font-size:11px;color:var(--text2)" id="feedDetail"></div>
+        </div>
+      </div>
+
+      <!-- Stocking Density Calculator -->
+      <div class="tool-card">
+        <div class="tool-title">🐠 เครื่องคำนวณความหนาแน่น</div>
+        <div class="form-row">
+          <div class="form-group">
+            <div class="form-label">จำนวนลูกพันธุ์ (ตัว)</div>
+            <input type="number" class="form-input" id="stockCount" placeholder="100000" value="100000">
+          </div>
+          <div class="form-group">
+            <div class="form-label">พื้นที่บ่อ (ตร.ม.)</div>
+            <input type="number" class="form-input" id="pondSqm" placeholder="1600" value="1600">
+          </div>
+        </div>
+        <button class="calc-btn" onclick="calcDensity()">คำนวณ</button>
+        <div class="calc-result" id="densityResult">
+          <div class="cr-val" id="densityVal"></div>
+          <div class="cr-label">ตัว/ตร.ม.</div>
+          <div style="margin-top:8px;font-size:11px;color:var(--text2)" id="densityAdvice"></div>
+        </div>
+      </div>
+
+      <!-- Chemical Table -->
+      <div class="tool-card">
+        <div class="tool-title">💊 ยา-เคมีภัณฑ์ที่ใช้บ่อย</div>
+        <div class="scroll-x">
+          <table class="chem-table">
+            <thead><tr><th>ชื่อ</th><th>ใช้สำหรับ</th><th>อัตรา</th></tr></thead>
+            <tbody>
+              <tr><td>ปูนขาว (CaO)</td><td>เตรียมบ่อ, ฆ่าเชื้อ</td><td>200-400 กก./ไร่</td></tr>
+              <tr><td>โดโลไมท์</td><td>ปรับ pH</td><td>100-200 กก./ไร่</td></tr>
+              <tr><td>Probiotics</td><td>คุณภาพน้ำ, ลด Ammonia</td><td>ตามฉลาก</td></tr>
+              <tr><td>Zeolite</td><td>ดูดซับ NH3, H2S</td><td>50-100 กก./ไร่</td></tr>
+              <tr><td>Dolomite</td><td>เพิ่ม Ca-Mg</td><td>80-100 กก./ไร่</td></tr>
+              <tr><td>Formalin</td><td>รักษาปรสิต</td><td>25-30 ppm ช่วงสั้น</td></tr>
+              <tr><td>Salt (NaCl)</td><td>ลด stress, บาดแผล</td><td>3-5 ppt</td></tr>
+              <tr><td>Vitamin C</td><td>เสริมภูมิคุ้มกัน</td><td>50-100 มก./กก.อาหาร</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN: IOT WATER -->
+    <div class="screen" id="screen-iot">
+      <div class="alert-strip" id="iotAlert">
+        <span>⚠️</span>
+        <span id="iotAlertText">กำลังตรวจสอบคุณภาพน้ำ...</span>
+      </div>
+      <div class="sec-label">📡 ค่าคุณภาพน้ำ — อัพเดตล่าสุด 06:45 น.</div>
+      <div class="iot-grid" id="iotGrid"></div>
+      <div class="divider"></div>
+      <div class="sec-label">📋 คำแนะนำ</div>
+      <div class="task-card" id="iotAdvice"></div>
+    </div>
+
+    <!-- SCREEN: WEATHER -->
+    <div class="screen" id="screen-weather">
+      <div class="warn-banner" id="stormWarn" style="display:none">
+        <div class="wb-icon">🌪️</div>
+        <div class="wb-text" id="stormText">ประกาศเตือนภัย</div>
+      </div>
+      <div class="weather-main">
+        <div class="wx-top">
+          <div>
+            <div style="font-size:11px;color:var(--teal2);margin-bottom:4px;font-weight:600">สภาพอากาศวันนี้</div>
+            <div style="font-size:14px;color:var(--text2)" id="wxDesc">ท้องฟ้าแจ่มใส</div>
+          </div>
+          <div style="text-align:right">
+            <div class="wx-emoji" id="wxEmoji">☀️</div>
+            <div class="wx-temp" id="wxTemp">32°C</div>
+          </div>
+        </div>
+        <div class="wx-grid" id="wxGrid"></div>
+      </div>
+
+      <div class="tide-card">
+        <div class="tide-title">🌊 ตารางน้ำขึ้น-น้ำลงวันนี้</div>
+        <div id="tideRows"></div>
+      </div>
+
+      <div class="task-card">
+        <div class="tc-head">🌤️ พยากรณ์ 5 วัน</div>
+        <div id="forecast5"></div>
+      </div>
+    </div>
+
+    <!-- SCREEN: MARKET -->
+    <div class="screen" id="screen-market">
+      <div class="sec-label">💰 ราคาตลาดวันนี้ (บาท/กก.)</div>
+      <div class="market-grid" id="marketGrid"></div>
+      <div class="divider"></div>
+      <div class="sec-label">📈 แนวโน้มราคา</div>
+      <div class="task-card">
+        <div class="task-list" id="priceTrend"></div>
+      </div>
+      <div class="divider"></div>
+      <div class="sec-label">📦 ข้อมูลตลาดรับซื้อ</div>
+      <div id="buyerList"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div id="nav">
+  <button class="nav-btn active" onclick="showScreen('cal',this)">
+    <span class="ic">📅</span>ปฏิทิน
+  </button>
+  <button class="nav-btn" onclick="showScreen('tools',this)">
+    <span class="ic">🧪</span>เครื่องมือ
+  </button>
+  <button class="nav-btn" onclick="showScreen('iot',this)">
+    <span class="ic">📡</span>IoT น้ำ
+  </button>
+  <button class="nav-btn" onclick="showScreen('weather',this)">
+    <span class="ic">🌊</span>อากาศ
+  </button>
+  <button class="nav-btn" onclick="showScreen('market',this)">
+    <span class="ic">📊</span>ตลาด
+  </button>
+</div>
+
+<script>
+// ============================================================
+// DATA: SPECIES
+// ============================================================
+const SPECIES = {
+  shrimp:{key:'shrimp',name:'กุ้งขาวแวนนาไม',emoji:'🦐',color:'#f97316',soft:'#fdba74',dark:'#9a3412',glass:'rgba(249,115,22,0.15)'},
+  tilapia:{key:'tilapia',name:'ปลานิล',emoji:'🐟',color:'#06b6d4',soft:'#67e8f9',dark:'#164e63',glass:'rgba(6,182,212,0.15)'},
+  catfish:{key:'catfish',name:'ปลาดุก',emoji:'🐠',color:'#8b5cf6',soft:'#c4b5fd',dark:'#4c1d95',glass:'rgba(139,92,246,0.15)'},
+  seabass:{key:'seabass',name:'ปลากะพงขาว',emoji:'🐡',color:'#10b981',soft:'#6ee7b7',dark:'#064e3b',glass:'rgba(16,185,129,0.15)'},
+  oyster:{key:'oyster',name:'หอยนางรม',emoji:'🦪',color:'#64748b',soft:'#94a3b8',dark:'#1e293b',glass:'rgba(100,116,139,0.15)'},
+};
+
+// ============================================================
+// DATA: FARM CALENDAR 52 WEEKS
+// ============================================================
+function buildPeriods(arr){
+  const map={};
+  arr.forEach(([ws,we,phase,tasks])=>{
+    for(let w=ws;w<=we;w++) map[w]={phase,tasks};
+  });
+  return map;
+}
+
+const FARM_PERIODS={
+  shrimp: buildPeriods([
+    [1,2,'🌱 เตรียมบ่อ รอบ 1',['ตากบ่อให้แห้ง 7-10 วัน','โรยปูนขาว CaO 200-400 กก./ไร่','ไถพลิกดิน และตากแดดซ้ำ','กำจัดศัตรูพืชน้ำ']],
+    [3,4,'🌊 เตรียมน้ำ รอบ 1',['เติมน้ำผ่านตาข่ายกรอง 60 mesh','สร้างแพลงก์ตอนพืช (Diatom)','ปรับความเค็ม 10-15 ppt','ตรวจ pH ให้ได้ 7.5-8.5']],
+    [5,5,'🌿 ปล่อยลูกกุ้ง',['ตรวจ DO>5 ก่อนปล่อย','Acclimatize ลูกกุ้งอย่างน้อย 30 นาที','ความหนาแน่น 80-120 ตัว/ตร.ม.','บันทึกวันปล่อยและ PL size']],
+    [6,10,'🌿 ระยะอนุบาล รอบ 1',['ให้อาหาร 4-6 ครั้ง/วัน','เปลี่ยนถ่ายน้ำ 20-30%/วัน','ตรวจ Ammonia <0.5 ppm','เพิ่มออกซิเจนด้วยใบพัดน้ำ']],
+    [11,16,'🍃 เจริญเติบโต รอบ 1',['สุ่มชั่งน้ำหนัก 1 ครั้ง/สัปดาห์','ปรับปริมาณอาหารตามน้ำหนัก','ตรวจ Vibrio ในน้ำ','เฝ้าระวังโรค EMS/AHPND']],
+    [17,20,'🧺 จับจำหน่าย รอบ 1',['เตรียมรถ-ตู้แช่และน้ำแข็ง','จับตอนเช้า อุณหภูมิน้ำต่ำ','คัดขนาด 60/80/100 ตัว/กก.','ชั่ง-บันทึกผลผลิต']],
+    [21,22,'🌱 เตรียมบ่อ รอบ 2',['ล้างบ่อ สูบน้ำออก','โรยปูนขาวซ้ำ 200 กก./ไร่','ซ่อมแซมระบบให้อากาศ','ตรวจสุขภาพน้ำบ่อพัก']],
+    [23,23,'🌿 ปล่อยลูกกุ้ง รอบ 2',['เตรียมน้ำ 3-5 วันล่วงหน้า','ปล่อย PL 15 ขึ้นไป','ความหนาแน่น 80-100 ตัว/ตร.ม.','บันทึกแหล่งที่มาของลูกพันธุ์']],
+    [24,28,'🌿 ระยะอนุบาล รอบ 2',['ให้อาหาร 4 ครั้ง/วัน','เติม Probiotics สม่ำเสมอ','ตรวจ Alkalinity 80-120 ppm','เฝ้าระวังช่วงฝนตก']],
+    [29,35,'🍃 เจริญเติบโต รอบ 2',['ปรับอาหารตาม ABW','เปลี่ยนน้ำ 30%/วัน','ตรวจ DO ทุกเช้า-เย็น','เสริม Vitamin C ในอาหาร']],
+    [36,39,'🧺 จับจำหน่าย รอบ 2',['ประสานล้งรับซื้อล่วงหน้า','จับกุ้งขนาด 50-70 ตัว/กก.','คัดเกรดและบรรจุ','บันทึก FCR รอบ 2']],
+    [40,41,'🌱 เตรียมบ่อ รอบ 3',['ตากบ่อ 5-7 วัน','โรยปูนขาวฆ่าเชื้อ','ซ่อมระบบน้ำและไฟ','ตรวจสอบอุปกรณ์ใบพัด']],
+    [42,42,'🌿 ปล่อยลูกกุ้ง รอบ 3',['ปล่อยช่วงหลังฝนหมด','ความหนาแน่นต่ำลง 60-80 ตัว/ตร.ม.','ตรวจคุณภาพน้ำก่อนปล่อย','เตรียมอุปกรณ์ฉุกเฉิน']],
+    [43,48,'🍃 เลี้ยงดูแล รอบ 3',['ดูแลเป็นพิเศษช่วงอากาศเย็น','ลดปริมาณอาหาร 20% ถ้าอุณหภูมิ<25°C','ตรวจ DO ตลอดคืน','เพิ่มใบพัดน้ำ']],
+    [49,52,'🧺 จับ-สรุปปี',['จับกุ้งให้หมดบ่อ','บันทึกผลผลิตรวมทั้งปี','สรุป FCR-ADG-SR','วางแผนปีถัดไป']],
+  ]),
+
+  tilapia: buildPeriods([
+    [1,2,'🌱 เตรียมบ่อ',['ตากบ่อ 7-10 วัน หรือสูบน้ำออก','โรยปูนขาว 200-300 กก./ไร่','เพิ่มปุ๋ยอินทรีย์เร่งแพลงก์ตอน','ซ่อมตาข่ายและท่อน้ำ']],
+    [3,4,'🌿 ปล่อยลูกปลา',['เติมน้ำสะอาด ความลึก 80-100 ซม.','ปล่อยลูกปลา 1-3 ตัว/ตร.ม.','ให้อาหารเม็ดลอยน้ำ 3 ครั้ง/วัน','สังเกตพฤติกรรมกินอาหาร']],
+    [5,15,'🌿 เลี้ยงดูแล ระยะต้น',['ให้อาหาร 3-4 ครั้ง/วัน','เปลี่ยนน้ำ 20-30% ทุก 2 สัปดาห์','ตรวจ DO, pH สัปดาห์ละครั้ง','สุ่มชั่งน้ำหนัก 2 สัปดาห์/ครั้ง']],
+    [16,28,'🍃 ขยายขนาด',['ลดความหนาแน่นถ้าจำเป็น','เพิ่มปริมาณอาหารตาม ABW 3%','บำบัดน้ำด้วย Zeolite','เฝ้าระวังโรคจุดขาว']],
+    [29,38,'🧺 จับจำหน่าย',['คัดปลาขนาด 300-500 กรัม','จับทยอยตามขนาด','เตรียมเรือ-อวน-ถัง','ชั่งและบันทึกผลผลิต']],
+    [39,42,'🌱 พักบ่อ-เตรียมรอบใหม่',['สูบน้ำ ทำความสะอาด','ตรวจสอบดิน','โรยปูนขาว','วางแผนความหนาแน่นรอบใหม่']],
+    [43,44,'🌿 ปล่อยลูกปลา รอบ 2',['เติมน้ำ ตรวจคุณภาพ','ปล่อยลูกปลารุ่นใหม่','บันทึกวันปล่อยและน้ำหนักเริ่มต้น','ให้อาหารปรับสภาพ 3 วัน']],
+    [45,52,'🍃 เลี้ยงดูแล รอบ 2',['ให้อาหาร 3 ครั้ง/วัน','ดูแลคุณภาพน้ำช่วงหนาว','เพิ่มอาหารโปรตีนสูง','วางแผนจับปลาต้นปีถัดไป']],
+  ]),
+
+  catfish: buildPeriods([
+    [1,2,'🌱 เตรียมบ่อปลาดุก',['ตากบ่อ 5-7 วัน','โรยปูนขาว 150-200 กก./ไร่','เตรียมที่หลบซ่อน (ท่อ PVC)','ตรวจระบบน้ำเข้า-ออก']],
+    [3,3,'🌿 ปล่อยลูกปลาดุก',['ปล่อย 20-50 ตัว/ตร.ม.','ให้อาหารผสม-ลูกน้ำ-รำ','ตรวจอุณหภูมิ 25-32°C','ห้ามให้อาหารเกิน 30 นาที']],
+    [4,12,'🌿 ระยะอนุบาล',['ให้อาหาร 2-3 ครั้ง/วัน','เปลี่ยนน้ำ 30-50%/สัปดาห์','ตรวจ Ammonia <1 ppm','เพิ่มอากาศช่วงกลางคืน']],
+    [13,22,'🍃 เจริญเติบโตเต็มที่',['ให้อาหาร 2 ครั้ง/วัน เช้า-เย็น','เพิ่มน้ำหนักอาหาร 5% ทุกสัปดาห์','ตรวจ DO >3 ppm','เฝ้าระวังโรคจุดขาว']],
+    [23,28,'🧺 จับจำหน่าย รอบ 1',['งดอาหาร 24 ชั่วโมงก่อนจับ','จับตอนเช้าตรู่','คัดขนาด >150 กรัม','บันทึก FCR และ Survival Rate']],
+    [29,30,'🌱 เตรียมบ่อ รอบ 2',['ล้างบ่อ ฆ่าเชื้อ','โรยปูนขาวซ้ำ','เติมน้ำสะอาด','ตรวจ pH ให้ได้ 6.5-7.5']],
+    [31,31,'🌿 ปล่อยลูกปลา รอบ 2',['ปล่อยลูกปลาขนาด 3-5 ซม.','ปรับสภาพ 30 นาทีก่อนปล่อย','บันทึกจำนวนปล่อย','เริ่มให้อาหารหลัง 6 ชั่วโมง']],
+    [32,44,'🍃 เลี้ยงดูแล รอบ 2',['ดูแลช่วงฤดูฝน','เฝ้าระวังน้ำท่วม','เพิ่มใบพัดน้ำช่วงอากาศร้อน','ตรวจ Ammonia ทุก 3 วัน']],
+    [45,50,'🧺 จับจำหน่าย รอบ 2',['จับตามความต้องการตลาด','เจรจาราคากับพ่อค้า','บันทึกผลผลิต','สรุปต้นทุนรอบที่ 2']],
+    [51,52,'📊 สรุปผล-วางแผนปีใหม่',['สรุป FCR ทั้งปี','ประเมินกำไร-ขาดทุน','วางแผนพันธุ์ปลารอบหน้า','ซ่อมบำรุงบ่อและอุปกรณ์']],
+  ]),
+
+  seabass: buildPeriods([
+    [1,3,'🌱 เตรียมบ่อกะพง',['ตากบ่อ ฆ่าเชื้อด้วยปูนขาว','เติมน้ำทะเล/น้ำกร่อย ความเค็ม 15-25 ppt','ตรวจ pH 7.5-8.5','สร้างแพลงก์ตอนพืชเบื้องต้น']],
+    [4,5,'🌿 ปล่อยลูกปลากะพง',['ปล่อยลูกปลา 1-3 ตัว/ตร.ม.','ขนาดลูกปลา >5 ซม.','เริ่มด้วยอาหารมีชีวิต (กุ้ง-ปลาเล็ก)','สังเกตพฤติกรรม 48 ชั่วโมงแรก']],
+    [6,18,'🌿 ระยะโตเร็ว',['เปลี่ยนจากอาหารสดเป็นเม็ด','ให้อาหาร 2-3 ครั้ง/วัน','ตรวจ Salinity สม่ำเสมอ','สุ่มชั่งน้ำหนักทุก 2 สัปดาห์']],
+    [19,32,'🍃 ขยายขนาด-ดูแลเข้มข้น',['ลด density ถ้าน้ำหนักรวม >500 กก./ไร่','เพิ่มอาหารโปรตีน >45%','ตรวจสุขภาพปลาสัปดาห์ละครั้ง','เฝ้าระวังโรค VNN']],
+    [33,42,'🧺 จับจำหน่าย',['จับเมื่อน้ำหนัก 500-800 กรัม','เตรียมรถและน้ำแข็งเป็นพิเศษ','ติดต่อร้านอาหาร-ตลาดสด','คัดเกรด A/B ตามขนาด']],
+    [43,46,'🌱 พักบ่อ',['สูบน้ำออก ตากบ่อ','ฆ่าเชื้อซ้ำ','ซ่อมระบบ aeration','ตรวจดิน-วิเคราะห์']],
+    [47,48,'🌿 ปล่อยลูกปลา รอบ 2',['เตรียมน้ำ ปรับความเค็ม','ปล่อยปลาขนาด 5-8 ซม.','เริ่มให้อาหารวันที่ 2','บันทึกอัตราการรอด']],
+    [49,52,'🍃 เลี้ยงดูแลช่วงสิ้นปี',['ดูแลเป็นพิเศษช่วงอากาศเปลี่ยน','ลดอาหาร 20% ถ้า DO ต่ำ','วางแผนตลาดปีใหม่','สรุปต้นทุนและกำไร']],
+  ]),
+
+  oyster: buildPeriods([
+    [1,4,'🌱 เตรียมแพและวัสดุเกาะ',['ซ่อมแพ-ทุ่น-เชือก','ทำความสะอาดวัสดุเกาะ (ไม้ไผ่/ทาก)','ตรวจสอบกระแสน้ำ','ทดสอบ Salinity 20-30 ppt']],
+    [5,8,'🌊 แขวนวัสดุรอตัวอ่อน',['แขวนวัสดุเกาะในน้ำ','รอ Larval Settlement','บันทึกความหนาแน่นของตัวอ่อน','ตรวจน้ำทุกสัปดาห์']],
+    [9,20,'🌿 ระยะเลี้ยง',['ปรับระดับความลึกตามฤดูกาล','ทำความสะอาดวัสดุทุกเดือน','ตรวจสุขภาพและการเจริญเติบโต','เฝ้าระวังมลพิษน้ำ']],
+    [21,32,'🍃 เติบโต-เพิ่มขนาด',['ขยับวัสดุเกาะให้ห่างขึ้น','ตรวจ Phytoplankton สม่ำเสมอ','บันทึกอัตราการตาย','ประสานหน่วยงานตรวจคุณภาพน้ำ']],
+    [33,40,'🧺 เก็บเกี่ยวรอบ 1',['เก็บหอยที่โตเต็มที่ >7 ซม.','ล้างและคัดแยก','บรรจุในตะกร้าเย็น','จัดส่งให้ลูกค้าภายใน 24 ชั่วโมง']],
+    [41,44,'🌱 เตรียมรอบใหม่',['ทำความสะอาดแพ','เปลี่ยนวัสดุเกาะใหม่','ตรวจสอบเชือก-ทุ่น','ขอผล water quality test']],
+    [45,52,'🌊 เลี้ยงรอบ 2',['แขวนวัสดุรอตัวอ่อนใหม่','เฝ้าระวังช่วงมรสุม','ตรวจ Salinity บ่อยขึ้น','เตรียมตลาดปีใหม่']],
+  ]),
+};
+
+// ============================================================
+// STATE
+// ============================================================
+let currentSpecies = 'shrimp';
+let currentWeek = 1;
+const NOW = new Date();
+const startOfYear = new Date(NOW.getFullYear(),0,1);
+const weekOfYear = Math.ceil(((NOW-startOfYear)/86400000+startOfYear.getDay()+1)/7);
+currentWeek = Math.min(Math.max(1,weekOfYear),52);
+
+// ============================================================
+// PHASE GRADIENT
+// ============================================================
+function getPhaseGradient(speciesKey, phase) {
+  const sp = SPECIES[speciesKey] || {};
+  const color = sp.color || '#06b6d4';
+  if(phase.includes('เตรียมบ่อ') || phase.includes('เตรียม'))
+    return `linear-gradient(135deg,#0a1520 0%,#1a3a50 60%,${color}22 100%)`;
+  if(phase.includes('ปล่อย') || phase.includes('อนุบาล'))
+    return `linear-gradient(135deg,#0a2030 0%,${color}44 60%,rgba(6,4,15,0.8) 100%)`;
+  if(phase.includes('เจริญ') || phase.includes('ขยาย') || phase.includes('เลี้ยง') || phase.includes('โต'))
+    return `linear-gradient(135deg,#0d2b35 0%,${color}55 60%,rgba(6,4,15,0.7) 100%)`;
+  if(phase.includes('จับ') || phase.includes('เก็บเกี่ยว') || phase.includes('เก็บ'))
+    return `linear-gradient(135deg,#2a1a00 0%,#7a4400 50%,#d4a84333 100%)`;
+  if(phase.includes('พัก') || phase.includes('สรุป'))
+    return `linear-gradient(135deg,#0f0f20 0%,#1a1a30 100%)`;
+  return `linear-gradient(135deg,#0a1520 0%,${color}44 100%)`;
+}
+
+// ============================================================
+// RENDER SPECIES CHIPS
+// ============================================================
+function renderSpecies() {
+  const row = document.getElementById('speciesRow');
+  row.innerHTML = Object.values(SPECIES).map(sp =>
+    `<div class="sp-chip${sp.key===currentSpecies?' active':''}" style="color:${sp.color}" onclick="selectSpecies('${sp.key}')">
+      <span>${sp.emoji}</span><span>${sp.name}</span>
+    </div>`
+  ).join('');
+}
+
+function selectSpecies(key) {
+  currentSpecies = key;
+  renderSpecies();
+  renderCalendar();
+}
+
+// ============================================================
+// RENDER CALENDAR
+// ============================================================
+function renderCalendar() {
+  const sp = SPECIES[currentSpecies];
+  const periods = FARM_PERIODS[currentSpecies] || {};
+  const period = periods[currentWeek] || {phase:'ไม่มีข้อมูล',tasks:[]};
+
+  // Header week
+  document.getElementById('hdrWeek').textContent = `สัปดาห์ ${currentWeek}`;
+  document.getElementById('nowWeekNum').textContent = weekOfYear;
+
+  // Today badge
+  const months = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  document.getElementById('todayDate').textContent =
+    `${NOW.getDate()} ${months[NOW.getMonth()]} ${NOW.getFullYear()+543}`;
+
+  // Phase pill
+  const pill = document.getElementById('phasePill');
+  const phaseName = period.phase.replace(/^[^\s]+ /,'');
+  pill.textContent = phaseName;
+  pill.style.color = sp.color;
+
+  // Phase banner
+  const banner = document.getElementById('phaseBanner');
+  banner.style.background = getPhaseGradient(currentSpecies, period.phase);
+  document.getElementById('pbCrop').textContent = sp.emoji + ' ' + sp.name;
+  document.getElementById('pbPhase').textContent = period.phase;
+  document.getElementById('pbWeek').textContent = `สัปดาห์ที่ ${currentWeek} / 52`;
+  document.getElementById('pbEmoji').textContent = sp.emoji;
+
+  // Week strip
+  const row = document.getElementById('weekRow');
+  row.innerHTML = Array.from({length:52},(_,i)=>{
+    const w=i+1;
+    const p=periods[w];
+    const cls=['wk'];
+    if(w===currentWeek)cls.push('active');
+    if(w===weekOfYear)cls.push('now');
+    return `<div class="${cls.join(' ')}" onclick="selectWeek(${w})">${w}</div>`;
+  }).join('');
+  // Scroll to current week
+  setTimeout(()=>{
+    const active=row.querySelector('.active');
+    if(active)active.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
+  },100);
+
+  // Tasks
+  const tc = document.getElementById('taskContainer');
+  const taskColor = sp.color;
+  tc.innerHTML = `
+    <div class="task-card">
+      <div class="tc-head" style="color:${taskColor}">📋 งานประจำสัปดาห์นี้</div>
+      <ul class="task-list">${period.tasks.map(t=>`<li>${t}</li>`).join('')}</ul>
+    </div>
+    <div class="task-card">
+      <div class="tc-head">⚠️ ข้อควรระวัง</div>
+      <ul class="task-list">
+        ${getWarnings(currentSpecies,currentWeek).map(w=>`<li class="warn">${w}</li>`).join('')}
+      </ul>
+    </div>
+    <div class="task-card">
+      <div class="tc-head">💡 คำแนะนำ AI</div>
+      <ul class="task-list">
+        ${getAdvice(currentSpecies,period.phase).map(a=>`<li class="success">${a}</li>`).join('')}
+      </ul>
+    </div>
+  `;
+}
+
+function selectWeek(w) {
+  currentWeek = w;
+  renderCalendar();
+}
+
+function getWarnings(species, week) {
+  const w = [
+    'ตรวจ DO ก่อนและหลังพระอาทิตย์ตก',
+    'ระวังน้ำฝนทำให้ pH ลดลงกะทันหัน',
+  ];
+  if(species==='shrimp') w.push('เฝ้าระวัง EMS: กุ้งลอยหัว ลำไส้ขาว');
+  if(species==='tilapia') w.push('ปลานิลอาจรุกรานลูกปลาเล็ก');
+  if(species==='catfish') w.push('ปลาดุกหนาแน่นสูง → Ammonia พุ่ง');
+  if(species==='seabass') w.push('กะพงอ่อนแอต่อโรค VNN ช่วงฝน');
+  if(species==='oyster') w.push('หอยอ่อนแอต่อน้ำจืดหลังฝนหนัก');
+  if(week>=10&&week<=20) w.push('ฤดูร้อน: DO ลดต่ำกลางคืน เพิ่มใบพัด');
+  return w.slice(0,3);
+}
+
+function getAdvice(species, phase) {
+  const base = ['บันทึกข้อมูลในสมุดฟาร์มทุกวัน','ตรวจสอบอุปกรณ์ให้อากาศอย่างสม่ำเสมอ'];
+  if(phase.includes('เตรียม')) base.push('ตากบ่อให้ถึง 7 วัน ลดโรคได้ >70%');
+  if(phase.includes('ปล่อย')) base.push('ทดสอบคุณภาพน้ำ 3 วันก่อนปล่อยลูกพันธุ์');
+  if(phase.includes('จับ')) base.push('ติดต่อล้งล่วงหน้า 2-3 วัน ได้ราคาดีกว่า');
+  if(species==='shrimp') base.push('เติม Probiotics ลดความเสี่ยง Vibrio');
+  return base.slice(0,3);
+}
+
+// ============================================================
+// IOT WATER QUALITY
+// ============================================================
+const IOT_DATA = [
+  {key:'do', label:'DO (ออกซิเจนละลาย)', icon:'💧', unit:'mg/L', val:5.8, min:0, max:10, ideal:[5,8], crit:[0,3]},
+  {key:'temp', label:'อุณหภูมิน้ำ', icon:'🌡️', unit:'°C', val:29, min:20, max:40, ideal:[25,32], crit:[0,22]},
+  {key:'ph', label:'pH น้ำ', icon:'🧪', unit:'', val:7.8, min:6, max:10, ideal:[7.5,8.5], crit:[0,6.5]},
+  {key:'sal', label:'ความเค็ม', icon:'🧂', unit:'ppt', val:12, min:0, max:35, ideal:[10,25], crit:[0,5]},
+  {key:'nh3', label:'แอมโมเนีย', icon:'🔬', unit:'ppm', val:0.08, min:0, max:1, ideal:[0,0.1], crit:[0.5,1]},
+  {key:'turb', label:'ความขุ่น', icon:'🌊', unit:'NTU', val:38, min:0, max:200, ideal:[20,80], crit:[150,200]},
+];
+
+function renderIoT() {
+  const grid = document.getElementById('iotGrid');
+  grid.innerHTML = IOT_DATA.map(d => {
+    const pct = ((d.val - d.min)/(d.max - d.min)*100).toFixed(0);
+    const inIdeal = d.val >= d.ideal[0] && d.val <= d.ideal[1];
+    const inCrit = d.val >= d.crit[0] && d.val <= d.crit[1];
+    const status = inCrit ? 'crit' : inIdeal ? 'ok' : 'warn';
+    const statusText = inCrit ? 'วิกฤต' : inIdeal ? 'ปกติ' : 'ระวัง';
+    const barColor = inCrit ? '#ef4444' : inIdeal ? '#10b981' : '#f97316';
+    return `<div class="iot-card">
+      <div class="iot-label">${d.icon} ${d.label}</div>
+      <div class="iot-val">${d.val}<span class="iot-unit">${d.unit}</span></div>
+      <div class="iot-bar"><div class="iot-fill" style="width:${pct}%;background:${barColor}"></div></div>
+      <span class="iot-status status-${status}">${statusText}</span>
+    </div>`;
+  }).join('');
+
+  // Alerts
+  const crits = IOT_DATA.filter(d => d.val >= d.crit[0] && d.val <= d.crit[1] && d.val !== 0);
+  const warns = IOT_DATA.filter(d => !(d.val >= d.ideal[0] && d.val <= d.ideal[1]) && !crits.includes(d));
+  const alertEl = document.getElementById('iotAlert');
+  const alertText = document.getElementById('iotAlertText');
+  if(crits.length > 0) {
+    alertEl.style.background = 'linear-gradient(135deg,rgba(239,68,68,0.15),rgba(239,68,68,0.08))';
+    alertEl.style.borderColor = 'rgba(239,68,68,0.4)';
+    alertText.innerHTML = `<strong style="color:#f87171">⚠️ วิกฤต!</strong> ${crits.map(d=>d.label).join(', ')} ออกนอกช่วงปลอดภัย — ดำเนินการทันที`;
+    alertText.style.color = '#fca5a5';
+  } else if(warns.length > 0) {
+    alertText.textContent = `ระวัง: ${warns.map(d=>d.label).join(', ')} ออกจากช่วงอุดมคติ`;
+    alertText.style.color = '#fdba74';
+  } else {
+    alertEl.style.background = 'linear-gradient(135deg,rgba(16,185,129,0.12),rgba(16,185,129,0.06))';
+    alertEl.style.borderColor = 'rgba(16,185,129,0.25)';
+    alertText.textContent = '✅ คุณภาพน้ำทุกค่าอยู่ในเกณฑ์ปกติ';
+    alertText.style.color = '#6ee7b7';
+  }
+
+  // Advice
+  const advice = document.getElementById('iotAdvice');
+  advice.innerHTML = `<ul class="task-list">
+    <li class="success">DO 5.8 mg/L อยู่ในเกณฑ์ดี — คงระดับใบพัดน้ำปัจจุบัน</li>
+    <li>อุณหภูมิ 29°C เหมาะสม — กุ้งกินอาหารได้ดี</li>
+    <li>pH 7.8 ดีเยี่ยม — คงสภาวะน้ำนี้ไว้</li>
+    <li class="warn">ความเค็ม 12 ppt — ตรวจสอบถ้าฝนตกหนัก</li>
+  </ul>`;
+}
+
+// ============================================================
+// WEATHER
+// ============================================================
+const WEATHER = {
+  emoji: '⛅',
+  desc: 'มีเมฆบางส่วน',
+  temp: 32,
+  grid: [
+    {ic:'💨', val:'18 กม/ชม', lbl:'ความเร็วลม'},
+    {ic:'🌊', val:'0.5 ม.', lbl:'ความสูงคลื่น'},
+    {ic:'🌧️', val:'30%', lbl:'โอกาสฝน'},
+    {ic:'🧭', val:'NE', lbl:'ทิศลม'},
+    {ic:'👁️', val:'12 กม.', lbl:'ทัศนวิสัย'},
+    {ic:'💧', val:'75%', lbl:'ความชื้น'},
+  ],
+  tides: [
+    {time:'03:24', type:'น้ำขึ้นสูงสุด', height:'1.8 ม.', pct:90},
+    {time:'09:45', type:'น้ำลงต่ำสุด', height:'0.3 ม.', pct:15},
+    {time:'15:12', type:'น้ำขึ้นสูงสุด', height:'1.6 ม.', pct:80},
+    {time:'21:33', type:'น้ำลงต่ำสุด', height:'0.4 ม.', pct:20},
+  ],
+  forecast: [
+    {day:'พรุ่งนี้', ic:'🌤️', hi:33, lo:27, rain:20},
+    {day:'วันมะรืน', ic:'🌦️', hi:31, lo:26, rain:55},
+    {day:'3 วันข้าง', ic:'⛈️', hi:29, lo:25, rain:80},
+    {day:'4 วันข้าง', ic:'🌧️', hi:28, lo:24, rain:90},
+    {day:'5 วันข้าง', ic:'🌤️', hi:32, lo:26, rain:25},
+  ]
+};
+
+function renderWeather() {
+  document.getElementById('wxEmoji').textContent = WEATHER.emoji;
+  document.getElementById('wxTemp').textContent = WEATHER.temp + '°C';
+  document.getElementById('wxDesc').textContent = WEATHER.desc;
+
+  document.getElementById('wxGrid').innerHTML = WEATHER.grid.map(g=>
+    `<div class="wx-item">
+      <div class="ic">${g.ic}</div>
+      <div class="val">${g.val}</div>
+      <div class="lbl">${g.lbl}</div>
+    </div>`
+  ).join('');
+
+  document.getElementById('tideRows').innerHTML = WEATHER.tides.map(t=>
+    `<div class="tide-row">
+      <span class="tide-time">${t.time}</span>
+      <span class="tide-type" style="color:${t.pct>50?'#67e8f9':'#94a3b8'}">${t.type}</span>
+      <div class="tide-bar-wrap"><div class="tide-bar" style="width:${t.pct}%"></div></div>
+      <span class="tide-h">${t.height}</span>
+    </div>`
+  ).join('');
+
+  document.getElementById('forecast5').innerHTML = WEATHER.forecast.map(f=>
+    `<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)">
+      <span style="min-width:70px;font-size:12px;color:var(--text2)">${f.day}</span>
+      <span style="font-size:20px">${f.ic}</span>
+      <span style="font-size:12px;color:#fff;font-weight:600">${f.hi}° / ${f.lo}°</span>
+      <span style="margin-left:auto;font-size:11px;color:${f.rain>60?'#67e8f9':'var(--text3)'}">🌧️ ${f.rain}%</span>
+    </div>`
+  ).join('');
+
+  // Storm warning if rain > 75
+  const stormDay = WEATHER.forecast.find(f=>f.rain>=75);
+  if(stormDay) {
+    document.getElementById('stormWarn').style.display = 'flex';
+    document.getElementById('stormText').textContent = `แจ้งเตือน: โอกาสพายุ/ฝนหนัก ${stormDay.rain}% — ${stormDay.day} — ระวังคลื่นลมแรง`;
+  }
+}
+
+// ============================================================
+// MARKET PRICES
+// ============================================================
+const MARKET_DATA = [
+  {species:'กุ้งขาว Size 60', emoji:'🦐', price:'200-230', unit:'บ./กก.', trend:'up', note:'+10 จากเมื่อวาน'},
+  {species:'กุ้งขาว Size 80', emoji:'🦐', price:'160-190', unit:'บ./กก.', trend:'flat', note:'ทรงตัว'},
+  {species:'ปลานิล', emoji:'🐟', price:'45-55', unit:'บ./กก.', trend:'down', note:'-3 จากอาทิตย์ก่อน'},
+  {species:'ปลาดุก', emoji:'🐠', price:'35-45', unit:'บ./กก.', trend:'up', note:'+5 ตลาดต้องการสูง'},
+  {species:'ปลากะพง', emoji:'🐡', price:'80-120', unit:'บ./กก.', trend:'up', note:'ราคาสูงสุดรอบปี'},
+  {species:'หอยนางรม', emoji:'🦪', price:'80-100', unit:'บ./กก.', trend:'flat', note:'คงที่ช่วงปลายปี'},
+];
+
+function renderMarket() {
+  document.getElementById('marketGrid').innerHTML = MARKET_DATA.map(m=>
+    `<div class="mkt-card">
+      <div class="mkt-emoji">${m.emoji}</div>
+      <div class="mkt-species">${m.species}</div>
+      <div class="mkt-price">${m.price}</div>
+      <div class="mkt-unit">${m.unit}</div>
+      <span class="mkt-tag tag-${m.trend}">${m.trend==='up'?'▲ ขึ้น':m.trend==='down'?'▼ ลง':'━ คงที่'}</span>
+      <div style="font-size:10px;color:var(--text3);margin-top:4px">${m.note}</div>
+    </div>`
+  ).join('');
+
+  document.getElementById('priceTrend').innerHTML = `
+    <li class="success">กุ้งขาว Size 60 ราคาดี — เหมาะจับตอนนี้</li>
+    <li class="success">ปลากะพงราคาพุ่ง — ตลาดร้านอาหารต้องการ</li>
+    <li class="warn">ปลานิลราคาลง — พิจารณาเก็บไว้อีก 2-3 สัปดาห์</li>
+    <li>หอยนางรมตลาดปลายปี — เตรียมแพ็กพิเศษเทศกาล</li>
+  `;
+
+  document.getElementById('buyerList').innerHTML = `
+    <div class="task-card" style="margin-bottom:10px">
+      <div class="tc-head" style="color:var(--teal2)">🏪 ตลาดรับซื้อหลัก</div>
+      <ul class="task-list">
+        <li>ตลาดสด อ.ท่าทอง — กุ้ง, ปลา รับทุกวัน 05:00-09:00 น.</li>
+        <li>ล้งเจ้าสมุทร (สุราษฎร์) — รับกุ้งขาว ขั้นต่ำ 500 กก.</li>
+        <li>โรงงานแช่แข็ง Sea Fresh — ปลากะพง, ปลานิล ต้องการ GAP</li>
+        <li>ตลาดกุ้ง จ.สมุทรสาคร — ราคาสูง แต่ค่าขนส่งเพิ่ม</li>
+      </ul>
+    </div>
+  `;
+}
+
+// ============================================================
+// CALCULATORS
+// ============================================================
+function calcFeed() {
+  const area = parseFloat(document.getElementById('pondArea').value)||1;
+  const dens = parseFloat(document.getElementById('density').value)||80;
+  const avgW = parseFloat(document.getElementById('avgWeight').value)||10;
+  const fcr = parseFloat(document.getElementById('fcr').value)||1.3;
+  const sqm = area * 1600;
+  const totalFish = sqm * dens;
+  const biomass = totalFish * avgW / 1000; // kg
+  const feedRate = 0.03; // 3% body weight
+  const feedKg = biomass * feedRate * fcr;
+
+  const el = document.getElementById('feedResult');
+  document.getElementById('feedVal').textContent = feedKg.toFixed(1);
+  document.getElementById('feedDetail').innerHTML =
+    `จำนวนสัตว์น้ำ: <strong>${totalFish.toLocaleString()}</strong> ตัว<br>
+     Biomass รวม: <strong>${biomass.toFixed(0)}</strong> กก.<br>
+     อัตราให้อาหาร 3% × FCR ${fcr} = <strong>${feedKg.toFixed(1)} กก./วัน</strong>`;
+  el.style.display = 'block';
+}
+
+function calcDensity() {
+  const count = parseFloat(document.getElementById('stockCount').value)||100000;
+  const area = parseFloat(document.getElementById('pondSqm').value)||1600;
+  const dens = count / area;
+  let advice = '';
+  if(dens < 20) advice = '🟢 ความหนาแน่นต่ำ — เหมาะสำหรับปลานิล, กะพง';
+  else if(dens < 60) advice = '🟡 ความหนาแน่นปานกลาง — เหมาะสำหรับปลาดุก';
+  else if(dens < 120) advice = '🟠 ความหนาแน่นสูง — เหมาะกุ้งขาว ต้องระบบอากาศดี';
+  else advice = '🔴 ความหนาแน่นสูงมาก — ต้องการระบบน้ำและอากาศระดับสูง';
+
+  const el = document.getElementById('densityResult');
+  document.getElementById('densityVal').textContent = dens.toFixed(1);
+  document.getElementById('densityAdvice').textContent = advice;
+  el.style.display = 'block';
+}
+
+// ============================================================
+// SCREEN NAVIGATION
+// ============================================================
+function showScreen(name, btn) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active');
+  if(btn) btn.classList.add('active');
+  // Scroll to top
+  document.getElementById('content').scrollTo(0,0);
+}
+
+// ============================================================
+// INIT
+// ============================================================
+function init() {
+  renderSpecies();
+  renderCalendar();
+  renderIoT();
+  renderWeather();
+  renderMarket();
+
+  // Hide splash
+  setTimeout(()=>{
+    const splash = document.getElementById('splash');
+    splash.style.opacity = '0';
+    setTimeout(()=>splash.style.display='none', 500);
+  }, 2000);
+}
+
+window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

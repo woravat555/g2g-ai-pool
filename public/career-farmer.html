@@ -109,10 +109,68 @@ input,select,textarea{font-family:inherit;font-size:1rem;-webkit-appearance:none
 .wc-ai-btn:active{background:rgba(249,115,22,.25)}
 
 /* PHASE IMAGE BANNER */
-.wc-phase-img-wrap{position:relative;overflow:hidden;border-radius:0;line-height:0}
-.wc-phase-img{width:100%;height:150px;object-fit:cover;display:block;filter:brightness(.75) saturate(1.3);background:var(--bg3);transition:filter .3s}
-.wc-phase-img-wrap:hover .wc-phase-img{filter:brightness(.9) saturate(1.4)}
-.wc-phase-cap{position:absolute;bottom:0;left:0;right:0;padding:8px 14px;background:linear-gradient(0deg,rgba(6,4,15,.85) 0%,transparent 100%);font-size:.72rem;font-weight:600;color:rgba(255,255,255,.8);letter-spacing:1.5px;text-transform:uppercase}
+.wc-phase-img-wrap{position:relative;overflow:hidden;border-radius:0;height:130px;display:flex;align-items:flex-end}
+.wc-phase-cap{padding:8px 14px;background:linear-gradient(0deg,rgba(6,4,15,.85) 0%,transparent 100%);font-size:.72rem;font-weight:600;color:rgba(255,255,255,.8);letter-spacing:1.5px;text-transform:uppercase;width:100%}
+
+/* IOT SCREEN */
+.iot-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px 12px}
+.sensor-card{background:var(--glass);border:1px solid var(--border);border-radius:18px;padding:14px;position:relative}
+.sc-icon{font-size:1.5rem;margin-bottom:4px}
+.sc-label{font-size:.72rem;color:var(--text3);letter-spacing:.5px}
+.sc-value{font-size:1.5rem;font-weight:700;color:var(--text);margin:4px 0;line-height:1}
+.sc-unit{font-size:.65rem;color:var(--text3)}
+.sc-status{font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:8px;display:inline-block;margin-top:4px}
+.sc-status.ok{background:rgba(34,197,94,.15);color:#4ade80}
+.sc-status.low{background:rgba(251,191,36,.15);color:#fbbf24}
+.sc-status.high{background:rgba(239,68,68,.15);color:#f87171}
+.sc-trend{position:absolute;top:12px;right:12px;font-size:.9rem}
+.weather-strip{display:flex;gap:8px;overflow-x:auto;padding:0 14px 12px;scrollbar-width:none}
+.weather-strip::-webkit-scrollbar{display:none}
+.wx-card{flex-shrink:0;background:var(--glass);border:1px solid var(--border);border-radius:14px;padding:10px 12px;text-align:center;min-width:70px}
+.wx-day{font-size:.65rem;color:var(--text3)}
+.wx-icon{font-size:1.3rem;margin:4px 0}
+.wx-temp{font-size:.75rem;font-weight:600;color:var(--text)}
+.wx-rain{font-size:.65rem;color:#60a5fa;margin-top:2px}
+.iot-alert-box{margin:0 14px 12px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:14px;padding:12px 14px;font-size:.82rem;color:#fca5a5;display:none}
+.iot-alert-box.show{display:block}
+.iot-connect-btn{margin:0 14px 14px;width:calc(100% - 28px);padding:12px;border-radius:14px;background:linear-gradient(135deg,#0d2b18,#1e5530);border:1.5px solid #16a34a;color:#4ade80;font-weight:700;font-size:.88rem;cursor:pointer}
+
+/* DRONE SCREEN */
+.drone-zone-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:0 14px 12px}
+.dz-card{background:var(--glass);border:1px solid var(--border);border-radius:10px;padding:8px 4px;text-align:center;cursor:pointer;transition:border-color .2s}
+.dz-card.ok{border-color:#16a34a}
+.dz-card.warn{border-color:#f59e0b}
+.dz-card.bad{border-color:#dc2626}
+.dz-num{font-size:.65rem;color:var(--text3)}
+.dz-status{font-size:.7rem;font-weight:600;margin-top:2px}
+.dz-card.ok .dz-status{color:#4ade80}
+.dz-card.warn .dz-status{color:#fbbf24}
+.dz-card.bad .dz-status{color:#f87171}
+.drone-settings{background:var(--glass);border:1px solid var(--border);border-radius:18px;padding:14px;margin:0 14px 12px}
+.drone-settings h3{font-size:.88rem;font-weight:700;color:var(--gold);margin-bottom:12px}
+.drone-status-bar{margin:0 14px 12px;background:var(--glass);border:1px solid var(--border);border-radius:14px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between}
+.dsb-state{font-size:.88rem;font-weight:700;color:var(--text)}
+.dsb-batt{font-size:.8rem;color:var(--gold)}
+.drone-start-btn{margin:0 14px 14px;width:calc(100% - 28px);padding:12px;border-radius:14px;background:linear-gradient(135deg,var(--gold-d),var(--gold));color:#06040f;font-weight:700;font-size:.88rem;cursor:pointer;border:none}
+.drone-result{background:var(--glass);border:1px solid var(--border);border-radius:14px;padding:14px;margin:0 14px 12px;font-size:.82rem;line-height:1.7;color:var(--text)}
+
+/* ACTIVITY MODAL */
+#activity-modal{position:fixed;inset:0;z-index:250;pointer-events:none}
+#activity-modal.open{pointer-events:all}
+.modal-overlay{position:absolute;inset:0;background:rgba(0,0,0,.6);opacity:0;transition:opacity .3s}
+#activity-modal.open .modal-overlay{opacity:1}
+.modal-panel{position:absolute;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:480px;background:var(--bg2);border-radius:24px 24px 0 0;border-top:1px solid rgba(255,255,255,.12);transition:transform .35s var(--eout);padding:0 0 max(20px,env(safe-area-inset-bottom))}
+#activity-modal.open .modal-panel{transform:translateX(-50%) translateY(0)}
+.modal-handle{width:36px;height:4px;border-radius:2px;background:rgba(255,255,255,.15);margin:12px auto 0}
+.modal-header{padding:12px 18px 10px;font-size:.95rem;font-weight:700;color:#c084fc;border-bottom:1px solid var(--border)}
+.modal-body{padding:16px}
+.modal-body .tp-row{margin-bottom:12px}
+.modal-save-btn{width:100%;padding:12px;border-radius:14px;background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;font-weight:700;font-size:.88rem;border:none;cursor:pointer;margin-top:6px}
+.modal-cancel-btn{width:100%;padding:10px;border-radius:14px;background:transparent;border:1px solid var(--border);color:var(--text2);font-size:.82rem;cursor:pointer;margin-top:6px}
+.task-item.custom{border-color:rgba(168,85,247,.4);background:rgba(168,85,247,.08)}
+.task-item.custom .ti-check{border-color:#a855f7}
+.task-item.custom.done .ti-check{background:#a855f7;border-color:#a855f7}
+.add-activity-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:99px;background:rgba(168,85,247,.12);border:1.5px solid rgba(168,85,247,.4);color:#c084fc;font-size:.78rem;font-weight:600;cursor:pointer;margin:0 14px 10px}
 
 /* BOTTOM NAV */
 .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;z-index:50;padding:0 16px max(16px,env(safe-area-inset-bottom));background:linear-gradient(0deg,var(--bg0) 60%,transparent)}
@@ -305,7 +363,7 @@ input,select,textarea{font-family:inherit;font-size:1rem;-webkit-appearance:none
     </div>
     <div id="tool-npk" class="tool-panel" style="display:none">
       <h3>🌿 คำนวณปุ๋ย N-P-K</h3>
-      <div class="tp-row"><div class="tp-label">ชนิดพืช</div><select class="tp-select" id="npk-crop"><option value="citrus">ส้มเขียวหวาน</option><option value="longan">ลำไย</option><option value="durian">ทุเรียน</option><option value="pomelo">ส้มโอ</option></select></div>
+      <div class="tp-row"><div class="tp-label">ชนิดพืช</div><select class="tp-select" id="npk-crop"><option value="citrus">ส้มเขียวหวาน</option><option value="longan">ลำไย</option><option value="durian">ทุเรียน</option><option value="pomelo">ส้มโอ</option><option value="rice">ข้าว</option><option value="cassava">มันสำปะหลัง</option><option value="sugarcane">อ้อย</option><option value="rubber">ยางพารา</option><option value="mango">มะม่วง</option><option value="lychee">ลิ้นจี่</option><option value="pineapple">สับปะรด</option><option value="banana">กล้วย</option></select></div>
       <div class="tp-row"><div class="tp-label">ระยะพืช</div><select class="tp-select" id="npk-stage"><option value="veg">บำรุงต้น</option><option value="flower">ชักนำดอก</option><option value="fruit_set">ติดผลอ่อน</option><option value="fruit_dev">ผลพัฒนา</option><option value="ripen">ผลแก่/เก็บ</option><option value="after">หลังเก็บ</option></select></div>
       <div class="tp-row"><div class="tp-label">จำนวนต้น</div><input class="tp-input" type="number" id="npk-trees" value="80" min="1"></div>
       <div class="tp-row"><div class="tp-label">อายุต้น (ปี)</div><input class="tp-input" type="number" id="npk-age" value="5" min="1" max="30"></div>
@@ -315,7 +373,7 @@ input,select,textarea{font-family:inherit;font-size:1rem;-webkit-appearance:none
     </div>
     <div id="tool-water" class="tool-panel" style="display:none">
       <h3>💧 คำนวณปริมาณน้ำ</h3>
-      <div class="tp-row"><div class="tp-label">ชนิดพืช</div><select class="tp-select" id="w-crop"><option value="citrus">ส้มเขียวหวาน</option><option value="longan">ลำไย</option><option value="durian">ทุเรียน</option><option value="pomelo">ส้มโอ</option></select></div>
+      <div class="tp-row"><div class="tp-label">ชนิดพืช</div><select class="tp-select" id="w-crop"><option value="citrus">ส้มเขียวหวาน</option><option value="longan">ลำไย</option><option value="durian">ทุเรียน</option><option value="pomelo">ส้มโอ</option><option value="rice">ข้าว</option><option value="cassava">มันสำปะหลัง</option><option value="sugarcane">อ้อย</option><option value="rubber">ยางพารา</option><option value="mango">มะม่วง</option><option value="lychee">ลิ้นจี่</option><option value="pineapple">สับปะรด</option><option value="banana">กล้วย</option></select></div>
       <div class="tp-row"><div class="tp-label">จำนวนต้น</div><input class="tp-input" type="number" id="w-trees" value="80" min="1"></div>
       <div class="tp-row"><div class="tp-label">อายุต้น (ปี)</div><input class="tp-input" type="number" id="w-age" value="5" min="1" max="30"></div>
       <div class="tp-row"><div class="tp-label">ระบบน้ำ</div><select class="tp-select" id="w-system"><option value="drip">หยด</option><option value="sprinkler">สปริงเกลอร์</option><option value="flood">ปล่อยท่วม</option></select></div>
@@ -334,7 +392,7 @@ input,select,textarea{font-family:inherit;font-size:1rem;-webkit-appearance:none
     </div>
     <div id="tool-growth" class="tool-panel" style="display:none">
       <h3>📅 คำนวณระยะเจริญเติบโต</h3>
-      <div class="tp-row"><div class="tp-label">ชนิดพืช</div><select class="tp-select" id="g-crop"><option value="citrus">ส้มเขียวหวาน</option><option value="longan">ลำไย</option><option value="durian">ทุเรียน</option><option value="pomelo">ส้มโอ</option></select></div>
+      <div class="tp-row"><div class="tp-label">ชนิดพืช</div><select class="tp-select" id="g-crop"><option value="citrus">ส้มเขียวหวาน</option><option value="longan">ลำไย</option><option value="durian">ทุเรียน</option><option value="pomelo">ส้มโอ</option><option value="rice">ข้าว</option><option value="cassava">มันสำปะหลัง</option><option value="sugarcane">อ้อย</option><option value="rubber">ยางพารา</option><option value="mango">มะม่วง</option><option value="lychee">ลิ้นจี่</option><option value="pineapple">สับปะรด</option><option value="banana">กล้วย</option></select></div>
       <div class="tp-row"><div class="tp-label">วันที่ปลูก</div><input class="tp-input" type="date" id="g-planted"></div>
       <button class="tp-btn" onclick="calcGrowth()">คำนวณ</button>
       <div class="tp-result" id="g-result"></div>
@@ -363,7 +421,7 @@ input,select,textarea{font-family:inherit;font-size:1rem;-webkit-appearance:none
       </div>
       <img id="diag-img-preview" alt="พืชที่วินิจฉัย">
       <div style="margin-top:10px">
-        <div class="tp-row"><div class="tp-label">พืชที่ถ่าย</div><select class="tp-select" id="diag-crop-sel"><option value="ส้มเขียวหวาน">ส้มเขียวหวาน</option><option value="ลำไย">ลำไย</option><option value="ทุเรียน">ทุเรียน</option><option value="ส้มโอ">ส้มโอ</option></select></div>
+        <div class="tp-row"><div class="tp-label">พืชที่ถ่าย</div><select class="tp-select" id="diag-crop-sel"><option value="ส้มเขียวหวาน">ส้มเขียวหวาน</option><option value="ลำไย">ลำไย</option><option value="ทุเรียน">ทุเรียน</option><option value="ส้มโอ">ส้มโอ</option><option value="ข้าว">ข้าว</option><option value="มันสำปะหลัง">มันสำปะหลัง</option><option value="อ้อย">อ้อย</option><option value="ยางพารา">ยางพารา</option><option value="มะม่วง">มะม่วง</option><option value="ลิ้นจี่">ลิ้นจี่</option><option value="สับปะรด">สับปะรด</option><option value="กล้วย">กล้วย</option></select></div>
         <div class="tp-row"><div class="tp-label">คำถาม</div><input class="tp-input" id="diag-q" placeholder="เช่น ใบเหลือง มีจุดดำ"></div>
         <button class="tp-btn" id="diag-submit-btn" onclick="submitDiag()" style="display:none">🔍 วิเคราะห์ด้วย AI</button>
       </div>
@@ -379,7 +437,7 @@ input,select,textarea{font-family:inherit;font-size:1rem;-webkit-appearance:none
       <div class="log-input-card">
         <textarea id="log-text" placeholder="บันทึกวันนี้... เช่น พ่นยา ราคา ปัญหาที่พบ"></textarea>
         <div class="log-meta">
-          <select id="log-crop"><option value="ส้มเขียวหวาน">🍊 ส้มเขียวหวาน</option><option value="ลำไย">🍇 ลำไย</option><option value="ทุเรียน">🌵 ทุเรียน</option><option value="ส้มโอ">🫧 ส้มโอ</option></select>
+          <select id="log-crop"><option value="ส้มเขียวหวาน">🍊 ส้มเขียวหวาน</option><option value="ลำไย">🍇 ลำไย</option><option value="ทุเรียน">🌵 ทุเรียน</option><option value="ส้มโอ">🫧 ส้มโอ</option><option value="ข้าว">🌾 ข้าว</option><option value="มันสำปะหลัง">🥔 มันสำปะหลัง</option><option value="อ้อย">🎋 อ้อย</option><option value="ยางพารา">🌳 ยางพารา</option><option value="มะม่วง">🥭 มะม่วง</option><option value="ลิ้นจี่">🍒 ลิ้นจี่</option><option value="สับปะรด">🍍 สับปะรด</option><option value="กล้วย">🍌 กล้วย</option></select>
           <select id="log-type"><option value="งาน">งานสวน</option><option value="ปัญหา">ปัญหา</option><option value="ราคา">ราคาตลาด</option><option value="ค่าใช้จ่าย">ค่าใช้จ่าย</option></select>
         </div>
         <button class="log-save-btn" onclick="saveLog()">💾 บันทึก</button>
@@ -401,14 +459,62 @@ input,select,textarea{font-family:inherit;font-size:1rem;-webkit-appearance:none
     </div>
   </div>
 
+  <!-- IOT SCREEN -->
+  <div id="screen-iot" class="screen">
+    <div class="screen-header"><div class="sh-title">📡 เซนเซอร์แปลง IoT</div><div class="sh-sub">ข้อมูลสภาพแวดล้อมแบบ Realtime</div></div>
+    <div class="iot-alert-box" id="iot-alert-box">⚠️ กำลังโหลดข้อมูล...</div>
+    <div class="iot-grid" id="iot-grid"></div>
+    <div style="padding:0 14px;font-size:.72rem;color:var(--text3);letter-spacing:1px;margin-bottom:8px">พยากรณ์อากาศ 5 วัน</div>
+    <div class="weather-strip" id="weather-strip"></div>
+    <button class="iot-connect-btn" onclick="connectIoT()">📡 เชื่อมต่ออุปกรณ์</button>
+  </div>
+
+  <!-- DRONE SCREEN -->
+  <div id="screen-drone" class="screen">
+    <div class="screen-header"><div class="sh-title">🚁 โดรนตรวจสภาพสวน</div><div class="sh-sub">ตรวจสอบแปลงด้วยโดรนอัจฉริยะ</div></div>
+    <div class="drone-status-bar">
+      <div><div class="dsb-state" id="drone-state">🟡 พักเครื่อง</div><div style="font-size:.7rem;color:var(--text3);margin-top:2px">DJI Agras T40</div></div>
+      <div class="dsb-batt" id="drone-batt">🔋 87%</div>
+    </div>
+    <div style="padding:0 14px;font-size:.72rem;color:var(--text3);letter-spacing:1px;margin-bottom:8px">แผนที่โซนแปลง (4×3)</div>
+    <div class="drone-zone-grid" id="drone-zone-grid"></div>
+    <div class="drone-settings">
+      <h3>⚙️ ตั้งค่าการบิน</h3>
+      <div class="tp-row"><div class="tp-label">พื้นที่บิน (m²)</div><input class="tp-input" id="drone-area" type="number" value="10000" min="500"></div>
+      <div class="tp-row"><div class="tp-label">ความสูง</div><select class="tp-select" id="drone-alt"><option value="5">5 เมตร</option><option value="10" selected>10 เมตร</option><option value="15">15 เมตร</option></select></div>
+      <div class="tp-row"><div class="tp-label">ความเร็ว</div><select class="tp-select" id="drone-speed"><option value="2">2 m/s (ละเอียด)</option><option value="4" selected>4 m/s (ปกติ)</option><option value="6">6 m/s (เร็ว)</option></select></div>
+      <div class="tp-row"><div class="tp-label">หลีกเลี่ยงต้นไม้</div><select class="tp-select" id="drone-avoid"><option value="1">เปิด ✅</option><option value="0">ปิด</option></select></div>
+    </div>
+    <button class="drone-start-btn" id="drone-start-btn" onclick="startDroneInspection()">🚁 เริ่มตรวจสภาพสวน</button>
+    <div class="drone-result" id="drone-result" style="display:none"></div>
+  </div>
+
   <!-- BOTTOM NAV -->
   <div class="bottom-nav">
     <div class="nav-inner">
       <button class="nav-item active" onclick="switchTab('week',this)"><div class="nav-icon">📅</div><div class="nav-label">สัปดาห์</div><div class="nav-dot"></div></button>
       <button class="nav-item" onclick="switchTab('tools',this)"><div class="nav-icon">🧪</div><div class="nav-label">เครื่องมือ</div><div class="nav-dot"></div></button>
       <button class="nav-item" onclick="switchTab('diag',this)"><div class="nav-icon">📷</div><div class="nav-label">วินิจฉัย</div><div class="nav-dot"></div></button>
-      <button class="nav-item" onclick="switchTab('log',this)"><div class="nav-icon">📓</div><div class="nav-label">บันทึก</div><div class="nav-dot"></div></button>
+      <button class="nav-item" onclick="switchTab('iot',this)"><div class="nav-icon">📡</div><div class="nav-label">IoT</div><div class="nav-dot"></div></button>
+      <button class="nav-item" onclick="switchTab('drone',this)"><div class="nav-icon">🚁</div><div class="nav-label">โดรน</div><div class="nav-dot"></div></button>
       <button class="nav-item" onclick="switchTab('market',this)"><div class="nav-icon">📊</div><div class="nav-label">ตลาด</div><div class="nav-dot"></div></button>
+    </div>
+  </div>
+</div>
+
+<!-- ACTIVITY MODAL -->
+<div id="activity-modal">
+  <div class="modal-overlay" onclick="closeActivityModal()"></div>
+  <div class="modal-panel">
+    <div class="modal-handle"></div>
+    <div class="modal-header">➕ เพิ่มกิจกรรมพืช</div>
+    <div class="modal-body">
+      <div class="tp-row"><div class="tp-label">พืช</div><select class="tp-select" id="act-crop"></select></div>
+      <div class="tp-row"><div class="tp-label">สัปดาห์</div><input class="tp-input" type="number" id="act-week" min="1" max="52" value="1" placeholder="สัปดาห์ที่"></div>
+      <div class="tp-row"><div class="tp-label">ชื่อกิจกรรม</div><input class="tp-input" type="text" id="act-name" placeholder="เช่น พ่นยา ใส่ปุ๋ย ตัดแต่ง"></div>
+      <div class="tp-row"><div class="tp-label">รายละเอียด</div><input class="tp-input" type="text" id="act-detail" placeholder="รายละเอียดเพิ่มเติม"></div>
+      <button class="modal-save-btn" onclick="saveActivity()">💾 บันทึกกิจกรรม</button>
+      <button class="modal-cancel-btn" onclick="closeActivityModal()">ยกเลิก</button>
     </div>
   </div>
 </div>
@@ -447,37 +553,27 @@ const CROPS={
   citrus:{key:'citrus',name:'ส้มเขียวหวาน',emoji:'🍊',color:'#f97316',soft:'#fdba74',dark:'#9a3412',glass:'rgba(249,115,22,0.15)'},
   longan:{key:'longan',name:'ลำไย',emoji:'🍇',color:'#9333ea',soft:'#c084fc',dark:'#581c87',glass:'rgba(147,51,234,0.15)'},
   durian:{key:'durian',name:'ทุเรียน',emoji:'🌵',color:'#84cc16',soft:'#bef264',dark:'#365314',glass:'rgba(132,204,22,0.15)'},
-  pomelo:{key:'pomelo',name:'ส้มโอ',emoji:'🫧',color:'#ec4899',soft:'#f9a8d4',dark:'#831843',glass:'rgba(236,72,153,0.15)'}
+  pomelo:{key:'pomelo',name:'ส้มโอ',emoji:'🫧',color:'#ec4899',soft:'#f9a8d4',dark:'#831843',glass:'rgba(236,72,153,0.15)'},
+  rice:{key:'rice',name:'ข้าว',emoji:'🌾',color:'#eab308',soft:'#fde047',dark:'#713f12',glass:'rgba(234,179,8,0.15)'},
+  cassava:{key:'cassava',name:'มันสำปะหลัง',emoji:'🥔',color:'#a16207',soft:'#fcd34d',dark:'#713f12',glass:'rgba(161,98,7,0.15)'},
+  sugarcane:{key:'sugarcane',name:'อ้อย',emoji:'🎋',color:'#16a34a',soft:'#86efac',dark:'#14532d',glass:'rgba(22,163,74,0.15)'},
+  rubber:{key:'rubber',name:'ยางพารา',emoji:'🌳',color:'#15803d',soft:'#86efac',dark:'#14532d',glass:'rgba(21,128,61,0.15)'},
+  mango:{key:'mango',name:'มะม่วง',emoji:'🥭',color:'#f59e0b',soft:'#fcd34d',dark:'#92400e',glass:'rgba(245,158,11,0.15)'},
+  lychee:{key:'lychee',name:'ลิ้นจี่',emoji:'🍒',color:'#dc2626',soft:'#fca5a5',dark:'#7f1d1d',glass:'rgba(220,38,38,0.15)'},
+  pineapple:{key:'pineapple',name:'สับปะรด',emoji:'🍍',color:'#ca8a04',soft:'#fde047',dark:'#713f12',glass:'rgba(202,138,4,0.15)'},
+  banana:{key:'banana',name:'กล้วย',emoji:'🍌',color:'#d97706',soft:'#fcd34d',dark:'#92400e',glass:'rgba(217,119,6,0.15)'}
 };
 let activeCrop='citrus';
 
-// Phase banner images — confirmed Unsplash photo IDs (free, stable)
-const PHASE_IMGS={
-  'citrus_🌱 ฟื้นต้น':'_Tt2HSV6lgY',   // farmer working orange orchard
-  'citrus_🌿 เตรียมต้น':'kscdZjn6IuA',  // mandarin orange prep
-  'citrus_🌸 ออกดอก':'kfKyvidaHv0',     // flowering tree
-  'citrus_🍃 ขยายผล':'_MYcIi9DgYQ',    // oranges ripening on tree
-  'citrus_🧺 เก็บเกี่ยว':'_Tt2HSV6lgY', // picking oranges
-  'longan_🌱 ฟื้นต้น':'eCm6i7V8EAs',   // longan leaves recovery
-  'longan_🌿 เตรียมต้น':'VcUH1qneMeg', // tree with leaves & fruit
-  'longan_🌸 ออกดอก':'kfKyvidaHv0',    // flowering tree
-  'longan_🍃 ขยายผล':'OiOUry4Jpew',   // longan bunch hanging on tree
-  'longan_🧺 เก็บเกี่ยว':'b_nPCnxS3QI', // longan fruits in pot
-  'durian_🌱 ฟื้นต้น':'o8vu1T4VUV8',   // fresh durian produce
-  'durian_🌿 เตรียมต้น':'xZa4JUE7EdM', // durian fruits preparation
-  'durian_🌸 ออกดอก':'kfKyvidaHv0',    // flowering tree
-  'durian_🍃 ขยายผล':'kHqY15DbjrU',   // close up durian bunch on tree
-  'durian_🧺 เก็บเกี่ยว':'fM_JgCp1bzA', // person holding durian
-  'pomelo_🌱 ฟื้นต้น':'NNfpOAUSFvs',   // unripe pomelo on branch
-  'pomelo_🌿 เตรียมต้น':'NNfpOAUSFvs', // pomelo branch prep
-  'pomelo_🌸 ออกดอก':'kfKyvidaHv0',    // flowering tree
-  'pomelo_🍃 ขยายผล':'GsMrUvvac1c',   // pomelo fruit development
-  'pomelo_🧺 เก็บเกี่ยว':'8vJL2ID-S-o', // pomelo harvest
-};
-function getPhaseImg(crop,season){
-  const s=season.replace(/\s+/g,' ').trim();
-  const id=PHASE_IMGS[`${crop}_${s}`];
-  return id?`https://images.unsplash.com/photo-${id}?w=800&q=70&fit=crop&auto=format`:null;
+function getPhaseGradient(crop,season){
+  const c=CROPS[crop]||CROPS.citrus;
+  const color=c.color;const dark=c.dark;
+  if(season.includes('ฟื้นต้น'))return`linear-gradient(135deg,#0a2010 0%,#1a4a20 60%,${color}22 100%)`;
+  if(season.includes('เตรียมต้น'))return`linear-gradient(135deg,#0d2b18 0%,#1e5530 50%,${color}33 100%)`;
+  if(season.includes('ออกดอก'))return`linear-gradient(135deg,#2a0a1a 0%,#7a1a4a 50%,${color}44 100%)`;
+  if(season.includes('ขยายผล'))return`linear-gradient(135deg,${dark}cc 0%,${color}55 60%,rgba(6,4,15,0.8) 100%)`;
+  if(season.includes('เก็บเกี่ยว'))return`linear-gradient(135deg,#2a1a00 0%,#7a4400 50%,#d4a84333 100%)`;
+  return`linear-gradient(135deg,${dark}cc 0%,${color}44 100%)`;
 }
 
 const FARM_PERIODS={
@@ -549,13 +645,96 @@ const FARM_PERIODS={
     {w:[45,48],season:'🌱 ฟื้นต้น',stage:'🌱 ฟื้นต้น',period:'🌱 ฟื้นต้น',tasks:[{t:'ฉีดล้างต้น',d:''},{t:'ใส่ปุ๋ยอินทรีย์ 15 กก./ต้น',d:''},{t:'ตรวจสภาพต้น',d:''},{t:'ตัดแต่งกิ่งหลังเก็บ',d:''},{t:'ทาปูนขาว',d:''},{t:'ใส่ปุ๋ย 25-7-7 อัตรา 1 กก./ต้น',d:''}]},
     {w:[49,52],season:'🌱 ฟื้นต้น',stage:'จดบันทึก lessons learned ปีนี้',period:'🌱 ฟื้นต้น',tasks:[{t:'ใส่ปุ๋ยอินทรีย์ 10 กก./ต้น',d:''},{t:'พรวนดิน',d:''},{t:'ตัดกิ่งกระโดง',d:''},{t:'ตรวจการแตกใบชุดที่ 2',d:''},{t:'ฉีดธาตุรอง + กรดอะมิโน',d:''},{t:'กำจัดวัชพืช',d:''}]},
   ],
+  rice:[
+    {w:[1,4],season:'🌱 ฟื้นต้น',stage:'เตรียมแปลงนาปี',period:'🌱 ฟื้นต้น',tasks:[{t:'ไถดะพลิกดิน ลึก 20-25 ซม.',d:''},{t:'ไถแปรย่อยดินให้ละเอียด',d:''},{t:'ทำเทือกขังน้ำ',d:''},{t:'ตรวจระบบน้ำคลองส่ง',d:''},{t:'ปรับระดับพื้นแปลง',d:''}]},
+    {w:[5,8],season:'🌿 หว่านกล้า/ปักดำ',stage:'หว่านข้าวหรือปักดำ',period:'🌿 หว่านกล้า',tasks:[{t:'หว่านเมล็ดพันธุ์อัตรา 20-25 กก./ไร่',d:''},{t:'ใส่ปุ๋ยรองพื้น 16-20-0',d:''},{t:'ควบคุมระดับน้ำ 5-10 ซม.',d:''},{t:'ป้องกันนกกาเข้ากินเมล็ด',d:''},{t:'ตรวจการงอกของเมล็ด',d:''}]},
+    {w:[9,12],season:'🌿 ดูแลรักษา',stage:'บำรุงกล้าระยะแตกกอ',period:'🌿 บำรุงกล้า',tasks:[{t:'ใส่ปุ๋ย 46-0-0 อัตรา 10 กก./ไร่',d:''},{t:'กำจัดวัชพืชโดยน้ำท่วม',d:''},{t:'ตรวจโรคไหม้-โรคกาบใบแห้ง',d:''},{t:'ตรวจแมลงศัตรูพืช',d:''},{t:'รักษาระดับน้ำ 10-15 ซม.',d:''}]},
+    {w:[13,16],season:'🌿 ดูแลรักษา',stage:'ระยะตั้งตัวแตกกอสูงสุด',period:'🌿 แตกกอ',tasks:[{t:'ใส่ปุ๋ย 46-0-0 อัตรา 10 กก./ไร่ รอบ 2',d:''},{t:'ตรวจป้องกันเพลี้ยกระโดดสีน้ำตาล',d:''},{t:'กำจัดวัชพืชที่เหลือ',d:''},{t:'รักษาระดับน้ำ 15 ซม.',d:''},{t:'ฉีดป้องกันโรคไหม้คอรวง',d:''},{t:'ตรวจสภาพต้นข้าว',d:''}]},
+    {w:[17,20],season:'🌸 ออกรวง',stage:'ระยะตั้งท้อง-ออกรวง',period:'🌸 ออกรวง',tasks:[{t:'ป้องกันเพลี้ยกระโดดสีน้ำตาล',d:''},{t:'ฉีดป้องกันโรคไหม้คอรวง',d:''},{t:'รักษาระดับน้ำ 20 ซม.',d:''},{t:'ใส่ปุ๋ย 16-20-0 อัตรา 5 กก./ไร่',d:''},{t:'ตรวจการออกรวงสม่ำเสมอ',d:''}]},
+    {w:[21,26],season:'🍃 พัฒนาเมล็ด',stage:'พัฒนาเมล็ดข้าว',period:'🍃 พัฒนาเมล็ด',tasks:[{t:'ใส่ปุ๋ย 0-0-60 อัตรา 5 กก./ไร่',d:''},{t:'ลดระดับน้ำเตรียมเก็บเกี่ยว',d:''},{t:'ตรวจความแก่เมล็ด',d:''},{t:'ป้องกันนก-หนู',d:''},{t:'ตรวจโรคราสนิม-กาบใบแห้ง',d:''}]},
+    {w:[27,30],season:'🧺 เก็บเกี่ยว',stage:'เก็บเกี่ยวนาปี',period:'🧺 เก็บเกี่ยว',tasks:[{t:'เกี่ยวข้าวด้วยรถเกี่ยว',d:''},{t:'ตรวจความชื้นข้าว (ควร <25%)',d:''},{t:'อบแห้ง-พักข้าว',d:''},{t:'คัดแยกสิ่งเจือปน',d:''},{t:'บันทึกผลผลิต กก./ไร่',d:''},{t:'ขายหรือเก็บในยุ้งฉาง',d:''}]},
+    {w:[31,36],season:'🌱 ฟื้นต้น',stage:'พักแปลง/เตรียมนาปรัง',period:'🌱 พักแปลง',tasks:[{t:'ไถกลบตอซัง',d:''},{t:'ใส่ปุ๋ยอินทรีย์ 500 กก./ไร่',d:''},{t:'ปรับพื้นแปลงสำหรับนาปรัง',d:''},{t:'ตรวจระบบน้ำ',d:''},{t:'พักดินฟื้นสภาพ',d:''}]},
+    {w:[37,40],season:'🌿 นาปรัง เตรียมปลูก',stage:'เตรียมนาปรัง (รอบ 2)',period:'🌿 นาปรัง',tasks:[{t:'ทำเทือกใหม่',d:''},{t:'หว่านพันธุ์นาปรัง',d:''},{t:'ใส่ปุ๋ยรองพื้น 16-20-0',d:''},{t:'ควบคุมระดับน้ำ',d:''},{t:'ป้องกันวัชพืช',d:''}]},
+    {w:[41,46],season:'🌿 นาปรัง ดูแล',stage:'บำรุงนาปรัง',period:'🌿 นาปรัง',tasks:[{t:'ใส่ปุ๋ย 46-0-0 อัตรา 10 กก./ไร่',d:''},{t:'ป้องกันเพลี้ยกระโดด',d:''},{t:'รักษาระดับน้ำ',d:''},{t:'ตรวจโรคและแมลง',d:''},{t:'ใส่ปุ๋ย 0-0-60 ก่อนออกรวง',d:''}]},
+    {w:[47,52],season:'🧺 เก็บเกี่ยว',stage:'เก็บเกี่ยวนาปรัง',period:'🧺 เก็บเกี่ยว',tasks:[{t:'เกี่ยวข้าวนาปรัง',d:''},{t:'อบแห้งลดความชื้น',d:''},{t:'บันทึกผลผลิต',d:''},{t:'ขายข้าวหรือเก็บสต็อก',d:''},{t:'เตรียมแปลงสำหรับนาปีรอบใหม่',d:''}]},
+  ],
+  cassava:[
+    {w:[1,4],season:'🌱 ฟื้นต้น',stage:'เตรียมดินปลูกมันสำปะหลัง',period:'🌱 เตรียมดิน',tasks:[{t:'ไถลึก 30-40 ซม. เพื่อระบายน้ำ',d:''},{t:'ปรับหน้าดินให้ร่วนซุย',d:''},{t:'ตรวจ pH ดิน (เหมาะ 5.5-6.5)',d:''},{t:'ใส่ปูนขาวถ้า pH ต่ำกว่า 5.5',d:''},{t:'ปรับระยะปลูก 1×1 ม. หรือ 0.8×1 ม.',d:''}]},
+    {w:[5,8],season:'🌿 ปักท่อนพันธุ์',stage:'ปักท่อนพันธุ์มัน',period:'🌿 ปักท่อน',tasks:[{t:'เลือกท่อนพันธุ์จากต้นอายุ 8-12 เดือน',d:''},{t:'ปักท่อนพันธุ์ความลึก 5-10 ซม.',d:''},{t:'ใส่ปุ๋ยรองพื้น 15-15-15 อัตรา 50 กก./ไร่',d:''},{t:'รดน้ำหลังปักท่อน',d:''},{t:'ตรวจการงอก 2-3 สัปดาห์หลังปลูก',d:''}]},
+    {w:[9,12],season:'🌿 ดูแลรักษา',stage:'บำรุงต้นมันระยะต้น',period:'🌿 บำรุงต้น',tasks:[{t:'กำจัดวัชพืชรอบต้น',d:''},{t:'ใส่ปุ๋ย 15-15-15 อัตรา 50 กก./ไร่',d:''},{t:'ตรวจโรคใบจุด-ราแป้ง',d:''},{t:'ป้องกันไรแดง',d:''},{t:'พูนโคนต้นป้องกันล้ม',d:''}]},
+    {w:[13,20],season:'🌿 ดูแลรักษา',stage:'ระยะเจริญเติบโตสูงสุด',period:'🌿 เจริญเติบโต',tasks:[{t:'ใส่ปุ๋ย 15-15-15 รอบ 2 อัตรา 25 กก./ไร่',d:''},{t:'กำจัดวัชพืชรอบ 2',d:''},{t:'ตรวจโรคและแมลง',d:''},{t:'รดน้ำถ้าแล้งนาน >2 สัปดาห์',d:''},{t:'ตรวจสภาพต้นรายเดือน',d:''}]},
+    {w:[21,40],season:'🍃 สะสมแป้ง',stage:'ระยะสะสมแป้งในหัว',period:'🍃 สะสมแป้ง',tasks:[{t:'ใส่ปุ๋ย 13-5-30 อัตรา 25 กก./ไร่',d:''},{t:'ลดการให้น้ำ กระตุ้นสะสมแป้ง',d:''},{t:'ตรวจปริมาณแป้ง (% starch)',d:''},{t:'ป้องกันไรแดง-เพลี้ยแป้ง',d:''},{t:'ตรวจอายุต้น (เหมาะเก็บ 8-12 เดือน)',d:''}]},
+    {w:[41,48],season:'🧺 เก็บเกี่ยว',stage:'เก็บเกี่ยวมันสำปะหลัง',period:'🧺 เก็บเกี่ยว',tasks:[{t:'ตัดต้นเหลือความสูง 30 ซม.',d:''},{t:'ขุดหัวมันด้วยรถขุด',d:''},{t:'ชั่งน้ำหนัก-ตรวจ % แป้ง',d:''},{t:'ส่งโรงงานภายใน 24 ชม.',d:''},{t:'บันทึกผลผลิต ตัน/ไร่',d:''}]},
+    {w:[49,52],season:'🌱 ฟื้นต้น',stage:'เตรียมรอบใหม่',period:'🌱 เตรียมรอบใหม่',tasks:[{t:'ไถกลบตอมัน',d:''},{t:'ปรับสภาพดินใหม่',d:''},{t:'เตรียมท่อนพันธุ์รอบใหม่',d:''},{t:'วางแผนตารางปลูก',d:''}]},
+  ],
+  sugarcane:[
+    {w:[1,4],season:'🌱 ฟื้นต้น',stage:'เตรียมดินปลูกอ้อย',period:'🌱 เตรียมดิน',tasks:[{t:'ไถลึก 40-50 ซม.',d:''},{t:'ปรับแปลง ยกร่อง',d:''},{t:'ใส่ปูนขาวถ้า pH ต่ำ',d:''},{t:'ใส่ปุ๋ยอินทรีย์คลุกดิน',d:''},{t:'วางแผนระบบน้ำ',d:''}]},
+    {w:[5,8],season:'🌿 ปลูกอ้อย',stage:'ปลูกท่อนอ้อย/อ้อยตอ',period:'🌿 ปลูก',tasks:[{t:'วางท่อนพันธุ์ในร่อง',d:''},{t:'ใส่ปุ๋ยรองพื้น 15-15-15',d:''},{t:'กลบดินหนา 5 ซม.',d:''},{t:'รดน้ำหลังปลูก',d:''},{t:'ตรวจการงอก 10-15 วัน',d:''}]},
+    {w:[9,12],season:'🌿 ดูแลรักษา',stage:'บำรุงต้นอ้อยระยะต้น',period:'🌿 บำรุง',tasks:[{t:'กำจัดวัชพืชรอบต้น',d:''},{t:'ใส่ปุ๋ยยูเรีย 46-0-0',d:''},{t:'ป้องกันหนอนกออ้อย',d:''},{t:'รดน้ำสม่ำเสมอ',d:''}]},
+    {w:[13,20],season:'🌿 ดูแลรักษา',stage:'ระยะย่างปล้อง',period:'🌿 ย่างปล้อง',tasks:[{t:'ใส่ปุ๋ย 15-15-15 รอบ 2',d:''},{t:'กำจัดวัชพืชรอบ 2',d:''},{t:'ตรวจหนอนกอ-หนอนกัดรากอ้อย',d:''},{t:'ให้น้ำในช่วงแล้ง',d:''},{t:'ตรวจสภาพต้นอ้อย',d:''}]},
+    {w:[21,36],season:'🍃 สะสมน้ำตาล',stage:'ระยะสะสมน้ำตาล',period:'🍃 สะสมน้ำตาล',tasks:[{t:'ใส่ปุ๋ย 0-0-60 เพิ่มน้ำตาล',d:''},{t:'ลดการให้น้ำ กระตุ้น CCS',d:''},{t:'ตรวจค่า CCS อ้อย (เป้า >12)',d:''},{t:'ป้องกันโรคราสนิม',d:''},{t:'เตรียมแรงงานเก็บเกี่ยว',d:''}]},
+    {w:[37,40],season:'🧺 เก็บเกี่ยว',stage:'เก็บเกี่ยวอ้อยสด',period:'🧺 เก็บสด',tasks:[{t:'ตัดอ้อยสดด้วยรถตัด',d:''},{t:'ส่งโรงงานทันที (ไม่เกิน 16 ชม.)',d:''},{t:'บันทึกน้ำหนัก-ค่า CCS',d:''},{t:'ตรวจคุณภาพอ้อย',d:''}]},
+    {w:[41,46],season:'🧺 เก็บเกี่ยว',stage:'เก็บเกี่ยวต่อเนื่อง',period:'🧺 เก็บเกี่ยว',tasks:[{t:'เก็บเกี่ยวต่อเนื่อง',d:''},{t:'ส่งโรงงาน',d:''},{t:'บันทึกผลผลิตรวม',d:''},{t:'คำนวณต้นทุน-กำไร',d:''}]},
+    {w:[47,52],season:'🌱 ฟื้นต้น',stage:'บำรุงอ้อยตอ',period:'🌱 อ้อยตอ',tasks:[{t:'ตัดแต่งตออ้อยให้เรียบ',d:''},{t:'ใส่ปุ๋ย 15-15-15 บำรุงตอ',d:''},{t:'กำจัดวัชพืชรอบตอ',d:''},{t:'ให้น้ำกระตุ้นการแตกหน่อ',d:''},{t:'ตรวจการแตกหน่อใหม่',d:''}]},
+  ],
+  rubber:[
+    {w:[1,4],season:'🌱 ฟื้นต้น',stage:'บำรุงต้นยางต้นปี',period:'🌱 บำรุงต้น',tasks:[{t:'ใส่ปุ๋ย 30-5-18 อัตรา 0.5 กก./ต้น',d:''},{t:'ทำความสะอาดรอยกรีด',d:''},{t:'ทา Stimulant เพิ่มน้ำยาง',d:''},{t:'ตรวจสภาพต้นยาง',d:''},{t:'กำจัดวัชพืชในสวน',d:''}]},
+    {w:[5,12],season:'🌿 กรีดยาง',stage:'กรีดยางช่วงต้นปี',period:'🌿 กรีด',tasks:[{t:'กรีดยางระบบ S/2 d/3',d:''},{t:'เก็บน้ำยางทุก 3 วัน',d:''},{t:'ทาสาร Stimulant รักษายาง',d:''},{t:'ตรวจหน้ากรีด ป้องกันโรคหน้ากรีด',d:''},{t:'ใส่ปุ๋ย 20-8-20 รอบ 2',d:''},{t:'กำจัดวัชพืช',d:''}]},
+    {w:[13,16],season:'🌿 ผลัดใบ',stage:'ผลัดใบ พักกรีด',period:'🌿 ผลัดใบ',tasks:[{t:'หยุดกรีดช่วงผลัดใบ (มี.ค.-เม.ย.)',d:''},{t:'ใส่ปุ๋ย 20-8-20 อัตรา 0.5 กก./ต้น',d:''},{t:'ตรวจโรคราสีชมพู-โคนเน่า',d:''},{t:'กำจัดวัชพืชทั้งสวน',d:''},{t:'ซ่อมแซมระบบน้ำ',d:''}]},
+    {w:[17,30],season:'🌿 กรีดต่อเนื่อง',stage:'กรีดยางช่วงหลัก',period:'🌿 กรีดหลัก',tasks:[{t:'กรีดยางระบบ S/2 d/3 ต่อเนื่อง',d:''},{t:'เก็บน้ำยางทุก 3 วัน',d:''},{t:'ใส่ปุ๋ย 13-13-21 อัตรา 0.5 กก./ต้น',d:''},{t:'ทาสาร Stimulant ทุก 2-3 สัปดาห์',d:''},{t:'ตรวจโรคราและแมลง',d:''}]},
+    {w:[31,44],season:'🌿 กรีดต่อเนื่อง',stage:'กรีดยางช่วงปลายปี',period:'🌿 กรีดปลายปี',tasks:[{t:'กรีดยางต่อเนื่อง',d:''},{t:'เก็บน้ำยาง',d:''},{t:'ใส่ปุ๋ย 20-8-20 รอบ 3',d:''},{t:'ตรวจสภาพต้นก่อนผลัดใบรอบใหม่',d:''},{t:'บันทึกปริมาณน้ำยาง',d:''}]},
+    {w:[45,52],season:'🌸 บำรุงพิเศษ',stage:'บำรุงก่อนผลัดใบ',period:'🌸 บำรุง',tasks:[{t:'ใส่ปุ๋ย 20-8-20 อัตรา 1 กก./ต้น',d:''},{t:'ฉีดป้องกันโรคราสีชมพู',d:''},{t:'กำจัดวัชพืชทั้งสวน',d:''},{t:'บันทึกผลผลิตรวมทั้งปี',d:''},{t:'วางแผนปีถัดไป',d:''}]},
+  ],
+  mango:[
+    {w:[1,4],season:'🌱 ฟื้นต้น',stage:'ฟื้นต้นมะม่วงหลังเก็บ',period:'🌱 ฟื้นต้น',tasks:[{t:'ตัดแต่งกิ่งหลังเก็บเกี่ยว',d:''},{t:'ใส่ปุ๋ย 15-15-15 อัตรา 1 กก./ต้น',d:''},{t:'ฉีดล้างต้นป้องกันเชื้อรา',d:''},{t:'ใส่ปุ๋ยอินทรีย์ 10 กก./ต้น',d:''},{t:'กำจัดวัชพืชรอบโคน',d:''}]},
+    {w:[5,8],season:'🌿 เตรียมต้น',stage:'เตรียมต้นด้วย KNO3',period:'🌿 เตรียมต้น',tasks:[{t:'ฉีด KNO3 1-2% กระตุ้นดอก',d:''},{t:'ลดน้ำเตรียมสะสมตาดอก',d:''},{t:'ตรวจสภาพใบ-ตา',d:''},{t:'ใส่ปุ๋ย 8-24-24',d:''},{t:'ฉีดป้องกันเพลี้ยแป้ง',d:''}]},
+    {w:[9,12],season:'🌸 ออกดอก',stage:'ออกดอกมะม่วง',period:'🌸 ออกดอก',tasks:[{t:'ตาดอกเริ่มยืดออก',d:''},{t:'ให้น้ำน้อยๆ',d:''},{t:'ฉีดป้องกันเพลี้ยไฟ-เพลี้ยมะม่วง',d:''},{t:'ดอกบาน ห้ามฉีดยาฆ่าแมลง',d:''},{t:'ฉีด Ca-B เสริม',d:''}]},
+    {w:[13,24],season:'🍃 ขยายผล',stage:'ขยายผลมะม่วง',period:'🍃 ขยายผล',tasks:[{t:'ผลอ่อนขยาย',d:''},{t:'ตัดผลส่วนเกินคงไว้ 3-5 ผล/ช่อ',d:''},{t:'ใส่ปุ๋ย 13-5-30 อัตรา 1 กก./ต้น',d:''},{t:'ห่อผลป้องกันแมลงวันผลไม้',d:''},{t:'ให้น้ำสม่ำเสมอ',d:''},{t:'ฉีดป้องกันโรคแอนแทรคโนส',d:''}]},
+    {w:[25,32],season:'🧺 เก็บเกี่ยว',stage:'เก็บเกี่ยวมะม่วง',period:'🧺 เก็บเกี่ยว',tasks:[{t:'ตรวจความแก่ผล (สี-ความหนาแน่น)',d:''},{t:'เก็บเกี่ยวรอบแรก',d:''},{t:'คัดเกรด A-B-C',d:''},{t:'ส่งล้ง/ส่งออก',d:''},{t:'บันทึกผลผลิต',d:''}]},
+    {w:[33,44],season:'🌱 ฟื้นต้น',stage:'ฟื้นต้นหลังเก็บเกี่ยว',period:'🌱 ฟื้นต้น',tasks:[{t:'ตัดแต่งกิ่งอย่างหนัก',d:''},{t:'ใส่ปุ๋ยอินทรีย์ 15 กก./ต้น',d:''},{t:'ฉีดล้างต้น',d:''},{t:'ใส่ปุ๋ย 15-15-15 อัตรา 2 กก./ต้น',d:''},{t:'กำจัดวัชพืช',d:''}]},
+    {w:[45,52],season:'🌿 เตรียมต้น',stage:'เตรียมต้นรอบใหม่',period:'🌿 เตรียมต้น',tasks:[{t:'ฉีด KNO3 กระตุ้นดอกรอบใหม่',d:''},{t:'ลดน้ำเตรียมดอก',d:''},{t:'ตรวจตาดอก',d:''},{t:'ใส่ปุ๋ย 8-24-24',d:''}]},
+  ],
+  lychee:[
+    {w:[1,4],season:'🌿 เตรียมต้น',stage:'เตรียมต้นลิ้นจี่',period:'🌿 เตรียมต้น',tasks:[{t:'ใส่ปุ๋ย 15-15-15 อัตรา 1.5 กก./ต้น',d:''},{t:'ตัดแต่งกิ่งหลังเก็บ',d:''},{t:'ฉีดป้องกันโรคแอนแทรคโนส',d:''},{t:'กำจัดวัชพืช',d:''}]},
+    {w:[5,8],season:'🌸 ออกดอก',stage:'ออกดอก (กุมภา-มีนา)',period:'🌸 ออกดอก',tasks:[{t:'ตาดอกเริ่มโผล่ (อากาศเย็น)',d:''},{t:'ฉีดป้องกันเพลี้ยไฟ',d:''},{t:'ห้ามฉีดยาฆ่าแมลงขณะดอกบาน',d:''},{t:'ฉีด Ca-B ทางใบ',d:''},{t:'รักษาความชื้นดิน',d:''}]},
+    {w:[9,16],season:'🍃 ขยายผล',stage:'ขยายผลลิ้นจี่',period:'🍃 ขยายผล',tasks:[{t:'ผลอ่อนติดและขยาย',d:''},{t:'ตัดผลทิ้งส่วนเกิน',d:''},{t:'ใส่ปุ๋ย 13-5-30 อัตรา 1 กก./ต้น',d:''},{t:'ให้น้ำสม่ำเสมอ',d:''},{t:'ฉีดป้องกันแมลงวันผลไม้',d:''},{t:'ห่อช่อผล',d:''}]},
+    {w:[17,22],season:'🧺 เก็บเกี่ยว',stage:'เก็บเกี่ยว (เมษา-พฤษภา)',period:'🧺 เก็บเกี่ยว',tasks:[{t:'ตัดช่อลิ้นจี่ที่แก่',d:''},{t:'คัดเกรด',d:''},{t:'บรรจุกล่องเย็น',d:''},{t:'ส่งตลาดด่วน',d:''},{t:'บันทึกผลผลิต',d:''}]},
+    {w:[23,40],season:'🌱 ฟื้นต้น',stage:'ฟื้นต้นหลังเก็บ',period:'🌱 ฟื้นต้น',tasks:[{t:'ตัดแต่งกิ่งอย่างหนัก',d:''},{t:'ใส่ปุ๋ยอินทรีย์ 15 กก./ต้น',d:''},{t:'ใส่ปุ๋ย 15-15-15 อัตรา 2 กก./ต้น',d:''},{t:'ตรวจการแตกใบ',d:''}]},
+    {w:[41,52],season:'🌿 เตรียมต้น',stage:'เตรียมต้นรอบใหม่',period:'🌿 เตรียมต้น',tasks:[{t:'ลดน้ำกระตุ้นสะสมตาดอก',d:''},{t:'ใส่ปุ๋ย 8-24-24',d:''},{t:'ตรวจตาดอกเริ่มโผล่',d:''},{t:'เตรียมรับอากาศเย็น',d:''}]},
+  ],
+  pineapple:[
+    {w:[1,4],season:'🌱 ฟื้นต้น',stage:'เตรียมดินปลูกสับปะรด',period:'🌱 เตรียมดิน',tasks:[{t:'ไถลึก 30 ซม. ปรับดิน',d:''},{t:'ยกแปลงสูง 30-40 ซม.',d:''},{t:'ตรวจ pH ดิน (เหมาะ 5.0-6.0)',d:''},{t:'ใส่ปุ๋ยอินทรีย์คลุกดิน',d:''}]},
+    {w:[5,8],season:'🌱 ปลูกหน่อ',stage:'ปลูกหน่อสับปะรด',period:'🌱 ปลูก',tasks:[{t:'เลือกหน่อพันธุ์ดี',d:''},{t:'ปลูกหน่อระยะ 30×60 ซม.',d:''},{t:'ใส่ปุ๋ยรองพื้น 15-15-15',d:''},{t:'รดน้ำหลังปลูก',d:''},{t:'คลุมแปลงด้วยวัสดุคลุมดิน',d:''}]},
+    {w:[9,20],season:'🌿 ดูแลรักษา',stage:'บำรุงต้นสับปะรด',period:'🌿 บำรุง',tasks:[{t:'ใส่ปุ๋ย 15-15-15 อัตรา 30 กก./ไร่',d:''},{t:'กำจัดวัชพืชรอบต้น',d:''},{t:'ตรวจโรคเน่าดำ-เน่าหัวใจ',d:''},{t:'ให้น้ำสม่ำเสมอ',d:''},{t:'ฉีดธาตุรองทางใบ',d:''}]},
+    {w:[21,24],season:'🌸 เร่งดอก',stage:'เร่งออกดอกด้วย Ethephon',period:'🌸 เร่งดอก',tasks:[{t:'ฉีด Ethephon 1000 ppm ตอนเย็น',d:''},{t:'ฉีดซ้ำ 7 วันต่อมา',d:''},{t:'ตรวจตาดอกเริ่มโผล่',d:''},{t:'ฉีด Ca-B ทางใบ',d:''}]},
+    {w:[25,36],season:'🍃 พัฒนาผล',stage:'พัฒนาผลสับปะรด',period:'🍃 พัฒนาผล',tasks:[{t:'ผลขยายเร็ว',d:''},{t:'ใส่ปุ๋ย 13-5-30 อัตรา 30 กก./ไร่',d:''},{t:'ห่อผลป้องกันแสงแดด',d:''},{t:'รักษาความชื้นดิน',d:''},{t:'ตรวจแมลงทับ-มวนหนวดยาว',d:''}]},
+    {w:[37,44],season:'🧺 เก็บเกี่ยว',stage:'เก็บเกี่ยวสับปะรด',period:'🧺 เก็บเกี่ยว',tasks:[{t:'ตรวจสีผล (เหลือง 25% ขึ้นไป)',d:''},{t:'เก็บเกี่ยว',d:''},{t:'ตัดยอด-บรรจุ',d:''},{t:'ส่งโรงงาน/ตลาด',d:''},{t:'บันทึกผลผลิต',d:''}]},
+    {w:[45,52],season:'🌱 ฟื้นต้น',stage:'ปลูกรอบใหม่/หน่อ',period:'🌱 รอบใหม่',tasks:[{t:'แยกหน่อพันธุ์',d:''},{t:'เตรียมดินสำหรับรอบใหม่',d:''},{t:'ปลูกหน่อรอบ 2',d:''},{t:'ให้ปุ๋ยเริ่มต้น',d:''}]},
+  ],
+  banana:[
+    {w:[1,4],season:'🌱 ฟื้นต้น',stage:'เตรียมดินปลูกกล้วย',period:'🌱 เตรียมดิน',tasks:[{t:'ไถดิน ปรับพื้นที่',d:''},{t:'ขุดหลุมปลูก 50×50×50 ซม.',d:''},{t:'ใส่ปุ๋ยอินทรีย์ 5 กก./หลุม',d:''},{t:'ปลูกหน่อพันธุ์ดี',d:''},{t:'รดน้ำหลังปลูก',d:''}]},
+    {w:[5,12],season:'🌿 ดูแลรักษา',stage:'บำรุงต้นกล้วยระยะต้น',period:'🌿 บำรุง',tasks:[{t:'ใส่ปุ๋ย 15-15-15 อัตรา 0.2 กก./ต้น',d:''},{t:'ตัดใบแก่-ใบเสีย',d:''},{t:'กำจัดวัชพืชรอบโคน',d:''},{t:'ให้น้ำสม่ำเสมอ 5-10 ล./ต้น/วัน',d:''},{t:'คัดหน่อแยกออก 1 หน่อ/ต้น',d:''},{t:'ตรวจโรคตายพราย-โรคใบจุด',d:''}]},
+    {w:[13,20],season:'🌸 ออกปลี',stage:'ออกปลีกล้วย',period:'🌸 ออกปลี',tasks:[{t:'ปลีเริ่มโผล่',d:''},{t:'ใส่ปุ๋ย 8-24-24 กระตุ้นปลี',d:''},{t:'ฉีดป้องกันเพลี้ยแป้งบนปลี',d:''},{t:'ตรวจจำนวนหวีกล้วย',d:''},{t:'ให้น้ำเพิ่ม 15 ล./ต้น/วัน',d:''}]},
+    {w:[21,28],season:'🍃 พัฒนาเครือ',stage:'พัฒนาเครือกล้วย',period:'🍃 พัฒนาเครือ',tasks:[{t:'ห่อเครือด้วยถุงฟ้า',d:''},{t:'ใส่ปุ๋ย 13-5-30 อัตรา 0.3 กก./ต้น',d:''},{t:'ค้ำลำต้นป้องกันล้ม',d:''},{t:'ตัดปลีที่เหลือออก',d:''},{t:'ตรวจน้ำหนักเครือ',d:''}]},
+    {w:[29,36],season:'🧺 เก็บเกี่ยว',stage:'เก็บเกี่ยวกล้วย',period:'🧺 เก็บเกี่ยว',tasks:[{t:'ตัดเครือกล้วย (อายุ 90-120 วันหลังปลีโผล่)',d:''},{t:'แยกหวี',d:''},{t:'บ่มด้วยก๊าซ Ethylene',d:''},{t:'คัดเกรด-บรรจุ',d:''},{t:'ส่งตลาด/ล้ง',d:''},{t:'บันทึกผลผลิต',d:''}]},
+    {w:[37,44],season:'🌱 ฟื้นต้น',stage:'ปลูกรอบใหม่',period:'🌱 รอบใหม่',tasks:[{t:'ตัดต้นแม่หลังเก็บ',d:''},{t:'เลือกหน่อทดแทน',d:''},{t:'ใส่ปุ๋ยอินทรีย์',d:''},{t:'ดูแลหน่อใหม่',d:''}]},
+    {w:[45,52],season:'🌿 ดูแลรักษา',stage:'บำรุงหน่อรุ่น 2',period:'🌿 บำรุงหน่อ',tasks:[{t:'บำรุงหน่อรุ่นที่ 2',d:''},{t:'ใส่ปุ๋ย 15-15-15',d:''},{t:'ให้น้ำสม่ำเสมอ',d:''},{t:'กำจัดวัชพืช',d:''}]},
+  ],
 };
 
 const NPK_DATA={
   citrus:{veg:'16-16-16',flower:'8-24-24',fruit_set:'13-0-46',fruit_dev:'13-5-30',ripen:'0-0-60',after:'15-15-15'},
   longan:{veg:'15-15-15',flower:'8-24-24',fruit_set:'12-12-17',fruit_dev:'13-5-30',ripen:'0-0-50',after:'15-15-15'},
   durian:{veg:'16-16-16',flower:'0-52-34',fruit_set:'12-12-17',fruit_dev:'13-5-30',ripen:'13-0-46',after:'15-15-15'},
-  pomelo:{veg:'16-16-16',flower:'8-24-24',fruit_set:'13-0-46',fruit_dev:'13-5-30',ripen:'0-0-60',after:'15-15-15'}
+  pomelo:{veg:'16-16-16',flower:'8-24-24',fruit_set:'13-0-46',fruit_dev:'13-5-30',ripen:'0-0-60',after:'15-15-15'},
+  rice:{veg:'46-0-0',flower:'0-0-0',fruit_set:'16-20-0',fruit_dev:'0-0-60',ripen:'0-0-0',after:'15-15-15'},
+  cassava:{veg:'15-15-15',flower:'15-15-15',fruit_set:'15-15-15',fruit_dev:'13-5-30',ripen:'0-0-60',after:'15-15-15'},
+  sugarcane:{veg:'15-15-15',flower:'8-24-24',fruit_set:'0-0-60',fruit_dev:'0-0-60',ripen:'0-0-60',after:'15-15-15'},
+  rubber:{veg:'20-8-20',flower:'20-8-20',fruit_set:'13-13-21',fruit_dev:'13-13-21',ripen:'13-13-21',after:'20-8-20'},
+  mango:{veg:'15-15-15',flower:'8-24-24',fruit_set:'12-12-17',fruit_dev:'13-5-30',ripen:'0-0-60',after:'15-15-15'},
+  lychee:{veg:'15-15-15',flower:'8-24-24',fruit_set:'12-12-17',fruit_dev:'13-5-30',ripen:'0-0-60',after:'15-15-15'},
+  pineapple:{veg:'15-15-15',flower:'8-24-24',fruit_set:'12-12-17',fruit_dev:'13-5-30',ripen:'0-0-50',after:'15-15-15'},
+  banana:{veg:'15-15-15',flower:'8-24-24',fruit_set:'13-13-21',fruit_dev:'13-5-30',ripen:'0-0-50',after:'15-15-15'}
 };
 
 let currentWeek=1,taskDone={},aiCtx='',mediaRecognition=null,isRecording=false;
@@ -620,8 +799,8 @@ function renderWeeks(){
   for(let w=s;w<=e;w++){
     const p=getPeriodForWeek(activeCrop,w);if(!p)continue;
     const isCur=w===currentWeek,dk=`${activeCrop}_w${w}`,done=taskDone[dk]||[];
-    const imgUrl=getPhaseImg(activeCrop,p.season);
-    const imgBanner=imgUrl?`<div class="wc-phase-img-wrap"><img class="wc-phase-img" src="${imgUrl}" alt="${p.season}" loading="lazy" onerror="this.parentNode.style.display='none'"><div class="wc-phase-cap">${p.season}</div></div>`:'';
+    const grad=getPhaseGradient(activeCrop,p.season);
+    const imgBanner=`<div class="wc-phase-img-wrap" style="background:${grad}"><div class="wc-phase-cap">${p.season}</div></div>`;
     html+=`<div class="week-card${isCur?' current':''}" id="wcard${w}">
       <div class="wc-header" onclick="toggleCard(${w})">
         <div class="wc-num">${w}</div>
@@ -633,8 +812,9 @@ function renderWeeks(){
           <div class="ti-check">${d?'✓':''}</div>
           <div class="ti-content"><div class="ti-text">${t.t}</div>${t.d?`<div class="ti-dose">📦 ${t.d}</div>`:''}</div>
         </div>`;}).join('')}
+        ${getCustomTasksHTML(activeCrop,w)}
       </div>
-      <div class="wc-ai-row"><button class="wc-ai-btn" onclick="openDrawer('สัปดาห์ที่ ${w} ${p.stage} ${CROPS[activeCrop].name}')">🤖 ถาม AI สัปดาห์ ${w}</button></div>
+      <div class="wc-ai-row" style="gap:8px;flex-wrap:wrap"><button class="wc-ai-btn" onclick="openDrawer('สัปดาห์ที่ ${w} ${p.stage} ${CROPS[activeCrop].name}')">🤖 ถาม AI สัปดาห์ ${w}</button><button class="wc-ai-btn" style="background:rgba(168,85,247,.12);border-color:rgba(168,85,247,.4);color:#c084fc" onclick="openActivityModal('${activeCrop}',${w})">➕ กิจกรรม</button></div>
       </div></div>`;
   }
   document.getElementById('weeksSection').innerHTML=html;
@@ -861,6 +1041,191 @@ function toggleVoice(){
   mediaRecognition.onresult=e=>{document.getElementById('drawerInput').value=e.results[0][0].transcript;isRecording=false;btn.classList.remove('recording');btn.textContent='🎤';sendDrawer();};
   mediaRecognition.onerror=mediaRecognition.onend=()=>{isRecording=false;btn.classList.remove('recording');btn.textContent='🎤';};
   mediaRecognition.start();isRecording=true;btn.classList.add('recording');btn.textContent='🔴';
+}
+
+// ==================== CUSTOM ACTIVITIES ====================
+function getCustomActivities(){try{return JSON.parse(localStorage.getItem('g2g_custom_acts')||'[]')}catch(e){return[];}}
+function saveCustomActivities(arr){localStorage.setItem('g2g_custom_acts',JSON.stringify(arr));}
+
+function getCustomTasksHTML(crop,week){
+  const acts=getCustomActivities().filter(a=>a.crop===crop&&a.week===week);
+  if(!acts.length)return'';
+  return acts.map((a,i)=>{
+    const ck=`custom_${crop}_w${week}_${i}`;
+    const done=(taskDone[ck]||[]).includes(0);
+    return`<div class="task-item custom${done?' done':''}" onclick="toggleTask('${ck}',0)">
+      <div class="ti-check">${done?'✓':''}</div>
+      <div class="ti-content"><div class="ti-text">⭐ ${a.name}</div>${a.detail?`<div class="ti-dose">📝 ${a.detail}</div>`:''}</div>
+    </div>`;
+  }).join('');
+}
+
+function openActivityModal(crop,week){
+  const modal=document.getElementById('activity-modal');
+  const cropSel=document.getElementById('act-crop');
+  cropSel.innerHTML=Object.values(CROPS).map(c=>`<option value="${c.key}"${c.key===crop?' selected':''}>${c.emoji} ${c.name}</option>`).join('');
+  document.getElementById('act-week').value=week||currentWeek;
+  document.getElementById('act-name').value='';
+  document.getElementById('act-detail').value='';
+  modal.classList.add('open');
+}
+function closeActivityModal(){document.getElementById('activity-modal').classList.remove('open');}
+
+function saveActivity(){
+  const crop=document.getElementById('act-crop').value;
+  const week=parseInt(document.getElementById('act-week').value)||currentWeek;
+  const name=document.getElementById('act-name').value.trim();
+  const detail=document.getElementById('act-detail').value.trim();
+  if(!name){alert('กรุณาใส่ชื่อกิจกรรม');return;}
+  const acts=getCustomActivities();
+  acts.push({crop,week,name,detail,date:new Date().toLocaleDateString('th-TH')});
+  saveCustomActivities(acts);
+  closeActivityModal();
+  renderWeeks();
+}
+
+// ==================== IOT SENSOR PANEL ====================
+const IOT_SENSORS=[
+  {id:'temp',icon:'🌡️',label:'อุณหภูมิอากาศ',unit:'°C',min:20,max:38,ok:[24,34],base:29},
+  {id:'humid',icon:'💧',label:'ความชื้นสัมพัทธ์',unit:'%',min:40,max:90,ok:[50,80],base:68},
+  {id:'soil',icon:'🌱',label:'ความชื้นดิน',unit:'%',min:20,max:80,ok:[35,65],base:55},
+  {id:'ph',icon:'🧪',label:'pH ดิน',unit:'',min:5.5,max:7.5,ok:[5.8,7.0],base:6.4},
+  {id:'light',icon:'☀️',label:'ปริมาณแสง',unit:'Lux',min:1000,max:80000,ok:[5000,60000],base:32000},
+  {id:'wind',icon:'🌬️',label:'ความเร็วลม',unit:'m/s',min:0,max:8,ok:[0,5],base:2.1},
+];
+let iotValues={},iotPrev={};
+
+function iotRand(base,spread){return Math.round((base+((Math.random()-.5)*spread))*10)/10;}
+function iotStatus(val,ok){if(val<ok[0])return['low','ต่ำเกินไป'];if(val>ok[1])return['high','สูงเกินไป'];return['ok','เหมาะสม'];}
+function iotTrend(cur,prev){if(prev===undefined)return'→';if(cur>prev+0.3)return'↑';if(cur<prev-0.3)return'↓';return'→';}
+
+function initIoT(){
+  IOT_SENSORS.forEach(s=>{iotValues[s.id]=iotRand(s.base,s.max*0.08);});
+  renderIoT();renderWeather();
+  setInterval(()=>{
+    iotPrev={...iotValues};
+    IOT_SENSORS.forEach(s=>{iotValues[s.id]=Math.min(s.max,Math.max(s.min,iotRand(iotValues[s.id],s.max*0.04)));});
+    renderIoT();
+  },30000);
+}
+
+function renderIoT(){
+  const grid=document.getElementById('iot-grid');if(!grid)return;
+  let alerts=[];
+  grid.innerHTML=IOT_SENSORS.map(s=>{
+    const val=iotValues[s.id];
+    const [st,stl]=iotStatus(val,s.ok);
+    const tr=iotTrend(val,iotPrev[s.id]);
+    const disp=s.id==='light'?(val/1000).toFixed(1)+'k':val.toFixed(s.id==='ph'?1:0);
+    if(st!=='ok')alerts.push(`${s.icon} ${s.label}: ${stl} (${disp}${s.unit})`);
+    return`<div class="sensor-card">
+      <div class="sc-trend">${tr}</div>
+      <div class="sc-icon">${s.icon}</div>
+      <div class="sc-label">${s.label}</div>
+      <div class="sc-value">${disp}</div>
+      <div class="sc-unit">${s.unit}</div>
+      <div class="sc-status ${st}">${stl}</div>
+    </div>`;
+  }).join('');
+  const alertBox=document.getElementById('iot-alert-box');
+  if(alerts.length){alertBox.innerHTML='⚠️ แจ้งเตือน: '+alerts.join(' · ');alertBox.classList.add('show');}
+  else{alertBox.innerHTML='✅ ทุกค่าอยู่ในเกณฑ์ปกติ';alertBox.classList.add('show');}
+}
+
+const WX_ICONS=['☀️','⛅','🌤️','🌧️','⛈️','🌦️'];
+const WX_DAYS=['วันนี้','พรุ่งนี้','มะรืน','+3 วัน','+4 วัน'];
+function renderWeather(){
+  const strip=document.getElementById('weather-strip');if(!strip)return;
+  const base=iotValues.temp||29;
+  strip.innerHTML=WX_DAYS.map((d,i)=>{
+    const hi=Math.round(base+Math.random()*4-i*0.5);
+    const lo=hi-Math.round(5+Math.random()*4);
+    const rain=Math.round(Math.random()*80);
+    const ic=WX_ICONS[Math.floor(Math.random()*WX_ICONS.length)];
+    return`<div class="wx-card">
+      <div class="wx-day">${d}</div>
+      <div class="wx-icon">${ic}</div>
+      <div class="wx-temp">${hi}°/${lo}°</div>
+      <div class="wx-rain">🌧 ${rain}%</div>
+    </div>`;
+  }).join('');
+}
+
+function connectIoT(){
+  const btn=document.querySelector('.iot-connect-btn');
+  btn.textContent='🔄 กำลังเชื่อมต่อ...';
+  setTimeout(()=>{btn.textContent='✅ เชื่อมต่อแล้ว (จำลอง)';btn.style.background='linear-gradient(135deg,#14532d,#166534)';},1500);
+}
+
+// ==================== DRONE PANEL ====================
+const ZONE_STATUSES=['ok','ok','ok','ok','ok','warn','ok','ok','bad','ok','ok','ok'];
+const ZONE_LABELS=['ปกติ','ปกติ','ปกติ','ปกติ','ปกติ','ต้องตรวจ','ปกติ','ปกติ','มีปัญหา','ปกติ','ปกติ','ปกติ'];
+let droneRunning=false,droneInterval=null,droneBatt=87;
+
+function initDrone(){
+  renderDroneZones();
+}
+
+function renderDroneZones(){
+  const grid=document.getElementById('drone-zone-grid');if(!grid)return;
+  grid.innerHTML=ZONE_STATUSES.map((s,i)=>`
+    <div class="dz-card ${s}" onclick="inspectZone(${i})">
+      <div class="dz-num">โซน ${i+1}</div>
+      <div class="dz-status">${ZONE_LABELS[i]}</div>
+    </div>`).join('');
+}
+
+function inspectZone(i){
+  const msgs=['สีใบปกติ สุขภาพดี','ความชื้นดินเหมาะสม','ไม่พบโรคหรือแมลง','ต้นเจริญเติบโตดี','ไม่พบสิ่งผิดปกติ','พบสีใบซีด อาจขาดธาตุอาหาร','ต้องการน้ำเพิ่มเติม','พบร่องรอยแมลง ควรตรวจ','พบโรคราน้ำค้าง ต้องพ่นยาด่วน','ปกติ','ปกติ','ปกติ'];
+  alert(`📍 โซน ${i+1}: ${msgs[i]}`);
+}
+
+function startDroneInspection(){
+  const btn=document.getElementById('drone-start-btn');
+  const state=document.getElementById('drone-state');
+  const result=document.getElementById('drone-result');
+  if(droneRunning){
+    droneRunning=false;clearInterval(droneInterval);
+    btn.textContent='🚁 เริ่มตรวจสภาพสวน';
+    state.textContent='🟡 พักเครื่อง';
+    return;
+  }
+  droneRunning=true;
+  btn.textContent='⏹ หยุดการบิน';
+  result.style.display='block';
+  const area=document.getElementById('drone-area').value||10000;
+  const alt=document.getElementById('drone-alt').value||10;
+  const speed=document.getElementById('drone-speed').value||4;
+  const eta=Math.round(area/parseInt(speed)/60);
+  result.innerHTML=`<div style="color:var(--gold);font-weight:700;margin-bottom:8px">🚁 กำลังบินตรวจสภาพสวน</div>
+    <div>พื้นที่: ${parseInt(area).toLocaleString()} m² · ความสูง ${alt}m · ความเร็ว ${speed} m/s</div>
+    <div>ประมาณเวลา: ~${eta} นาที</div>
+    <div id="drone-progress" style="margin-top:8px;color:var(--text2)">กำลังสแกนโซน 1/12...</div>`;
+  let zone=0;
+  droneInterval=setInterval(()=>{
+    droneBatt=Math.max(0,droneBatt-1);
+    document.getElementById('drone-batt').textContent=`🔋 ${droneBatt}%`;
+    state.textContent='🟢 กำลังบิน';
+    zone=(zone+1)%12;
+    const pg=document.getElementById('drone-progress');
+    if(pg)pg.textContent=`กำลังสแกนโซน ${zone+1}/12... ${ZONE_LABELS[zone]}`;
+    if(droneBatt<=10){
+      droneRunning=false;clearInterval(droneInterval);
+      btn.textContent='🚁 เริ่มตรวจสภาพสวน';
+      state.textContent='🔴 ชาร์จแบต';
+      if(pg)pg.textContent='⚠️ แบตน้อย กำลังบินกลับ';
+    }
+    ZONE_STATUSES[zone]=droneBatt>30?'ok':'warn';
+    renderDroneZones();
+  },3000);
+}
+
+// extend switchTab to init IoT/Drone
+const _origSwitchTab=switchTab;
+function switchTab(name,btn){
+  _origSwitchTab(name,btn);
+  if(name==='iot'&&!iotValues.temp)initIoT();
+  if(name==='drone')initDrone();
 }
 </script>
 </body>

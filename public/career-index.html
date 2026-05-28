@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#070d15">
+<title>G2G Career AI — Platform Directory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700;800;900&family=Sarabun:wght@400;600;700&display=swap">
+<style>
+/* ─── DESIGN TOKENS (AIMClinic‑inspired dark premium) ─── */
+:root{
+  --bg:#070d15;
+  --bg2:#0d1a26;
+  --surface:#0f2035;
+  --surface2:#152a42;
+  --border:rgba(100,180,255,.10);
+  --border-hi:rgba(100,200,255,.22);
+  --gold:#f0c040;
+  --gold2:#ffe082;
+  --cyan:#38d9f5;
+  --cyan2:#80eaff;
+  --green:#00e676;
+  --green2:#69ffb4;
+  --red:#ff5370;
+  --purple:#b39ddb;
+  --white:#e8f0fe;
+  --gray:#6a8aaa;
+  --gray2:#3d5a78;
+  --font:'Bai Jamjuree','Sarabun',sans-serif;
+  --ease:cubic-bezier(0.22,1,0.36,1);
+  --r:18px;
+  --r-sm:12px;
+  --shadow:0 12px 48px rgba(0,0,0,.6);
+  --glow-cyan:0 0 24px rgba(56,217,245,.25);
+  --glow-gold:0 0 20px rgba(240,192,64,.2);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--white);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;border:none;cursor:pointer;background:none;color:inherit}
+a{color:inherit;text-decoration:none}
+
+/* ─── TOP NAVIGATION BAR ─── */
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:300;
+  height:54px;
+  background:rgba(7,13,21,.92);
+  backdrop-filter:blur(16px) saturate(180%);
+  -webkit-backdrop-filter:blur(16px) saturate(180%);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 20px;gap:12px
+}
+.topbar-logo{display:flex;align-items:center;gap:8px}
+.topbar-logo-mark{
+  width:32px;height:32px;border-radius:10px;
+  background:linear-gradient(135deg,var(--cyan),var(--green));
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:900;color:#070d15;letter-spacing:-1px;
+  box-shadow:var(--glow-cyan)
+}
+.topbar-brand{font-size:.95rem;font-weight:800;letter-spacing:1px}
+.topbar-brand span{color:var(--cyan)}
+.topbar-spacer{flex:1}
+.topbar-badge{
+  font-size:.68rem;font-weight:800;letter-spacing:2px;
+  background:linear-gradient(135deg,rgba(56,217,245,.15),rgba(0,230,118,.15));
+  border:1px solid rgba(56,217,245,.3);
+  color:var(--cyan2);padding:4px 10px;border-radius:20px
+}
+.topbar-ver{font-size:.7rem;color:var(--gray);font-weight:600}
+
+/* ─── HERO HEADER ─── */
+.hero{
+  margin-top:54px;
+  padding:36px 20px 28px;
+  position:relative;overflow:hidden;
+  background:linear-gradient(180deg,rgba(56,217,245,.05) 0%,transparent 60%)
+}
+.hero::before{
+  content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);
+  width:300px;height:300px;
+  background:radial-gradient(circle,rgba(56,217,245,.12) 0%,transparent 70%);
+  pointer-events:none
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:.72rem;font-weight:800;letter-spacing:3px;text-transform:uppercase;
+  color:var(--cyan);margin-bottom:14px
+}
+.hero-eyebrow::before{content:'';width:20px;height:2px;background:var(--cyan);border-radius:1px}
+.hero h1{
+  font-size:clamp(1.8rem,6vw,2.8rem);font-weight:900;line-height:1.15;
+  margin-bottom:10px;
+  background:linear-gradient(135deg,var(--white) 0%,var(--cyan2) 50%,var(--gold2) 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent
+}
+.hero p{font-size:.9rem;color:var(--gray);line-height:1.75;max-width:440px;margin-bottom:22px}
+.hero-stats{display:flex;gap:10px;flex-wrap:wrap}
+.hstat{
+  display:flex;flex-direction:column;align-items:flex-start;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r-sm);padding:10px 14px;min-width:80px
+}
+.hstat-num{font-size:1.4rem;font-weight:900;color:var(--cyan);line-height:1}
+.hstat-lbl{font-size:.65rem;color:var(--gray);font-weight:600;letter-spacing:1px;margin-top:2px}
+
+/* ─── SEARCH + FILTER ─── */
+.controls{padding:0 20px 16px;display:flex;flex-direction:column;gap:10px}
+.search-wrap{position:relative}
+.search-wrap input{
+  width:100%;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--r-sm);
+  padding:11px 14px 11px 42px;
+  color:var(--white);font-family:var(--font);font-size:.92rem;
+  outline:none;transition:border-color .2s,box-shadow .2s
+}
+.search-wrap input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(56,217,245,.1)}
+.search-wrap input::placeholder{color:var(--gray)}
+.search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none}
+.filter-row{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.filter-row::-webkit-scrollbar{display:none}
+.chip{
+  flex:0 0 auto;padding:6px 14px;border-radius:20px;
+  font-size:.75rem;font-weight:700;letter-spacing:.5px;
+  border:1px solid var(--border);
+  color:var(--gray);cursor:pointer;transition:all .2s
+}
+.chip.on{background:rgba(56,217,245,.15);border-color:var(--cyan);color:var(--cyan)}
+.chip:hover:not(.on){border-color:var(--border-hi);color:var(--white)}
+
+/* ─── SECTION HEADER ─── */
+.sec-head{
+  padding:8px 20px 12px;
+  display:flex;align-items:center;gap:10px
+}
+.sec-label{
+  font-size:.72rem;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--gold)
+}
+.sec-count{
+  font-size:.7rem;font-weight:700;
+  background:rgba(240,192,64,.15);color:var(--gold);
+  padding:2px 8px;border-radius:8px
+}
+.sec-line{flex:1;height:1px;background:linear-gradient(90deg,var(--border-hi),transparent)}
+
+/* ─── APP GRID ─── */
+.app-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:12px;
+  padding:0 20px 12px
+}
+
+/* ─── APP CARD ─── */
+.app-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  overflow:hidden;
+  cursor:pointer;
+  transition:transform .22s var(--ease),box-shadow .22s,border-color .22s;
+  display:flex;flex-direction:column;
+  position:relative;
+  text-decoration:none
+}
+.app-card:hover{
+  transform:translateY(-4px) scale(1.01);
+  box-shadow:var(--shadow);
+  border-color:var(--border-hi)
+}
+.app-card:active{transform:scale(.97)}
+.app-card.featured{border-color:rgba(240,192,64,.3)}
+.app-card.featured:hover{box-shadow:var(--shadow),var(--glow-gold)}
+
+/* Card thumb */
+.app-thumb{
+  height:90px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:40px;
+  position:relative;overflow:hidden;
+  flex-shrink:0
+}
+.app-thumb::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(0deg,rgba(13,26,38,.9) 0%,transparent 50%)
+}
+
+/* Status dot */
+.app-dot{
+  position:absolute;top:10px;left:10px;z-index:2;
+  width:8px;height:8px;border-radius:50%;
+  box-shadow:0 0 6px currentColor
+}
+.app-dot.live{background:var(--green);color:var(--green)}
+.app-dot.wip{background:var(--gold);color:var(--gold)}
+.app-dot.soon{background:var(--gray2);color:var(--gray2)}
+
+/* Badges */
+.app-badge{
+  position:absolute;top:8px;right:8px;z-index:2;
+  font-size:.58rem;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;
+  padding:3px 8px;border-radius:8px
+}
+.badge-new{background:var(--gold);color:#070d15}
+.badge-hot{background:var(--red);color:#fff}
+.badge-up{background:var(--cyan);color:#070d15}
+.badge-ai{background:linear-gradient(135deg,var(--cyan),var(--green));color:#070d15}
+
+/* Card body */
+.app-body{padding:10px 12px 14px;flex:1;display:flex;flex-direction:column;gap:4px}
+.app-name{font-size:.9rem;font-weight:800;color:var(--white);line-height:1.3}
+.app-desc{font-size:.7rem;color:var(--gray);line-height:1.5;flex:1}
+.app-url{
+  font-size:.62rem;color:var(--cyan);font-weight:700;
+  background:rgba(56,217,245,.08);
+  border-radius:6px;padding:3px 7px;
+  display:inline-block;margin-top:4px;
+  max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  letter-spacing:.3px
+}
+.app-pills{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
+.pill{
+  font-size:.58rem;font-weight:700;padding:2px 6px;border-radius:5px;
+  background:rgba(100,180,255,.08);color:var(--gray);letter-spacing:.5px
+}
+
+/* Actions row */
+.app-actions{
+  display:flex;border-top:1px solid var(--border);
+}
+.app-action{
+  flex:1;padding:9px 8px;
+  font-size:.72rem;font-weight:700;
+  text-align:center;color:var(--gray);
+  transition:background .15s,color .15s;
+  display:flex;align-items:center;justify-content:center;gap:4px
+}
+.app-action:hover{background:var(--surface2);color:var(--white)}
+.app-action.primary{color:var(--cyan)}
+.app-action.primary:hover{background:rgba(56,217,245,.1);color:var(--cyan2)}
+.app-action+.app-action{border-left:1px solid var(--border)}
+
+/* ─── PLATFORM LIST (alternative view) ─── */
+.platform-list{padding:0 20px;display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
+.pl-row{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r-sm);
+  display:flex;align-items:center;gap:12px;
+  padding:12px 14px;
+  transition:background .15s,border-color .15s;
+  text-decoration:none
+}
+.pl-row:hover{background:var(--surface2);border-color:var(--border-hi)}
+.pl-icon{font-size:26px;width:42px;height:42px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(56,217,245,.06);border-radius:12px}
+.pl-info{flex:1;min-width:0}
+.pl-name{font-size:.9rem;font-weight:800;color:var(--white);margin-bottom:1px}
+.pl-desc{font-size:.7rem;color:var(--gray);line-height:1.4;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.pl-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
+.pl-status{font-size:.62rem;font-weight:800;padding:2px 8px;border-radius:8px;letter-spacing:1px}
+.pl-status.live{background:rgba(0,230,118,.15);color:var(--green)}
+.pl-status.wip{background:rgba(240,192,64,.15);color:var(--gold)}
+.pl-url{font-size:.62rem;color:var(--cyan);font-weight:600}
+
+/* ─── VIEW TOGGLE ─── */
+.view-toggle{
+  display:flex;gap:0;background:var(--surface);
+  border:1px solid var(--border);border-radius:var(--r-sm);
+  overflow:hidden;padding:2px
+}
+.vtb{
+  flex:1;padding:7px 10px;font-size:.72rem;font-weight:700;
+  border-radius:8px;transition:all .2s;text-align:center
+}
+.vtb.on{background:var(--surface2);color:var(--cyan)}
+.vtb:not(.on){color:var(--gray)}
+
+/* ─── QUICK COPY TOAST ─── */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:rgba(56,217,245,.9);color:#070d15;
+  font-size:.82rem;font-weight:800;padding:10px 22px;border-radius:14px;
+  z-index:999;pointer-events:none;
+  transition:transform .3s var(--ease),opacity .3s
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ─── FOOTER ─── */
+.footer{
+  padding:32px 20px;text-align:center;
+  border-top:1px solid var(--border);
+  margin-top:8px
+}
+.footer p{font-size:.75rem;color:var(--gray);line-height:1.8}
+.footer strong{color:var(--cyan);font-weight:700}
+.footer-links{display:flex;justify-content:center;gap:16px;margin-top:12px;flex-wrap:wrap}
+.footer-links a{font-size:.72rem;color:var(--gray);font-weight:600;padding:4px 8px;border-radius:6px;transition:color .15s}
+.footer-links a:hover{color:var(--cyan)}
+
+/* ─── RESPONSIVE ─── */
+@media(min-width:520px){
+  .app-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media(min-width:780px){
+  .app-grid{grid-template-columns:repeat(4,1fr)}
+  .hero h1{font-size:2.6rem}
+}
+
+/* ─── SCROLL FADE-IN ─── */
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .5s var(--ease),transform .5s var(--ease)}
+.fade-in.visible{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<nav class="topbar">
+  <div class="topbar-logo">
+    <div class="topbar-logo-mark">G2</div>
+    <div class="topbar-brand">G2G <span>AI</span> Career</div>
+  </div>
+  <div class="topbar-spacer"></div>
+  <div class="topbar-badge">PLATFORM DIRECTORY</div>
+  <div class="topbar-ver">v2.0</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero fade-in">
+  <div class="hero-eyebrow">G2G AgriTech AI Platform</div>
+  <h1>Career Apps<br>Directory</h1>
+  <p>รวมแอพส่งเสริมอาชีพ AI ทุกตัว พร้อม URL, คำอธิบาย และลิงก์แก้ไขโดยตรง</p>
+  <div class="hero-stats">
+    <div class="hstat"><span class="hstat-num" id="cnt-live">9</span><span class="hstat-lbl">LIVE APPS</span></div>
+    <div class="hstat"><span class="hstat-num">AI</span><span class="hstat-lbl">POWERED</span></div>
+    <div class="hstat"><span class="hstat-num">🌐</span><span class="hstat-lbl">FLY.IO</span></div>
+    <div class="hstat"><span class="hstat-num" id="cnt-crop">40+</span><span class="hstat-lbl">CROPS</span></div>
+  </div>
+</section>
+
+<!-- CONTROLS -->
+<div class="controls fade-in">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="search" id="search" placeholder="ค้นหาแอพ เช่น ข้าว ยาง อัญมณี..." autocomplete="off">
+  </div>
+  <div style="display:flex;gap:10px;align-items:center">
+    <div class="filter-row" id="filterRow">
+      <button class="chip on" data-cat="all">ทั้งหมด</button>
+      <button class="chip" data-cat="agri">เกษตร</button>
+      <button class="chip" data-cat="aqua">ประมง</button>
+      <button class="chip" data-cat="craft">หัตถกรรม</button>
+      <button class="chip" data-cat="gem">อัญมณี</button>
+      <button class="chip" data-cat="live">LIVE</button>
+    </div>
+    <div class="view-toggle" style="flex-shrink:0">
+      <button class="vtb on" id="vGrid" onclick="setView('grid')">⊞</button>
+      <button class="vtb" id="vList" onclick="setView('list')">☰</button>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION HEADER -->
+<div class="sec-head fade-in">
+  <span class="sec-label">Career Apps</span>
+  <span class="sec-count" id="secCount">9 แอพ</span>
+  <div class="sec-line"></div>
+</div>
+
+<!-- GRID VIEW -->
+<div class="app-grid" id="gridView"></div>
+
+<!-- LIST VIEW (hidden by default) -->
+<div class="platform-list" id="listView" style="display:none"></div>
+
+<!-- FOOTER -->
+<footer class="footer fade-in">
+  <p>
+    <strong>G2G AgriTech AI Platform</strong><br>
+    Deployed on <strong>Fly.io</strong> — g2g-ai-pool.fly.dev<br>
+    สร้างเมื่อ 28 พ.ค. 2569 • ทุกแอพขับเคลื่อนด้วย Claude AI
+  </p>
+  <div class="footer-links">
+    <a href="/career-hub.html">🏆 Career Hub</a>
+    <a href="/management.html">⚙️ Management</a>
+    <a href="https://g2g-ai-pool.fly.dev" target="_blank">🌐 Production</a>
+    <a href="https://fly.io/apps/g2g-ai-pool" target="_blank">☁️ Fly Dashboard</a>
+  </div>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✓ คัดลอก URL แล้ว</div>
+
+<script>
+// ── APP DATA ──────────────────────────────────────────────
+const BASE = 'https://g2g-ai-pool.fly.dev';
+
+const APPS = [
+  {
+    id:'career-farmer',
+    icon:'🌿',
+    name:'นักปลูกผลไม้ & พืชเศรษฐกิจ',
+    desc:'ปฏิทิน 52 สัปดาห์ 12 พืชหลัก IoT เซนเซอร์ โดรน วินิจฉัยโรค Grade Prediction ราคาตลาด',
+    url:'/career-farmer.html',
+    cats:['agri'],
+    crops:['ส้ม','ลำไย','ทุเรียน','ส้มโอ','มะม่วง','ลิ้นจี่','ข้าว','ยาง','อ้อย','มัน','สับปะรด','กล้วย'],
+    status:'live',
+    badge:'hot',
+    badgeLabel:'HOT',
+    gradient:'linear-gradient(135deg,#1a4a1a,#2e7d32,#1b5e20)',
+    featured:true
+  },
+  {
+    id:'career-rice',
+    icon:'🌾',
+    name:'ชาวนา',
+    desc:'ข้าวหอมมะลิ ข้าวเหนียว ปทุมธานี1 ปฏิทินนาปี-นาปรัง ต้นทุน/ไร่ ราคาข้าวสาร',
+    url:'/career-rice.html',
+    cats:['agri'],
+    crops:['ข้าวหอมมะลิ','ข้าวเหนียว','ปทุมธานี1'],
+    status:'live',
+    badge:'new',
+    badgeLabel:'NEW',
+    gradient:'linear-gradient(135deg,#2a3a1a,#558b2f,#827717)',
+  },
+  {
+    id:'career-fisherman',
+    icon:'🐟',
+    name:'ชาวประมง & เพาะเลี้ยง',
+    desc:'กุ้งขาว ปลานิล ปลาดุก ปลากะพง หอยนางรม IoT วัดค่าน้ำ DO pH อุณหภูมิ',
+    url:'/career-fisherman.html',
+    cats:['aqua'],
+    crops:['กุ้งขาว','ปลานิล','ปลาดุก','ปลากะพง','หอยนางรม'],
+    status:'live',
+    badge:'new',
+    badgeLabel:'NEW',
+    gradient:'linear-gradient(135deg,#0a2a3a,#0277bd,#01579b)',
+  },
+  {
+    id:'career-herb',
+    icon:'🌱',
+    name:'เกษตรกรสมุนไพร',
+    desc:'ขมิ้นชัน ข่า ตะไคร้ ขิง กะเพรา มะรุม GAP Checklist ระบบตากอบแห้ง',
+    url:'/career-herb.html',
+    cats:['agri'],
+    crops:['ขมิ้น','ข่า','ตะไคร้','ขิง','กะเพรา','มะรุม'],
+    status:'live',
+    badge:'new',
+    badgeLabel:'NEW',
+    gradient:'linear-gradient(135deg,#1a3a1a,#388e3c,#1b5e20)',
+  },
+  {
+    id:'career-rubber',
+    icon:'🌲',
+    name:'ชาวสวนยางพารา',
+    desc:'RRIM600 BPB24 ปฏิทินกรีดยาง 10 เดือน RSS1/3/4 DRC% Calculator คุณภาพยาง',
+    url:'/career-rubber.html',
+    cats:['agri'],
+    crops:['RRIM600','BPB24','ยางแผ่น','ยางก้อน'],
+    status:'live',
+    badge:'new',
+    badgeLabel:'NEW',
+    gradient:'linear-gradient(135deg,#1a2a0a,#33691e,#827717)',
+  },
+  {
+    id:'career-cassava',
+    icon:'🥔',
+    name:'ชาวไร่มันสำปะหลัง',
+    desc:'คำนวณ %แป้ง เกรดคุณภาพ ปฏิทินปลูก-เก็บเกี่ยว ราคาหัวมัน',
+    url:'/career-cassava.html',
+    cats:['agri'],
+    crops:['มันสำปะหลัง','มันหวาน'],
+    status:'live',
+    badge:'new',
+    badgeLabel:'NEW',
+    gradient:'linear-gradient(135deg,#2a1a0a,#e65100,#bf360c)',
+  },
+  {
+    id:'career-silk',
+    icon:'🧵',
+    name:'ช่างทอผ้าไหม & ผ้าพื้นเมือง',
+    desc:'ปฏิทินผลิต OTOP 5 ดาว เกรดผ้าไหมไทย บันทึกชั่วโมงทำงาน ราคาผ้าตลาด',
+    url:'/career-silk.html',
+    cats:['craft'],
+    crops:['ผ้าไหม','ผ้าฝ้าย','มัดหมี่','ขิด'],
+    status:'live',
+    badge:'new',
+    badgeLabel:'NEW',
+    gradient:'linear-gradient(135deg,#2a0a2a,#7b1fa2,#4a148c)',
+  },
+  {
+    id:'career-gem',
+    icon:'💎',
+    name:'ช่างอัญมณี & จิวเวลรี่',
+    desc:'4C Grading คะแนนหิน คำนวณกะรัต Ruby Sapphire Emerald Gold ราคาขาย',
+    url:'/career-gem.html',
+    cats:['gem'],
+    crops:['ทับทิม','ไพลิน','มรกต','ทอง'],
+    status:'live',
+    badge:'ai',
+    badgeLabel:'AI+',
+    gradient:'linear-gradient(135deg,#0a0a2a,#1a237e,#311b92)',
+    featured:true
+  },
+  {
+    id:'career-hub',
+    icon:'🏆',
+    name:'HERO Career Hub',
+    desc:'หน้าหลักรวมแอพอาชีพ HERO สำหรับผู้ใช้ทั่วไป เข้าถึงทุกแอพ',
+    url:'/career-hub.html',
+    cats:['agri','aqua','craft','gem'],
+    crops:[],
+    status:'live',
+    badge:null,
+    badgeLabel:null,
+    gradient:'linear-gradient(135deg,#0f1f0f,#2e7d32,#1b5e20)',
+    featured:false
+  },
+];
+
+// versioned backup entry (meta only)
+const VERSIONED = [
+  {id:'career-farmer-20260528',url:'/career-farmer-20260528.html',name:'นักปลูกผลไม้ (Backup 28 พ.ค. 69)',date:'2026-05-28'},
+];
+
+// ── STATE ─────────────────────────────────────────────────
+let currentView = 'grid';
+let currentCat  = 'all';
+let searchQ     = '';
+
+// ── RENDER ────────────────────────────────────────────────
+function filteredApps(){
+  return APPS.filter(a=>{
+    const catOk = currentCat==='all'||a.cats.includes(currentCat)||(currentCat==='live'&&a.status==='live');
+    const q = searchQ.toLowerCase();
+    const searchOk = !q || a.name.includes(q)||a.desc.includes(q)||a.crops.some(c=>c.includes(q));
+    return catOk && searchOk;
+  });
+}
+
+function renderGrid(){
+  const gv = document.getElementById('gridView');
+  const apps = filteredApps();
+  document.getElementById('secCount').textContent = apps.length + ' แอพ';
+  gv.innerHTML = apps.map(a=>`
+    <a class="app-card${a.featured?' featured':''}" href="${a.url}" target="_blank" data-id="${a.id}">
+      <div class="app-thumb" style="background:${a.gradient}">
+        <span style="position:relative;z-index:1">${a.icon}</span>
+        <span class="app-dot ${a.status}"></span>
+        ${a.badge?`<span class="app-badge badge-${a.badge}">${a.badgeLabel}</span>`:''}
+      </div>
+      <div class="app-body">
+        <div class="app-name">${a.name}</div>
+        <div class="app-desc">${a.desc.substring(0,60)}${a.desc.length>60?'…':''}</div>
+        <div class="app-url">${BASE}${a.url}</div>
+        ${a.crops.length?`<div class="app-pills">${a.crops.slice(0,4).map(c=>`<span class="pill">${c}</span>`).join('')}${a.crops.length>4?`<span class="pill">+${a.crops.length-4}</span>`:''}</div>`:''}
+      </div>
+      <div class="app-actions">
+        <button class="app-action primary" onclick="event.preventDefault();openApp('${a.url}')">🚀 เปิด</button>
+        <button class="app-action" onclick="event.preventDefault();copyUrl('${a.url}')">📋 URL</button>
+        <button class="app-action" onclick="event.preventDefault();editApp('${a.id}')">✏️ แก้</button>
+      </div>
+    </a>
+  `).join('');
+}
+
+function renderList(){
+  const lv = document.getElementById('listView');
+  const apps = filteredApps();
+  document.getElementById('secCount').textContent = apps.length + ' แอพ';
+  lv.innerHTML = apps.map(a=>`
+    <a class="pl-row" href="${a.url}" target="_blank" data-id="${a.id}">
+      <div class="pl-icon" style="background:${a.gradient}">${a.icon}</div>
+      <div class="pl-info">
+        <div class="pl-name">${a.name}</div>
+        <div class="pl-desc">${a.desc}</div>
+        <div style="font-size:.62rem;color:var(--cyan);margin-top:3px;font-weight:700">${BASE}${a.url}</div>
+      </div>
+      <div class="pl-right">
+        <span class="pl-status ${a.status}">${a.status==='live'?'● LIVE':'⏳ WIP'}</span>
+        <button style="font-size:.65rem;color:var(--gray);padding:3px 8px;background:var(--surface2);border-radius:6px" onclick="event.preventDefault();copyUrl('${a.url}')">📋</button>
+      </div>
+    </a>
+  `).join('');
+}
+
+function render(){
+  if(currentView==='grid'){
+    renderGrid();
+    document.getElementById('gridView').style.display='grid';
+    document.getElementById('listView').style.display='none';
+  } else {
+    renderList();
+    document.getElementById('gridView').style.display='none';
+    document.getElementById('listView').style.display='flex';
+  }
+}
+
+// ── ACTIONS ───────────────────────────────────────────────
+function setView(v){
+  currentView = v;
+  document.getElementById('vGrid').className = 'vtb'+(v==='grid'?' on':'');
+  document.getElementById('vList').className = 'vtb'+(v==='list'?' on':'');
+  render();
+}
+
+function openApp(url){ window.open(url,'_blank') }
+
+function copyUrl(url){
+  const full = BASE + url;
+  navigator.clipboard?.writeText(full).catch(()=>{});
+  const t = document.getElementById('toast');
+  t.textContent = '✓ คัดลอก: ' + url;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+function editApp(id){
+  const msg = `แก้ไขแอพ: ${id}.html\n\nไฟล์อยู่ที่:\n/Users/maew/Desktop/g2g-ai-pool/public/${id}.html\n\nURL ออนไลน์:\n${BASE}/${id}.html`;
+  alert(msg);
+}
+
+// ── FILTERS ───────────────────────────────────────────────
+document.getElementById('filterRow').addEventListener('click',e=>{
+  const btn = e.target.closest('.chip');
+  if(!btn) return;
+  currentCat = btn.dataset.cat;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c===btn));
+  render();
+});
+
+// ── SEARCH ────────────────────────────────────────────────
+document.getElementById('search').addEventListener('input',e=>{
+  searchQ = e.target.value;
+  render();
+});
+
+// ── FADE-IN OBSERVER ─────────────────────────────────────
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible') });
+},{threshold:.1});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+// ── INIT ──────────────────────────────────────────────────
+render();
+
+// Update live count
+document.getElementById('cnt-live').textContent = APPS.filter(a=>a.status==='live').length;
+const allCrops = new Set(APPS.flatMap(a=>a.crops));
+document.getElementById('cnt-crop').textContent = allCrops.size + '+';
+</script>
+</body>
+</html>

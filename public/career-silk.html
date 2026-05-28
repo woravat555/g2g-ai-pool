@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#06040f">
+<title>G2G Craft AI · ช่างทอผ้า</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap">
+<style>
+:root{
+  --bg0:#06040f;--bg1:#0e0a22;--bg2:#160f30;--bg3:#1e1540;
+  --glass:rgba(255,255,255,0.05);--glass2:rgba(255,255,255,0.09);
+  --border:rgba(255,255,255,0.10);--border2:rgba(255,255,255,0.18);
+  --gold:#d4a843;--gold-s:#f0c960;--gold-d:#8a6820;--gold-pale:rgba(212,168,67,0.15);
+  --text:#f0eaf8;--text2:rgba(220,200,255,0.65);--text3:rgba(180,160,240,0.4);
+  --eout:cubic-bezier(0.22,1,0.36,1);
+  --cr-color:#c026d3;--cr-soft:#e879f9;--cr-dark:#701a75;--cr-glass:rgba(192,38,211,0.15);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{font-size:16px;height:100%}
+body{font-family:'Bai Jamjuree','Sarabun',sans-serif;background:var(--bg0);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+button,a{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;touch-action:manipulation}
+input,select,textarea{font-family:inherit;font-size:1rem;-webkit-appearance:none}
+
+/* SPLASH */
+#splash{position:fixed;inset:0;z-index:300;background:radial-gradient(ellipse at 30% 20%,#2a003d 0%,#06040f 60%);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s var(--eout)}
+#splash.out{opacity:0;pointer-events:none}
+.sp-rings{position:relative;width:120px;height:120px;margin-bottom:28px}
+.sp-rings svg{position:absolute;top:0;left:0;animation:spinRing 8s linear infinite}
+.sp-rings svg:nth-child(2){animation-duration:12s;animation-direction:reverse}
+.sp-inner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:42px}
+@keyframes spinRing{to{transform:rotate(360deg)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.sp-brand{font-size:1.7rem;font-weight:700;letter-spacing:6px;background:linear-gradient(180deg,var(--gold-s) 0%,var(--gold) 60%,var(--gold-d) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:fadeUp .8s var(--eout) .3s both}
+.sp-sub{font-size:.85rem;color:rgba(192,38,211,.7);letter-spacing:3px;margin-top:6px;animation:fadeUp .8s var(--eout) .5s both}
+.sp-start{margin-top:40px;padding:14px 36px;border-radius:99px;background:linear-gradient(135deg,var(--gold-s),var(--gold));color:#06040f;font-weight:700;font-size:1rem;letter-spacing:1px;box-shadow:0 8px 28px rgba(212,168,67,.35);animation:fadeUp .8s var(--eout) .8s both;transition:transform .1s,opacity .1s}
+.sp-start:active{transform:scale(.95);opacity:.85}
+
+/* APP */
+.app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative}
+
+/* TOP HEADER */
+.app-header{padding:52px 18px 10px;display:flex;justify-content:space-between;align-items:flex-start;flex-shrink:0;position:relative;z-index:2}
+.app-header::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,4,15,.95) 60%,transparent);pointer-events:none;z-index:-1}
+.hdr-logo{font-size:1rem;font-weight:700;letter-spacing:3px;background:linear-gradient(135deg,var(--gold-s),var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hdr-crop-name{font-size:1.3rem;font-weight:700;color:var(--cr-color);margin-top:2px;transition:color .3s}
+.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.hdr-week-badge{background:var(--gold-pale);border:1px solid rgba(212,168,67,.4);border-radius:20px;padding:4px 12px;font-size:.75rem;font-weight:600;color:var(--gold)}
+.hdr-date{font-size:.72rem;color:var(--text3)}
+
+/* PRODUCT SELECTOR */
+.crop-scroll-wrap{padding:8px 16px;flex-shrink:0;position:relative;z-index:2}
+.crop-scroll{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px}
+.crop-scroll::-webkit-scrollbar{display:none}
+.crop-tab{flex-shrink:0;display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:99px;border:1.5px solid rgba(255,255,255,.12);background:var(--glass);font-size:.8rem;font-weight:600;color:var(--text2);cursor:pointer;transition:all .25s var(--eout)}
+.crop-tab.active{border-color:var(--cr-color);background:var(--cr-glass);color:var(--cr-color);box-shadow:0 0 20px var(--cr-glass)}
+
+/* MAIN CONTENT AREA */
+.app-content{flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:90px}
+.app-content::-webkit-scrollbar{display:none}
+
+/* WEEK RING SECTION */
+.ring-section{padding:12px 18px 18px;display:flex;align-items:center;gap:16px}
+.ring-wrap{position:relative;flex-shrink:0;width:100px;height:100px}
+.ring-wrap svg{position:absolute;top:0;left:0}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-wnum{font-size:1.85rem;font-weight:700;color:var(--gold-s);line-height:1}
+.ring-wlbl{font-size:.6rem;color:var(--text2);letter-spacing:2px;margin-top:2px}
+.ring-info{flex:1}
+.ring-stage{font-size:1.05rem;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:4px}
+.ring-season{font-size:.8rem;color:var(--text2)}
+.ring-period{font-size:.75rem;color:var(--gold);margin-top:4px;background:var(--gold-pale);border-radius:8px;padding:3px 8px;display:inline-block}
+
+/* DIVIDER */
+.section-divider{display:flex;align-items:center;gap:10px;padding:2px 18px 10px;color:var(--text3);font-size:.7rem;letter-spacing:2px;text-transform:uppercase}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent)}
+
+/* WEEK CARDS */
+.weeks-section{padding:0 14px}
+.week-card{background:var(--glass);border:1px solid var(--border);border-radius:20px;margin-bottom:10px;overflow:hidden;transition:border-color .2s,box-shadow .2s;position:relative}
+.week-card.current{border-color:rgba(212,168,67,.5);box-shadow:0 0 24px rgba(212,168,67,.1)}
+.week-card.current::before{content:'สัปดาห์ปัจจุบัน';position:absolute;top:10px;right:10px;background:linear-gradient(135deg,var(--gold-s),var(--gold));color:#06040f;font-size:.6rem;font-weight:700;padding:3px 8px;border-radius:10px;letter-spacing:.5px;z-index:1}
+.wc-header{padding:14px 16px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.wc-num{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0;background:var(--cr-glass);color:var(--cr-color);border:1.5px solid var(--cr-color);transition:background .3s,color .3s,border-color .3s}
+.week-card.current .wc-num{background:linear-gradient(135deg,var(--gold-s),var(--gold));color:#06040f;border-color:transparent}
+.wc-info{flex:1}
+.wc-title{font-size:.88rem;font-weight:600;color:var(--text);line-height:1.3}
+.wc-subtitle{font-size:.75rem;color:var(--text2);margin-top:2px}
+.wc-toggle{color:var(--text3);font-size:1.1rem;transition:transform .25s var(--eout)}
+.week-card.open .wc-toggle{transform:rotate(180deg)}
+.wc-body{max-height:0;overflow:hidden;transition:max-height .35s var(--eout)}
+.week-card.open .wc-body{max-height:1100px}
+.wc-tasks{padding:0 14px 14px}
+.task-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:16px 8px 14px 8px;margin-bottom:8px;background:var(--glass2);border:1px solid var(--border);cursor:pointer;transition:background .15s,border-color .15s}
+.task-item:active{background:rgba(255,255,255,.12)}
+.task-item.done{opacity:.55}
+.task-item.done .ti-text{text-decoration:line-through;color:var(--text3)}
+.ti-check{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--cr-color);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-size:.8rem;transition:background .15s}
+.task-item.done .ti-check{background:var(--cr-color);border-color:var(--cr-color)}
+.ti-content{flex:1}
+.ti-text{font-size:.85rem;color:var(--text);line-height:1.5;font-weight:500}
+.ti-dose{font-size:.75rem;color:var(--gold);margin-top:3px;background:var(--gold-pale);border-radius:6px;padding:2px 7px;display:inline-block}
+.wc-ai-row{display:flex;justify-content:flex-end;padding:0 14px 14px}
+.wc-ai-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:99px;background:var(--cr-glass);border:1.5px solid var(--cr-color);color:var(--cr-color);font-size:.8rem;font-weight:600}
+
+/* PHASE BANNER */
+.wc-phase-img-wrap{position:relative;overflow:hidden;border-radius:0;height:130px;display:flex;align-items:flex-end}
+.wc-phase-cap{padding:8px 14px;background:linear-gradient(0deg,rgba(6,4,15,.85) 0%,transparent 100%);font-size:.72rem;font-weight:600;color:rgba(255,255,255,.8);letter-spacing:1.5px;text-transform:uppercase;width:100%}
+
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;z-index:50;padding:0 16px max(16px,env(safe-area-inset-bottom));background:linear-gradient(0deg,var(--bg0) 60%,transparent)}
+.nav-inner{background:rgba(20,14,38,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.12);border-radius:24px;display:flex;align-items:center;padding:6px 8px}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 4px;border-radius:16px;cursor:pointer;border:none;background:transparent;color:var(--text3);transition:color .2s}
+.nav-item.active{color:var(--cr-color)}
+.nav-item.active .nav-dot{background:var(--cr-color)}
+.nav-icon{font-size:1.25rem;line-height:1}
+.nav-label{font-size:.6rem;font-weight:600;letter-spacing:.5px}
+.nav-dot{width:4px;height:4px;border-radius:50%;background:transparent;margin:1px auto 0;transition:background .2s}
+
+/* FAB */
+#ai-fab{position:fixed;bottom:90px;right:18px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--gold-s),var(--gold));display:flex;align-items:center;justify-content:center;font-size:1.5rem;box-shadow:0 6px 24px rgba(212,168,67,.5);z-index:60;cursor:pointer;border:none}
+#ai-fab.pulse{animation:fabPulse 2s ease-in-out infinite}
+@keyframes fabPulse{0%,100%{box-shadow:0 6px 24px rgba(212,168,67,.5)}50%{box-shadow:0 6px 32px rgba(212,168,67,.8),0 0 0 8px rgba(212,168,67,.1)}}
+
+/* AI DRAWER */
+#ai-drawer{position:fixed;inset:0;z-index:200;pointer-events:none}
+#ai-drawer.open{pointer-events:all}
+.drawer-overlay{position:absolute;inset:0;background:rgba(0,0,0,.6);opacity:0;transition:opacity .3s;cursor:pointer}
+#ai-drawer.open .drawer-overlay{opacity:1}
+.drawer-panel{position:absolute;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:480px;background:var(--bg2);border-radius:24px 24px 0 0;border-top:1px solid rgba(255,255,255,.12);transition:transform .35s var(--eout);display:flex;flex-direction:column;max-height:85vh}
+#ai-drawer.open .drawer-panel{transform:translateX(-50%) translateY(0)}
+.drawer-handle{width:36px;height:4px;border-radius:2px;background:rgba(255,255,255,.15);margin:12px auto 0}
+.drawer-header{padding:12px 18px 10px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
+.drawer-title{flex:1;font-size:.95rem;font-weight:700;color:var(--gold)}
+.drawer-ctx{font-size:.75rem;color:var(--text2);margin-top:1px}
+.drawer-close{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:1rem}
+.drawer-msgs{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-height:80px}
+.drawer-msgs::-webkit-scrollbar{display:none}
+.dmsg{padding:10px 13px;border-radius:14px;font-size:.85rem;line-height:1.6;max-width:90%;white-space:pre-wrap}
+.dmsg.user{align-self:flex-end;background:rgba(192,38,211,.2);color:#fde68a;border:1px solid rgba(192,38,211,.25);border-bottom-right-radius:4px}
+.dmsg.ai{align-self:flex-start;background:var(--glass2);color:var(--text);border:1px solid var(--border);border-bottom-left-radius:4px}
+.drawer-input-row{padding:10px 14px max(12px,env(safe-area-inset-bottom));border-top:1px solid var(--border);display:flex;gap:8px;align-items:flex-end;background:var(--bg2)}
+.drawer-input{flex:1;background:var(--glass);border:1px solid var(--border2);border-radius:14px;padding:10px 13px;color:var(--text);font-size:.88rem;resize:none;min-height:40px;max-height:100px;outline:none}
+.drawer-input:focus{border-color:rgba(192,38,211,.4)}
+.drawer-send{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--gold-s),var(--gold));display:flex;align-items:center;justify-content:center;color:#06040f;font-size:1rem;font-weight:700;flex-shrink:0;border:none}
+.drawer-send:disabled{opacity:.4}
+.quick-asks{display:flex;gap:6px;flex-wrap:wrap;padding:8px 14px 0}
+.qa-chip{padding:6px 12px;border-radius:20px;background:var(--glass);border:1px solid var(--border);font-size:.75rem;color:var(--text2);cursor:pointer}
+.qa-chip:active{background:var(--glass2)}
+
+/* SCREENS */
+.screen{display:none}
+.screen.active{display:block;min-height:100vh;padding-bottom:90px}
+.screen-header{padding:52px 18px 14px;position:sticky;top:0;z-index:10;background:linear-gradient(180deg,var(--bg0) 70%,transparent)}
+.sh-title{font-size:1.1rem;font-weight:700;color:var(--text)}
+.sh-sub{font-size:.75rem;color:var(--text2);margin-top:2px}
+
+/* TOOLS */
+.tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px 12px}
+.tool-card{background:var(--glass);border:1px solid var(--border);border-radius:18px;padding:14px;cursor:pointer}
+.tool-card:active{background:var(--glass2)}
+.tc-icon{font-size:1.8rem;margin-bottom:6px}
+.tc-title{font-size:.85rem;font-weight:700;color:var(--text)}
+.tc-sub{font-size:.72rem;color:var(--text2);margin-top:3px}
+.tool-panel{background:var(--glass);border:1px solid var(--border);border-radius:18px;margin:0 14px 12px;padding:16px}
+.tool-panel h3{font-size:.88rem;font-weight:700;color:var(--gold);margin-bottom:12px}
+.tp-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.tp-label{font-size:.8rem;color:var(--text2);width:90px;flex-shrink:0}
+.tp-input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:8px 12px;color:var(--text);font-size:.88rem}
+.tp-select{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:8px 12px;color:var(--text);font-size:.82rem}
+.tp-btn{width:100%;padding:11px;border-radius:14px;background:linear-gradient(135deg,var(--cr-color),var(--cr-dark));color:#fff;font-weight:700;font-size:.88rem;border:none;margin-top:6px}
+.tp-btn:active{opacity:.8}
+.tp-result{margin-top:10px;padding:12px;background:var(--bg3);border-radius:12px;border-left:3px solid var(--gold);font-size:.82rem;color:var(--text);line-height:1.7;display:none;white-space:pre-wrap}
+.tp-result.show{display:block}
+.back-btn{margin-top:8px;width:100%;padding:8px;background:transparent;border:1px solid var(--border);border-radius:10px;color:var(--text2);font-size:.8rem;cursor:pointer}
+
+/* LOG */
+.log-section{padding:0 14px}
+.log-input-card{background:var(--glass);border:1px solid var(--border);border-radius:18px;padding:14px;margin-bottom:12px}
+.log-input-card textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:10px;color:var(--text);font-size:.85rem;resize:vertical;min-height:80px;outline:none}
+.log-meta{display:flex;gap:8px;margin-top:8px}
+.log-meta select{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:7px 10px;color:var(--text);font-size:.8rem}
+.log-save-btn{width:100%;padding:10px;border-radius:12px;background:var(--cr-glass);border:1.5px solid var(--cr-color);color:var(--cr-color);font-weight:700;font-size:.85rem;margin-top:8px;cursor:pointer}
+.log-entry{background:var(--glass);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:8px}
+.le-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.le-crop{font-size:.72rem;color:var(--cr-color);font-weight:600;background:var(--cr-glass);padding:3px 9px;border-radius:10px}
+.le-date{font-size:.7rem;color:var(--text3)}
+.le-text{font-size:.82rem;color:var(--text);line-height:1.6}
+
+/* MARKET */
+.market-section{padding:0 14px}
+.price-card{background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:10px}
+.pc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.pc-crop{font-size:.88rem;font-weight:700;color:var(--text)}
+.pc-updated{font-size:.7rem;color:var(--text3)}
+.pc-prices{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.pcp-item{text-align:center;background:var(--bg3);border-radius:10px;padding:8px 4px}
+.pcp-grade{font-size:.65rem;color:var(--text3);letter-spacing:.5px}
+.pcp-val{font-size:1.1rem;font-weight:700;color:var(--gold);margin:2px 0}
+.pcp-unit{font-size:.65rem;color:var(--text3)}
+.market-ai-btn{width:100%;padding:11px;border-radius:14px;background:linear-gradient(135deg,var(--bg2),var(--bg3));border:1.5px solid var(--gold);color:var(--gold);font-weight:700;font-size:.88rem;margin-bottom:10px;cursor:pointer}
+#screen-week{padding-bottom:90px}
+
+/* GRADE PREDICTION CARD */
+.grade-card{background:linear-gradient(135deg,var(--bg1) 0%,var(--bg3) 100%);border:1.5px solid var(--cr-color);border-radius:20px;padding:16px;margin-bottom:14px;position:relative;overflow:hidden}
+.grade-card::before{content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;border-radius:50%;background:var(--cr-glass);pointer-events:none}
+.gc-row1{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.gc-ttl{font-size:.68rem;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:2px}
+.gc-crop-name{font-size:.92rem;font-weight:700;color:var(--text)}
+.gc-week-tag{font-size:.7rem;color:var(--gold);background:var(--gold-pale);border:1px solid rgba(212,168,67,.3);padding:3px 10px;border-radius:10px;white-space:nowrap}
+.gc-grade-row{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.gc-grade-box{width:68px;height:68px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;border:2px solid var(--cr-color);background:var(--cr-glass);transition:border-color .3s,background .3s}
+.gc-letter{font-size:2rem;font-weight:900;color:var(--cr-color);line-height:1;transition:color .3s}
+.gc-sub{font-size:.55rem;color:var(--cr-soft);letter-spacing:1px;margin-top:1px}
+.gc-desc{flex:1}
+.gc-grade-title{font-size:.9rem;font-weight:700;color:var(--text);margin-bottom:3px}
+.gc-price-line{font-size:.78rem;color:var(--gold);margin-bottom:4px}
+.gc-tip{font-size:.74rem;color:var(--text2);line-height:1.5}
+.gc-bars{margin-bottom:12px}
+.gc-bar-row{margin-bottom:7px}
+.gc-bar-hd{display:flex;justify-content:space-between;font-size:.7rem;color:var(--text2);margin-bottom:3px}
+.gc-bar-track{height:5px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden}
+.gc-bar-fill{height:100%;border-radius:3px;background:var(--cr-color);transition:width .7s cubic-bezier(0.22,1,0.36,1)}
+.gc-msg-box{background:rgba(255,255,255,.04);border-left:3px solid var(--cr-color);border-radius:0 12px 12px 0;padding:10px 12px}
+.gc-msg-text{font-size:.82rem;color:var(--text);line-height:1.7}
+.gc-msg-cta{font-size:.72rem;color:var(--cr-soft);margin-top:5px;font-weight:600}
+.gc-refresh{float:right;font-size:.7rem;color:var(--text3);cursor:pointer;margin-top:2px;padding:2px 6px;border:1px solid var(--border);border-radius:6px;background:none}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="sp-rings">
+    <svg width="120" height="120" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="54" fill="none" stroke="rgba(192,38,211,.25)" stroke-width="2" stroke-dasharray="8 6"/>
+    </svg>
+    <svg width="120" height="120" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="42" fill="none" stroke="rgba(192,38,211,.15)" stroke-width="1.5" stroke-dasharray="4 8"/>
+    </svg>
+    <div class="sp-inner">🦋</div>
+  </div>
+  <div class="sp-brand">G2G CRAFT AI</div>
+  <div class="sp-sub">ระบบจัดการผ้าทอมืออัจฉริยะ</div>
+  <button class="sp-start" onclick="startApp()">เริ่มใช้งาน →</button>
+</div>
+
+<!-- APP -->
+<div class="app" id="app" style="display:none">
+
+  <!-- WEEK SCREEN -->
+  <div id="screen-week" class="screen active">
+    <div class="app-header">
+      <div class="hdr-left">
+        <div class="hdr-logo">G2G CRAFT AI</div>
+        <div class="hdr-crop-name" id="hdr-crop-name">ผ้าไหมมัดหมี่</div>
+      </div>
+      <div class="hdr-right">
+        <div class="hdr-week-badge" id="hdr-week-badge">🦋 สัปดาห์ที่ 1</div>
+        <div class="hdr-date" id="hdr-date"></div>
+      </div>
+    </div>
+    <div class="crop-scroll-wrap">
+      <div class="crop-scroll" id="cropScroll"></div>
+    </div>
+    <div class="ring-section">
+      <div class="ring-wrap">
+        <svg width="100" height="100" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="7"/>
+          <circle id="ringArc" cx="50" cy="50" r="44" fill="none" stroke="var(--cr-color)" stroke-width="7" stroke-linecap="round" stroke-dasharray="276.5" stroke-dashoffset="276.5" transform="rotate(-90 50 50)" style="transition:stroke-dashoffset 1s var(--eout),stroke .3s"/>
+        </svg>
+        <div class="ring-center">
+          <div class="ring-wnum" id="ringWeekNum">1</div>
+          <div class="ring-wlbl">/ 52 สัปดาห์</div>
+        </div>
+      </div>
+      <div class="ring-info">
+        <div class="ring-stage" id="ringStage">เตรียมวัตถุดิบ</div>
+        <div class="ring-season" id="ringSeason">🌱 ต้นรอบผลิต</div>
+        <div class="ring-period" id="ringPeriod">เตรียมไหมดิบ</div>
+      </div>
+    </div>
+    <div class="section-divider"><span id="weekRangeLabel">แผนงานสัปดาห์</span></div>
+    <div class="weeks-section" id="weeksSection"></div>
+  </div>
+
+  <!-- TOOLS SCREEN (Cost Calculator) -->
+  <div id="screen-tools" class="screen">
+    <div class="screen-header"><div class="sh-title">🧮 คำนวณต้นทุน</div><div class="sh-sub">ต้นทุนต่อผืน · ราคาขายขั้นต่ำ · เวลาทอ</div></div>
+    <div id="toolsHome">
+      <div class="tools-grid">
+        <div class="tool-card" onclick="showTool('fabric')"><div class="tc-icon">🪡</div><div class="tc-title">ต้นทุนผ้า</div><div class="tc-sub">คำนวณต้นทุน/ผืน</div></div>
+        <div class="tool-card" onclick="showTool('price')"><div class="tc-icon">💰</div><div class="tc-title">ราคาขาย</div><div class="tc-sub">ราคาขั้นต่ำ+กำไร</div></div>
+        <div class="tool-card" onclick="showTool('time')"><div class="tc-icon">⏱️</div><div class="tc-title">เวลาทอ</div><div class="tc-sub">ประมาณเวลา/ผืน</div></div>
+        <div class="tool-card" onclick="showTool('dye')"><div class="tc-icon">🎨</div><div class="tc-title">ย้อมสี</div><div class="tc-sub">สูตรสีธรรมชาติ</div></div>
+      </div>
+    </div>
+    <div id="tool-fabric" class="tool-panel" style="display:none">
+      <h3>🪡 คำนวณต้นทุนต่อผืน</h3>
+      <div class="tp-row"><div class="tp-label">ไหมดิบ (กก.)</div><input class="tp-input" type="number" id="fc-silk" value="0.2" step="0.05" min="0.05"></div>
+      <div class="tp-row"><div class="tp-label">สีย้อม (บ.)</div><input class="tp-input" type="number" id="fc-dye" value="50" min="0"></div>
+      <div class="tp-row"><div class="tp-label">ชม.ทำงาน</div><input class="tp-input" type="number" id="fc-hours" value="40" min="1"></div>
+      <div class="tp-row"><div class="tp-label">ค่าแรง/ชม.</div><input class="tp-input" type="number" id="fc-rate" value="60" min="1"></div>
+      <div class="tp-row"><div class="tp-label">ค่าโสหุ้ย (บ.)</div><input class="tp-input" type="number" id="fc-overhead" value="200" min="0"></div>
+      <button class="tp-btn" onclick="calcFabricCost()">คำนวณ</button>
+      <div class="tp-result" id="fabric-result"></div>
+      <button class="back-btn" onclick="showTool(null)">← กลับ</button>
+    </div>
+    <div id="tool-price" class="tool-panel" style="display:none">
+      <h3>💰 คำนวณราคาขาย</h3>
+      <div class="tp-row"><div class="tp-label">ต้นทุนรวม (บ.)</div><input class="tp-input" type="number" id="sp-cost" value="2800" min="100"></div>
+      <div class="tp-row"><div class="tp-label">กำไรที่ต้องการ (%)</div><input class="tp-input" type="number" id="sp-margin" value="40" min="10" max="300"></div>
+      <div class="tp-row"><div class="tp-label">ประเภทผ้า</div><select class="tp-select" id="sp-type"><option value="silk">ผ้าไหมมัดหมี่</option><option value="cotton">ผ้าฝ้ายทอมือ</option><option value="indigo">ผ้าย้อมคราม</option><option value="otop">ผ้า OTOP พิเศษ</option></select></div>
+      <button class="tp-btn" onclick="calcSellPrice()">คำนวณ</button>
+      <div class="tp-result" id="price-result"></div>
+      <button class="back-btn" onclick="showTool(null)">← กลับ</button>
+    </div>
+    <div id="tool-time" class="tool-panel" style="display:none">
+      <h3>⏱️ ประมาณเวลาทอ</h3>
+      <div class="tp-row"><div class="tp-label">ความยาว (เมตร)</div><input class="tp-input" type="number" id="wt-length" value="2" step="0.5" min="0.5"></div>
+      <div class="tp-row"><div class="tp-label">ความกว้าง (นิ้ว)</div><select class="tp-select" id="wt-width"><option value="24">24 นิ้ว (แคบ)</option><option value="36" selected>36 นิ้ว (กลาง)</option><option value="48">48 นิ้ว (กว้าง)</option></select></div>
+      <div class="tp-row"><div class="tp-label">ความละเอียด</div><select class="tp-select" id="wt-detail"><option value="plain">ลายพื้น</option><option value="pattern" selected>ลายมัดหมี่</option><option value="complex">ลายซับซ้อน</option></select></div>
+      <div class="tp-row"><div class="tp-label">ฝีมือช่าง</div><select class="tp-select" id="wt-skill"><option value="beginner">ฝึกหัด</option><option value="mid" selected>ปานกลาง</option><option value="expert">ชำนาญ</option></select></div>
+      <button class="tp-btn" onclick="calcWeaveTime()">ประมาณ</button>
+      <div class="tp-result" id="time-result"></div>
+      <button class="back-btn" onclick="showTool(null)">← กลับ</button>
+    </div>
+    <div id="tool-dye" class="tool-panel" style="display:none">
+      <h3>🎨 สูตรสีย้อมธรรมชาติ</h3>
+      <div class="tp-row"><div class="tp-label">สีที่ต้องการ</div><select class="tp-select" id="dye-color"><option value="indigo">น้ำเงิน (คราม)</option><option value="red">แดง (ครั่ง)</option><option value="yellow">เหลือง (ขมิ้น/มะเกลือ)</option><option value="black">ดำ (มะเกลือ/ฝาง)</option><option value="brown">น้ำตาล (เปลือกไม้)</option><option value="green">เขียว (คราม+ขมิ้น)</option></select></div>
+      <div class="tp-row"><div class="tp-label">น้ำหนักเส้นใย (กรัม)</div><input class="tp-input" type="number" id="dye-weight" value="200" min="10"></div>
+      <button class="tp-btn" onclick="calcDyeFormula()">ดูสูตร</button>
+      <div class="tp-result" id="dye-result"></div>
+      <button class="back-btn" onclick="showTool(null)">← กลับ</button>
+    </div>
+  </div>
+
+  <!-- MARKET SCREEN -->
+  <div id="screen-market" class="screen">
+    <div class="screen-header"><div class="sh-title">📊 ราคาตลาด</div><div class="sh-sub">ราคาอ้างอิง · คาดการณ์คุณภาพ · AI วางแผนขาย</div></div>
+    <div class="market-section">
+      <div class="grade-card" id="grade-card">
+        <button class="gc-refresh" onclick="renderGradeCard()">↻ อัพเดท</button>
+        <div class="gc-row1">
+          <div><div class="gc-ttl">📈 คาดการณ์คุณภาพผ้า</div><div class="gc-crop-name" id="gc-crop-name">-</div></div>
+          <div class="gc-week-tag" id="gc-week-tag">สัปดาห์ที่ -</div>
+        </div>
+        <div class="gc-grade-row">
+          <div class="gc-grade-box" id="gc-grade-box">
+            <div class="gc-letter" id="gc-letter">-</div>
+            <div class="gc-sub" id="gc-sub">-</div>
+          </div>
+          <div class="gc-desc">
+            <div class="gc-grade-title" id="gc-grade-title">กำลังคำนวณ...</div>
+            <div class="gc-price-line" id="gc-price-line"></div>
+            <div class="gc-tip" id="gc-tip"></div>
+          </div>
+        </div>
+        <div class="gc-bars" id="gc-bars"></div>
+        <div class="gc-msg-box">
+          <div class="gc-msg-text" id="gc-msg-text">-</div>
+          <div class="gc-msg-cta" id="gc-msg-cta"></div>
+        </div>
+      </div>
+      <button class="market-ai-btn" onclick="getMarketAdvice()">🤖 AI แนะนำกลยุทธ์ขาย</button>
+      <div id="market-ai-result" style="background:var(--glass);border:1px solid var(--border);border-radius:14px;padding:14px;font-size:.83rem;color:var(--text);line-height:1.7;margin-bottom:12px;white-space:pre-wrap;display:none"></div>
+      <div class="price-card"><div class="pc-header"><div class="pc-crop">🦋 ผ้าไหมมัดหมี่ (2ม.)</div><div class="pc-updated">อ้างอิง 2568</div></div><div class="pc-prices"><div class="pcp-item"><div class="pcp-grade">OTOP</div><div class="pcp-val">5,000+</div><div class="pcp-unit">บ./ผืน</div></div><div class="pcp-item"><div class="pcp-grade">Premium</div><div class="pcp-val">3,000</div><div class="pcp-unit">บ./ผืน</div></div><div class="pcp-item"><div class="pcp-grade">Standard</div><div class="pcp-val">1,500</div><div class="pcp-unit">บ./ผืน</div></div></div></div>
+      <div class="price-card"><div class="pc-header"><div class="pc-crop">🌸 ผ้าฝ้ายทอมือ</div><div class="pc-updated">อ้างอิง 2568</div></div><div class="pc-prices"><div class="pcp-item"><div class="pcp-grade">พิเศษ</div><div class="pcp-val">2,500</div><div class="pcp-unit">บ./ผืน</div></div><div class="pcp-item"><div class="pcp-grade">ทั่วไป</div><div class="pcp-val">1,200</div><div class="pcp-unit">บ./ผืน</div></div><div class="pcp-item"><div class="pcp-grade">พื้นฐาน</div><div class="pcp-val">800</div><div class="pcp-unit">บ./ผืน</div></div></div></div>
+      <div class="price-card"><div class="pc-header"><div class="pc-crop">💙 ผ้าย้อมคราม</div><div class="pc-updated">อ้างอิง 2568</div></div><div class="pc-prices"><div class="pcp-item"><div class="pcp-grade">ลายพิเศษ</div><div class="pcp-val">4,000</div><div class="pcp-unit">บ./ผืน</div></div><div class="pcp-item"><div class="pcp-grade">มาตรฐาน</div><div class="pcp-val">2,000</div><div class="pcp-unit">บ./ผืน</div></div><div class="pcp-item"><div class="pcp-grade">ทั่วไป</div><div class="pcp-val">1,200</div><div class="pcp-unit">บ./ผืน</div></div></div></div>
+      <div class="price-card"><div class="pc-header"><div class="pc-crop">⭐ ผ้า OTOP 5 ดาว</div><div class="pc-updated">อ้างอิง 2568</div></div><div class="pc-prices"><div class="pcp-item"><div class="pcp-grade">เกรดสูง</div><div class="pcp-val">20,000</div><div class="pcp-unit">บ./ผืน</div></div><div class="pcp-item"><div class="pcp-grade">กลาง</div><div class="pcp-val">10,000</div><div class="pcp-unit">บ./ผืน</div></div><div class="pcp-item"><div class="pcp-grade">เริ่มต้น</div><div class="pcp-val">5,000</div><div class="pcp-unit">บ./ผืน</div></div></div></div>
+    </div>
+  </div>
+
+  <!-- LOG SCREEN -->
+  <div id="screen-log" class="screen">
+    <div class="screen-header"><div class="sh-title">📓 บันทึกการผลิต</div><div class="sh-sub">บันทึกงาน ค่าใช้จ่าย ปัญหา ยอดขาย</div></div>
+    <div class="log-section">
+      <div class="log-input-card">
+        <textarea id="log-text" placeholder="บันทึกวันนี้... เช่น ทอผ้าได้ 50 ซม. ย้อมสีคราม ปัญหาเส้นขาด"></textarea>
+        <div class="log-meta">
+          <select id="log-crop"><option value="ผ้าไหมมัดหมี่">🦋 ผ้าไหมมัดหมี่</option><option value="ผ้าฝ้ายทอมือ">🌸 ผ้าฝ้ายทอมือ</option><option value="ผ้าย้อมคราม">💙 ผ้าย้อมคราม</option></select>
+          <select id="log-type"><option value="งาน">งานทอ</option><option value="ย้อมสี">ย้อมสี</option><option value="ขาย">ยอดขาย</option><option value="ปัญหา">ปัญหา</option><option value="ค่าใช้จ่าย">ค่าใช้จ่าย</option></select>
+        </div>
+        <button class="log-save-btn" onclick="saveLog()">💾 บันทึก</button>
+      </div>
+      <div id="log-list"></div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav">
+    <div class="nav-inner">
+      <button class="nav-item active" onclick="switchTab('week',this)"><div class="nav-icon">📅</div><div class="nav-label">แผนงาน</div><div class="nav-dot"></div></button>
+      <button class="nav-item" onclick="switchTab('tools',this)"><div class="nav-icon">🧮</div><div class="nav-label">คำนวณ</div><div class="nav-dot"></div></button>
+      <button class="nav-item" onclick="switchTab('market',this)"><div class="nav-icon">📊</div><div class="nav-label">ตลาด</div><div class="nav-dot"></div></button>
+      <button class="nav-item" onclick="switchTab('log',this)"><div class="nav-icon">📓</div><div class="nav-label">บันทึก</div><div class="nav-dot"></div></button>
+    </div>
+  </div>
+</div>
+
+<!-- FAB -->
+<button id="ai-fab" class="pulse" onclick="openDrawer(null)" style="display:none">🤖</button>
+
+<!-- AI DRAWER -->
+<div id="ai-drawer">
+  <div class="drawer-overlay" onclick="closeDrawer()"></div>
+  <div class="drawer-panel">
+    <div class="drawer-handle"></div>
+    <div class="drawer-header">
+      <div><div class="drawer-title">🤖 AI ที่ปรึกษาช่างทอ</div><div class="drawer-ctx" id="drawer-ctx">ถามได้ทุกเรื่องเกี่ยวกับการทอผ้า</div></div>
+      <button class="drawer-close" onclick="closeDrawer()">✕</button>
+    </div>
+    <div class="quick-asks" id="quickAsks">
+      <button class="qa-chip" onclick="askQuick('ลายนี้ทอยังไง?')">ลายนี้ทอยังไง?</button>
+      <button class="qa-chip" onclick="askQuick('ย้อมสีคราม วิธีทำ?')">ย้อมสีคราม</button>
+      <button class="qa-chip" onclick="askQuick('ราคาขายเหมาะสมไหม?')">ราคาขายดีไหม?</button>
+      <button class="qa-chip" onclick="askQuick('จะขายที่ไหนดี?')">ขายที่ไหนดี?</button>
+    </div>
+    <div class="drawer-msgs" id="drawerMsgs">
+      <div class="dmsg ai">สวัสดีครับ 🦋 ผมคือ AI ที่ปรึกษาช่างทอ G2G Craft<br>ถามได้ทุกเรื่อง ลาย สี วัตถุดิบ ราคา และกลยุทธ์ขายครับ</div>
+    </div>
+    <div class="drawer-input-row">
+      <textarea class="drawer-input" id="drawerInput" placeholder="ถามเรื่องการทอผ้า..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendDrawer()}"></textarea>
+      <button class="drawer-send" id="drawerSendBtn" onclick="sendDrawer()">▶</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const CROPS={
+  silk:{key:'silk',name:'ผ้าไหมมัดหมี่',emoji:'🦋',color:'#c026d3',soft:'#e879f9',dark:'#701a75',glass:'rgba(192,38,211,0.15)'},
+  cotton:{key:'cotton',name:'ผ้าฝ้ายทอมือ',emoji:'🌸',color:'#ec4899',soft:'#f9a8d4',dark:'#831843',glass:'rgba(236,72,153,0.15)'},
+  indigo:{key:'indigo',name:'ผ้าย้อมคราม',emoji:'💙',color:'#6366f1',soft:'#a5b4fc',dark:'#312e81',glass:'rgba(99,102,241,0.15)'},
+};
+let activeCrop='silk';
+
+function getPhaseGradient(crop,season){
+  const c=CROPS[crop]||CROPS.silk;
+  const color=c.color;const dark=c.dark;
+  if(season.includes('เตรียม')||season.includes('วางแผน'))return`linear-gradient(135deg,#0a001a 0%,#2a0040 60%,${color}22 100%)`;
+  if(season.includes('ย้อม'))return`linear-gradient(135deg,${dark}cc 0%,${color}66 60%,rgba(6,4,15,0.8) 100%)`;
+  if(season.includes('ทอ')||season.includes('เส้น'))return`linear-gradient(135deg,#1a0030 0%,${color}44 60%,rgba(6,4,15,0.8) 100%)`;
+  if(season.includes('ตกแต่ง')||season.includes('ตัด'))return`linear-gradient(135deg,#2a0a30 0%,${color}55 50%,rgba(6,4,15,0.8) 100%)`;
+  if(season.includes('จำหน่าย')||season.includes('ขาย')||season.includes('บู๊ธ'))return`linear-gradient(135deg,#2a1a00 0%,#7a4400 50%,#d4a84333 100%)`;
+  return`linear-gradient(135deg,${dark}aa 0%,${color}44 100%)`;
+}
+
+const FARM_PERIODS={
+  silk:[
+    {w:[1,4],season:'🌱 เตรียมวัตถุดิบ',stage:'รับไหมดิบ คัดเส้น ต้มฟอก',period:'🌱 เริ่มรอบผลิต',tasks:[
+      {t:'รับไหมดิบจากแหล่ง ตรวจคุณภาพเส้น',d:''},
+      {t:'คัดเส้นไหม แยกเกรด A-B-C',d:''},
+      {t:'ต้มไหมฟอกกาวด้วยน้ำสบู่อุ่น 80°C',d:''},
+      {t:'ล้างเส้นไหม ตากให้แห้งในร่ม',d:''},
+      {t:'ชั่งน้ำหนักเส้นไหม บันทึกสต็อก',d:''}
+    ]},
+    {w:[5,8],season:'🎨 ย้อมสี',stage:'ย้อมสีธรรมชาติ ทดสอบความคงทน',period:'🎨 ย้อมสี',tasks:[
+      {t:'เตรียมสีธรรมชาติ (ครั่ง/คราม/ขมิ้น)',d:''},
+      {t:'แช่เส้นไหมน้ำสะอาด 30 นาทีก่อนย้อม',d:''},
+      {t:'ย้อมสีหลักตามสูตร ควบคุมอุณหภูมิ',d:''},
+      {t:'ทดสอบความคงทนของสี (ซักน้ำ/แสงแดด)',d:''},
+      {t:'ตากเส้นไหมที่ย้อมแล้วในร่มจนแห้ง',d:''}
+    ]},
+    {w:[9,12],season:'🧵 เตรียมเส้น',stage:'ค้นหูก มัดหมี่ ตรวจความตึง',period:'🧵 เตรียมเส้น',tasks:[
+      {t:'ค้นหูก วางแผนลาย มัดหมี่ตามลาย',d:''},
+      {t:'มัดหมี่ (tie-dye pattern) ตามลายที่ออกแบบ',d:''},
+      {t:'ย้อมสีรอบสองบนเส้นที่มัดแล้ว',d:''},
+      {t:'แก้มัด ตรวจลาย ปรับความตึงเส้นยืน',d:''},
+      {t:'ใส่เส้นยืนบนหูกทอ ตรวจความตึงสม่ำเสมอ',d:''}
+    ]},
+    {w:[13,20],season:'🪡 ทอผ้า',stage:'ทอให้ได้ 5 เมตร/สัปดาห์',period:'🪡 ทอผ้า',tasks:[
+      {t:'ทอผ้าหน้าแคบ/กว้างตามแบบ ตรวจลาย',d:''},
+      {t:'ตรวจความสม่ำเสมอเส้นพุ่งทุก 20 ซม.',d:''},
+      {t:'แก้ไขเส้นขาดหรือลายผิดทันที',d:''},
+      {t:'บันทึกความยาวที่ทอได้แต่ละวัน',d:''},
+      {t:'ทอผ้าต่อเนื่องเป้าหมาย 5 เมตร/สัปดาห์',d:''}
+    ]},
+    {w:[21,24],season:'✂️ ตกแต่ง',stage:'ตัด เย็บริม ซัก รีด ตรวจคุณภาพ',period:'✂️ ตกแต่งผ้า',tasks:[
+      {t:'ตัดผ้าตามขนาดที่กำหนด',d:''},
+      {t:'เย็บริมป้องกันเส้นหลุด',d:''},
+      {t:'ซักผ้าด้วยน้ำเย็นอ่อนๆ',d:''},
+      {t:'รีดผ้าด้วยเตารีดไอน้ำ',d:''},
+      {t:'ตรวจคุณภาพ ลาย สี ความสม่ำเสมอ',d:''}
+    ]},
+    {w:[25,28],season:'📦 จัดจำหน่าย',stage:'ถ่ายภาพ ตั้งราคา ออกบู๊ธ/ออนไลน์',period:'📦 จัดจำหน่าย',tasks:[
+      {t:'ถ่ายภาพผ้าในแสงธรรมชาติ',d:''},
+      {t:'ตั้งราคาตามต้นทุน+กำไรที่เหมาะสม',d:''},
+      {t:'ลงขายออนไลน์ Facebook/Lazada/Shopee',d:''},
+      {t:'เตรียมสินค้าออกบู๊ธตลาด OTOP/ตลาดนัด',d:''},
+      {t:'บันทึกยอดขาย ราคาขายจริง ลูกค้า',d:''}
+    ]},
+    {w:[29,32],season:'🌱 วางแผนคอลเล็กชัน',stage:'ศึกษาเทรนด์ ออกแบบลายใหม่',period:'🌱 วางแผนใหม่',tasks:[
+      {t:'ศึกษาเทรนด์สีและลายปีถัดไป',d:''},
+      {t:'ออกแบบลายใหม่ สเก็ตช์บนกระดาษ',d:''},
+      {t:'สั่งวัตถุดิบล่วงหน้า ไหมดิบ+สีย้อม',d:''},
+      {t:'ประเมินต้นทุนคอลเล็กชันใหม่',d:''},
+      {t:'ติดต่อลูกค้าประจำ pre-order คอลเล็กชันใหม่',d:''}
+    ]},
+    {w:[33,36],season:'🎨 ย้อมชุดใหม่',stage:'ย้อมสีเข้ม เตรียมงานปีใหม่',period:'🎨 ย้อมฤดูหนาว',tasks:[
+      {t:'ย้อมสีเข้มสำหรับฤดูหนาว (น้ำเงิน/ดำ/แดงเข้ม)',d:''},
+      {t:'ทดลองผสมสีใหม่ บันทึกสูตร',d:''},
+      {t:'เตรียมเส้นไหมสำหรับผ้าพิเศษเทศกาล',d:''},
+      {t:'ค้นหูกลายเทศกาลปีใหม่/คริสต์มาส',d:''},
+      {t:'ตรวจสอบอุปกรณ์หูก บำรุงรักษา',d:''}
+    ]},
+    {w:[37,40],season:'🪡 ทอคอลเล็กชันปลายปี',stage:'ทอผ้าพิเศษ เทศกาล/ของขวัญ',period:'🪡 ทอปลายปี',tasks:[
+      {t:'ทอผ้าลายพิเศษสำหรับเทศกาลปีใหม่',d:''},
+      {t:'ทอผ้าชุดของขวัญ Gift Set',d:''},
+      {t:'ตรวจลายพิเศษให้สมบูรณ์แบบ',d:''},
+      {t:'จัดทำ packaging สวยงามสำหรับของขวัญ',d:''},
+      {t:'เตรียมสินค้าสต็อกฤดูขายดี',d:''}
+    ]},
+    {w:[41,44],season:'📦 ฤดูขายดี',stage:'งานกาชาด OTOP บู๊ธ ราคา Premium',period:'📦 ฤดูขายดี',tasks:[
+      {t:'ออกบู๊ธงานกาชาด/งาน OTOP',d:''},
+      {t:'ตั้งราคา Premium สำหรับฤดูเทศกาล',d:''},
+      {t:'บริหารสต็อกสินค้าให้พอขาย',d:''},
+      {t:'ถ่ายภาพ content สำหรับโซเชียลมีเดีย',d:''},
+      {t:'บันทึกยอดขาย เปรียบเทียบกับปีที่แล้ว',d:''}
+    ]},
+    {w:[45,48],season:'✂️ ปิดยอด',stage:'สรุปยอดขาย ทำบัญชี สั่งวัตถุดิบ',period:'✂️ ปิดรอบปี',tasks:[
+      {t:'สรุปยอดขายรายเดือน/ไตรมาส',d:''},
+      {t:'ทำบัญชีรายรับ-รายจ่ายปีนี้',d:''},
+      {t:'ประเมินสินค้าค้างสต็อก ลดราคาระบาย',d:''},
+      {t:'สั่งวัตถุดิบปีหน้าล่วงหน้า',d:''},
+      {t:'ประเมินกำไรขาดทุน วางแผนปรับราคา',d:''}
+    ]},
+    {w:[49,52],season:'🌱 วางแผนปีถัดไป',stage:'ออกแบบลายใหม่ ศึกษาตลาด ฝึกทักษะ',period:'🌱 วางแผนปีใหม่',tasks:[
+      {t:'ออกแบบลายใหม่สำหรับปีถัดไป',d:''},
+      {t:'ศึกษาตลาด เทรนด์ผ้าไทย/ผ้าพื้นเมือง',d:''},
+      {t:'เข้าอบรมฝึกทักษะเพิ่ม (ถ้ามี)',d:''},
+      {t:'ต่ออายุ OTOP/ทะเบียนผลิตภัณฑ์',d:''},
+      {t:'วางแผนการผลิตและเป้าหมายรายได้ปีใหม่',d:''}
+    ]},
+  ],
+  cotton:[
+    {w:[1,4],season:'🌱 เตรียมวัตถุดิบ',stage:'รับฝ้าย ดีดฝ้าย เตรียมเส้น',period:'🌱 เตรียมฝ้าย',tasks:[
+      {t:'รับฝ้ายดิบ คัดเส้นใย',d:''},
+      {t:'ดีดฝ้าย (ใช้ไม้ดีดฝ้าย/เครื่อง)',d:''},
+      {t:'ปั่นเส้นฝ้ายบนเครื่องปั่นหรือมือ',d:''},
+      {t:'ชั่งน้ำหนักเส้นฝ้าย บันทึกสต็อก',d:''},
+      {t:'เตรียมอุปกรณ์หูกทอฝ้าย',d:''}
+    ]},
+    {w:[5,10],season:'🎨 ย้อมสี',stage:'ย้อมสีธรรมชาติ สีอ่อน-เข้ม',period:'🎨 ย้อมฝ้าย',tasks:[
+      {t:'แช่เส้นฝ้ายในน้ำสะอาด',d:''},
+      {t:'ย้อมสีธรรมชาติตามต้องการ',d:''},
+      {t:'ตรวจความคงทนของสี',d:''},
+      {t:'ตากเส้นฝ้ายในร่ม',d:''},
+      {t:'ค้นหูก เตรียมลาย',d:''}
+    ]},
+    {w:[11,22],season:'🪡 ทอผ้า',stage:'ทอฝ้ายได้เร็วกว่าไหม',period:'🪡 ทอฝ้าย',tasks:[
+      {t:'ทอผ้าฝ้าย เป้าหมาย 3-5 เมตร/สัปดาห์',d:''},
+      {t:'ตรวจลายและความตึงเส้น',d:''},
+      {t:'บันทึกความยาวที่ทอได้',d:''},
+      {t:'แก้ไขเส้นขาดหรือลายผิด',d:''},
+      {t:'ตรวจคุณภาพเนื้อผ้า',d:''}
+    ]},
+    {w:[23,30],season:'✂️ ตกแต่ง',stage:'ตัด เย็บ ซัก รีด ตรวจ',period:'✂️ ตกแต่ง',tasks:[
+      {t:'ตัดผ้าตามขนาด',d:''},
+      {t:'เย็บริม ซักผ้า',d:''},
+      {t:'รีดและตรวจคุณภาพ',d:''},
+      {t:'ถ่ายภาพสินค้า',d:''},
+      {t:'บรรจุหีบห่อ ติดราคา',d:''}
+    ]},
+    {w:[31,40],season:'📦 จัดจำหน่าย',stage:'ขายออนไลน์ บู๊ธ ตลาด',period:'📦 จัดจำหน่าย',tasks:[
+      {t:'ลงขายออนไลน์',d:''},
+      {t:'ออกบู๊ธตลาด OTOP',d:''},
+      {t:'บันทึกยอดขาย',d:''},
+      {t:'รับ feedback ลูกค้า',d:''},
+      {t:'เตรียมรอบผลิตถัดไป',d:''}
+    ]},
+    {w:[41,52],season:'🌱 วางแผนรอบใหม่',stage:'วางแผน สั่งวัตถุดิบ ออกแบบลาย',period:'🌱 วางแผน',tasks:[
+      {t:'สรุปยอดขาย บัญชีรายรับ-จ่าย',d:''},
+      {t:'ออกแบบลายใหม่',d:''},
+      {t:'สั่งวัตถุดิบล่วงหน้า',d:''},
+      {t:'ฝึกทักษะเพิ่มเติม',d:''},
+      {t:'วางแผนเป้าหมายปีถัดไป',d:''}
+    ]},
+  ],
+  indigo:[
+    {w:[1,6],season:'🌱 เตรียมครามธรรมชาติ',stage:'เตรียมต้นคราม หมักน้ำคราม',period:'🌱 เตรียมคราม',tasks:[
+      {t:'รวบรวมใบครามสด ล้างสะอาด',d:''},
+      {t:'หมักใบครามในน้ำ 24-48 ชม.',d:''},
+      {t:'เติมปูนขาว คน 30 นาทีจนเกิดฟอง',d:''},
+      {t:'รอตกตะกอน ระบายน้ำส่วนใส',d:''},
+      {t:'บ่มน้ำครามไว้ในถังดินเผา',d:''}
+    ]},
+    {w:[7,14],season:'🎨 ย้อมคราม',stage:'ย้อมสีครามแบบแช่-หมัก',period:'🎨 ย้อมคราม',tasks:[
+      {t:'เตรียมถังน้ำครามให้พร้อม',d:''},
+      {t:'แช่เส้นใยในน้ำคราม 15-20 นาที',d:''},
+      {t:'นำขึ้นออกซิไดซ์กับอากาศ (สีเข้มขึ้น)',d:''},
+      {t:'ซ้ำกระบวนการ 5-10 รอบตามความเข้มที่ต้องการ',d:''},
+      {t:'ซักล้างน้ำคราม ตากในร่ม',d:''}
+    ]},
+    {w:[15,30],season:'🪡 ทอผ้าคราม',stage:'ทอลายพื้นและลายประยุกต์',period:'🪡 ทอผ้าคราม',tasks:[
+      {t:'ค้นหูกเส้นคราม',d:''},
+      {t:'ทอผ้าครามลายพื้น/ลายจก',d:''},
+      {t:'ตรวจสีและลาย',d:''},
+      {t:'บันทึกความยาวที่ทอ',d:''},
+      {t:'ตกแต่งและซักผ้า',d:''}
+    ]},
+    {w:[31,40],season:'📦 จัดจำหน่าย',stage:'ขาย OTOP บู๊ธ ออนไลน์',period:'📦 จัดจำหน่าย',tasks:[
+      {t:'ถ่ายภาพผ้าคราม แสดงสีจริง',d:''},
+      {t:'ออกบู๊ธงาน ตลาด OTOP',d:''},
+      {t:'ลงขายออนไลน์ เน้นจุดขายสีธรรมชาติ',d:''},
+      {t:'บันทึกยอดขาย',d:''},
+      {t:'รับ order ล่วงหน้า',d:''}
+    ]},
+    {w:[41,52],season:'🌱 วางแผนรอบใหม่',stage:'บำรุงต้นคราม วางแผนปีใหม่',period:'🌱 วางแผน',tasks:[
+      {t:'ปลูกต้นครามเพิ่มหรือบำรุงต้นเดิม',d:''},
+      {t:'สรุปยอดขาย ทบทวนสูตรย้อม',d:''},
+      {t:'ออกแบบลายใหม่สำหรับปีถัดไป',d:''},
+      {t:'ฝึกทักษะเพิ่ม (จก/ขิด/มัดหมี่)',d:''},
+      {t:'วางแผนเป้าหมายการผลิตปีใหม่',d:''}
+    ]},
+  ],
+};
+
+const GRADE_DATA={
+  silk:{grades:[
+    {min:85,g:'5⭐',sub:'OTOP',title:'OTOP 5 ดาว — ระดับแบรนด์',priceRef:5000,tip:'ลายสม่ำเสมอ สีคงทน เส้นเรียบ'},
+    {min:68,g:'4⭐',sub:'PREMIUM',title:'Premium — ส่งบู๊ธได้เลย',priceRef:3000,tip:'คุณภาพดี ตลาดระดับกลาง-บน'},
+    {min:45,g:'3⭐',sub:'STANDARD',title:'มาตรฐาน — ตลาดทั่วไป',priceRef:1500,tip:'ขายได้แต่ราคาปานกลาง'},
+    {min:0,g:'2⭐',sub:'BASIC',title:'คุณภาพพื้นฐาน',priceRef:600,tip:'ควรฝึกฝีมือเพิ่ม'}
+  ]},
+  cotton:{grades:[
+    {min:80,g:'4⭐',sub:'PREMIUM',title:'Premium — ผ้าฝ้ายคุณภาพสูง',priceRef:2500,tip:'เนื้อแน่น ลายสม่ำเสมอ ขอบเรียบ'},
+    {min:60,g:'3⭐',sub:'STANDARD',title:'มาตรฐาน — ขายได้ดี',priceRef:1200,tip:'คุณภาพดีพอ ตลาดทั่วไป'},
+    {min:0,g:'2⭐',sub:'BASIC',title:'พื้นฐาน — ปรับปรุงได้',priceRef:500,tip:'ฝึกความตึงเส้น ลายให้เรียบกว่านี้'}
+  ]},
+  indigo:{grades:[
+    {min:80,g:'5⭐',sub:'NATURAL',title:'ผ้าครามธรรมชาติแท้ — ราคาดี',priceRef:4000,tip:'สีสม่ำเสมอ ลายคมชัด ย้อมซ้ำ 7+ รอบ'},
+    {min:60,g:'4⭐',sub:'STANDARD',title:'มาตรฐาน — ตลาด OTOP',priceRef:2000,tip:'สีดี ลายชัด ย้อม 5 รอบ'},
+    {min:0,g:'3⭐',sub:'BASIC',title:'พื้นฐาน',priceRef:800,tip:'ย้อมเพิ่มรอบเพื่อสีเข้มขึ้น'}
+  ]},
+};
+
+// App state
+let currentWeek=1;
+let tasksDone={};
+let logs=[];
+let chatHistory=[];
+
+function startApp(){
+  document.getElementById('splash').classList.add('out');
+  const app=document.getElementById('app');
+  app.style.display='flex';
+  document.getElementById('ai-fab').style.display='flex';
+  setTimeout(()=>{document.getElementById('splash').style.display='none'},900);
+  // calc current week from date
+  const now=new Date();
+  const start=new Date(now.getFullYear(),0,1);
+  currentWeek=Math.ceil(((now-start)/86400000+start.getDay()+1)/7);
+  if(currentWeek>52)currentWeek=52;
+  renderHeader();
+  renderCropTabs();
+  renderWeeks();
+  renderRing();
+  renderGradeCard();
+  loadLogs();
+}
+
+function renderHeader(){
+  const c=CROPS[activeCrop];
+  document.getElementById('hdr-crop-name').textContent=c.name;
+  document.getElementById('hdr-crop-name').style.color=c.color;
+  document.getElementById('hdr-week-badge').textContent=`${c.emoji} สัปดาห์ที่ ${currentWeek}`;
+  const now=new Date();
+  document.getElementById('hdr-date').textContent=now.toLocaleDateString('th-TH',{year:'numeric',month:'long',day:'numeric'});
+  document.documentElement.style.setProperty('--cr-color',c.color);
+  document.documentElement.style.setProperty('--cr-soft',c.soft);
+  document.documentElement.style.setProperty('--cr-dark',c.dark);
+  document.documentElement.style.setProperty('--cr-glass',c.glass);
+}
+
+function renderCropTabs(){
+  const el=document.getElementById('cropScroll');
+  el.innerHTML='';
+  Object.values(CROPS).forEach(c=>{
+    const btn=document.createElement('button');
+    btn.className='crop-tab'+(activeCrop===c.key?' active':'');
+    btn.innerHTML=`${c.emoji} ${c.name}`;
+    btn.style.setProperty('--cr-color',c.color);
+    btn.style.setProperty('--cr-glass',c.glass);
+    btn.onclick=()=>{activeCrop=c.key;renderHeader();renderCropTabs();renderWeeks();renderRing();renderGradeCard()};
+    el.appendChild(btn);
+  });
+}
+
+function getPeriodForWeek(crop,week){
+  const periods=FARM_PERIODS[crop]||FARM_PERIODS.silk;
+  for(const p of periods){
+    if(week>=p.w[0]&&week<=p.w[1])return p;
+  }
+  return periods[periods.length-1];
+}
+
+function renderRing(){
+  const p=getPeriodForWeek(activeCrop,currentWeek);
+  const c=CROPS[activeCrop];
+  document.getElementById('ringWeekNum').textContent=currentWeek;
+  document.getElementById('ringStage').textContent=p.stage;
+  document.getElementById('ringSeason').textContent=p.season;
+  document.getElementById('ringPeriod').textContent=p.period;
+  const arc=document.getElementById('ringArc');
+  const circ=276.5;
+  const pct=currentWeek/52;
+  arc.style.strokeDashoffset=circ-(circ*pct);
+  arc.style.stroke=c.color;
+}
+
+function renderWeeks(){
+  const periods=FARM_PERIODS[activeCrop]||FARM_PERIODS.silk;
+  const c=CROPS[activeCrop];
+  const el=document.getElementById('weeksSection');
+  el.innerHTML='';
+  document.getElementById('weekRangeLabel').textContent=`แผนงานสัปดาห์ ${c.name}`;
+  periods.forEach((p,idx)=>{
+    const isCurrent=currentWeek>=p.w[0]&&currentWeek<=p.w[1];
+    const card=document.createElement('div');
+    card.className='week-card'+(isCurrent?' current':'');
+    const doneKey=`${activeCrop}_${idx}`;
+    if(tasksDone[doneKey]===undefined)tasksDone[doneKey]=[];
+    const doneTasks=tasksDone[doneKey];
+    const allDone=p.tasks.length>0&&doneTasks.length>=p.tasks.length;
+    if(allDone)card.style.opacity='0.6';
+    const gradient=getPhaseGradient(activeCrop,p.season);
+    const label=p.w[0]===p.w[1]?`สัปดาห์ ${p.w[0]}`:`สัปดาห์ ${p.w[0]}–${p.w[1]}`;
+    card.innerHTML=`
+      <div class="wc-phase-img-wrap" style="background:${gradient}">
+        <div class="wc-phase-cap">${p.season}</div>
+      </div>
+      <div class="wc-header" onclick="toggleCard(this.parentElement)">
+        <div class="wc-num">${p.w[0]}</div>
+        <div class="wc-info">
+          <div class="wc-title">${p.stage}</div>
+          <div class="wc-subtitle">${label} · ${p.tasks.length} งาน · ${doneTasks.length} เสร็จ</div>
+        </div>
+        <div class="wc-toggle">⌄</div>
+      </div>
+      <div class="wc-body">
+        <div class="wc-tasks" id="tasks-${activeCrop}-${idx}"></div>
+        <div class="wc-ai-row">
+          <button class="wc-ai-btn" onclick="askWeekAI('${activeCrop}','${p.season}','${p.stage}')">🤖 ถาม AI</button>
+        </div>
+      </div>`;
+    el.appendChild(card);
+    if(isCurrent){card.classList.add('open');card.scrollIntoView({behavior:'smooth',block:'nearest'})}
+    renderTasks(idx,p,doneTasks,doneKey);
+  });
+}
+
+function renderTasks(idx,p,doneTasks,doneKey){
+  const el=document.getElementById(`tasks-${activeCrop}-${idx}`);
+  if(!el)return;
+  el.innerHTML='';
+  p.tasks.forEach((task,ti)=>{
+    const isDone=doneTasks.includes(ti);
+    const item=document.createElement('div');
+    item.className='task-item'+(isDone?' done':'');
+    item.innerHTML=`<div class="ti-check">${isDone?'✓':''}</div><div class="ti-content"><div class="ti-text">${task.t}</div>${task.d?`<div class="ti-dose">${task.d}</div>`:''}</div>`;
+    item.onclick=()=>{
+      if(isDone)tasksDone[doneKey]=doneTasks.filter(x=>x!==ti);
+      else{if(!tasksDone[doneKey])tasksDone[doneKey]=[];tasksDone[doneKey].push(ti);}
+      saveTasks();
+      renderWeeks();
+    };
+    el.appendChild(item);
+  });
+}
+
+function toggleCard(card){
+  card.classList.toggle('open');
+}
+
+function saveTasks(){
+  try{localStorage.setItem('silk_tasks',JSON.stringify(tasksDone))}catch(e){}
+}
+
+function loadTasks(){
+  try{const d=localStorage.getItem('silk_tasks');if(d)tasksDone=JSON.parse(d);}catch(e){}
+}
+
+function saveLog(){
+  const text=document.getElementById('log-text').value.trim();
+  if(!text)return;
+  const crop=document.getElementById('log-crop').value;
+  const type=document.getElementById('log-type').value;
+  const entry={text,crop,type,date:new Date().toLocaleDateString('th-TH')};
+  logs.unshift(entry);
+  try{localStorage.setItem('silk_logs',JSON.stringify(logs))}catch(e){}
+  document.getElementById('log-text').value='';
+  renderLogs();
+}
+
+function loadLogs(){
+  try{const d=localStorage.getItem('silk_logs');if(d)logs=JSON.parse(d);}catch(e){}
+  renderLogs();
+}
+
+function renderLogs(){
+  const el=document.getElementById('log-list');
+  if(!el)return;
+  el.innerHTML='';
+  logs.slice(0,20).forEach(l=>{
+    const div=document.createElement('div');
+    div.className='log-entry';
+    div.innerHTML=`<div class="le-header"><span class="le-crop">${l.crop} · ${l.type}</span><span class="le-date">${l.date}</span></div><div class="le-text">${l.text}</div>`;
+    el.appendChild(div);
+  });
+}
+
+function switchTab(tab,btn){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('screen-'+tab).classList.add('active');
+  btn.classList.add('active');
+  if(tab==='log')renderLogs();
+  if(tab==='market')renderGradeCard();
+}
+
+// TOOLS
+function showTool(id){
+  document.querySelectorAll('.tool-panel').forEach(p=>p.style.display='none');
+  document.getElementById('toolsHome').style.display=id?'none':'block';
+  if(id)document.getElementById('tool-'+id).style.display='block';
+}
+
+function calcFabricCost(){
+  const silkKg=parseFloat(document.getElementById('fc-silk').value)||0.2;
+  const dye=parseFloat(document.getElementById('fc-dye').value)||50;
+  const labor=parseFloat(document.getElementById('fc-hours').value)||40;
+  const hourRate=parseFloat(document.getElementById('fc-rate').value)||60;
+  const overhead=parseFloat(document.getElementById('fc-overhead').value)||200;
+  const silkCost=silkKg*2800;
+  const laborCost=labor*hourRate;
+  const total=silkCost+dye+laborCost+overhead;
+  const minPrice=Math.round(total*1.3);
+  const goodPrice=Math.round(total*1.6);
+  const el=document.getElementById('fabric-result');
+  el.className='tp-result show';
+  el.textContent=`ต้นทุนรวม: ${total.toLocaleString()} บาท/ผืน\n\nรายละเอียด:\n• ไหมดิบ: ${silkCost.toLocaleString()} บ. (${silkKg} กก. × 2,800 บ./กก.)\n• สีย้อม: ${dye.toLocaleString()} บ.\n• แรงงาน: ${laborCost.toLocaleString()} บ. (${labor} ชม. × ${hourRate} บ.)\n• ค่าโสหุ้ย: ${overhead.toLocaleString()} บ.\n\nราคาขายขั้นต่ำ (กำไร 30%): ${minPrice.toLocaleString()} บ.\nราคาแนะนำ (กำไร 60%): ${goodPrice.toLocaleString()} บ.`;
+}
+
+function calcSellPrice(){
+  const cost=parseFloat(document.getElementById('sp-cost').value)||2800;
+  const margin=parseFloat(document.getElementById('sp-margin').value)||40;
+  const type=document.getElementById('sp-type').value;
+  const sellPrice=Math.round(cost*(1+margin/100));
+  const marketRef={silk:'1,500-8,000',cotton:'800-2,500',indigo:'1,200-4,000',otop:'5,000-20,000'};
+  const el=document.getElementById('price-result');
+  el.className='tp-result show';
+  el.textContent=`ราคาขายแนะนำ: ${sellPrice.toLocaleString()} บาท/ผืน\n\n• ต้นทุน: ${cost.toLocaleString()} บ.\n• กำไร ${margin}%: ${Math.round(cost*margin/100).toLocaleString()} บ.\n\nราคาตลาดอ้างอิง (${type}): ${marketRef[type]||'-'} บ./ผืน`;
+}
+
+function calcWeaveTime(){
+  const length=parseFloat(document.getElementById('wt-length').value)||2;
+  const width=parseInt(document.getElementById('wt-width').value)||36;
+  const detail=document.getElementById('wt-detail').value;
+  const skill=document.getElementById('wt-skill').value;
+  const baseRate={plain:8,pattern:4,complex:2}[detail]||4; // cm/hour
+  const widthFactor={24:0.7,36:1,48:1.4}[width]||1;
+  const skillFactor={beginner:1.8,mid:1,expert:0.6}[skill]||1;
+  const hours=Math.round((length*100/baseRate)*widthFactor*skillFactor);
+  const days=Math.ceil(hours/6);
+  const el=document.getElementById('time-result');
+  el.className='tp-result show';
+  el.textContent=`เวลาทอโดยประมาณ: ${hours} ชั่วโมง\n(ทำงาน 6 ชม./วัน = ${days} วัน)\n\n• ความยาว: ${length} เมตร\n• ความกว้าง: ${width} นิ้ว\n• ลาย: ${detail==='plain'?'ลายพื้น':detail==='pattern'?'ลายมัดหมี่':'ลายซับซ้อน'}\n• ระดับฝีมือ: ${skill==='beginner'?'ฝึกหัด':skill==='mid'?'ปานกลาง':'ชำนาญ'}`;
+}
+
+function calcDyeFormula(){
+  const color=document.getElementById('dye-color').value;
+  const weight=parseFloat(document.getElementById('dye-weight').value)||200;
+  const formulas={
+    indigo:`สูตรย้อมคราม (น้ำหนักผ้า ${weight}g)\n• น้ำครามหมัก: ${Math.round(weight*3)} มล.\n• ปูนขาว: ${Math.round(weight*0.1)} ก.\n• ย้ำ 5-10 รอบ ออกซิไดซ์ทุกรอบ\n• ซักน้ำเย็นสะอาด\n\nเคล็ดลับ: ยิ่งย้ำรอบมาก สียิ่งเข้ม`,
+    red:`สูตรย้อมครั่ง-แดง (น้ำหนักผ้า ${weight}g)\n• ครั่งผง: ${Math.round(weight*0.3)} ก.\n• สารส้ม (mordant): ${Math.round(weight*0.15)} ก.\n• น้ำ: ${Math.round(weight*10)} มล.\n• ต้ม 60-80°C นาน 30-45 นาที\n• ล้างน้ำเย็น ตากในร่ม`,
+    yellow:`สูตรย้อมเหลือง-ขมิ้น (น้ำหนักผ้า ${weight}g)\n• ขมิ้นสด: ${Math.round(weight*0.5)} ก. หรือขมิ้นผง ${Math.round(weight*0.15)} ก.\n• สารส้ม: ${Math.round(weight*0.1)} ก.\n• ต้ม 30-40 นาที\n• ล้างน้ำเย็น ตากในร่ม`,
+    black:`สูตรย้อมดำ-มะเกลือ (น้ำหนักผ้า ${weight}g)\n• มะเกลือดิบ: ${Math.round(weight*1)} ก. ตำพอแตก\n• แช่เส้นใยในน้ำมะเกลือ 12-24 ชม.\n• นำขึ้นผึ่งแดดให้สีออกซิไดซ์เป็นดำ\n• ล้างน้ำสะอาด`,
+    brown:`สูตรย้อมน้ำตาล-เปลือกไม้ (น้ำหนักผ้า ${weight}g)\n• เปลือกมะพร้าว/ฝาง: ${Math.round(weight*0.5)} ก.\n• สารส้ม: ${Math.round(weight*0.1)} ก.\n• ต้ม 45-60 นาที\n• ล้างน้ำเย็น ตากในร่ม`,
+    green:`สูตรย้อมเขียว (คราม+ขมิ้น) (น้ำหนักผ้า ${weight}g)\n• ย้อมสีเหลืองด้วยขมิ้นก่อน\n• จากนั้นย้อมทับด้วยคราม 2-3 รอบ\n• ปรับสัดส่วนตามเฉดสีต้องการ\n• ทดสอบบนเส้นตัวอย่างก่อน`,
+  };
+  const el=document.getElementById('dye-result');
+  el.className='tp-result show';
+  el.textContent=formulas[color]||'ไม่พบสูตร';
+}
+
+// GRADE CARD
+function renderGradeCard(){
+  const c=CROPS[activeCrop];
+  const gd=GRADE_DATA[activeCrop]||GRADE_DATA.silk;
+  // simulate score based on week
+  const p=getPeriodForWeek(activeCrop,currentWeek);
+  let score=55;
+  if(p.season.includes('ทอ'))score=78;
+  else if(p.season.includes('ตกแต่ง'))score=85;
+  else if(p.season.includes('จำหน่าย')||p.season.includes('ขายดี'))score=90;
+  else if(p.season.includes('ย้อม'))score=65;
+  score+=Math.floor(Math.random()*8)-3;
+  const gradeObj=gd.grades.find(g=>score>=g.min)||gd.grades[gd.grades.length-1];
+  document.getElementById('gc-crop-name').textContent=c.name;
+  document.getElementById('gc-week-tag').textContent=`สัปดาห์ที่ ${currentWeek}`;
+  document.getElementById('gc-letter').textContent=gradeObj.g;
+  document.getElementById('gc-letter').style.color=c.color;
+  document.getElementById('gc-sub').textContent=gradeObj.sub;
+  document.getElementById('gc-grade-title').textContent=gradeObj.title;
+  document.getElementById('gc-price-line').textContent=`ราคาอ้างอิง ≈ ${gradeObj.priceRef.toLocaleString()} บ./ผืน`;
+  document.getElementById('gc-tip').textContent=gradeObj.tip;
+  document.getElementById('gc-grade-box').style.borderColor=c.color;
+  document.getElementById('gc-grade-box').style.background=c.glass;
+  const bars=[
+    {label:'ลายสม่ำเสมอ',val:Math.min(100,score+5)},
+    {label:'ความคงทนสี',val:Math.min(100,score-5)},
+    {label:'ความเรียบเนื้อผ้า',val:Math.min(100,score+2)},
+    {label:'ความสะอาดตกแต่ง',val:Math.min(100,score-8)},
+  ];
+  const barsEl=document.getElementById('gc-bars');
+  barsEl.innerHTML='';
+  bars.forEach(b=>{
+    barsEl.innerHTML+=`<div class="gc-bar-row"><div class="gc-bar-hd"><span>${b.label}</span><span>${b.val}%</span></div><div class="gc-bar-track"><div class="gc-bar-fill" style="width:${b.val}%;background:${c.color}"></div></div></div>`;
+  });
+  document.getElementById('gc-msg-text').textContent=`ขณะนี้อยู่ในช่วง ${p.season} คะแนนคุณภาพโดยรวม ${score}/100 ${score>=80?'คุณภาพดีมาก พร้อมออกบู๊ธ':score>=60?'คุณภาพดี ขายได้':'ยังพัฒนาได้อีก'}`;
+  document.getElementById('gc-msg-cta').textContent=score>=80?'→ เตรียมสต็อกสำหรับบู๊ธหรือออนไลน์':'→ ให้ความสนใจกับการตรวจคุณภาพเพิ่มขึ้น';
+}
+
+async function getMarketAdvice(){
+  const btn=document.querySelector('.market-ai-btn');
+  const result=document.getElementById('market-ai-result');
+  btn.textContent='⏳ กำลังวิเคราะห์...';btn.disabled=true;
+  result.style.display='block';result.textContent='กำลังวิเคราะห์ตลาดผ้าทอมือ...';
+  const c=CROPS[activeCrop];
+  const p=getPeriodForWeek(activeCrop,currentWeek);
+  const prompt=`คุณเป็นที่ปรึกษาด้านการตลาดผ้าทอมือไทย ช่วยแนะนำกลยุทธ์ขาย ${c.name} ในสัปดาห์ที่ ${currentWeek} ช่วง ${p.season} พร้อมแนะนำช่องทางขาย OTOP/ออนไลน์/บู๊ธ และวิธีตั้งราคา (ตอบสั้น กระชับ ภาษาไทย)`;
+  try{
+    const r=await fetch('/api/ai-chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:prompt}]})});
+    const d=await r.json();
+    result.textContent=d.reply||d.content||'ไม่สามารถวิเคราะห์ได้ในขณะนี้';
+  }catch(e){
+    result.textContent=`กลยุทธ์ขาย ${c.name}:\n• ช่วง ${p.season} เหมาะแก่การเตรียมสต็อก\n• ออกบู๊ธงาน OTOP และตลาดนัดชุมชน\n• ลงขายออนไลน์ Facebook/Instagram ด้วยรูปสวย\n• ราคาสินค้า OTOP 5 ดาว สูงกว่าตลาดทั่วไป 3-5 เท่า\n• สร้าง Story ความเป็นมาของผ้าแต่ละผืน`;
+  }
+  btn.textContent='🤖 AI แนะนำกลยุทธ์ขาย';btn.disabled=false;
+}
+
+// AI DRAWER
+function openDrawer(context){
+  document.getElementById('ai-drawer').classList.add('open');
+  if(context){
+    const c=CROPS[activeCrop];
+    document.getElementById('drawer-ctx').textContent=`${c.name} สัปดาห์ที่ ${currentWeek}`;
+  }
+}
+
+function closeDrawer(){
+  document.getElementById('ai-drawer').classList.remove('open');
+}
+
+function askQuick(q){
+  document.getElementById('drawerInput').value=q;
+  sendDrawer();
+}
+
+function askWeekAI(crop,season,stage){
+  openDrawer(true);
+  const c=CROPS[crop];
+  document.getElementById('drawerInput').value=`สัปดาห์นี้อยู่ในช่วง ${season} (${stage}) สำหรับ ${c.name} มีคำแนะนำอะไรบ้าง?`;
+  sendDrawer();
+}
+
+async function sendDrawer(){
+  const input=document.getElementById('drawerInput');
+  const msg=input.value.trim();
+  if(!msg)return;
+  input.value='';
+  addMsg('user',msg);
+  const btn=document.getElementById('drawerSendBtn');
+  btn.disabled=true;
+  const c=CROPS[activeCrop];
+  const p=getPeriodForWeek(activeCrop,currentWeek);
+  const systemCtx=`คุณคือ AI ที่ปรึกษาช่างทอผ้าไทย G2G Craft ปัจจุบัน: ${c.name} สัปดาห์ที่ ${currentWeek} ช่วง ${p.season} ตอบเป็นภาษาไทย กระชับ เข้าใจง่าย`;
+  chatHistory.push({role:'user',content:msg});
+  try{
+    const r=await fetch('/api/ai-chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:systemCtx,messages:chatHistory})});
+    const d=await r.json();
+    const reply=d.reply||d.content||'ขอโทษค่ะ ไม่สามารถตอบได้ในขณะนี้';
+    chatHistory.push({role:'assistant',content:reply});
+    addMsg('ai',reply);
+  }catch(e){
+    const fallback=getFallbackReply(msg,c,p);
+    chatHistory.push({role:'assistant',content:fallback});
+    addMsg('ai',fallback);
+  }
+  btn.disabled=false;
+}
+
+function getFallbackReply(msg,c,p){
+  if(msg.includes('ลาย'))return`ลายผ้า${c.name}ในช่วง ${p.season}:\nควรเน้นลายที่ตลาดต้องการ เช่น ลายดอกพิกุล ลายนาค ลายขิด โดยทำจากการมัดหมี่ก่อนทอ ศึกษาตัวอย่างจากปราชญ์ชาวบ้านหรือ OTOP`;
+  if(msg.includes('ย้อม'))return`การย้อมสีธรรมชาติ ${c.name}:\n• ใช้สารส้มเป็น mordant ก่อนย้อม\n• ย้อมสีธรรมชาติ คราม/ครั่ง/ขมิ้น\n• ย้ำหลายรอบเพื่อสีเข้ม\n• ซักน้ำเย็น ตากในร่มเสมอ`;
+  if(msg.includes('ราคา'))return`ราคาขาย ${c.name} แนะนำ:\n• คำนวณต้นทุน × 1.5-2 เท่า\n• ผ้า OTOP 5 ดาว ตั้งได้ 5,000-20,000 บ.\n• ถ่ายภาพสวย เพิ่มมูลค่าได้มาก\n• ขายออนไลน์ ได้ราคาดีกว่าตลาดนัด`;
+  if(msg.includes('ขาย'))return`ช่องทางขาย ${c.name}:\n• ลงทะเบียน OTOP เพื่อตราสัญลักษณ์\n• ออกบู๊ธงานศิลปาชีพ/กาชาด\n• ขายออนไลน์ Facebook/Instagram/Shopee\n• ติดต่อร้านขายของที่ระลึก โรงแรม`;
+  return`สำหรับ ${c.name} ในช่วง ${p.season}: ${p.stage}\n\nแนะนำให้ทำตามแผนงานสัปดาห์นี้ และถามผู้เชี่ยวชาญเพิ่มเติมได้ที่ศูนย์ OTOP หรือกลุ่มทอผ้าในชุมชน`;
+}
+
+function addMsg(role,text){
+  const el=document.getElementById('drawerMsgs');
+  const div=document.createElement('div');
+  div.className=`dmsg ${role}`;
+  div.textContent=text;
+  el.appendChild(div);
+  el.scrollTop=el.scrollHeight;
+}
+
+// INIT
+loadTasks();
+</script>
+</body>
+</html>

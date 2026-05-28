@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#06040f">
+<title>G2G Farm AI · ชาวสวนยาง</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap">
+<style>
+:root{
+  --bg0:#06040f;--bg1:#0e0a22;--bg2:#160f30;--bg3:#1e1540;
+  --glass:rgba(255,255,255,0.05);--glass2:rgba(255,255,255,0.09);
+  --border:rgba(255,255,255,0.10);--border2:rgba(255,255,255,0.18);
+  --gold:#d4a843;--gold-s:#f0c960;--gold-d:#8a6820;--gold-pale:rgba(212,168,67,0.15);
+  --text:#f0eaf8;--text2:rgba(220,200,255,0.65);--text3:rgba(180,160,240,0.4);
+  --eout:cubic-bezier(0.22,1,0.36,1);
+  --cr-color:#22c55e;--cr-soft:#86efac;--cr-dark:#14532d;--cr-glass:rgba(34,197,94,0.15);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{font-size:16px;height:100%}
+body{font-family:'Bai Jamjuree','Sarabun',sans-serif;background:var(--bg0);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+button,a{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;touch-action:manipulation}
+input,select,textarea{font-family:inherit;font-size:1rem;-webkit-appearance:none}
+
+#splash{position:fixed;inset:0;z-index:300;background:radial-gradient(ellipse at 30% 20%,#0a1f0e 0%,#06040f 60%);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s var(--eout)}
+#splash.out{opacity:0;pointer-events:none}
+.sp-rings{position:relative;width:120px;height:120px;margin-bottom:28px}
+.sp-rings svg{position:absolute;top:0;left:0;animation:spinRing 8s linear infinite}
+.sp-rings svg:nth-child(2){animation-duration:12s;animation-direction:reverse}
+.sp-inner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:42px}
+@keyframes spinRing{to{transform:rotate(360deg)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.sp-brand{font-size:1.7rem;font-weight:700;letter-spacing:6px;background:linear-gradient(180deg,var(--gold-s) 0%,var(--gold) 60%,var(--gold-d) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:fadeUp .8s var(--eout) .3s both}
+.sp-sub{font-size:.85rem;color:rgba(34,197,94,.6);letter-spacing:3px;margin-top:6px;animation:fadeUp .8s var(--eout) .5s both}
+.sp-start{margin-top:40px;padding:14px 36px;border-radius:99px;background:linear-gradient(135deg,var(--gold-s),var(--gold));color:#06040f;font-weight:700;font-size:1rem;letter-spacing:1px;box-shadow:0 8px 28px rgba(212,168,67,.35);animation:fadeUp .8s var(--eout) .8s both;transition:transform .1s,opacity .1s}
+.sp-start:active{transform:scale(.95);opacity:.85}
+
+.app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative}
+.app-header{padding:52px 18px 10px;display:flex;justify-content:space-between;align-items:flex-start;flex-shrink:0;position:relative;z-index:2}
+.app-header::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,4,15,.95) 60%,transparent);pointer-events:none;z-index:-1}
+.hdr-logo{font-size:1rem;font-weight:700;letter-spacing:3px;background:linear-gradient(135deg,var(--gold-s),var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hdr-crop-name{font-size:1.3rem;font-weight:700;color:var(--cr-color);margin-top:2px}
+.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.hdr-week-badge{background:var(--gold-pale);border:1px solid rgba(212,168,67,.4);border-radius:20px;padding:4px 12px;font-size:.75rem;font-weight:600;color:var(--gold)}
+.hdr-date{font-size:.72rem;color:var(--text3)}
+.crop-scroll-wrap{padding:8px 16px;flex-shrink:0;position:relative;z-index:2}
+.crop-scroll{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px}
+.crop-scroll::-webkit-scrollbar{display:none}
+.crop-tab{flex-shrink:0;display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:99px;border:1.5px solid rgba(255,255,255,.12);background:var(--glass);font-size:.8rem;font-weight:600;color:var(--text2);cursor:pointer;transition:all .25s var(--eout)}
+.crop-tab.active{border-color:var(--cr-color);background:var(--cr-glass);color:var(--cr-color);box-shadow:0 0 20px var(--cr-glass)}
+.app-content{flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:90px}
+.app-content::-webkit-scrollbar{display:none}
+.ring-section{padding:12px 18px 18px;display:flex;align-items:center;gap:16px}
+.ring-wrap{position:relative;flex-shrink:0;width:100px;height:100px}
+.ring-wrap svg{position:absolute;top:0;left:0}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-wnum{font-size:1.85rem;font-weight:700;color:var(--gold-s);line-height:1}
+.ring-wlbl{font-size:.6rem;color:var(--text2);letter-spacing:2px;margin-top:2px}
+.ring-info{flex:1}
+.ring-stage{font-size:1.05rem;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:4px}
+.ring-season{font-size:.8rem;color:var(--text2)}
+.ring-period{font-size:.75rem;color:var(--gold);margin-top:4px;background:var(--gold-pale);border-radius:8px;padding:3px 8px;display:inline-block}
+.section-divider{display:flex;align-items:center;gap:10px;padding:2px 18px 10px;color:var(--text3);font-size:.7rem;letter-spacing:2px;text-transform:uppercase}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent)}
+.weeks-section{padding:0 14px}
+.week-card{background:var(--glass);border:1px solid var(--border);border-radius:20px;margin-bottom:10px;overflow:hidden;transition:border-color .2s,box-shadow .2s;position:relative}
+.week-card.current{border-color:rgba(212,168,67,.5);box-shadow:0 0 24px rgba(212,168,67,.1)}
+.week-card.current::before{content:'สัปดาห์ปัจจุบัน';position:absolute;top:10px;right:10px;background:linear-gradient(135deg,var(--gold-s),var(--gold));color:#06040f;font-size:.6rem;font-weight:700;padding:3px 8px;border-radius:10px;letter-spacing:.5px;z-index:1}
+.wc-header{padding:14px 16px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.wc-num{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0;background:var(--cr-glass);color:var(--cr-color);border:1.5px solid var(--cr-color)}
+.week-card.current .wc-num{background:linear-gradient(135deg,var(--gold-s),var(--gold));color:#06040f;border-color:transparent}
+.wc-info{flex:1}
+.wc-title{font-size:.88rem;font-weight:600;color:var(--text);line-height:1.3}
+.wc-subtitle{font-size:.75rem;color:var(--text2);margin-top:2px}
+.wc-toggle{color:var(--text3);font-size:1.1rem;transition:transform .25s var(--eout)}
+.week-card.open .wc-toggle{transform:rotate(180deg)}
+.wc-body{max-height:0;overflow:hidden;transition:max-height .35s var(--eout)}
+.week-card.open .wc-body{max-height:900px}
+.wc-phase-banner{height:90px;display:flex;align-items:flex-end;position:relative}
+.wc-phase-cap{padding:8px 14px;font-size:.72rem;font-weight:600;color:rgba(255,255,255,.8);letter-spacing:1.5px;text-transform:uppercase;width:100%;background:linear-gradient(0deg,rgba(6,4,15,.85),transparent)}
+.wc-tasks{padding:0 14px 14px}
+.task-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:14px;margin-bottom:8px;background:var(--glass2);border:1px solid var(--border);cursor:pointer}
+.task-item.done{opacity:.55}
+.task-item.done .ti-text{text-decoration:line-through;color:var(--text3)}
+.ti-check{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--cr-color);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-size:.8rem}
+.task-item.done .ti-check{background:var(--cr-color);border-color:var(--cr-color)}
+.ti-content{flex:1}
+.ti-text{font-size:.85rem;color:var(--text);line-height:1.5;font-weight:500}
+.ti-dose{font-size:.75rem;color:var(--gold);margin-top:3px;background:var(--gold-pale);border-radius:6px;padding:2px 7px;display:inline-block}
+.wc-ai-row{display:flex;justify-content:flex-end;padding:0 14px 14px}
+.wc-ai-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:99px;background:var(--cr-glass);border:1.5px solid var(--cr-color);color:var(--cr-color);font-size:.8rem;font-weight:600}
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;z-index:50;padding:0 16px max(16px,env(safe-area-inset-bottom));background:linear-gradient(0deg,var(--bg0) 60%,transparent)}
+.nav-inner{background:rgba(20,14,38,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.12);border-radius:24px;display:flex;align-items:center;padding:6px 8px}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 4px;border-radius:16px;cursor:pointer;border:none;background:transparent;color:var(--text3);transition:color .2s}
+.nav-item.active{color:var(--cr-color)}
+.nav-item.active .nav-dot{background:var(--cr-color)}
+.nav-icon{font-size:1.25rem;line-height:1}
+.nav-label{font-size:.6rem;font-weight:600;letter-spacing:.5px}
+.nav-dot{width:4px;height:4px;border-radius:50%;background:transparent;margin:1px auto 0}
+#ai-fab{position:fixed;bottom:90px;right:18px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--gold-s),var(--gold));display:flex;align-items:center;justify-content:center;font-size:1.5rem;box-shadow:0 6px 24px rgba(212,168,67,.5);z-index:60;cursor:pointer;border:none}
+#ai-fab.pulse{animation:fabPulse 2s ease-in-out infinite}
+@keyframes fabPulse{0%,100%{box-shadow:0 6px 24px rgba(212,168,67,.5)}50%{box-shadow:0 6px 32px rgba(212,168,67,.8),0 0 0 8px rgba(212,168,67,.1)}}
+#ai-drawer{position:fixed;inset:0;z-index:200;pointer-events:none}
+#ai-drawer.open{pointer-events:all}
+.drawer-overlay{position:absolute;inset:0;background:rgba(0,0,0,.6);opacity:0;transition:opacity .3s;cursor:pointer}
+#ai-drawer.open .drawer-overlay{opacity:1}
+.drawer-panel{position:absolute;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:480px;background:var(--bg2);border-radius:24px 24px 0 0;border-top:1px solid rgba(255,255,255,.12);transition:transform .35s var(--eout);display:flex;flex-direction:column;max-height:85vh}
+#ai-drawer.open .drawer-panel{transform:translateX(-50%) translateY(0)}
+.drawer-handle{width:36px;height:4px;border-radius:2px;background:rgba(255,255,255,.15);margin:12px auto 0}
+.drawer-header{padding:12px 18px 10px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
+.drawer-title{flex:1;font-size:.95rem;font-weight:700;color:var(--gold)}
+.drawer-close{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:1rem}
+.drawer-msgs{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-height:80px}
+.drawer-msgs::-webkit-scrollbar{display:none}
+.dmsg{padding:10px 13px;border-radius:14px;font-size:.85rem;line-height:1.6;max-width:90%;white-space:pre-wrap}
+.dmsg.user{align-self:flex-end;background:rgba(34,197,94,.2);color:#fde68a;border:1px solid rgba(34,197,94,.25);border-bottom-right-radius:4px}
+.dmsg.ai{align-self:flex-start;background:var(--glass2);color:var(--text);border:1px solid var(--border);border-bottom-left-radius:4px}
+.drawer-input-row{padding:10px 14px max(12px,env(safe-area-inset-bottom));border-top:1px solid var(--border);display:flex;gap:8px;align-items:flex-end;background:var(--bg2)}
+.drawer-input{flex:1;background:var(--glass);border:1px solid var(--border2);border-radius:14px;padding:10px 13px;color:var(--text);font-size:.88rem;resize:none;min-height:40px;max-height:100px;outline:none}
+.drawer-input:focus{border-color:rgba(34,197,94,.4)}
+.drawer-send{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--gold-s),var(--gold));display:flex;align-items:center;justify-content:center;color:#06040f;font-size:1rem;font-weight:700;flex-shrink:0;border:none}
+.drawer-send:disabled{opacity:.4}
+.quick-asks{display:flex;gap:6px;flex-wrap:wrap;padding:8px 14px 0}
+.qa-chip{padding:6px 12px;border-radius:20px;background:var(--glass);border:1px solid var(--border);font-size:.75rem;color:var(--text2);cursor:pointer}
+.qa-chip:active{background:var(--glass2)}
+.screen{display:none}
+.screen.active{display:block;min-height:100vh;padding-bottom:90px}
+.screen-header{padding:52px 18px 14px;position:sticky;top:0;z-index:10;background:linear-gradient(180deg,var(--bg0) 70%,transparent)}
+.sh-title{font-size:1.1rem;font-weight:700;color:var(--text)}
+.sh-sub{font-size:.75rem;color:var(--text2);margin-top:2px}
+.tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px 12px}
+.tool-card{background:var(--glass);border:1px solid var(--border);border-radius:18px;padding:14px;cursor:pointer}
+.tool-card:active{background:var(--glass2)}
+.tc-icon{font-size:1.8rem;margin-bottom:6px}
+.tc-title{font-size:.85rem;font-weight:700;color:var(--text)}
+.tc-sub{font-size:.72rem;color:var(--text2);margin-top:3px}
+.tool-panel{background:var(--glass);border:1px solid var(--border);border-radius:18px;margin:0 14px 12px;padding:16px}
+.tool-panel h3{font-size:.88rem;font-weight:700;color:var(--gold);margin-bottom:12px}
+.tp-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.tp-label{font-size:.8rem;color:var(--text2);width:90px;flex-shrink:0}
+.tp-input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:8px 12px;color:var(--text);font-size:.88rem}
+.tp-select{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:8px 12px;color:var(--text);font-size:.82rem}
+.tp-btn{width:100%;padding:11px;border-radius:14px;background:linear-gradient(135deg,var(--cr-color),var(--cr-dark));color:#fff;font-weight:700;font-size:.88rem;border:none;margin-top:6px}
+.tp-btn:active{opacity:.8}
+.tp-result{margin-top:10px;padding:12px;background:var(--bg3);border-radius:12px;border-left:3px solid var(--gold);font-size:.82rem;color:var(--text);line-height:1.7;display:none;white-space:pre-wrap}
+.tp-result.show{display:block}
+.back-btn{margin-top:8px;width:100%;padding:8px;background:transparent;border:1px solid var(--border);border-radius:10px;color:var(--text2);font-size:.8rem;cursor:pointer}
+.market-section{padding:0 14px}
+.price-card{background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:10px}
+.pc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.pc-crop{font-size:.88rem;font-weight:700;color:var(--text)}
+.pc-updated{font-size:.7rem;color:var(--text3)}
+.pc-prices{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pcp-item{text-align:center;background:var(--bg3);border-radius:10px;padding:8px 4px}
+.pcp-grade{font-size:.65rem;color:var(--text3);letter-spacing:.5px}
+.pcp-val{font-size:1.1rem;font-weight:700;color:var(--gold);margin:2px 0}
+.pcp-unit{font-size:.65rem;color:var(--text3)}
+.grade-card{background:linear-gradient(135deg,var(--bg1) 0%,var(--bg3) 100%);border:1.5px solid var(--cr-color);border-radius:20px;padding:16px;margin-bottom:14px;position:relative;overflow:hidden}
+.grade-card::before{content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;border-radius:50%;background:var(--cr-glass);pointer-events:none}
+.gc-row1{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.gc-ttl{font-size:.68rem;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:2px}
+.gc-crop-name{font-size:.92rem;font-weight:700;color:var(--text)}
+.gc-week-tag{font-size:.7rem;color:var(--gold);background:var(--gold-pale);border:1px solid rgba(212,168,67,.3);padding:3px 10px;border-radius:10px}
+.gc-grade-row{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.gc-grade-box{width:68px;height:68px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;border:2px solid var(--cr-color);background:var(--cr-glass)}
+.gc-letter{font-size:1.8rem;font-weight:900;color:var(--cr-color);line-height:1}
+.gc-sub{font-size:.55rem;color:var(--cr-soft);letter-spacing:1px;margin-top:1px}
+.gc-desc{flex:1}
+.gc-grade-title{font-size:.9rem;font-weight:700;color:var(--text);margin-bottom:3px}
+.gc-price-line{font-size:.78rem;color:var(--gold);margin-bottom:4px}
+.gc-tip{font-size:.74rem;color:var(--text2);line-height:1.5}
+.gc-msg-box{background:rgba(255,255,255,.04);border-left:3px solid var(--cr-color);border-radius:0 12px 12px 0;padding:10px 12px;margin-top:10px}
+.gc-msg-text{font-size:.82rem;color:var(--text);line-height:1.7}
+.log-section{padding:0 14px}
+.log-input-card{background:var(--glass);border:1px solid var(--border);border-radius:18px;padding:14px;margin-bottom:12px}
+.log-input-card textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:10px;color:var(--text);font-size:.85rem;resize:vertical;min-height:80px;outline:none}
+.log-meta{display:flex;gap:8px;margin-top:8px}
+.log-meta select{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:7px 10px;color:var(--text);font-size:.8rem}
+.log-save-btn{width:100%;padding:10px;border-radius:12px;background:var(--cr-glass);border:1.5px solid var(--cr-color);color:var(--cr-color);font-weight:700;font-size:.85rem;margin-top:8px;cursor:pointer}
+.log-entry{background:var(--glass);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:8px}
+.le-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.le-crop{font-size:.72rem;color:var(--cr-color);font-weight:600;background:var(--cr-glass);padding:3px 9px;border-radius:10px}
+.le-date{font-size:.7rem;color:var(--text3)}
+.le-text{font-size:.82rem;color:var(--text);line-height:1.6}
+</style>
+</head>
+<body>
+
+<div id="splash">
+  <div class="sp-rings">
+    <svg width="120" height="120" viewBox="0 0 120 120"><circle cx="60" cy="60" r="54" fill="none" stroke="rgba(34,197,94,.25)" stroke-width="2" stroke-dasharray="8 6"/></svg>
+    <svg width="120" height="120" viewBox="0 0 120 120"><circle cx="60" cy="60" r="42" fill="none" stroke="rgba(34,197,94,.15)" stroke-width="1.5" stroke-dasharray="4 8"/></svg>
+    <div class="sp-inner">🌳</div>
+  </div>
+  <div class="sp-brand">G2G FARM AI</div>
+  <div class="sp-sub">ระบบจัดการสวนยางอัจฉริยะ</div>
+  <button class="sp-start" onclick="startApp()">เริ่มใช้งาน →</button>
+</div>
+
+<div class="app" id="app" style="display:none">
+
+  <!-- WEEK SCREEN -->
+  <div id="screen-week" class="screen active">
+    <div class="app-header">
+      <div><div class="hdr-logo">G2G FARM AI</div><div class="hdr-crop-name" id="hdr-crop-name">ยาง RRIM600</div></div>
+      <div class="hdr-right">
+        <div class="hdr-week-badge" id="hdr-week-badge">⭐ สัปดาห์ที่ 1</div>
+        <div class="hdr-date" id="hdr-date"></div>
+      </div>
+    </div>
+    <div class="crop-scroll-wrap"><div class="crop-scroll" id="cropScroll"></div></div>
+    <div class="ring-section">
+      <div class="ring-wrap">
+        <svg width="100" height="100" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="7"/>
+          <circle id="ringArc" cx="50" cy="50" r="44" fill="none" stroke="var(--cr-color)" stroke-width="7" stroke-linecap="round" stroke-dasharray="276.5" stroke-dashoffset="276.5" transform="rotate(-90 50 50)" style="transition:stroke-dashoffset 1s var(--eout),stroke .3s"/>
+        </svg>
+        <div class="ring-center"><div class="ring-wnum" id="ringWeekNum">1</div><div class="ring-wlbl">/ 52 สัปดาห์</div></div>
+      </div>
+      <div class="ring-info">
+        <div class="ring-stage" id="ringStage">บำรุงต้น</div>
+        <div class="ring-season" id="ringSeason">🌱 ต้นปี</div>
+        <div class="ring-period" id="ringPeriod">ระยะบำรุง</div>
+      </div>
+    </div>
+    <div class="section-divider"><span id="weekRangeLabel">กิจกรรมสัปดาห์</span></div>
+    <div class="weeks-section" id="weeksSection"></div>
+  </div>
+
+  <!-- TOOLS SCREEN -->
+  <div id="screen-tools" class="screen">
+    <div class="screen-header"><div class="sh-title">🧪 เครื่องมือ</div><div class="sh-sub">คำนวณ DRC% · รายได้ต่อวัน</div></div>
+    <div id="toolsHome">
+      <div class="tools-grid">
+        <div class="tool-card" onclick="showTool('drc')"><div class="tc-icon">🧫</div><div class="tc-title">DRC% น้ำยาง</div><div class="tc-sub">คำนวณความเข้มข้น</div></div>
+        <div class="tool-card" onclick="showTool('income')"><div class="tc-icon">💰</div><div class="tc-title">รายได้ต่อวัน</div><div class="tc-sub">คำนวณรายรับสุทธิ</div></div>
+      </div>
+    </div>
+    <div id="tool-drc" class="tool-panel" style="display:none">
+      <h3>🧫 คำนวณ DRC% (Dry Rubber Content)</h3>
+      <div class="tp-row"><div class="tp-label">น้ำหนักน้ำยาง (กก.)</div><input class="tp-input" type="number" id="drc-wet" value="100" min="1"></div>
+      <div class="tp-row"><div class="tp-label">น้ำหนักยางแห้ง (กก.)</div><input class="tp-input" type="number" id="drc-dry" value="60" min="1"></div>
+      <div class="tp-row"><div class="tp-label">ราคาน้ำยาง DRC60 (บ./กก.)</div><input class="tp-input" type="number" id="drc-price" value="65" min="1"></div>
+      <button class="tp-btn" onclick="calcDRC()">คำนวณ</button>
+      <div class="tp-result" id="drc-result"></div>
+      <button class="back-btn" onclick="hideTool('drc')">← กลับ</button>
+    </div>
+    <div id="tool-income" class="tool-panel" style="display:none">
+      <h3>💰 คำนวณรายได้ต่อวัน</h3>
+      <div class="tp-row"><div class="tp-label">น้ำยางสด (กก./วัน)</div><input class="tp-input" type="number" id="inc-latex" value="30" min="1"></div>
+      <div class="tp-row"><div class="tp-label">ประเภทผลผลิต</div>
+        <select class="tp-select" id="inc-type">
+          <option value="62">น้ำยางสด DRC60% (62 บ./กก.)</option>
+          <option value="75" selected>ยางแผ่นดิบ RSS3 (75 บ./กก.)</option>
+          <option value="86">ยางแผ่นรมควัน RSS1 (86 บ./กก.)</option>
+          <option value="45">ยางก้อนถ้วย (45 บ./กก.)</option>
+        </select>
+      </div>
+      <div class="tp-row"><div class="tp-label">ต้นทุน/วัน (บ.)</div><input class="tp-input" type="number" id="inc-cost" value="200" min="0"></div>
+      <button class="tp-btn" onclick="calcIncome()">คำนวณ</button>
+      <div class="tp-result" id="income-result"></div>
+      <button class="back-btn" onclick="hideTool('income')">← กลับ</button>
+    </div>
+  </div>
+
+  <!-- MARKET SCREEN -->
+  <div id="screen-market" class="screen">
+    <div class="screen-header"><div class="sh-title">📊 ตลาดยางพารา</div><div class="sh-sub">ราคาวันนี้ · เกรดคุณภาพ</div></div>
+    <div class="market-section">
+      <div class="price-card">
+        <div class="pc-header"><div class="pc-crop">💹 ราคายางวันนี้</div><div class="pc-updated" id="mkt-updated"></div></div>
+        <div class="pc-prices">
+          <div class="pcp-item"><div class="pcp-grade">น้ำยางสด DRC60</div><div class="pcp-val">65</div><div class="pcp-unit">บ./กก.</div></div>
+          <div class="pcp-item"><div class="pcp-grade">ยางแผ่นดิบ RSS3</div><div class="pcp-val">75</div><div class="pcp-unit">บ./กก.</div></div>
+          <div class="pcp-item"><div class="pcp-grade">ยางแผ่นรมควัน RSS1</div><div class="pcp-val">86</div><div class="pcp-unit">บ./กก.</div></div>
+          <div class="pcp-item"><div class="pcp-grade">ยางก้อนถ้วย</div><div class="pcp-val">45</div><div class="pcp-unit">บ./กก.</div></div>
+        </div>
+      </div>
+      <div id="gradeCardContainer"></div>
+    </div>
+  </div>
+
+  <!-- LOG SCREEN -->
+  <div id="screen-log" class="screen">
+    <div class="screen-header"><div class="sh-title">📓 บันทึกสวน</div><div class="sh-sub">บันทึกกิจกรรม yield รายวัน</div></div>
+    <div class="log-section">
+      <div class="log-input-card">
+        <textarea id="logText" placeholder="บันทึกกิจกรรมวันนี้... เช่น กรีดยาง 2 ไร่ ได้น้ำยาง 45 กก. DRC 62%"></textarea>
+        <div class="log-meta">
+          <select id="logCrop"><option value="rrim600">ยาง RRIM600</option><option value="bpb24">ยาง BPB24</option></select>
+          <select id="logType"><option value="กรีดยาง">กรีดยาง</option><option value="บำรุง">บำรุงต้น</option><option value="ขาย">ขาย</option><option value="อื่นๆ">อื่นๆ</option></select>
+        </div>
+        <button class="log-save-btn" onclick="saveLog()">💾 บันทึก</button>
+      </div>
+      <div id="logList"></div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <div class="nav-inner">
+      <button class="nav-item active" onclick="showScreen('week',this)"><div class="nav-icon">📅</div><div class="nav-label">สัปดาห์</div><div class="nav-dot"></div></button>
+      <button class="nav-item" onclick="showScreen('tools',this)"><div class="nav-icon">🧪</div><div class="nav-label">เครื่องมือ</div><div class="nav-dot"></div></button>
+      <button class="nav-item" onclick="showScreen('market',this)"><div class="nav-icon">📊</div><div class="nav-label">ตลาด</div><div class="nav-dot"></div></button>
+      <button class="nav-item" onclick="showScreen('log',this)"><div class="nav-icon">📓</div><div class="nav-label">บันทึก</div><div class="nav-dot"></div></button>
+    </div>
+  </nav>
+</div>
+
+<!-- FAB -->
+<button id="ai-fab" onclick="openDrawer()" class="pulse">🤖</button>
+
+<!-- AI DRAWER -->
+<div id="ai-drawer">
+  <div class="drawer-overlay" onclick="closeDrawer()"></div>
+  <div class="drawer-panel">
+    <div class="drawer-handle"></div>
+    <div class="drawer-header">
+      <div><div class="drawer-title">🤖 AI ที่ปรึกษาสวนยาง</div><div style="font-size:.75rem;color:var(--text2);margin-top:1px" id="drawer-ctx">ถามอะไรเกี่ยวกับยางพาราได้เลย</div></div>
+      <button class="drawer-close" onclick="closeDrawer()">✕</button>
+    </div>
+    <div class="quick-asks">
+      <div class="qa-chip" onclick="quickAsk('วิธีเพิ่ม DRC%')">เพิ่ม DRC%</div>
+      <div class="qa-chip" onclick="quickAsk('ราคายางตอนนี้เป็นอย่างไร')">ราคายาง</div>
+      <div class="qa-chip" onclick="quickAsk('โรคใบร่วงยางพาราคืออะไร')">โรคใบร่วง</div>
+      <div class="qa-chip" onclick="quickAsk('ควรกรีดยางตอนไหน')">เวลากรีด</div>
+      <div class="qa-chip" onclick="quickAsk('สูตรปุ๋ยยางพารา')">ปุ๋ยยาง</div>
+    </div>
+    <div class="drawer-msgs" id="drawerMsgs">
+      <div class="dmsg ai">สวัสดีครับ! ผมคือ AI ที่ปรึกษาสวนยางพารา 🌳 ถามได้เลยครับ เรื่องการกรีด เกรด DRC% ราคาตลาด หรือการดูแลสวน</div>
+    </div>
+    <div class="drawer-input-row">
+      <textarea class="drawer-input" id="drawerInput" placeholder="ถามเกี่ยวกับสวนยาง..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendDrawer()}"></textarea>
+      <button class="drawer-send" id="drawerSendBtn" onclick="sendDrawer()">↑</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const CROPS={
+  rrim600:{key:'rrim600',name:'ยาง RRIM600',emoji:'🌳',color:'#22c55e',soft:'#86efac',dark:'#14532d',glass:'rgba(34,197,94,0.15)'},
+  bpb24:{key:'bpb24',name:'ยาง BPB24',emoji:'🌿',color:'#16a34a',soft:'#4ade80',dark:'#052e16',glass:'rgba(22,163,74,0.15)'},
+};
+
+const FARM_PERIODS={
+  rrim600:[
+    {start:1,end:4,emoji:'🌱',name:'บำรุงต้น',season:'ต้นปี',tasks:[
+      {t:'ใส่ปุ๋ยสูตร 20-8-20',d:'50 กก./ไร่'},
+      {t:'ตรวจโรคระบบราก'},
+      {t:'กำจัดวัชพืชระหว่างแถว'},
+      {t:'พ่นสารป้องกันโรคใบ'},
+    ]},
+    {start:5,end:12,emoji:'🌿',name:'กรีดต่อเนื่อง',season:'กรีดปกติ',tasks:[
+      {t:'กรีดยางรอบทุก 2 วัน',d:'S/2 d/2'},
+      {t:'เก็บน้ำยางใส่ถังสะอาด'},
+      {t:'ตรวจวัด DRC%'},
+      {t:'ทาสารป้องกันหน้ากรีด'},
+    ]},
+    {start:13,end:20,emoji:'🌿',name:'กรีดฤดูฝน',season:'หน้าฝน',tasks:[
+      {t:'กรีดช่วงแล้งในฤดูฝน'},
+      {t:'ระวังน้ำยางเจือจาง'},
+      {t:'ใส่ปุ๋ยอินทรีย์เพิ่ม',d:'20 กก./ต้น'},
+      {t:'ระวังราน้ำค้าง Colletotrichum'},
+    ]},
+    {start:21,end:28,emoji:'🌿',name:'กรีดช่วงกลาง',season:'กลางปี',tasks:[
+      {t:'ทาสาร Ethephon 2.5% กระตุ้นน้ำยาง'},
+      {t:'ตรวจสุขภาพต้น Tapping Panel Dryness'},
+      {t:'บันทึก yield รายต้น'},
+      {t:'ปรับ tapping system ถ้า yield ตก'},
+    ]},
+    {start:29,end:34,emoji:'🍃',name:'ผลัดใบ',season:'ช่วงพักต้น',tasks:[
+      {t:'หยุดกรีดในช่วงผลัดใบ'},
+      {t:'ฉีดป้องกัน Phytophthora'},
+      {t:'ใส่ปุ๋ยสะสม K สูง',d:'ปุ๋ย 13-13-21'},
+      {t:'ทำความสะอาดสวน'},
+    ]},
+    {start:35,end:38,emoji:'🍃',name:'ใบใหม่แตก',season:'ฟื้นต้น',tasks:[
+      {t:'ห้ามกรีดจนใบแก่เต็มที่'},
+      {t:'ดูแลสวนทั่วไป ตัดกิ่งแห้ง'},
+      {t:'ฉีดป้องกันเพลี้ยแป้ง'},
+      {t:'เตรียมเปิดหน้ากรีดใหม่'},
+    ]},
+    {start:39,end:44,emoji:'🧺',name:'เปิดกรีดใหม่',season:'เปิดกรีด',tasks:[
+      {t:'เปิดหน้ากรีดใหม่ S/2 d/2'},
+      {t:'ขายน้ำยางสด/ทำยางแผ่น'},
+      {t:'ชั่งน้ำหนักบันทึก'},
+      {t:'ตรวจ DRC% น้ำยางสด'},
+    ]},
+    {start:45,end:52,emoji:'🧺',name:'ฤดูกรีดดี',season:'ผลผลิตสูง',tasks:[
+      {t:'กรีดเต็มรูปแบบ ผลผลิตสูงสุด'},
+      {t:'ทำยางแผ่นรมควัน RSS1/RSS3'},
+      {t:'บันทึก yield สะสม'},
+      {t:'วางแผนขายล่วงหน้า'},
+    ]},
+  ],
+  bpb24:[
+    {start:1,end:4,emoji:'🌱',name:'บำรุงต้น BPB24',season:'ต้นปี',tasks:[
+      {t:'ใส่ปุ๋ยสูตร 20-8-20',d:'45 กก./ไร่'},
+      {t:'ตรวจโรคระบบราก'},
+      {t:'กำจัดวัชพืช'},
+      {t:'พ่นสารป้องกันโรค'},
+    ]},
+    {start:5,end:14,emoji:'🌿',name:'กรีดต่อเนื่อง',season:'กรีดปกติ',tasks:[
+      {t:'กรีด S/2 d/2 ทุก 2 วัน'},
+      {t:'เก็บน้ำยาง ตรวจ DRC%'},
+      {t:'ทาสารป้องกันหน้ากรีด'},
+    ]},
+    {start:15,end:24,emoji:'🌿',name:'กรีดฤดูฝน',season:'หน้าฝน',tasks:[
+      {t:'กรีดช่วงแล้ง ระวังน้ำเจือจาง'},
+      {t:'ใส่ปุ๋ยอินทรีย์'},
+      {t:'ป้องกันรา Colletotrichum'},
+    ]},
+    {start:25,end:30,emoji:'🍃',name:'ผลัดใบ',season:'พักต้น',tasks:[
+      {t:'หยุดกรีด ฉีดป้องกัน Phytophthora'},
+      {t:'ใส่ปุ๋ยสะสม K สูง'},
+    ]},
+    {start:31,end:36,emoji:'🌿',name:'กรีดกลาง',season:'กลางปี',tasks:[
+      {t:'ทาสาร Ethephon 2.5%'},
+      {t:'ตรวจ Tapping Panel Dryness'},
+      {t:'บันทึก yield รายต้น'},
+    ]},
+    {start:37,end:52,emoji:'🧺',name:'ฤดูกรีดดี',season:'ผลผลิตสูง',tasks:[
+      {t:'กรีดเต็มรูปแบบ ผลผลิตสูง'},
+      {t:'ทำยางแผ่นรมควัน'},
+      {t:'บันทึก yield ขายล่วงหน้า'},
+    ]},
+  ],
+};
+
+const GRADE_DATA={
+  rrim600:{grades:[
+    {min:85,g:'RSS1',sub:'PREMIUM',title:'ยางแผ่นรมควันชั้น1',priceRef:88,tip:'หน้ากรีดสะอาด DRC>60% ไม่มีสิ่งปนเปื้อน'},
+    {min:68,g:'RSS3',sub:'STANDARD',title:'ยางแผ่นมาตรฐาน',priceRef:74,tip:'คุณภาพดี ขายล้งได้ราคากลาง'},
+    {min:45,g:'RSS4',sub:'FAIR',title:'ยางแผ่นคุณภาพรอง',priceRef:60,tip:'มีรอยเปลือก/ฟองอากาศ ราคาต่ำ'},
+    {min:0,g:'ก้อน',sub:'BULK',title:'ยางก้อนถ้วย',priceRef:42,tip:'คุณภาพต่ำสุด ควรปรับวิธีกรีด'},
+  ]},
+  bpb24:{grades:[
+    {min:85,g:'RSS1',sub:'PREMIUM',title:'ยางแผ่นรมควันชั้น1',priceRef:90,tip:''},
+    {min:68,g:'RSS3',sub:'STANDARD',title:'ยางแผ่นมาตรฐาน',priceRef:76,tip:''},
+    {min:45,g:'RSS4',sub:'FAIR',title:'ยางแผ่นรอง',priceRef:62,tip:''},
+    {min:0,g:'ก้อน',sub:'BULK',title:'ยางก้อนถ้วย',priceRef:44,tip:''},
+  ]},
+};
+
+let currentCrop='rrim600';
+let currentWeek=1;
+let taskState={};
+let logs=[];
+
+function getWeekOfYear(){
+  const now=new Date();
+  const start=new Date(now.getFullYear(),0,1);
+  return Math.ceil(((now-start)/86400000+start.getDay()+1)/7);
+}
+
+function getPeriodForWeek(cropKey,w){
+  const periods=FARM_PERIODS[cropKey];
+  return periods.find(p=>w>=p.start&&w<=p.end)||periods[0];
+}
+
+function getPhaseGradient(phase){
+  const map={
+    '🌱':'linear-gradient(135deg,#052e16 0%,#14532d 60%,#166534 100%)',
+    '🌿':'linear-gradient(135deg,#0f2a1a 0%,#166534 50%,#15803d 100%)',
+    '🍃':'linear-gradient(135deg,#1a2e0a 0%,#365314 50%,#4d7c0f 100%)',
+    '🧺':'linear-gradient(135deg,#1c1700 0%,#713f12 50%,#92400e 100%)',
+  };
+  return map[phase]||map['🌿'];
+}
+
+function init(){
+  currentWeek=getWeekOfYear();
+  const now=new Date();
+  document.getElementById('hdr-date').textContent=now.toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'numeric'});
+  document.getElementById('mkt-updated').textContent='อัปเดต '+now.toLocaleDateString('th-TH',{day:'numeric',month:'short'});
+  taskState=JSON.parse(localStorage.getItem('rb_tasks')||'{}');
+  logs=JSON.parse(localStorage.getItem('rb_logs')||'[]');
+  renderCropTabs();
+  renderCurrent();
+  renderWeeks();
+  renderGradeCard();
+  renderLogs();
+}
+
+function renderCropTabs(){
+  const el=document.getElementById('cropScroll');
+  el.innerHTML=Object.values(CROPS).map(c=>`<button class="crop-tab${c.key===currentCrop?' active':''}" onclick="switchCrop('${c.key}')">${c.emoji} ${c.name}</button>`).join('');
+}
+
+function switchCrop(key){
+  currentCrop=key;
+  const c=CROPS[key];
+  document.documentElement.style.setProperty('--cr-color',c.color);
+  document.documentElement.style.setProperty('--cr-soft',c.soft);
+  document.documentElement.style.setProperty('--cr-dark',c.dark);
+  document.documentElement.style.setProperty('--cr-glass',c.glass);
+  renderCropTabs();
+  renderCurrent();
+  renderWeeks();
+  renderGradeCard();
+  document.getElementById('hdr-crop-name').textContent=c.name;
+}
+
+function renderCurrent(){
+  const p=getPeriodForWeek(currentCrop,currentWeek);
+  document.getElementById('hdr-week-badge').textContent=`⭐ สัปดาห์ที่ ${currentWeek}`;
+  document.getElementById('ringWeekNum').textContent=currentWeek;
+  document.getElementById('ringStage').textContent=`${p.emoji} ${p.name}`;
+  document.getElementById('ringSeason').textContent=p.season;
+  document.getElementById('ringPeriod').textContent=`สัปดาห์ ${p.start}–${p.end}`;
+  document.getElementById('weekRangeLabel').textContent=`กิจกรรมสัปดาห์ ${p.start}–${p.end}`;
+  const arc=document.getElementById('ringArc');
+  const pct=currentWeek/52;
+  arc.style.strokeDashoffset=276.5*(1-pct);
+}
+
+function renderWeeks(){
+  const periods=FARM_PERIODS[currentCrop];
+  const container=document.getElementById('weeksSection');
+  container.innerHTML=periods.map(p=>{
+    const isCurrent=currentWeek>=p.start&&currentWeek<=p.end;
+    const key=`${currentCrop}_p${p.start}`;
+    const done=taskState[key]||[];
+    const tasksHTML=p.tasks.map((t,i)=>{
+      const isDone=done.includes(i);
+      return `<div class="task-item${isDone?' done':''}" onclick="toggleTask('${key}',${i},this)">
+        <div class="ti-check">${isDone?'✓':''}</div>
+        <div class="ti-content">
+          <div class="ti-text">${t.t}</div>
+          ${t.d?`<div class="ti-dose">${t.d}</div>`:''}
+        </div>
+      </div>`;
+    }).join('');
+    const grad=getPhaseGradient(p.emoji);
+    return `<div class="week-card${isCurrent?' current':''}" id="wc-${p.start}">
+      <div class="wc-header" onclick="toggleCard(${p.start})">
+        <div class="wc-num">${p.start}</div>
+        <div class="wc-info">
+          <div class="wc-title">${p.emoji} ${p.name}</div>
+          <div class="wc-subtitle">สัปดาห์ ${p.start}–${p.end} · ${p.season}</div>
+        </div>
+        <span class="wc-toggle">⌄</span>
+      </div>
+      <div class="wc-body">
+        <div class="wc-phase-banner" style="background:${grad}">
+          <div class="wc-phase-cap">${p.season} · สัปดาห์ ${p.start}–${p.end}</div>
+        </div>
+        <div class="wc-tasks">${tasksHTML}</div>
+        <div class="wc-ai-row"><button class="wc-ai-btn" onclick="openDrawerCtx('${p.name}')">🤖 ถาม AI เรื่องนี้</button></div>
+      </div>
+    </div>`;
+  }).join('');
+  // auto-open current
+  const cur=document.querySelector('.week-card.current');
+  if(cur){cur.classList.add('open');setTimeout(()=>cur.scrollIntoView({behavior:'smooth',block:'start'}),600);}
+}
+
+function toggleCard(start){
+  const el=document.getElementById(`wc-${start}`);
+  el.classList.toggle('open');
+}
+
+function toggleTask(key,idx,el){
+  if(!taskState[key])taskState[key]=[];
+  const i=taskState[key].indexOf(idx);
+  if(i===-1)taskState[key].push(idx);else taskState[key].splice(i,1);
+  localStorage.setItem('rb_tasks',JSON.stringify(taskState));
+  const item=el.classList.contains('task-item')?el:el.closest('.task-item');
+  const isDone=taskState[key].includes(idx);
+  item.classList.toggle('done',isDone);
+  item.querySelector('.ti-check').textContent=isDone?'✓':'';
+}
+
+function showScreen(name,btn){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active');
+  if(btn)btn.classList.add('active');
+}
+
+function showTool(id){
+  document.getElementById('toolsHome').style.display='none';
+  document.querySelectorAll('.tool-panel').forEach(p=>p.style.display='none');
+  document.getElementById('tool-'+id).style.display='block';
+}
+function hideTool(id){
+  document.getElementById('tool-'+id).style.display='none';
+  document.getElementById('toolsHome').style.display='block';
+}
+
+function calcDRC(){
+  const wet=parseFloat(document.getElementById('drc-wet').value)||100;
+  const dry=parseFloat(document.getElementById('drc-dry').value)||60;
+  const price=parseFloat(document.getElementById('drc-price').value)||65;
+  const drc=(dry/wet)*100;
+  const adjPrice=price*(drc/60);
+  const r=document.getElementById('drc-result');
+  r.className='tp-result show';
+  r.textContent=`DRC% = ${drc.toFixed(1)}%\nราคาปรับตาม DRC = ${adjPrice.toFixed(2)} บ./กก.\nมูลค่าน้ำยาง ${wet} กก. = ${(adjPrice*wet).toFixed(0)} บาท\n\n${drc>=60?'✅ DRC ดี เหมาะทำยางแผ่น':'⚠️ DRC ต่ำกว่า 60% ควรตรวจสอบ'}`;
+}
+
+function calcIncome(){
+  const latex=parseFloat(document.getElementById('inc-latex').value)||30;
+  const price=parseFloat(document.getElementById('inc-type').value)||75;
+  const cost=parseFloat(document.getElementById('inc-cost').value)||200;
+  const gross=latex*price;
+  const net=gross-cost;
+  const r=document.getElementById('income-result');
+  r.className='tp-result show';
+  r.textContent=`รายรับ = ${latex} × ${price} = ${gross.toLocaleString()} บาท\nต้นทุน = ${cost.toLocaleString()} บาท\nกำไรสุทธิ = ${net.toLocaleString()} บาท/วัน\n\nรายเดือน (25 วัน) ≈ ${(net*25).toLocaleString()} บาท`;
+}
+
+function renderGradeCard(){
+  const crop=CROPS[currentCrop];
+  const gradeList=GRADE_DATA[currentCrop].grades;
+  const score=55+Math.floor(Math.random()*35);
+  const grade=gradeList.find(g=>score>=g.min)||gradeList[gradeList.length-1];
+  const html=`<div class="grade-card">
+    <div class="gc-row1">
+      <div><div class="gc-ttl">GRADE PREDICTION</div><div class="gc-crop-name">${crop.emoji} ${crop.name}</div></div>
+      <div class="gc-week-tag">สัปดาห์ ${currentWeek}</div>
+    </div>
+    <div class="gc-grade-row">
+      <div class="gc-grade-box"><div class="gc-letter">${grade.g}</div><div class="gc-sub">${grade.sub}</div></div>
+      <div class="gc-desc">
+        <div class="gc-grade-title">${grade.title}</div>
+        <div class="gc-price-line">💰 อ้างอิง ${grade.priceRef} บ./กก.</div>
+        ${grade.tip?`<div class="gc-tip">💡 ${grade.tip}</div>`:''}
+      </div>
+    </div>
+    <div class="gc-msg-box"><div class="gc-msg-text">คะแนนคุณภาพประมาณ ${score}/100 — ${score>=85?'ผลผลิตคุณภาพสูง เหมาะส่งออก':score>=68?'คุณภาพมาตรฐาน ขายล้งได้ราคาดี':'ควรปรับปรุงกระบวนการกรีดและจัดเก็บ'}</div></div>
+  </div>`;
+  document.getElementById('gradeCardContainer').innerHTML=html;
+}
+
+function saveLog(){
+  const text=document.getElementById('logText').value.trim();
+  if(!text)return;
+  const entry={id:Date.now(),text,crop:document.getElementById('logCrop').value,type:document.getElementById('logType').value,date:new Date().toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'numeric'})};
+  logs.unshift(entry);
+  localStorage.setItem('rb_logs',JSON.stringify(logs));
+  document.getElementById('logText').value='';
+  renderLogs();
+}
+
+function renderLogs(){
+  const container=document.getElementById('logList');
+  if(!logs.length){container.innerHTML='<div style="text-align:center;color:var(--text3);font-size:.82rem;padding:20px">ยังไม่มีบันทึก</div>';return;}
+  container.innerHTML=logs.slice(0,20).map(e=>`<div class="log-entry">
+    <div class="le-header"><span class="le-crop">${CROPS[e.crop]?.emoji||'🌳'} ${e.type}</span><span class="le-date">${e.date}</span></div>
+    <div class="le-text">${e.text}</div>
+  </div>`).join('');
+}
+
+function openDrawer(ctx){
+  document.getElementById('ai-drawer').classList.add('open');
+}
+function openDrawerCtx(ctx){
+  document.getElementById('drawer-ctx').textContent=`บริบท: ${ctx}`;
+  openDrawer();
+}
+function closeDrawer(){document.getElementById('ai-drawer').classList.remove('open')}
+
+function quickAsk(q){document.getElementById('drawerInput').value=q;sendDrawer()}
+
+async function sendDrawer(){
+  const inp=document.getElementById('drawerInput');
+  const txt=inp.value.trim();
+  if(!txt)return;
+  inp.value='';
+  const msgs=document.getElementById('drawerMsgs');
+  msgs.innerHTML+=`<div class="dmsg user">${txt}</div>`;
+  const thinking=document.createElement('div');
+  thinking.className='dmsg ai';thinking.textContent='กำลังคิด...';
+  msgs.appendChild(thinking);msgs.scrollTop=msgs.scrollHeight;
+  document.getElementById('drawerSendBtn').disabled=true;
+  const crop=CROPS[currentCrop];
+  const p=getPeriodForWeek(currentCrop,currentWeek);
+  const sys=`คุณคือ AI ที่ปรึกษาสวนยางพาราผู้เชี่ยวชาญ ตอบเป็นภาษาไทยกระชับ ข้อมูลบริบท: พืช ${crop.name} สัปดาห์ที่ ${currentWeek} ช่วง ${p.name} (${p.season})`;
+  try{
+    const res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:txt,system:sys})});
+    const data=await res.json();
+    thinking.textContent=data.reply||data.message||'ขออภัย ไม่สามารถตอบได้ในขณะนี้';
+  }catch(e){
+    thinking.textContent=`สวัสดีครับ! ตอนนี้ยังไม่ได้เชื่อมต่อ AI backend\n\nคำถาม: "${txt}"\n\nเกี่ยวกับ ${crop.name} ช่วง ${p.name} :\n${p.tasks.map(t=>'• '+t.t).join('\n')}`;
+  }
+  document.getElementById('drawerSendBtn').disabled=false;
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+function startApp(){
+  document.getElementById('splash').classList.add('out');
+  setTimeout(()=>{document.getElementById('splash').style.display='none';document.getElementById('app').style.display='flex';init();},800);
+}
+</script>
+</body>
+</html>

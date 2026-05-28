@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<meta name="theme-color" content="#06040f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>G2G Gem AI · ช่างอัญมณี</title>
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg0:#06040f;--bg1:#0e0a22;--bg2:#160f30;--bg3:#1e1540;
+  --glass:rgba(255,255,255,0.05);--glass2:rgba(255,255,255,0.09);
+  --border:rgba(255,255,255,0.10);--border2:rgba(255,255,255,0.18);
+  --gold:#d4a843;--gold-s:#f0c960;--gold-d:#8a6820;--gold-pale:rgba(212,168,67,0.15);
+  --text:#f0eaf8;--text2:rgba(220,200,255,0.65);--text3:rgba(180,160,240,0.4);
+  --cr-color:#8b5cf6;--cr-soft:#c4b5fd;--cr-dark:#4c1d95;--cr-glass:rgba(139,92,246,0.15);
+}
+html,body{min-height:100vh;background:var(--bg0);color:var(--text);font-family:'Bai Jamjuree','Sarabun',sans-serif;font-size:14px;line-height:1.6;overflow-x:hidden}
+body{background:linear-gradient(160deg,var(--bg0) 0%,var(--bg1) 40%,var(--bg2) 70%,var(--bg3) 100%);min-height:100vh}
+
+/* SPLASH */
+#splash{position:fixed;inset:0;background:linear-gradient(160deg,#06040f,#0e0a22,#160f30);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .5s ease}
+#splash.fade-out{opacity:0;pointer-events:none}
+.splash-icon{font-size:72px;margin-bottom:16px;animation:bob 2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.splash-title{font-size:28px;font-weight:800;letter-spacing:.08em;color:#fff;margin-bottom:6px}
+.splash-sub{font-size:14px;color:var(--text2);letter-spacing:.04em}
+.splash-bar{width:160px;height:3px;background:rgba(255,255,255,0.1);border-radius:4px;margin-top:32px;overflow:hidden}
+.splash-fill{height:100%;width:0;background:linear-gradient(90deg,var(--cr-color),var(--gold),var(--cr-soft));animation:fill 1.8s ease forwards}
+@keyframes fill{to{width:100%}}
+
+/* HEADER */
+.header{background:rgba(14,10,34,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:12px 16px;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;max-width:480px;margin:0 auto;width:100%}
+.header-logo{font-size:18px;font-weight:800;color:#fff;letter-spacing:.04em;display:flex;align-items:center;gap:8px}
+.header-logo span{color:var(--gold)}
+.header-badge{background:var(--glass2);border:1px solid var(--border);border-radius:20px;padding:4px 10px;font-size:11px;color:var(--text2)}
+
+/* MAIN */
+.app{max-width:480px;margin:0 auto;padding-bottom:90px}
+
+/* HERO BANNER */
+.hero{margin:12px;border-radius:16px;overflow:hidden;position:relative;min-height:120px;display:flex;align-items:flex-end}
+.hero-bg{position:absolute;inset:0}
+.hero-content{position:relative;z-index:2;padding:16px;width:100%}
+.hero-eyebrow{font-size:10px;letter-spacing:.15em;color:var(--gold);text-transform:uppercase;font-weight:700;margin-bottom:4px}
+.hero-phase{font-size:20px;font-weight:800;color:#fff;margin-bottom:4px}
+.hero-week{font-size:12px;color:rgba(255,255,255,0.6)}
+.hero-badge{display:inline-block;padding:4px 12px;background:var(--cr-glass);border:1px solid rgba(139,92,246,0.4);border-radius:20px;font-size:11px;color:var(--cr-soft);font-weight:600;margin-top:8px}
+
+/* CROP SELECTOR */
+.crop-section{padding:12px 16px}
+.section-label{font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--text3);text-transform:uppercase;margin-bottom:10px}
+.crop-chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.crop-chips::-webkit-scrollbar{display:none}
+.crop-chip{flex-shrink:0;background:var(--glass);border:1px solid var(--border);border-radius:20px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .15s;color:var(--text2);white-space:nowrap}
+.crop-chip:hover{border-color:var(--cr-color);color:var(--text)}
+.crop-chip.active{border-color:var(--crop-color,var(--cr-color));background:var(--crop-glass,var(--cr-glass));color:#fff}
+
+/* TABS */
+.tab-bar{display:flex;gap:0;border-bottom:1px solid var(--border);padding:0 16px;overflow-x:auto;scrollbar-width:none}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab-btn{flex-shrink:0;padding:10px 14px;font-size:12px;font-weight:600;color:var(--text3);border-bottom:2px solid transparent;cursor:pointer;transition:all .15s;white-space:nowrap;background:transparent;border-top:0;border-left:0;border-right:0}
+.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
+
+/* SCREENS */
+.screen{display:none;padding:12px 16px}
+.screen.active{display:block;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* WEEK STRIP */
+.week-strip-wrap{background:var(--glass);border:1px solid var(--border);border-radius:12px;padding:10px;margin-bottom:14px;overflow-x:auto;scrollbar-width:none}
+.week-strip-wrap::-webkit-scrollbar{display:none}
+.week-strip{display:flex;gap:4px;min-width:max-content}
+.wk-btn{min-width:32px;padding:7px 4px;border:1px solid var(--border);border-radius:6px;background:rgba(255,255,255,0.03);font-size:10px;font-weight:700;cursor:pointer;color:var(--text3);text-align:center;transition:.12s;white-space:nowrap}
+.wk-btn:hover{background:var(--glass2);color:var(--text)}
+.wk-btn.active{background:linear-gradient(135deg,var(--cr-dark),var(--cr-color));border-color:var(--cr-color);color:#fff;box-shadow:0 2px 10px rgba(139,92,246,.3)}
+.wk-btn.today-wk{outline:2px solid var(--gold);outline-offset:1px}
+
+/* DETAIL CARD */
+.detail-card{background:var(--glass);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:14px}
+.detail-banner{padding:20px;min-height:100px;display:flex;align-items:flex-end;position:relative;overflow:hidden}
+.detail-banner::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(6,4,15,0.75),transparent)}
+.detail-banner-content{position:relative;z-index:2}
+.detail-phase{font-size:18px;font-weight:800;color:#fff;margin-bottom:2px}
+.detail-week-label{font-size:11px;color:rgba(255,255,255,0.6)}
+.detail-body{padding:16px}
+
+/* CARDS */
+.card{background:var(--glass);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:12px}
+.card-title{font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.card-title-icon{font-size:16px}
+
+/* TASK LIST */
+.task-list{list-style:none}
+.task-item{padding:9px 12px;background:var(--cr-glass);border-left:3px solid rgba(139,92,246,0.5);border-radius:0 8px 8px 0;font-size:13px;margin-bottom:6px;color:var(--text);line-height:1.5}
+.task-item::before{content:'▸ ';color:var(--cr-soft);font-size:12px}
+.watch-item{padding:7px 12px;background:rgba(212,168,67,0.08);border-left:3px solid rgba(212,168,67,0.4);border-radius:0 8px 8px 0;font-size:12px;margin-bottom:5px;color:var(--text2)}
+.alert-item{padding:7px 12px;background:rgba(239,68,68,0.1);border-left:3px solid rgba(239,68,68,0.5);border-radius:0 8px 8px 0;font-size:12px;margin-bottom:5px;color:#fca5a5;font-weight:600}
+
+/* MARKET */
+.market-section{margin-bottom:16px}
+.market-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.market-name{font-size:14px;font-weight:700;color:#fff}
+.market-rows{background:var(--glass);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.market-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border)}
+.market-row:last-child{border-bottom:0}
+.market-product{font-size:12px;color:var(--text2)}
+.market-price{font-size:13px;font-weight:700;color:var(--gold)}
+.market-unit{font-size:10px;color:var(--text3)}
+.price-trend{font-size:10px;padding:2px 6px;border-radius:8px;margin-left:6px}
+.trend-up{background:rgba(34,197,94,0.15);color:#86efac}
+.trend-down{background:rgba(239,68,68,0.15);color:#fca5a5}
+.trend-stable{background:rgba(156,163,175,0.15);color:#9ca3af}
+
+/* GRADE CARD */
+.grade-card{border-radius:12px;padding:14px;margin-bottom:10px;border:1px solid var(--border)}
+.grade-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:13px;font-weight:800;letter-spacing:.06em;margin-bottom:8px}
+.grade-title{font-size:14px;font-weight:700;color:#fff;margin-bottom:4px}
+.grade-price{font-size:20px;font-weight:800;color:var(--gold);margin-bottom:4px}
+.grade-tip{font-size:11px;color:var(--text2);line-height:1.5}
+
+/* TOOLS */
+.tool-card{background:var(--glass);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:12px}
+.tool-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.input-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.input-label{font-size:12px;color:var(--text2);min-width:120px}
+.input-field{flex:1;background:rgba(255,255,255,0.06);border:1px solid var(--border2);border-radius:8px;padding:8px 12px;font-size:13px;color:#fff;font-family:'Bai Jamjuree',sans-serif}
+.input-field:focus{outline:none;border-color:var(--cr-color);background:var(--cr-glass)}
+.input-select{flex:1;background:rgba(255,255,255,0.06);border:1px solid var(--border2);border-radius:8px;padding:8px 12px;font-size:13px;color:#fff;font-family:'Bai Jamjuree',sans-serif}
+.input-select option{background:#160f30}
+.calc-btn{width:100%;padding:10px;background:linear-gradient(135deg,var(--cr-dark),var(--cr-glass));border:1px solid rgba(139,92,246,0.4);border-radius:10px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:'Bai Jamjuree',sans-serif;transition:.15s}
+.calc-btn:hover{background:linear-gradient(135deg,var(--cr-dark),rgba(139,92,246,0.4));transform:translateY(-1px)}
+.calc-result{margin-top:10px;padding:12px;background:var(--cr-glass);border:1px solid rgba(139,92,246,0.25);border-radius:8px;font-size:13px;color:var(--text);display:none}
+.result-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+.result-row:last-child{border-bottom:0;font-weight:700;color:var(--gold);padding-top:8px}
+.result-label{color:var(--text2)}
+.result-value{color:var(--text);font-weight:600}
+
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:rgba(14,10,34,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--border);padding:8px 0 max(8px,env(safe-area-inset-bottom));display:flex;z-index:200}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;cursor:pointer;transition:.15s}
+.nav-item .nav-icon{font-size:20px;line-height:1}
+.nav-item .nav-label{font-size:9px;color:var(--text3);font-weight:600;letter-spacing:.04em}
+.nav-item.active .nav-label{color:var(--gold)}
+.nav-item.active .nav-icon{filter:drop-shadow(0 0 6px var(--gold))}
+
+/* RECORD LOG */
+.record-form{background:var(--glass);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px}
+.record-form textarea{width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border2);border-radius:8px;padding:10px;font-size:12px;color:var(--text);font-family:'Bai Jamjuree',sans-serif;resize:none;min-height:80px}
+.record-form textarea:focus{outline:none;border-color:var(--cr-color)}
+.record-form select{width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border2);border-radius:8px;padding:9px 12px;font-size:12px;color:var(--text);font-family:'Bai Jamjuree',sans-serif;margin-bottom:8px}
+.record-form select option{background:#160f30}
+.log-entry{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px}
+.log-entry .log-meta{font-size:10px;color:var(--text3);margin-bottom:4px;display:flex;justify-content:space-between}
+.log-entry .log-text{font-size:12px;color:var(--text2)}
+
+/* AI CHAT DRAWER */
+.chat-fab{position:fixed;bottom:80px;right:20px;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--cr-dark),var(--cr-color));border:none;font-size:22px;cursor:pointer;box-shadow:0 4px 20px rgba(139,92,246,.5);z-index:150;transition:.2s;display:flex;align-items:center;justify-content:center}
+.chat-fab:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(139,92,246,.7)}
+.chat-drawer{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:480px;background:rgba(14,10,34,0.97);backdrop-filter:blur(20px);border-top:1px solid var(--border);border-radius:16px 16px 0 0;z-index:300;transition:transform .3s ease;padding:0 0 max(16px,env(safe-area-inset-bottom)) 0}
+.chat-drawer.open{transform:translateX(-50%) translateY(0)}
+.chat-handle{height:4px;width:40px;background:rgba(255,255,255,0.2);border-radius:2px;margin:12px auto 0}
+.chat-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.chat-title{font-size:14px;font-weight:700;color:#fff;display:flex;align-items:center;gap:6px}
+.chat-close{background:none;border:none;color:var(--text3);font-size:20px;cursor:pointer;padding:4px}
+.chat-body{padding:12px 16px;max-height:320px;overflow-y:auto}
+.chat-msg{margin-bottom:10px}
+.chat-msg.ai .bubble{background:var(--cr-glass);border:1px solid rgba(139,92,246,0.2);border-radius:12px 12px 12px 2px;padding:10px 12px;font-size:12px;color:var(--text);line-height:1.5;max-width:85%}
+.chat-msg.user .bubble{background:rgba(212,168,67,0.12);border:1px solid rgba(212,168,67,0.2);border-radius:12px 12px 2px 12px;padding:10px 12px;font-size:12px;color:var(--text);max-width:85%;margin-left:auto}
+.quick-asks{display:flex;gap:6px;flex-wrap:wrap;padding:8px 16px;border-top:1px solid var(--border)}
+.quick-ask{background:var(--glass2);border:1px solid var(--border);border-radius:16px;padding:5px 10px;font-size:11px;color:var(--text2);cursor:pointer;white-space:nowrap;transition:.12s}
+.quick-ask:hover{border-color:var(--cr-color);color:var(--text)}
+.chat-input-row{display:flex;gap:8px;padding:8px 16px}
+.chat-input{flex:1;background:rgba(255,255,255,0.06);border:1px solid var(--border2);border-radius:20px;padding:8px 14px;font-size:12px;color:#fff;font-family:'Bai Jamjuree',sans-serif}
+.chat-input:focus{outline:none;border-color:var(--cr-color)}
+.chat-send{background:var(--cr-color);border:none;border-radius:50%;width:34px;height:34px;color:#fff;font-size:14px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+
+/* PILLS */
+.pill{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700}
+.pill-purple{background:var(--cr-glass);border:1px solid rgba(139,92,246,0.3);color:var(--cr-soft)}
+.pill-gold{background:var(--gold-pale);border:1px solid rgba(212,168,67,0.25);color:var(--gold-s)}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-icon">💎</div>
+  <div class="splash-title">G2G GEM AI</div>
+  <div class="splash-sub">ระบบจัดการอัญมณีและจิวเวลรี่</div>
+  <div class="splash-bar"><div class="splash-fill"></div></div>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-logo">💎 <span>G2G</span> GEM</div>
+  <div class="header-badge" id="headerBadge">สัปดาห์ 1</div>
+</div>
+
+<!-- APP -->
+<div class="app">
+
+  <!-- HERO BANNER -->
+  <div class="hero" id="heroBanner">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow" id="heroEyebrow">พลอยทับทิม · แพร่</div>
+      <div class="hero-phase" id="heroPhase">🌱 จัดซื้อวัตถุดิบ</div>
+      <div class="hero-week" id="heroWeek">สัปดาห์ที่ 1 — คัดพลอยดิบ</div>
+      <div class="hero-badge" id="heroBadge">GIA Standard</div>
+    </div>
+  </div>
+
+  <!-- GEM SELECTOR -->
+  <div class="crop-section">
+    <div class="section-label">เลือกประเภทอัญมณี</div>
+    <div class="crop-chips" id="cropChips"></div>
+  </div>
+
+  <!-- TAB BAR -->
+  <div class="tab-bar">
+    <button class="tab-btn active" data-tab="plan">📅 แผนงาน</button>
+    <button class="tab-btn" data-tab="calc">💎 คำนวณ</button>
+    <button class="tab-btn" data-tab="market">📊 ตลาด</button>
+    <button class="tab-btn" data-tab="log">📓 บันทึก</button>
+  </div>
+
+  <!-- SCREEN: PLAN -->
+  <div class="screen active" id="screen-plan">
+    <div class="week-strip-wrap">
+      <div class="week-strip" id="weekStrip"></div>
+    </div>
+    <div class="detail-card" id="detailCard">
+      <div class="detail-banner" id="detailBanner">
+        <div class="detail-banner-content">
+          <div class="detail-phase" id="detailPhase">จัดซื้อวัตถุดิบ</div>
+          <div class="detail-week-label" id="detailWeekLabel">สัปดาห์ที่ 1-3</div>
+        </div>
+      </div>
+      <div class="detail-body" id="detailBody"></div>
+    </div>
+  </div>
+
+  <!-- SCREEN: CALC -->
+  <div class="screen" id="screen-calc">
+    <!-- CARAT CALCULATOR -->
+    <div class="tool-card">
+      <div class="tool-title">💎 คำนวณราคาพลอย (Carat Price)</div>
+      <div class="input-row">
+        <div class="input-label">น้ำหนัก (กะรัต)</div>
+        <input class="input-field" id="g-carat" type="number" step="0.01" min="0.01" value="1.00" placeholder="0.00">
+      </div>
+      <div class="input-row">
+        <div class="input-label">ชนิดพลอย</div>
+        <select class="input-select" id="g-type">
+          <option value="ruby">พลอยทับทิม (Ruby)</option>
+          <option value="sapphire">พลอยไพลิน (Sapphire)</option>
+          <option value="emerald">มรกต (Emerald)</option>
+          <option value="gold">ทองรูปพรรณ 96.5%</option>
+        </select>
+      </div>
+      <div class="input-row">
+        <div class="input-label">เกรดคุณภาพ</div>
+        <select class="input-select" id="g-quality">
+          <option value="AAA">AAA — Finest</option>
+          <option value="AA">AA — Fine</option>
+          <option value="A" selected>A — Good</option>
+          <option value="B">B — Commercial</option>
+        </select>
+      </div>
+      <button class="calc-btn" onclick="calcGemPrice()">คำนวณราคา</button>
+      <div class="calc-result" id="gem-result"></div>
+    </div>
+
+    <!-- JEWELRY COST CALCULATOR -->
+    <div class="tool-card">
+      <div class="tool-title">💍 คำนวณต้นทุนเครื่องประดับ</div>
+      <div class="input-row">
+        <div class="input-label">ราคาพลอย (บาท)</div>
+        <input class="input-field" id="j-gem-cost" type="number" value="8000" placeholder="0">
+      </div>
+      <div class="input-row">
+        <div class="input-label">ทอง (กรัม)</div>
+        <input class="input-field" id="j-gold-g" type="number" step="0.1" value="3.5" placeholder="0">
+      </div>
+      <div class="input-row">
+        <div class="input-label">ค่าแรงช่าง (บาท)</div>
+        <input class="input-field" id="j-labor" type="number" value="1500" placeholder="0">
+      </div>
+      <div class="input-row">
+        <div class="input-label">ราคาขาย (บาท)</div>
+        <input class="input-field" id="j-price" type="number" value="25000" placeholder="0">
+      </div>
+      <button class="calc-btn" onclick="calcJewelry()">คำนวณกำไร</button>
+      <div class="calc-result" id="jewelry-result"></div>
+    </div>
+
+    <!-- GRADE REFERENCE -->
+    <div class="card">
+      <div class="card-title"><span class="card-title-icon">📋</span>ตารางเกรดอ้างอิง</div>
+      <div id="gradeTable"></div>
+    </div>
+  </div>
+
+  <!-- SCREEN: MARKET -->
+  <div class="screen" id="screen-market">
+    <div class="card" style="margin-bottom:12px">
+      <div class="card-title"><span class="card-title-icon">📅</span>ราคาตลาดอัญมณี พ.ศ. 2568</div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:12px">อัปเดต: มกราคม 2568 — ราคาอ้างอิงตลาดไทย</div>
+      <div id="marketData"></div>
+    </div>
+
+    <!-- GRADE PREDICTION -->
+    <div class="card">
+      <div class="card-title"><span class="card-title-icon">🔍</span>ประเมินเกรดพลอย (4C Analysis)</div>
+      <div style="font-size:12px;color:var(--text2);margin-bottom:12px">กรอกคะแนนเพื่อประเมินเกรด:</div>
+      <div class="input-row">
+        <div class="input-label">Color (สี) /100</div>
+        <input class="input-field" id="grade-color" type="number" min="0" max="100" value="75" placeholder="0-100">
+      </div>
+      <div class="input-row">
+        <div class="input-label">Clarity (ความใส) /100</div>
+        <input class="input-field" id="grade-clarity" type="number" min="0" max="100" value="70" placeholder="0-100">
+      </div>
+      <div class="input-row">
+        <div class="input-label">Cut (การเจียระไน) /100</div>
+        <input class="input-field" id="grade-cut" type="number" min="0" max="100" value="80" placeholder="0-100">
+      </div>
+      <div class="input-row">
+        <div class="input-label">Carat (น้ำหนัก)</div>
+        <input class="input-field" id="grade-carat-val" type="number" step="0.01" value="1.0" placeholder="0.00">
+      </div>
+      <button class="calc-btn" onclick="predictGrade()">ประเมินเกรด</button>
+      <div class="calc-result" id="grade-result"></div>
+    </div>
+
+    <!-- GEM FAIRS -->
+    <div class="card">
+      <div class="card-title"><span class="card-title-icon">🏪</span>งาน GemFair / ตลาดพลอย</div>
+      <div id="gemFairs"></div>
+    </div>
+  </div>
+
+  <!-- SCREEN: LOG -->
+  <div class="screen" id="screen-log">
+    <div class="record-form">
+      <div style="font-size:12px;color:var(--text2);margin-bottom:8px;font-weight:600">บันทึกการผลิต</div>
+      <select id="log-type">
+        <option>จัดซื้อพลอยดิบ</option>
+        <option>วิเคราะห์/วางแผนตัด</option>
+        <option>เจียระไน</option>
+        <option>ขัดละเอียด</option>
+        <option>ตรวจคุณภาพ/ชั่งน้ำหนัก</option>
+        <option>ออกแบบเครื่องประดับ</option>
+        <option>ทำตัวเรือน</option>
+        <option>ฝังพลอย</option>
+        <option>ถ่ายภาพ/กำหนดราคา</option>
+        <option>จำหน่าย</option>
+      </select>
+      <textarea id="log-text" placeholder="รายละเอียด เช่น รับพลอยทับทิมพม่า 12 เม็ด น้ำหนักรวม 8.4 กะรัต..."></textarea>
+      <button class="calc-btn" onclick="saveLog()">💾 บันทึก</button>
+    </div>
+    <div class="card-title" style="padding:0 0 8px"><span class="card-title-icon">📋</span>ประวัติการบันทึก</div>
+    <div id="logList"></div>
+  </div>
+
+</div><!-- /app -->
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <div class="nav-item active" data-nav="plan">
+    <div class="nav-icon">📅</div>
+    <div class="nav-label">แผนงาน</div>
+  </div>
+  <div class="nav-item" data-nav="calc">
+    <div class="nav-icon">💎</div>
+    <div class="nav-label">คำนวณ</div>
+  </div>
+  <div class="nav-item" data-nav="market">
+    <div class="nav-icon">📊</div>
+    <div class="nav-label">ตลาด</div>
+  </div>
+  <div class="nav-item" data-nav="log">
+    <div class="nav-icon">📓</div>
+    <div class="nav-label">บันทึก</div>
+  </div>
+</div>
+
+<!-- AI CHAT FAB -->
+<button class="chat-fab" id="chatFab" onclick="toggleChat()">🤖</button>
+
+<!-- AI CHAT DRAWER -->
+<div class="chat-drawer" id="chatDrawer">
+  <div class="chat-handle"></div>
+  <div class="chat-header">
+    <div class="chat-title">🤖 <span>AI ที่ปรึกษาช่างอัญมณี</span></div>
+    <button class="chat-close" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-body" id="chatBody">
+    <div class="chat-msg ai">
+      <div class="bubble">สวัสดีครับ! ผมเป็น AI ที่ปรึกษาสำหรับช่างอัญมณีและจิวเวลรี่ จังหวัดแพร่ มีอะไรให้ช่วยไหมครับ? 💎</div>
+    </div>
+  </div>
+  <div class="quick-asks">
+    <div class="quick-ask" onclick="askAI('ราคาพลอยวันนี้?')">ราคาพลอยวันนี้?</div>
+    <div class="quick-ask" onclick="askAI('เจียระไนแบบไหนดีที่สุด?')">เจียระไนแบบไหน?</div>
+    <div class="quick-ask" onclick="askAI('ตรวจเกรดพลอยยังไง?')">ตรวจเกรดพลอย</div>
+    <div class="quick-ask" onclick="askAI('หาลูกค้าที่ไหน?')">หาลูกค้าที่ไหน?</div>
+  </div>
+  <div class="chat-input-row">
+    <input class="chat-input" id="chatInput" placeholder="พิมพ์คำถาม..." onkeydown="if(event.key==='Enter')sendChat()">
+    <button class="chat-send" onclick="sendChat()">➤</button>
+  </div>
+</div>
+
+<script>
+// ===== DATA =====
+const CROPS = {
+  ruby:{key:'ruby',name:'พลอยทับทิม',emoji:'💎',color:'#ef4444',soft:'#fca5a5',dark:'#7f1d1d',glass:'rgba(239,68,68,0.15)'},
+  sapphire:{key:'sapphire',name:'พลอยไพลิน',emoji:'🔷',color:'#3b82f6',soft:'#93c5fd',dark:'#1e3a8a',glass:'rgba(59,130,246,0.15)'},
+  emerald:{key:'emerald',name:'มรกต',emoji:'💚',color:'#22c55e',soft:'#86efac',dark:'#14532d',glass:'rgba(34,197,94,0.15)'},
+  gold:{key:'gold',name:'ทองรูปพรรณ',emoji:'✨',color:'#d4a843',soft:'#f0c960',dark:'#8a6820',glass:'rgba(212,168,67,0.15)'},
+};
+
+const FARM_PERIODS = {
+  ruby:[
+    {w:[1,3],season:'🌱 จัดซื้อวัตถุดิบ',tasks:['คัดพลอยดิบจากแหล่งพม่า/ศรีลังกา','ตรวจเกรดสี Pigeon Blood / Red','ตรวจความใสด้วย Loupe 10x','ชั่งน้ำหนักกะรัต บันทึก Lot','ตรวจ Certificate (GRS/GIA)'],watch:['ระวังพลอยปลอม/เคลือบสี','ตรวจด้วย Chelsea Filter','บันทึก Lot number ทุกเม็ด']},
+    {w:[4,6],season:'🔍 วิเคราะห์พลอย',tasks:['ดูทิศแสงด้วย Polariscope','ตรวจเส้นรอย Inclusion ภายใน','วางแผนรูปทรงการตัด (Round/Oval/Cushion)','คำนวณ yield % จากน้ำหนักดิบ','ร่างแผนผังทิศทางเจียร'],watch:['ระวัง Feather fracture','วิเคราะห์ก่อนตัดทุกครั้ง','ปรึกษาช่างอาวุโสก่อนตัดพลอยใหญ่']},
+    {w:[7,10],season:'⚒️ เจียระไน',tasks:['เจียรรูปทรงด้วย Diamond Lap','ขัดหยาบ Pre-form ให้ได้รูปทรง','ตรวจ Symmetry ทุก 30 นาที','รักษาอุณหภูมิหัวเจียรไม่เกิน 40°C','บันทึกน้ำหนักหลังเจียรทุก Stage'],watch:['ระวังความร้อนทำลายพลอย','ล้างน้ำสะอาดระหว่างขั้นตอน','ไม่ใช้แรงกดเกินไป']},
+    {w:[11,14],season:'✨ ขัดละเอียด',tasks:['ขัดด้วยผง Cerium Oxide','ขัดระดับ 14000 → 50000 grit','ตรวจ Mirror Finish ด้วย Loupe','ล้างทำความสะอาดด้วย Ultrasonic','ชั่งน้ำหนักสุดท้าย/Carat Final'],watch:['ตรวจผิวขัดไม่ให้มี Scratch','ความชื้นต้องต่ำในห้องขัด']},
+    {w:[15,18],season:'📐 ตรวจคุณภาพ',tasks:['วัด Carat น้ำหนักสุดท้าย','ตรวจ Clarity ระดับ Eye-Clean','ตรวจสี Saturation ใต้แสงธรรมชาติ','ถ่ายภาพมาตรฐาน GIA/GRS','จัดทำ Certificate ภายใน'],watch:['แสง Daylight 6500K มาตรฐาน','เปรียบกับ Grading Stone']},
+    {w:[19,22],season:'💍 ออกแบบเครื่องประดับ',tasks:['ร่างแบบ Sketch 3 Version','ขึ้น Model Wax / CAD 3D','เลือกโลหะ (18K/22K/925 Silver)','นำเสนอแบบลูกค้า/ตลาด','Finalize Design + BOM List'],watch:['ตรวจ Prong Placement ให้ Secure','เช็คน้ำหนักรวมก่อน Quote']},
+    {w:[23,26],season:'🔨 ทำตัวเรือน',tasks:['หลอมทอง/เงิน ตามสัดส่วน','ทำตัวเรือน Cast จาก Wax Model','เชื่อม Solder จุดต่อตัวเรือน','ขัดตัวเรือนด้วย Polishing Motor','ตรวจ Rhodium Plating (กรณีขาว)'],watch:['ระวัง Porosity ใน Casting','ทดสอบ Acid Test ทุก Lot']},
+    {w:[27,30],season:'💎 ฝังพลอย',tasks:['ฝังพลอยแบบ Prong/Bezel/Pavé','ปรับ Prong ให้กระชับ Secure','ขัดสุดท้าย Post-setting Polish','ล้าง Ultrasonic + Steam Clean','ตรวจไม่ให้พลอยโยก'],watch:['ระวัง Scratch พลอยระหว่างฝัง','ตรวจด้วย Microscope 30x']},
+    {w:[31,34],season:'📸 ถ่ายภาพและราคา',tasks:['ถ่ายภาพ Lightbox สีขาว/ดำ','ถ่ายมุม 360° + Macro Close-up','กำหนดราคาขายตาม Market Ref','จัดทำ Certificate + Tag','อัปโหลดเว็บ/Instagram/GemFair'],watch:['Lighting 5600K ไม่ Overexpose','ใส่ Scale/Reference สำหรับขนาด']},
+    {w:[35,38],season:'🏪 จำหน่าย',tasks:['ออกงาน Bangkok GemFair','ลงขายใน GemSwap/JewelryLine','ส่งให้ร้านค้า Consignment','ติดตาม Order ออนไลน์','ออกใบกำกับภาษี/Receipt'],watch:['ระวังการ Copy งาน','ทำ Insurance Shipping']},
+    {w:[39,42],season:'🌱 วางแผน Collection ใหม่',tasks:['ศึกษาเทรนด์ Pantone / Vogue','ดู Bangkok International Gem Fair','สั่งพลอยดิบ Lot ใหม่','วิเคราะห์ยอดขาย/Margin','ตั้งเป้า Collection ถัดไป'],watch:['เช็ค Exchange Rate USD/THB','ดูราคาทองก่อนสั่ง']},
+    {w:[43,52],season:'⚒️ Production รอบถัดไป',tasks:['เริ่ม Pre-form พลอยดิบ Lot ใหม่','รับออเดอร์ Bespoke จากลูกค้า','ทำ Prototype 2-3 แบบ','วาง Production Schedule Q1','Review Cost + Pricing'],watch:['บริหาร Cashflow ช่วงปลายปี','เตรียมงาน Gem Fair ต้นปี']},
+  ],
+  sapphire:[
+    {w:[1,3],season:'🌱 จัดซื้อวัตถุดิบ',tasks:['คัดพลอยไพลินจากซีลอน/มาดากัสการ์','ตรวจสี Royal Blue / Cornflower Blue','ตรวจ Silk Inclusion (Natural)','ชั่งน้ำหนักและบันทึก Lot','ขอ Certificate GRS ทุก Lot'],watch:['ตรวจ Heat Treatment Disclosure','ระวังพลอยสังเคราะห์']},
+    {w:[4,6],season:'🔍 วิเคราะห์พลอย',tasks:['ดู Color Zone ด้วย Dichroscope','ตรวจ Silk Rutile Needle','วางแผนตัด Step Cut / Brilliant','คำนวณ Yield % ก่อนตัด','ร่างทิศทาง Pleochroism'],watch:['สี Sapphire เปลี่ยนตามทิศแสง','ต้องวางแนวแสงให้ถูกต้อง']},
+    {w:[7,14],season:'⚒️ เจียระไนและขัด',tasks:['เจียร Oval / Cushion / Princess','ขัดหยาบ → Fine Lap','ตรวจ Window Effect ระหว่างเจียร','ขัดละเอียด Alumina Oxide 50000g','ตรวจ Extinction Rate ≤ 10%'],watch:['ระวัง Window ลดคุณค่าพลอย','Extinction มากเกินลด Value']},
+    {w:[15,22],season:'📐 ตรวจและออกแบบ',tasks:['ตรวจ Clarity Eye-Clean','วัด Carat / Dimension สุดท้าย','ออกแบบ Ring Pendant Earring','ทำ CAD Model','เลือก 18K White / Yellow Gold'],watch:['Sapphire ต้อง 4-Prong Minimum','ป้องกัน Chip ที่ Girdle']},
+    {w:[23,38],season:'🔨 ผลิตและจำหน่าย',tasks:['Cast ตัวเรือน Fine Jewelry','ฝัง Sapphire เทคนิค Bezel','Polish + Rhodium White Gold','ออกงาน Bangkok Fair','จำหน่ายออนไลน์ Luxury Channel'],watch:['Rhodium ทุก 1-2 ปี','Certificate ทุกชิ้น']},
+    {w:[39,52],season:'🌱 วางแผนและผลิตรอบถัดไป',tasks:['วิเคราะห์ตลาด Sapphire Engagement Ring','สั่งพลอยดิบ Lot ใหม่','ออกแบบ Collection Anniversary','Review Sales & Profit','ตั้งเป้า Bespoke Orders'],watch:['ดูราคา Ceylon Sapphire Market','เตรียม Portfolio ลูกค้าคนสำคัญ']},
+  ],
+  emerald:[
+    {w:[1,6],season:'🌱 จัดซื้อและวิเคราะห์',tasks:['คัดมรกตจากโคลอมเบีย/แซมเบีย','ตรวจ Jardin (Inclusion Garden)','ตรวจ Oiling/Resin Treatment','ชั่งน้ำหนัก บันทึก Origin','ขอ AGL / GRS Certificate'],watch:['มรกต 99% มี Inclusion','ระวัง Fracture Filling Grade']},
+    {w:[7,18],season:'⚒️ เจียระไนและขัด',tasks:['เจียร Emerald Cut / Octagon','ขัดหยาบระวัง Fracture','ใช้ Diamond Lap Speed ช้า','ขัดละเอียด Cerium Oxide','ห้ามใช้ Ultrasonic Clean'],watch:['มรกตเปราะมาก ระวังแตก','ใช้ Steam เท่านั้น','ไม่ใส่ Acid ทุกชนิด']},
+    {w:[19,30],season:'💍 ออกแบบและผลิต',tasks:['ออกแบบ Emerald Cut Ring','ทำตัวเรือน 18K Yellow Gold','ฝังแบบ 4/6-Prong Bezel','ขัด Polished Finish','ถ่ายภาพ Macro ใน Lightbox'],watch:['มรกตต้องดูแลพิเศษ','ไม่ขัด Ultrasonic หลังฝัง']},
+    {w:[31,52],season:'📸 ถ่ายภาพ จำหน่าย วางแผนรอบใหม่',tasks:['ถ่าย Marketing Photo','ออกงาน GemFair Bangkok','ขาย High-End Boutique','วิเคราะห์ตลาด Colombia Origin','สั่งพลอยดิบ Lot ถัดไป'],watch:['Emerald ต้อง Full Disclosure Treatment','ลูกค้า High-End ต้องการ Certificate']},
+  ],
+  gold:[
+    {w:[1,4],season:'🌱 จัดซื้อทองและวัสดุ',tasks:['ซื้อทองคำ 96.5% / 18K Grain','ตรวจ Purity ด้วย XRF Analyzer','สั่งพลอยประกอบ Melee','ซื้อวัสดุประกอบ (Solder, Findings)','วางแผน Collection ฤดูกาล'],watch:['ดูราคาทองคำโลก LBMA','ซื้อเมื่อราคาต่ำ']},
+    {w:[5,12],season:'🔨 ออกแบบและทำตัวเรือน',tasks:['Sketch Collection 10-20 Design','CAD 3D Modeling Rhino/Matrix','ทำ Wax Carving / 3D Print','Cast ด้วย Vacuum Casting','ตรวจ Porosity + Weight'],watch:['ตรวจ Casting Defects ทุกชิ้น','Alloy Ratio ต้องแม่นยำ']},
+    {w:[13,22],season:'✨ ขัดและตกแต่ง',tasks:['File + Sand ตัวเรือน','Polishing Motor High Shine','Engraving / Texture เพิ่มมูลค่า','Rhodium Plating (White Gold)','Stone Setting Melee Diamond'],watch:['Hallmark Stamp ทุกชิ้น','เก็บ Scraps ทุกกรัม']},
+    {w:[23,38],season:'📸 ถ่ายภาพและจำหน่าย',tasks:['ถ่าย Studio Photo/Video','ลง JWA / Instagram / Line OA','ออกงาน Bangkok Gems & Jewelry','Consignment ร้านค้า','รับ Custom Order Bespoke'],watch:['ราคาทองผันผวน Update ราคาทุกสัปดาห์','ติด Price Tag ชัดเจน']},
+    {w:[39,52],season:'🌱 วิเคราะห์และวางแผนรอบถัดไป',tasks:['วิเคราะห์ยอดขาย Bestseller','ออกแบบ Holiday Collection','สั่งทองคำ Bulk ราคาดี','Review Pricing & Margin','ทำ Customer Loyalty Program'],watch:['เปรียบเทียบ Market Trend','วางแผน Cash Flow ปลายปี']},
+  ],
+};
+
+function getPhaseGradient(crop, season) {
+  const c = CROPS[crop] || {};
+  const color = c.color || '#8b5cf6';
+  const dark = c.dark || '#4c1d95';
+  if(season.includes('จัดซื้อ') || season.includes('วิเคราะห์'))
+    return `linear-gradient(135deg,#0a001a 0%,${dark}cc 60%,${color}22 100%)`;
+  if(season.includes('เจียระไน') || season.includes('ขัด'))
+    return `linear-gradient(135deg,#0a0020 0%,${color}55 60%,rgba(6,4,15,0.8) 100%)`;
+  if(season.includes('ออกแบบ') || season.includes('ตัวเรือน'))
+    return `linear-gradient(135deg,${dark}aa 0%,#d4a84344 50%,rgba(6,4,15,0.8) 100%)`;
+  if(season.includes('ฝัง') || season.includes('ตรวจ'))
+    return `linear-gradient(135deg,${dark}cc 0%,${color}66 60%,rgba(6,4,15,0.8) 100%)`;
+  if(season.includes('จำหน่าย') || season.includes('ถ่ายภาพ'))
+    return `linear-gradient(135deg,#2a1a00 0%,#7a5500 50%,#d4a84355 100%)`;
+  return `linear-gradient(135deg,${dark}aa 0%,${color}44 100%)`;
+}
+
+const GRADE_DATA = {
+  ruby:{grades:[
+    {min:85,g:'AAA',sub:'FINEST',title:'Ruby พม่า สีเลือดนกพิราบ',priceRef:50000,tip:'ไม่มีรอย สีสม่ำเสมอ Pigeon Blood ใสปลอดจากตำหนิ'},
+    {min:68,g:'AA',sub:'FINE',title:'Ruby คุณภาพดี',priceRef:20000,tip:'สีสวย อาจมีตำหนิเล็กน้อย Eye-Clean'},
+    {min:45,g:'A',sub:'GOOD',title:'Ruby คุณภาพมาตรฐาน',priceRef:8000,tip:'ขายได้แต่ราคาปานกลาง'},
+    {min:0,g:'B',sub:'COMMERCIAL',title:'Ruby เชิงพาณิชย์',priceRef:2000,tip:'เหมาะสำหรับ Fashion Jewelry'},
+  ]},
+  sapphire:{grades:[
+    {min:85,g:'AAA',sub:'FINEST',title:'Sapphire Ceylon Royal Blue',priceRef:45000,tip:'Royal Blue ไม่ผ่าน Heat Treatment ใสมาก'},
+    {min:68,g:'AA',sub:'FINE',title:'Sapphire Fine Quality',priceRef:15000,tip:'สีดี Heat Treated เล็กน้อย'},
+    {min:45,g:'A',sub:'GOOD',title:'Sapphire มาตรฐาน',priceRef:6000,tip:'สีสม่ำเสมอ ขายตลาดทั่วไปได้'},
+    {min:0,g:'B',sub:'COMMERCIAL',title:'Sapphire เชิงพาณิชย์',priceRef:1500,tip:'Heavy Heat Treatment ราคาถูก'},
+  ]},
+  emerald:{grades:[
+    {min:85,g:'AAA',sub:'FINEST',title:'Emerald Colombia Vivid Green',priceRef:80000,tip:'Colombia Origin Vivid Green Minor Oil'},
+    {min:68,g:'AA',sub:'FINE',title:'Emerald Fine Quality',priceRef:25000,tip:'สีดี Moderate Oil Treatment'},
+    {min:45,g:'A',sub:'GOOD',title:'Emerald มาตรฐาน',priceRef:8000,tip:'Jardin ชัดเจน แต่ยังสวยงาม'},
+    {min:0,g:'B',sub:'COMMERCIAL',title:'Emerald เชิงพาณิชย์',priceRef:2000,tip:'Heavy Fracture Fill ราคาต่ำ'},
+  ]},
+  gold:{grades:[
+    {min:85,g:'AAA',sub:'FINEST',title:'ทอง 99.99% Pure Gold',priceRef:40000,tip:'ทองบริสุทธิ์ Investment Grade'},
+    {min:68,g:'AA',sub:'FINE',title:'ทอง 96.5% Thai Gold',priceRef:38000,tip:'ทองรูปพรรณไทยมาตรฐาน'},
+    {min:45,g:'A',sub:'GOOD',title:'ทอง 18K (75%)',priceRef:28000,tip:'Fine Jewelry ตลาดสากล'},
+    {min:0,g:'B',sub:'COMMERCIAL',title:'ทอง 14K/10K',priceRef:18000,tip:'ตลาดแฟชั่น ราคาเข้าถึงได้'},
+  ]},
+};
+
+const MARKET_DATA = [
+  {name:'พลอยทับทิม (Ruby)',emoji:'💎',items:[
+    {product:'Burma Pigeon Blood 1ct+',price:'50,000-80,000',unit:'บ./กะรัต',trend:'up'},
+    {product:'Thailand/Africa Ruby 1ct',price:'15,000-25,000',unit:'บ./กะรัต',trend:'stable'},
+    {product:'Ruby Heat-Treated 1ct',price:'5,000-12,000',unit:'บ./กะรัต',trend:'down'},
+  ]},
+  {name:'พลอยไพลิน (Sapphire)',emoji:'🔷',items:[
+    {product:'Ceylon Royal Blue 1ct+',price:'45,000-60,000',unit:'บ./กะรัต',trend:'up'},
+    {product:'Montana Sapphire 1ct',price:'12,000-20,000',unit:'บ./กะรัต',trend:'stable'},
+    {product:'Sapphire Heat-Treated 1ct',price:'4,000-10,000',unit:'บ./กะรัต',trend:'stable'},
+  ]},
+  {name:'มรกต (Emerald)',emoji:'💚',items:[
+    {product:'Colombia Minor Oil 1ct+',price:'60,000-100,000',unit:'บ./กะรัต',trend:'up'},
+    {product:'Zambia Vivid Green 1ct',price:'20,000-35,000',unit:'บ./กะรัต',trend:'up'},
+    {product:'Brazil Emerald 1ct',price:'8,000-15,000',unit:'บ./กะรัต',trend:'stable'},
+  ]},
+  {name:'ทองรูปพรรณ',emoji:'✨',items:[
+    {product:'ทอง 96.5% (บาท)',price:'37,500-40,000',unit:'บ./บาท',trend:'up'},
+    {product:'ทอง 18K งานเครื่องประดับ',price:'28,000-32,000',unit:'บ./บาท',trend:'stable'},
+    {product:'เงิน 925 (Sterling)',price:'600-900',unit:'บ./บาท',trend:'stable'},
+  ]},
+];
+
+const GEM_FAIRS = [
+  {name:'Bangkok International Gems & Jewelry Fair (BIJF)',date:'กุมภาพันธ์ 2569',loc:'IMPACT เมืองทองธานี'},
+  {name:'Thailand International Jewelry Fair (TIJF)',date:'พฤษภาคม 2569',loc:'IMPACT เมืองทองธานี'},
+  {name:'GemSwap Thailand Online',date:'ตลอดปี',loc:'GemSwap.co.th'},
+  {name:'งานอัญมณีแพร่ (Phrae Gem Fair)',date:'พฤศจิกายน 2568',loc:'ศูนย์การค้าแพร่'},
+];
+
+// ===== STATE =====
+let activeCrop = 'ruby';
+let activeWeek = getCurrentWeek();
+let logs = JSON.parse(localStorage.getItem('gem_logs')||'[]');
+
+function getCurrentWeek(){
+  const start = new Date(new Date().getFullYear(),0,1);
+  return Math.ceil(((new Date()-start)/86400000+start.getDay()+1)/7);
+}
+
+function getPeriod(cropKey, week){
+  const periods = FARM_PERIODS[cropKey] || FARM_PERIODS.ruby;
+  for(const p of periods){
+    const [s,e] = p.w;
+    if(week>=s && week<=e) return p;
+  }
+  return periods[periods.length-1];
+}
+
+// ===== INIT =====
+function init(){
+  // Splash
+  setTimeout(()=>document.getElementById('splash').classList.add('fade-out'),1800);
+
+  // Crop chips
+  const chips = document.getElementById('cropChips');
+  Object.values(CROPS).forEach(c=>{
+    const el = document.createElement('div');
+    el.className = 'crop-chip'+(c.key===activeCrop?' active':'');
+    el.style.setProperty('--crop-color',c.color);
+    el.style.setProperty('--crop-glass',c.glass);
+    el.innerHTML = `${c.emoji} ${c.name}`;
+    el.onclick=()=>setCrop(c.key);
+    chips.appendChild(el);
+  });
+
+  // Week strip
+  buildWeekStrip();
+  updateHero();
+  updateDetail();
+
+  // Market
+  buildMarket();
+  buildGradeTable();
+  buildFairs();
+  renderLogs();
+
+  // Nav
+  document.querySelectorAll('.nav-item').forEach(n=>{
+    n.onclick=()=>switchNav(n.dataset.nav);
+  });
+
+  // Tabs
+  document.querySelectorAll('.tab-btn').forEach(t=>{
+    t.onclick=()=>switchTab(t.dataset.tab);
+  });
+
+  document.getElementById('headerBadge').textContent = `สัปดาห์ ${activeWeek}`;
+}
+
+function buildWeekStrip(){
+  const strip = document.getElementById('weekStrip');
+  strip.innerHTML='';
+  const cur = getCurrentWeek();
+  for(let w=1;w<=52;w++){
+    const b=document.createElement('div');
+    b.className='wk-btn'+(w===activeWeek?' active':'')+(w===cur?' today-wk':'');
+    b.textContent=`W${w}`;
+    b.onclick=()=>{activeWeek=w;buildWeekStrip();updateDetail();};
+    strip.appendChild(b);
+  }
+  // scroll to active
+  setTimeout(()=>{
+    const active = strip.querySelector('.wk-btn.active');
+    if(active) active.scrollIntoView({block:'nearest',inline:'center'});
+  },50);
+}
+
+function setCrop(key){
+  activeCrop=key;
+  document.querySelectorAll('.crop-chip').forEach((el,i)=>{
+    const c=Object.values(CROPS)[i];
+    el.classList.toggle('active',c.key===key);
+  });
+  updateHero();
+  updateDetail();
+}
+
+function updateHero(){
+  const c = CROPS[activeCrop];
+  const p = getPeriod(activeCrop, activeWeek);
+  document.getElementById('heroEyebrow').textContent = `${c.name} · แพร่`;
+  document.getElementById('heroPhase').textContent = p.season;
+  document.getElementById('heroWeek').textContent = `สัปดาห์ที่ ${p.w[0]}-${p.w[1]} — ${p.tasks[0]}`;
+  document.getElementById('heroBg').style.background = getPhaseGradient(activeCrop, p.season);
+}
+
+function updateDetail(){
+  const c = CROPS[activeCrop];
+  const p = getPeriod(activeCrop, activeWeek);
+  document.getElementById('detailBanner').style.background = getPhaseGradient(activeCrop, p.season);
+  document.getElementById('detailPhase').textContent = p.season;
+  document.getElementById('detailWeekLabel').textContent = `สัปดาห์ที่ ${p.w[0]}-${p.w[1]}`;
+
+  let html = `<ul class="task-list" style="margin-bottom:12px">`;
+  p.tasks.forEach(t=>{ html+=`<li class="task-item">${t}</li>`; });
+  html += `</ul>`;
+
+  if(p.watch && p.watch.length){
+    html += `<div style="font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--text3);text-transform:uppercase;margin-bottom:6px">⚠️ ข้อควรระวัง</div>`;
+    p.watch.forEach(w=>{ html+=`<div class="watch-item">⚠ ${w}</div>`; });
+  }
+
+  // Progress bar
+  const prog = Math.round(((activeWeek-p.w[0])/(p.w[1]-p.w[0]+1))*100);
+  html += `<div style="margin-top:14px"><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:6px"><span>ความคืบหน้าช่วงนี้</span><span>${Math.max(0,Math.min(100,prog))}%</span></div><div style="height:4px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden"><div style="height:100%;width:${Math.max(0,Math.min(100,prog))}%;background:linear-gradient(90deg,${c.dark},${c.color});border-radius:2px;transition:width .4s"></div></div></div>`;
+
+  document.getElementById('detailBody').innerHTML = html;
+  buildWeekStrip();
+}
+
+function buildMarket(){
+  const el = document.getElementById('marketData');
+  let html='';
+  MARKET_DATA.forEach(m=>{
+    html+=`<div class="market-section"><div class="market-header"><span style="font-size:18px">${m.emoji}</span><span class="market-name">${m.name}</span></div><div class="market-rows">`;
+    m.items.forEach(i=>{
+      const tClass=i.trend==='up'?'trend-up':i.trend==='down'?'trend-down':'trend-stable';
+      const tText=i.trend==='up'?'▲ ขึ้น':i.trend==='down'?'▼ ลง':'— คงที่';
+      html+=`<div class="market-row"><div class="market-product">${i.product}</div><div><span class="market-price">${i.price}</span> <span class="market-unit">${i.unit}</span><span class="price-trend ${tClass}">${tText}</span></div></div>`;
+    });
+    html+=`</div></div>`;
+  });
+  el.innerHTML=html;
+}
+
+function buildGradeTable(){
+  const el = document.getElementById('gradeTable');
+  const gd = GRADE_DATA[activeCrop]||GRADE_DATA.ruby;
+  let html='';
+  gd.grades.forEach(g=>{
+    const bg = g.g==='AAA'?'rgba(212,168,67,0.15)':g.g==='AA'?'rgba(139,92,246,0.12)':g.g==='A'?'rgba(59,130,246,0.1)':'rgba(156,163,175,0.08)';
+    const badge = g.g==='AAA'?'#d4a843':g.g==='AA'?'#8b5cf6':g.g==='A'?'#3b82f6':'#6b7280';
+    html+=`<div class="grade-card" style="background:${bg}"><span class="grade-badge" style="background:${badge}22;color:${badge};border:1px solid ${badge}44">${g.g} ${g.sub}</span><div class="grade-title">${g.title}</div><div class="grade-price">~${g.priceRef.toLocaleString()} บ./กะรัต</div><div class="grade-tip">${g.tip}</div></div>`;
+  });
+  el.innerHTML=html;
+}
+
+function buildFairs(){
+  const el = document.getElementById('gemFairs');
+  let html='';
+  GEM_FAIRS.forEach(f=>{
+    html+=`<div style="padding:10px 0;border-bottom:1px solid var(--border)"><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">${f.name}</div><div style="font-size:11px;color:var(--text2)">📅 ${f.date} &nbsp;|&nbsp; 📍 ${f.loc}</div></div>`;
+  });
+  el.innerHTML=html;
+}
+
+// ===== CALCULATORS =====
+function calcGemPrice(){
+  const carat = parseFloat(document.getElementById('g-carat').value)||1;
+  const quality = document.getElementById('g-quality').value;
+  const type = document.getElementById('g-type').value;
+  const baseMap = {
+    ruby:{AAA:50000,AA:20000,A:8000,B:2000},
+    sapphire:{AAA:45000,AA:15000,A:6000,B:1500},
+    emerald:{AAA:80000,AA:25000,A:8000,B:2000},
+    gold:{AAA:40000,AA:38000,A:28000,B:18000},
+  };
+  const prices = baseMap[type]||baseMap.ruby;
+  const base = prices[quality]||8000;
+  const isGold = type==='gold';
+  const total = isGold ? Math.round(base*carat) : Math.round(base*Math.pow(carat,1.8));
+  const low = Math.round(total*0.8);
+  const high = Math.round(total*1.2);
+  const el = document.getElementById('gem-result');
+  el.style.display='block';
+  el.innerHTML=`
+    <div class="result-row"><span class="result-label">น้ำหนัก</span><span class="result-value">${carat} กะรัต</span></div>
+    <div class="result-row"><span class="result-label">เกรด</span><span class="result-value">${quality}</span></div>
+    <div class="result-row"><span class="result-label">ราคาฐาน/กะรัต</span><span class="result-value">${base.toLocaleString()} บ.</span></div>
+    ${!isGold?`<div class="result-row"><span class="result-label">Premium Scale (×${carat.toFixed(2)}<sup>1.8</sup>)</span><span class="result-value">+${Math.round((Math.pow(carat,1.8)-carat)*100)}%</span></div>`:''}
+    <div class="result-row"><span class="result-label">ช่วงราคาตลาด</span><span class="result-value">${low.toLocaleString()} – ${high.toLocaleString()} บ.</span></div>
+    <div class="result-row"><span>ราคาอ้างอิง</span><span>${total.toLocaleString()} บาท</span></div>`;
+}
+
+function calcJewelry(){
+  const gemCost = parseFloat(document.getElementById('j-gem-cost').value)||0;
+  const goldG = parseFloat(document.getElementById('j-gold-g').value)||0;
+  const labor = parseFloat(document.getElementById('j-labor').value)||0;
+  const sellPrice = parseFloat(document.getElementById('j-price').value)||0;
+  const goldPrice = 38000; // บาท/บาททอง = 15.2g, so per gram = 2500
+  const goldCost = Math.round(goldG*2500);
+  const totalCost = gemCost+goldCost+labor;
+  const profit = sellPrice-totalCost;
+  const margin = sellPrice>0 ? Math.round((profit/sellPrice)*100):0;
+  const el = document.getElementById('jewelry-result');
+  el.style.display='block';
+  el.innerHTML=`
+    <div class="result-row"><span class="result-label">ต้นทุนพลอย</span><span class="result-value">${gemCost.toLocaleString()} บ.</span></div>
+    <div class="result-row"><span class="result-label">ต้นทุนทอง (${goldG}g)</span><span class="result-value">${goldCost.toLocaleString()} บ.</span></div>
+    <div class="result-row"><span class="result-label">ค่าแรงช่าง</span><span class="result-value">${labor.toLocaleString()} บ.</span></div>
+    <div class="result-row"><span class="result-label">ต้นทุนรวม</span><span class="result-value">${totalCost.toLocaleString()} บ.</span></div>
+    <div class="result-row"><span class="result-label">ราคาขาย</span><span class="result-value">${sellPrice.toLocaleString()} บ.</span></div>
+    <div class="result-row"><span>กำไรสุทธิ (Margin ${margin}%)</span><span style="color:${profit>=0?'#86efac':'#fca5a5'}">${profit>=0?'+':''}${profit.toLocaleString()} บาท</span></div>`;
+}
+
+function predictGrade(){
+  const color = parseFloat(document.getElementById('grade-color').value)||0;
+  const clarity = parseFloat(document.getElementById('grade-clarity').value)||0;
+  const cut = parseFloat(document.getElementById('grade-cut').value)||0;
+  const carat = parseFloat(document.getElementById('grade-carat-val').value)||1;
+  const score = (color*0.4+clarity*0.35+cut*0.25);
+  const gd = GRADE_DATA[activeCrop]||GRADE_DATA.ruby;
+  const gradeObj = gd.grades.find(g=>score>=g.min)||gd.grades[gd.grades.length-1];
+  const priceEst = Math.round(gradeObj.priceRef*Math.pow(carat,1.8));
+  const el = document.getElementById('grade-result');
+  el.style.display='block';
+  el.innerHTML=`
+    <div class="result-row"><span class="result-label">คะแนนรวม (4C)</span><span class="result-value">${score.toFixed(1)}/100</span></div>
+    <div class="result-row"><span class="result-label">เกรดที่ประเมิน</span><span class="result-value">${gradeObj.g} — ${gradeObj.sub}</span></div>
+    <div class="result-row"><span class="result-label">ชื่อเกรด</span><span class="result-value">${gradeObj.title}</span></div>
+    <div class="result-row"><span class="result-label">คำแนะนำ</span><span class="result-value" style="font-size:11px">${gradeObj.tip}</span></div>
+    <div class="result-row"><span>ราคาอ้างอิง ${carat}ct</span><span>~${priceEst.toLocaleString()} บาท</span></div>`;
+}
+
+// ===== LOGS =====
+function saveLog(){
+  const type = document.getElementById('log-type').value;
+  const text = document.getElementById('log-text').value.trim();
+  if(!text) return;
+  const entry = {id:Date.now(),type,text,crop:activeCrop,week:activeWeek,date:new Date().toLocaleDateString('th-TH')};
+  logs.unshift(entry);
+  localStorage.setItem('gem_logs',JSON.stringify(logs.slice(0,50)));
+  document.getElementById('log-text').value='';
+  renderLogs();
+}
+
+function renderLogs(){
+  const el = document.getElementById('logList');
+  if(!logs.length){ el.innerHTML='<div style="font-size:12px;color:var(--text3);text-align:center;padding:20px">ยังไม่มีบันทึก</div>'; return; }
+  let html='';
+  logs.slice(0,20).forEach(l=>{
+    const c = CROPS[l.crop]||{emoji:'💎',name:l.crop};
+    html+=`<div class="log-entry"><div class="log-meta"><span>${c.emoji} ${c.name} · สัปดาห์ ${l.week} · ${l.type}</span><span>${l.date}</span></div><div class="log-text">${l.text}</div></div>`;
+  });
+  el.innerHTML=html;
+}
+
+// ===== NAVIGATION =====
+function switchNav(tab){
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.nav===tab));
+  document.querySelectorAll('.tab-btn').forEach(t=>t.classList.toggle('active',t.dataset.tab===tab));
+  document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===`screen-${tab}`));
+  if(tab==='market') buildGradeTable();
+}
+
+function switchTab(tab){
+  switchNav(tab);
+}
+
+// ===== CHAT =====
+function toggleChat(){
+  document.getElementById('chatDrawer').classList.toggle('open');
+}
+
+const AI_RESPONSES = {
+  'ราคาพลอยวันนี้?': 'ราคาพลอยปัจจุบัน (2568): ทับทิมพม่า AAA: 50,000-80,000 บ./กะรัต | ไพลินซีลอน: 45,000-60,000 บ./กะรัต | มรกตโคลอมเบีย: 60,000-100,000 บ./กะรัต | ทอง 96.5%: 37,500-40,000 บ./บาท ราคาผันผวนตาม USD/THB แนะนำดูตลาด BIJF',
+  'เจียระไนแบบไหนดีที่สุด?': 'ขึ้นอยู่กับพลอยแต่ละชนิด: Ruby/Sapphire → Round Brilliant หรือ Oval เพิ่มความวาว | Emerald → Emerald Cut (Step Cut) รักษา Clarity | ทับทิมขนาดใหญ่ → Cushion Cut เพิ่มน้ำหนัก | สำคัญ: วิเคราะห์ทิศแสง (Pleochroism) ก่อนตัดทุกครั้ง',
+  'ตรวจเกรดพลอยยังไง?': 'ตรวจด้วย 4C: 1) Color — ดูใต้แสง Daylight 6500K เปรียบกับ Master Stone | 2) Clarity — ใช้ Loupe 10x ตรวจ Inclusion | 3) Cut — ตรวจ Symmetry Window Effect | 4) Carat — ชั่งน้ำหนักแม่นยำ 0.001g | เครื่องมือ: Spectroscope, Chelsea Filter, Polariscope',
+  'หาลูกค้าที่ไหน?': 'ช่องทางหลัก: 1) งาน BIJF/TIJF Bangkok ปีละ 2 ครั้ง | 2) GemSwap Thailand ออนไลน์ | 3) Instagram @jewelry #thaigemstone | 4) Line OA + LINE MyShop | 5) Etsy/eBay สำหรับลูกค้าต่างประเทศ | 6) งานอัญมณีแพร่ ใน จ.แพร่',
+};
+
+function askAI(question){
+  addMsg(question,'user');
+  setTimeout(()=>{
+    const ans = AI_RESPONSES[question]||'ขออภัยครับ ยังไม่มีข้อมูลสำหรับคำถามนี้ กรุณาลองถามคำถามอื่นครับ 💎';
+    addMsg(ans,'ai');
+  },400);
+}
+
+function addMsg(text,role){
+  const body = document.getElementById('chatBody');
+  const div = document.createElement('div');
+  div.className=`chat-msg ${role}`;
+  div.innerHTML=`<div class="bubble">${text}</div>`;
+  body.appendChild(div);
+  body.scrollTop=body.scrollHeight;
+}
+
+function sendChat(){
+  const input = document.getElementById('chatInput');
+  const val = input.value.trim();
+  if(!val) return;
+  input.value='';
+  addMsg(val,'user');
+  setTimeout(()=>{
+    const keys = Object.keys(AI_RESPONSES);
+    const match = keys.find(k=>val.includes(k.replace('?','')));
+    const ans = match?AI_RESPONSES[match]:'สอบถามได้เลยครับ! หรือลองคลิก Quick Ask ด้านบน สำหรับคำถามยอดนิยมของช่างอัญมณีแพร่ 💎';
+    addMsg(ans,'ai');
+  },500);
+}
+
+document.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>

@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#06040f">
+<title>G2G Farm AI · ชาวไร่มัน</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap">
+<style>
+:root{
+  --bg0:#06040f;--bg1:#0e0a22;--bg2:#160f30;--bg3:#1e1540;
+  --glass:rgba(255,255,255,0.05);--glass2:rgba(255,255,255,0.09);
+  --border:rgba(255,255,255,0.10);--border2:rgba(255,255,255,0.18);
+  --gold:#d4a843;--gold-s:#f0c960;--gold-d:#8a6820;--gold-pale:rgba(212,168,67,0.15);
+  --text:#f0eaf8;--text2:rgba(220,200,255,0.65);--text3:rgba(180,160,240,0.4);
+  --eout:cubic-bezier(0.22,1,0.36,1);
+  --cr-color:#f59e0b;--cr-soft:#fcd34d;--cr-dark:#78350f;--cr-glass:rgba(245,158,11,0.15);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{font-size:16px;height:100%}
+body{font-family:'Bai Jamjuree','Sarabun',sans-serif;background:var(--bg0);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+button,a{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;touch-action:manipulation}
+input,select,textarea{font-family:inherit;font-size:1rem;-webkit-appearance:none}
+
+/* SPLASH */
+#splash{position:fixed;inset:0;z-index:300;background:radial-gradient(ellipse at 30% 20%,#2a1400 0%,#06040f 60%);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s var(--eout)}
+#splash.out{opacity:0;pointer-events:none}
+.sp-rings{position:relative;width:120px;height:120px;margin-bottom:28px}
+.sp-rings svg{position:absolute;top:0;left:0;animation:spinRing 8s linear infinite}
+.sp-rings svg:nth-child(2){animation-duration:12s;animation-direction:reverse}
+.sp-inner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:42px}
+@keyframes spinRing{to{transform:rotate(360deg)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.sp-brand{font-size:1.7rem;font-weight:700;letter-spacing:6px;background:linear-gradient(180deg,var(--gold-s) 0%,var(--gold) 60%,var(--gold-d) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:fadeUp .8s var(--eout) .3s both}
+.sp-sub{font-size:.85rem;color:rgba(245,158,11,.6);letter-spacing:3px;margin-top:6px;animation:fadeUp .8s var(--eout) .5s both}
+.sp-start{margin-top:40px;padding:14px 36px;border-radius:99px;background:linear-gradient(135deg,var(--gold-s),var(--gold));color:#06040f;font-weight:700;font-size:1rem;letter-spacing:1px;box-shadow:0 8px 28px rgba(212,168,67,.35);animation:fadeUp .8s var(--eout) .8s both;transition:transform .1s,opacity .1s}
+.sp-start:active{transform:scale(.95);opacity:.85}
+
+/* APP */
+.app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative}
+
+/* TOP HEADER */
+.app-header{padding:52px 18px 10px;display:flex;justify-content:space-between;align-items:flex-start;flex-shrink:0;position:relative;z-index:2}
+.app-header::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,4,15,.95) 60%,transparent);pointer-events:none;z-index:-1}
+.hdr-logo{font-size:1rem;font-weight:700;letter-spacing:3px;background:linear-gradient(135deg,var(--gold-s),var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hdr-crop-name{font-size:1.3rem;font-weight:700;color:var(--cr-color);margin-top:2px;transition:color .3s}
+.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.hdr-week-badge{background:var(--gold-pale);border:1px solid rgba(212,168,67,.4);border-radius:20px;padding:4px 12px;font-size:.75rem;font-weight:600;color:var(--gold)}
+.hdr-date{font-size:.72rem;color:var(--text3)}
+
+/* CROP SELECTOR */
+.crop-scroll-wrap{padding:8px 16px;flex-shrink:0;position:relative;z-index:2}
+.crop-scroll{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px}
+.crop-scroll::-webkit-scrollbar{display:none}
+.crop-tab{flex-shrink:0;display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:99px;border:1.5px solid rgba(255,255,255,.12);background:var(--glass);font-size:.8rem;font-weight:600;color:var(--text2);cursor:pointer;transition:all .25s var(--eout)}
+.crop-tab.active{border-color:var(--cr-color);background:var(--cr-glass);color:var(--cr-color);box-shadow:0 0 20px var(--cr-glass)}
+
+/* MAIN CONTENT AREA */
+.app-content{flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:90px}
+.app-content::-webkit-scrollbar{display:none}
+
+/* WEEK RING SECTION */
+.ring-section{padding:12px 18px 18px;display:flex;align-items:center;gap:16px}
+.ring-wrap{position:relative;flex-shrink:0;width:100px;height:100px}
+.ring-wrap svg{position:absolute;top:0;left:0}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-wnum{font-size:1.85rem;font-weight:700;color:var(--gold-s);line-height:1}
+.ring-wlbl{font-size:.6rem;color:var(--text2);letter-spacing:2px;margin-top:2px}
+.ring-info{flex:1}
+.ring-stage{font-size:1.05rem;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:4px}
+.ring-season{font-size:.8rem;color:var(--text2)}
+.ring-period{font-size:.75rem;color:var(--gold);margin-top:4px;background:var(--gold-pale);border-radius:8px;padding:3px 8px;display:inline-block}
+
+/* DIVIDER */
+.section-divider{display:flex;align-items:center;gap:10px;padding:2px 18px 10px;color:var(--text3);font-size:.7rem;letter-spacing:2px;text-transform:uppercase}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent)}
+
+/* WEEK CARDS */
+.weeks-section{padding:0 14px}
+.week-card{background:var(--glass);border:1px solid var(--border);border-radius:20px;margin-bottom:10px;overflow:hidden;transition:border-color .2s,box-shadow .2s;position:relative}
+.week-card.current{border-color:rgba(245,158,11,.5);box-shadow:0 0 24px rgba(245,158,11,.1)}
+.week-card.current::before{content:'สัปดาห์ปัจจุบัน';position:absolute;top:10px;right:10px;background:linear-gradient(135deg,var(--gold-s),var(--gold));color:#06040f;font-size:.6rem;font-weight:700;padding:3px 8px;border-radius:10px;letter-spacing:.5px;z-index:1}
+.wc-header{padding:14px 16px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.wc-num{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0;background:var(--cr-glass);color:var(--cr-color);border:1.5px solid var(--cr-color);transition:background .3s,color .3s,border-color .3s}
+.week-card.current .wc-num{background:linear-gradient(135deg,var(--gold-s),var(--gold));color:#06040f;border-color:transparent}
+.wc-info{flex:1}
+.wc-title{font-size:.88rem;font-weight:600;color:var(--text);line-height:1.3}
+.wc-subtitle{font-size:.75rem;color:var(--text2);margin-top:2px}
+.wc-toggle{color:var(--text3);font-size:1.1rem;transition:transform .25s var(--eout)}
+.week-card.open .wc-toggle{transform:rotate(180deg)}
+.wc-body{max-height:0;overflow:hidden;transition:max-height .35s var(--eout)}
+.week-card.open .wc-body{max-height:1200px}
+.wc-tasks{padding:0 14px 14px}
+.task-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:16px 8px 14px 8px;margin-bottom:8px;background:var(--glass2);border:1px solid var(--border);cursor:pointer;transition:background .15s,border-color .15s}
+.task-item:active{background:rgba(255,255,255,.12)}
+.task-item.done{opacity:.55}
+.task-item.done .ti-text{text-decoration:line-through;color:var(--text3)}
+.ti-check{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--cr-color);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-size:.8rem;transition:background .15s}
+.task-item.done .ti-check{background:var(--cr-color);border-color:var(--cr-color)}
+.ti-content{flex:1}
+.ti-text{font-size:.85rem;color:var(--text);line-height:1.5;font-weight:500}
+.ti-dose{font-size:.75rem;color:var(--gold);margin-top:3px;background:var(--gold-pale);border-radius:6px;padding:2px 7px;display:inline-block}
+.wc-ai-row{display:flex;justify-content:flex-end;padding:0 14px 14px}
+.wc-ai-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:99px;background:var(--cr-glass);border:1.5px solid var(--cr-color);color:var(--cr-color);font-size:.8rem;font-weight:600}
+.wc-ai-btn:active{background:rgba(245,158,11,.25)}
+
+/* PHASE BANNER */
+.wc-phase-img-wrap{position:relative;overflow:hidden;border-radius:0;height:130px;display:flex;align-items:flex-end}
+.wc-phase-cap{padding:8px 14px;background:linear-gradient(0deg,rgba(6,4,15,.85) 0%,transparent 100%);font-size:.72rem;font-weight:600;color:rgba(255,255,255,.8);letter-spacing:1.5px;text-transform:uppercase;width:100%}
+
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;z-index:50;padding:0 16px max(16px,env(safe-area-inset-bottom));background:linear-gradient(0deg,var(--bg0) 60%,transparent)}
+.nav-inner{background:rgba(20,14,38,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.12);border-radius:24px;display:flex;align-items:center;padding:6px 8px}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 4px;border-radius:16px;cursor:pointer;border:none;background:transparent;color:var(--text3);transition:color .2s}
+.nav-item.active{color:var(--cr-color)}
+.nav-item.active .nav-dot{background:var(--cr-color)}
+.nav-icon{font-size:1.25rem;line-height:1}
+.nav-label{font-size:.6rem;font-weight:600;letter-spacing:.5px}
+.nav-dot{width:4px;height:4px;border-radius:50%;background:transparent;margin:1px auto 0;transition:background .2s}
+
+/* FAB */
+#ai-fab{position:fixed;bottom:90px;right:18px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--gold-s),var(--gold));display:flex;align-items:center;justify-content:center;font-size:1.5rem;box-shadow:0 6px 24px rgba(212,168,67,.5);z-index:60;cursor:pointer;border:none}
+#ai-fab.pulse{animation:fabPulse 2s ease-in-out infinite}
+@keyframes fabPulse{0%,100%{box-shadow:0 6px 24px rgba(212,168,67,.5)}50%{box-shadow:0 6px 32px rgba(212,168,67,.8),0 0 0 8px rgba(212,168,67,.1)}}
+
+/* AI DRAWER */
+#ai-drawer{position:fixed;inset:0;z-index:200;pointer-events:none}
+#ai-drawer.open{pointer-events:all}
+.drawer-overlay{position:absolute;inset:0;background:rgba(0,0,0,.6);opacity:0;transition:opacity .3s;cursor:pointer}
+#ai-drawer.open .drawer-overlay{opacity:1}
+.drawer-panel{position:absolute;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:480px;background:var(--bg2);border-radius:24px 24px 0 0;border-top:1px solid rgba(255,255,255,.12);transition:transform .35s var(--eout);display:flex;flex-direction:column;max-height:85vh}
+#ai-drawer.open .drawer-panel{transform:translateX(-50%) translateY(0)}
+.drawer-handle{width:36px;height:4px;border-radius:2px;background:rgba(255,255,255,.15);margin:12px auto 0}
+.drawer-header{padding:12px 18px 10px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
+.drawer-title{flex:1;font-size:.95rem;font-weight:700;color:var(--gold)}
+.drawer-ctx{font-size:.75rem;color:var(--text2);margin-top:1px}
+.drawer-close{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:1rem}
+.drawer-msgs{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-height:80px}
+.drawer-msgs::-webkit-scrollbar{display:none}
+.dmsg{padding:10px 13px;border-radius:14px;font-size:.85rem;line-height:1.6;max-width:90%;white-space:pre-wrap}
+.dmsg.user{align-self:flex-end;background:rgba(245,158,11,.2);color:#fde68a;border:1px solid rgba(245,158,11,.25);border-bottom-right-radius:4px}
+.dmsg.ai{align-self:flex-start;background:var(--glass2);color:var(--text);border:1px solid var(--border);border-bottom-left-radius:4px}
+.drawer-input-row{padding:10px 14px max(12px,env(safe-area-inset-bottom));border-top:1px solid var(--border);display:flex;gap:8px;align-items:flex-end;background:var(--bg2)}
+.drawer-input{flex:1;background:var(--glass);border:1px solid var(--border2);border-radius:14px;padding:10px 13px;color:var(--text);font-size:.88rem;resize:none;min-height:40px;max-height:100px;outline:none}
+.drawer-input:focus{border-color:rgba(245,158,11,.4)}
+.drawer-send{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--gold-s),var(--gold));display:flex;align-items:center;justify-content:center;color:#06040f;font-size:1rem;font-weight:700;flex-shrink:0;border:none}
+.drawer-send:disabled{opacity:.4}
+.quick-asks{display:flex;gap:6px;flex-wrap:wrap;padding:8px 14px 0}
+.qa-chip{padding:6px 12px;border-radius:20px;background:var(--glass);border:1px solid var(--border);font-size:.75rem;color:var(--text2);cursor:pointer}
+.qa-chip:active{background:var(--glass2)}
+
+/* SCREENS */
+.screen{display:none}
+.screen.active{display:block;min-height:100vh;padding-bottom:90px}
+.screen-header{padding:52px 18px 14px;position:sticky;top:0;z-index:10;background:linear-gradient(180deg,var(--bg0) 70%,transparent)}
+.sh-title{font-size:1.1rem;font-weight:700;color:var(--text)}
+.sh-sub{font-size:.75rem;color:var(--text2);margin-top:2px}
+
+/* TOOLS */
+.tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px 12px}
+.tool-card{background:var(--glass);border:1px solid var(--border);border-radius:18px;padding:14px;cursor:pointer}
+.tool-card:active{background:var(--glass2)}
+.tc-icon{font-size:1.8rem;margin-bottom:6px}
+.tc-title{font-size:.85rem;font-weight:700;color:var(--text)}
+.tc-sub{font-size:.72rem;color:var(--text2);margin-top:3px}
+.tool-panel{background:var(--glass);border:1px solid var(--border);border-radius:18px;margin:0 14px 12px;padding:16px}
+.tool-panel h3{font-size:.88rem;font-weight:700;color:var(--gold);margin-bottom:12px}
+.tp-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.tp-label{font-size:.8rem;color:var(--text2);width:100px;flex-shrink:0}
+.tp-input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:8px 12px;color:var(--text);font-size:.88rem}
+.tp-select{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:8px 12px;color:var(--text);font-size:.82rem}
+.tp-btn{width:100%;padding:11px;border-radius:14px;background:linear-gradient(135deg,var(--cr-color),var(--cr-dark));color:#fff;font-weight:700;font-size:.88rem;border:none;margin-top:6px;cursor:pointer}
+.tp-btn:active{opacity:.8}
+.tp-result{margin-top:10px;padding:12px;background:var(--bg3);border-radius:12px;border-left:3px solid var(--gold);font-size:.82rem;color:var(--text);line-height:1.7;display:none;white-space:pre-wrap}
+.tp-result.show{display:block}
+.back-btn{margin-top:8px;width:100%;padding:8px;background:transparent;border:1px solid var(--border);border-radius:10px;color:var(--text2);font-size:.8rem;cursor:pointer}
+
+/* MARKET */
+.market-section{padding:0 14px}
+.price-card{background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:10px}
+.pc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.pc-crop{font-size:.88rem;font-weight:700;color:var(--text)}
+.pc-updated{font-size:.7rem;color:var(--text3)}
+.pc-prices{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.pcp-item{text-align:center;background:var(--bg3);border-radius:10px;padding:8px 4px}
+.pcp-grade{font-size:.65rem;color:var(--text3);letter-spacing:.5px}
+.pcp-val{font-size:1.1rem;font-weight:700;color:var(--gold);margin:2px 0}
+.pcp-unit{font-size:.65rem;color:var(--text3)}
+.market-ai-btn{width:100%;padding:11px;border-radius:14px;background:linear-gradient(135deg,var(--bg2),var(--bg3));border:1.5px solid var(--gold);color:var(--gold);font-weight:700;font-size:.88rem;margin-bottom:10px;cursor:pointer}
+
+/* GRADE CARD */
+.grade-card{background:linear-gradient(135deg,var(--bg1) 0%,var(--bg3) 100%);border:1.5px solid var(--cr-color);border-radius:20px;padding:16px;margin-bottom:14px;position:relative;overflow:hidden}
+.grade-card::before{content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;border-radius:50%;background:var(--cr-glass);pointer-events:none}
+.gc-row1{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.gc-ttl{font-size:.68rem;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:2px}
+.gc-crop-name{font-size:.92rem;font-weight:700;color:var(--text)}
+.gc-week-tag{font-size:.7rem;color:var(--gold);background:var(--gold-pale);border:1px solid rgba(212,168,67,.3);padding:3px 10px;border-radius:10px;white-space:nowrap}
+.gc-grade-row{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.gc-grade-box{width:68px;height:68px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;border:2px solid var(--cr-color);background:var(--cr-glass)}
+.gc-letter{font-size:2rem;font-weight:900;color:var(--cr-color);line-height:1}
+.gc-sub{font-size:.55rem;color:var(--cr-soft);letter-spacing:1px;margin-top:1px}
+.gc-desc{flex:1}
+.gc-grade-title{font-size:.9rem;font-weight:700;color:var(--text);margin-bottom:3px}
+.gc-price-line{font-size:.78rem;color:var(--gold);margin-bottom:4px}
+.gc-tip{font-size:.74rem;color:var(--text2);line-height:1.5}
+.gc-bars{margin-bottom:12px}
+.gc-bar-row{margin-bottom:7px}
+.gc-bar-hd{display:flex;justify-content:space-between;font-size:.7rem;color:var(--text2);margin-bottom:3px}
+.gc-bar-track{height:5px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden}
+.gc-bar-fill{height:100%;border-radius:3px;background:var(--cr-color);transition:width .7s cubic-bezier(0.22,1,0.36,1)}
+.gc-msg-box{background:rgba(255,255,255,.04);border-left:3px solid var(--cr-color);border-radius:0 12px 12px 0;padding:10px 12px}
+.gc-msg-text{font-size:.82rem;color:var(--text);line-height:1.7}
+.gc-msg-cta{font-size:.72rem;color:var(--cr-soft);margin-top:5px;font-weight:600}
+
+/* LOG */
+.log-section{padding:0 14px}
+.log-input-card{background:var(--glass);border:1px solid var(--border);border-radius:18px;padding:14px;margin-bottom:12px}
+.log-input-card textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:10px;color:var(--text);font-size:.85rem;resize:vertical;min-height:80px;outline:none}
+.log-meta{display:flex;gap:8px;margin-top:8px}
+.log-meta select{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:7px 10px;color:var(--text);font-size:.8rem}
+.log-save-btn{width:100%;padding:10px;border-radius:12px;background:var(--cr-glass);border:1.5px solid var(--cr-color);color:var(--cr-color);font-weight:700;font-size:.85rem;margin-top:8px;cursor:pointer}
+.log-entry{background:var(--glass);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:8px}
+.le-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.le-crop{font-size:.72rem;color:var(--cr-color);font-weight:600;background:var(--cr-glass);padding:3px 9px;border-radius:10px}
+.le-date{font-size:.7rem;color:var(--text3)}
+.le-text{font-size:.82rem;color:var(--text);line-height:1.6}
+
+/* STARCH RESULT */
+.starch-result-card{background:linear-gradient(135deg,rgba(245,158,11,.15),rgba(120,53,15,.3));border:1.5px solid var(--cr-color);border-radius:16px;padding:14px;margin-top:12px;display:none}
+.starch-result-card.show{display:block}
+.sr-pct{font-size:2.2rem;font-weight:900;color:var(--cr-soft);line-height:1}
+.sr-label{font-size:.7rem;color:var(--text2);margin-top:2px}
+.sr-price{font-size:1rem;font-weight:700;color:var(--gold);margin-top:8px}
+.sr-grade{display:inline-block;padding:4px 12px;border-radius:20px;font-size:.75rem;font-weight:700;margin-top:6px}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="sp-rings">
+    <svg width="120" height="120" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="54" fill="none" stroke="rgba(245,158,11,.25)" stroke-width="2" stroke-dasharray="8 6"/>
+    </svg>
+    <svg width="120" height="120" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="42" fill="none" stroke="rgba(245,158,11,.15)" stroke-width="1.5" stroke-dasharray="4 8"/>
+    </svg>
+    <div class="sp-inner">🥔</div>
+  </div>
+  <div class="sp-brand">G2G FARM AI</div>
+  <div class="sp-sub">ระบบจัดการไร่มันสำปะหลัง</div>
+  <button class="sp-start" onclick="startApp()">เริ่มใช้งาน →</button>
+</div>
+
+<!-- APP -->
+<div class="app" id="app" style="display:none">
+
+  <!-- WEEK SCREEN -->
+  <div id="screen-week" class="screen active" style="padding-bottom:90px">
+    <div class="app-header">
+      <div class="hdr-left">
+        <div class="hdr-logo">G2G FARM AI</div>
+        <div class="hdr-crop-name" id="hdr-crop-name">มันสำปะหลัง เกษตรศาสตร์50</div>
+      </div>
+      <div class="hdr-right">
+        <div class="hdr-week-badge" id="hdr-week-badge">สัปดาห์ที่ 1</div>
+        <div class="hdr-date" id="hdr-date"></div>
+      </div>
+    </div>
+
+    <div class="crop-scroll-wrap">
+      <div class="crop-scroll" id="crop-scroll"></div>
+    </div>
+
+    <div class="ring-section">
+      <div class="ring-wrap">
+        <svg width="100" height="100" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(245,158,11,.12)" stroke-width="6"/>
+          <circle id="ring-arc" cx="50" cy="50" r="44" fill="none" stroke="#f59e0b" stroke-width="6" stroke-linecap="round"
+            stroke-dasharray="276.46" stroke-dashoffset="276.46" transform="rotate(-90 50 50)" style="transition:stroke-dashoffset .8s cubic-bezier(0.22,1,0.36,1)"/>
+        </svg>
+        <div class="ring-center">
+          <div class="ring-wnum" id="ring-wnum">1</div>
+          <div class="ring-wlbl">WEEK</div>
+        </div>
+      </div>
+      <div class="ring-info">
+        <div class="ring-stage" id="ring-stage">เตรียมดิน</div>
+        <div class="ring-season" id="ring-season">🌱 ช่วงเตรียมพื้นที่</div>
+        <div class="ring-period" id="ring-period">สัปดาห์ที่ 1-2</div>
+      </div>
+    </div>
+
+    <div class="section-divider">ปฏิทินรายสัปดาห์</div>
+    <div class="weeks-section" id="weeks-list"></div>
+  </div>
+
+  <!-- TOOLS SCREEN -->
+  <div id="screen-tools" class="screen">
+    <div class="screen-header">
+      <div class="sh-title">🧪 เครื่องมือไร่มัน</div>
+      <div class="sh-sub">คำนวณ%แป้ง · NPK · ต้นทุนต่อไร่</div>
+    </div>
+
+    <div id="tools-home">
+      <div class="tools-grid">
+        <div class="tool-card" onclick="showTool('starch')">
+          <div class="tc-icon">🧫</div>
+          <div class="tc-title">%แป้งคำนวณ</div>
+          <div class="tc-sub">Starch% จากน้ำหนัก</div>
+        </div>
+        <div class="tool-card" onclick="showTool('cost')">
+          <div class="tc-icon">💰</div>
+          <div class="tc-title">ต้นทุนต่อไร่</div>
+          <div class="tc-sub">ปุ๋ย+แรงงาน+ขนส่ง</div>
+        </div>
+        <div class="tool-card" onclick="showTool('npk')">
+          <div class="tc-icon">🌿</div>
+          <div class="tc-title">NPK คำนวณ</div>
+          <div class="tc-sub">อัตราปุ๋ยต่อพื้นที่</div>
+        </div>
+        <div class="tool-card" onclick="showTool('harvest')">
+          <div class="tc-icon">📅</div>
+          <div class="tc-title">วางแผนเก็บ</div>
+          <div class="tc-sub">คำนวณวันเก็บเกี่ยว</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Starch Panel -->
+    <div id="tool-starch" class="tool-panel" style="display:none">
+      <h3>🧫 คำนวณ % แป้ง (Starch%)</h3>
+      <div class="tp-row">
+        <div class="tp-label">น้ำหนักสด (กก.)</div>
+        <input class="tp-input" id="s-fresh" type="number" placeholder="1000" value="1000">
+      </div>
+      <div class="tp-row">
+        <div class="tp-label">น้ำหนักแห้ง (กก.)</div>
+        <input class="tp-input" id="s-dry" type="number" placeholder="280" value="280">
+      </div>
+      <button class="tp-btn" onclick="calcStarch()">คำนวณ %แป้ง</button>
+      <div class="starch-result-card" id="starch-result">
+        <div class="sr-pct" id="sr-pct-val">0%</div>
+        <div class="sr-label">เปอร์เซ็นต์แป้ง (Starch Content)</div>
+        <div class="sr-price" id="sr-price-val">ราคาอ้างอิง: — บ./กก.</div>
+        <div class="sr-grade" id="sr-grade-val">เกรด —</div>
+      </div>
+      <button class="back-btn" onclick="hideTool('starch')">← กลับ</button>
+    </div>
+
+    <!-- Cost Panel -->
+    <div id="tool-cost" class="tool-panel" style="display:none">
+      <h3>💰 ต้นทุนต่อไร่</h3>
+      <div class="tp-row">
+        <div class="tp-label">จำนวนไร่</div>
+        <input class="tp-input" id="c-rai" type="number" placeholder="10" value="10">
+      </div>
+      <div class="tp-row">
+        <div class="tp-label">ค่าไถ (บ./ไร่)</div>
+        <input class="tp-input" id="c-plow" type="number" placeholder="450" value="450">
+      </div>
+      <div class="tp-row">
+        <div class="tp-label">ค่าปุ๋ย (บ./ไร่)</div>
+        <input class="tp-input" id="c-fert" type="number" placeholder="800" value="800">
+      </div>
+      <div class="tp-row">
+        <div class="tp-label">ค่าแรงงาน (บ./ไร่)</div>
+        <input class="tp-input" id="c-labor" type="number" placeholder="600" value="600">
+      </div>
+      <div class="tp-row">
+        <div class="tp-label">ค่าขนส่ง (บ./ไร่)</div>
+        <input class="tp-input" id="c-trans" type="number" placeholder="200" value="200">
+      </div>
+      <button class="tp-btn" onclick="calcCost()">คำนวณต้นทุน</button>
+      <div class="tp-result" id="cost-result"></div>
+      <button class="back-btn" onclick="hideTool('cost')">← กลับ</button>
+    </div>
+
+    <!-- NPK Panel -->
+    <div id="tool-npk" class="tool-panel" style="display:none">
+      <h3>🌿 คำนวณ NPK ต่อไร่</h3>
+      <div class="tp-row">
+        <div class="tp-label">จำนวนไร่</div>
+        <input class="tp-input" id="n-rai" type="number" placeholder="5" value="5">
+      </div>
+      <div class="tp-row">
+        <div class="tp-label">ระยะการเจริญ</div>
+        <select class="tp-select" id="n-stage">
+          <option value="plant">ปลูกใหม่ (15-7-18)</option>
+          <option value="grow">เจริญเติบโต (46-0-0)</option>
+          <option value="tuber">สร้างหัว (13-13-21)</option>
+          <option value="pre">ก่อนเก็บ (0-0-60)</option>
+        </select>
+      </div>
+      <button class="tp-btn" onclick="calcNPK()">คำนวณปุ๋ย</button>
+      <div class="tp-result" id="npk-result"></div>
+      <button class="back-btn" onclick="hideTool('npk')">← กลับ</button>
+    </div>
+
+    <!-- Harvest Panel -->
+    <div id="tool-harvest" class="tool-panel" style="display:none">
+      <h3>📅 วางแผนเก็บเกี่ยว</h3>
+      <div class="tp-row">
+        <div class="tp-label">วันที่ปลูก</div>
+        <input class="tp-input" id="h-plant" type="date">
+      </div>
+      <div class="tp-row">
+        <div class="tp-label">พันธุ์มัน</div>
+        <select class="tp-select" id="h-variety">
+          <option value="8">เกษตรศาสตร์50 (8 เดือน)</option>
+          <option value="10">ระยอง11 (10 เดือน)</option>
+          <option value="12">ระยอง72 (12 เดือน)</option>
+        </select>
+      </div>
+      <button class="tp-btn" onclick="calcHarvest()">คำนวณวันเก็บ</button>
+      <div class="tp-result" id="harvest-result"></div>
+      <button class="back-btn" onclick="hideTool('harvest')">← กลับ</button>
+    </div>
+  </div>
+
+  <!-- MARKET SCREEN -->
+  <div id="screen-market" class="screen">
+    <div class="screen-header">
+      <div class="sh-title">📊 ราคาตลาด</div>
+      <div class="sh-sub">ราคามันสำปะหลัง ปี 2568</div>
+    </div>
+    <div class="market-section">
+      <div class="grade-card" id="grade-pred-card">
+        <div class="gc-row1">
+          <div>
+            <div class="gc-ttl">การทำนายเกรด</div>
+            <div class="gc-crop-name" id="gc-crop-nm">เกษตรศาสตร์50</div>
+          </div>
+          <div class="gc-week-tag" id="gc-week-tag">สัปดาห์ที่ 1</div>
+        </div>
+        <div class="gc-grade-row">
+          <div class="gc-grade-box">
+            <div class="gc-letter" id="gc-letter">A</div>
+            <div class="gc-sub" id="gc-sub">25%+</div>
+          </div>
+          <div class="gc-desc">
+            <div class="gc-grade-title" id="gc-grade-title">%แป้งสูง ≥25% — ราคาดีสุด</div>
+            <div class="gc-price-line" id="gc-price-line">ราคาอ้างอิง: 3.50 บ./กก.</div>
+            <div class="gc-tip" id="gc-tip">ดูแลครบ N-P-K สมดุล ลดน้ำก่อนเก็บ</div>
+          </div>
+        </div>
+        <div class="gc-bars">
+          <div class="gc-bar-row">
+            <div class="gc-bar-hd"><span>%แป้ง</span><span id="gb-starch">85%</span></div>
+            <div class="gc-bar-track"><div class="gc-bar-fill" id="gbar-starch" style="width:85%"></div></div>
+          </div>
+          <div class="gc-bar-row">
+            <div class="gc-bar-hd"><span>ความสมบูรณ์ของต้น</span><span id="gb-health">78%</span></div>
+            <div class="gc-bar-track"><div class="gc-bar-fill" id="gbar-health" style="width:78%"></div></div>
+          </div>
+          <div class="gc-bar-row">
+            <div class="gc-bar-hd"><span>อายุเก็บ (ตามแผน)</span><span id="gb-age">65%</span></div>
+            <div class="gc-bar-track"><div class="gc-bar-fill" id="gbar-age" style="width:65%"></div></div>
+          </div>
+        </div>
+        <div class="gc-msg-box">
+          <div class="gc-msg-text" id="gc-msg-text">ไร่อยู่ในสภาพดี — ดูแลต่อเนื่องและตรวจ%แป้งทุกสัปดาห์</div>
+          <div class="gc-msg-cta" id="gc-msg-cta">→ เป้าหมาย %แป้ง ≥25% เพื่อราคาสูงสุด</div>
+        </div>
+      </div>
+
+      <div class="price-card">
+        <div class="pc-header">
+          <div class="pc-crop">มันสำปะหลังสด (ตามเกรด%แป้ง)</div>
+          <div class="pc-updated">อัปเดต 28 พ.ค. 68</div>
+        </div>
+        <div class="pc-prices">
+          <div class="pcp-item">
+            <div class="pcp-grade">25%+</div>
+            <div class="pcp-val">3.50</div>
+            <div class="pcp-unit">บ./กก.</div>
+          </div>
+          <div class="pcp-item">
+            <div class="pcp-grade">22-24%</div>
+            <div class="pcp-val">3.00</div>
+            <div class="pcp-unit">บ./กก.</div>
+          </div>
+          <div class="pcp-item">
+            <div class="pcp-grade">18-21%</div>
+            <div class="pcp-val">2.40</div>
+            <div class="pcp-unit">บ./กก.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="price-card">
+        <div class="pc-header">
+          <div class="pc-crop">มันอัดเม็ดส่งออก</div>
+          <div class="pc-updated">อัปเดต 28 พ.ค. 68</div>
+        </div>
+        <div class="pc-prices">
+          <div class="pcp-item">
+            <div class="pcp-grade">เกรด A</div>
+            <div class="pcp-val">8,500</div>
+            <div class="pcp-unit">บ./ตัน</div>
+          </div>
+          <div class="pcp-item">
+            <div class="pcp-grade">เกรด B</div>
+            <div class="pcp-val">8,000</div>
+            <div class="pcp-unit">บ./ตัน</div>
+          </div>
+          <div class="pcp-item">
+            <div class="pcp-grade">เกรด C</div>
+            <div class="pcp-val">7,500</div>
+            <div class="pcp-unit">บ./ตัน</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="price-card">
+        <div class="pc-header">
+          <div class="pc-crop">ราคาต่ำกว่า 18% แป้ง</div>
+          <div class="pc-updated">หักลด</div>
+        </div>
+        <div class="pc-prices">
+          <div class="pcp-item">
+            <div class="pcp-grade">&lt;18%</div>
+            <div class="pcp-val">1.80</div>
+            <div class="pcp-unit">บ./กก.</div>
+          </div>
+          <div class="pcp-item">
+            <div class="pcp-grade">มันเส้น</div>
+            <div class="pcp-val">5.80</div>
+            <div class="pcp-unit">บ./กก.</div>
+          </div>
+          <div class="pcp-item">
+            <div class="pcp-grade">แป้งมัน</div>
+            <div class="pcp-val">14.50</div>
+            <div class="pcp-unit">บ./กก.</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="market-ai-btn" onclick="openDrawerWith('ราคาโรงงานวันนี้?')">🤖 ถามราคาโรงงานวันนี้</button>
+    </div>
+  </div>
+
+  <!-- LOG SCREEN -->
+  <div id="screen-log" class="screen">
+    <div class="screen-header">
+      <div class="sh-title">📓 บันทึกไร่</div>
+      <div class="sh-sub">Farm Diary — บันทึกการดูแล</div>
+    </div>
+    <div class="log-section">
+      <div class="log-input-card">
+        <textarea id="log-text" placeholder="บันทึกวันนี้... เช่น ใส่ปุ๋ย 46-0-0 จำนวน 25 กก./ไร่, ตรวจ%แป้ง 24%..."></textarea>
+        <div class="log-meta">
+          <select id="log-crop">
+            <option value="kasetsart50">เกษตรศาสตร์50</option>
+            <option value="rayong11">ระยอง11</option>
+            <option value="rayong72">ระยอง72</option>
+          </select>
+          <select id="log-type">
+            <option value="ใส่ปุ๋ย">ใส่ปุ๋ย</option>
+            <option value="ตรวจ%แป้ง">ตรวจ%แป้ง</option>
+            <option value="กำจัดวัชพืช">กำจัดวัชพืช</option>
+            <option value="พ่นยา">พ่นยา</option>
+            <option value="เก็บเกี่ยว">เก็บเกี่ยว</option>
+            <option value="ทั่วไป">ทั่วไป</option>
+          </select>
+        </div>
+        <button class="log-save-btn" onclick="saveLog()">💾 บันทึก</button>
+      </div>
+      <div class="section-divider">ประวัติการบันทึก</div>
+      <div id="log-list"></div>
+    </div>
+  </div>
+
+</div><!-- .app -->
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav" id="bottom-nav" style="display:none">
+  <div class="nav-inner">
+    <button class="nav-item active" onclick="navTo('week',this)" id="nav-week">
+      <div class="nav-icon">📅</div>
+      <div class="nav-label">สัปดาห์</div>
+      <div class="nav-dot"></div>
+    </button>
+    <button class="nav-item" onclick="navTo('tools',this)" id="nav-tools">
+      <div class="nav-icon">🧪</div>
+      <div class="nav-label">เครื่องมือ</div>
+      <div class="nav-dot"></div>
+    </button>
+    <button class="nav-item" onclick="navTo('market',this)" id="nav-market">
+      <div class="nav-icon">📊</div>
+      <div class="nav-label">ตลาด</div>
+      <div class="nav-dot"></div>
+    </button>
+    <button class="nav-item" onclick="navTo('log',this)" id="nav-log">
+      <div class="nav-icon">📓</div>
+      <div class="nav-label">บันทึก</div>
+      <div class="nav-dot"></div>
+    </button>
+  </div>
+</nav>
+
+<!-- FAB -->
+<button id="ai-fab" style="display:none" onclick="openDrawer()" class="pulse">🤖</button>
+
+<!-- AI DRAWER -->
+<div id="ai-drawer">
+  <div class="drawer-overlay" onclick="closeDrawer()"></div>
+  <div class="drawer-panel">
+    <div class="drawer-handle"></div>
+    <div class="drawer-header">
+      <div>
+        <div class="drawer-title">🤖 G2G Farm AI · ไร่มัน</div>
+        <div class="drawer-ctx" id="drawer-ctx">ถามเรื่องมันสำปะหลัง</div>
+      </div>
+      <button class="drawer-close" onclick="closeDrawer()">✕</button>
+    </div>
+    <div class="quick-asks">
+      <div class="qa-chip" onclick="sendQuick('วันนี้%แป้งเท่าไหร่?')">%แป้งวันนี้?</div>
+      <div class="qa-chip" onclick="sendQuick('ใบเหลืองแก้ยังไง?')">ใบเหลือง?</div>
+      <div class="qa-chip" onclick="sendQuick('ราคาโรงงานวันนี้?')">ราคาวันนี้?</div>
+      <div class="qa-chip" onclick="sendQuick('เมื่อไหร่ควรเก็บ?')">เมื่อไหร่เก็บ?</div>
+      <div class="qa-chip" onclick="sendQuick('เพลี้ยแป้งรักษายังไง?')">เพลี้ยแป้ง?</div>
+      <div class="qa-chip" onclick="sendQuick('ปุ๋ยอะไรดีก่อนเก็บ?')">ปุ๋ยก่อนเก็บ?</div>
+    </div>
+    <div class="drawer-msgs" id="drawer-msgs">
+      <div class="dmsg ai">สวัสดีครับ! ผมคือ G2G Farm AI ผู้ช่วยดูแลไร่มันสำปะหลัง 🥔\n\nถามได้เลยครับ เรื่อง %แป้ง, ปุ๋ย, โรคแมลง, ราคาตลาด หรือแผนการเก็บเกี่ยว</div>
+    </div>
+    <div class="drawer-input-row">
+      <textarea class="drawer-input" id="drawer-input" placeholder="ถามเรื่องไร่มัน..." rows="1"
+        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}"></textarea>
+      <button class="drawer-send" id="drawer-send-btn" onclick="sendMsg()">↑</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== DATA =====
+const CROPS={
+  kasetsart50:{key:'kasetsart50',name:'มันสำปะหลัง เกษตรศาสตร์50',shortName:'เกษตรศาสตร์50',emoji:'🥔',color:'#f59e0b',soft:'#fcd34d',dark:'#78350f',glass:'rgba(245,158,11,0.15)'},
+  rayong11:{key:'rayong11',name:'มันสำปะหลัง ระยอง11',shortName:'ระยอง11',emoji:'🌾',color:'#d97706',soft:'#fbbf24',dark:'#92400e',glass:'rgba(217,119,6,0.15)'},
+  rayong72:{key:'rayong72',name:'มันสำปะหลัง ระยอง72',shortName:'ระยอง72',emoji:'💛',color:'#b45309',soft:'#f59e0b',dark:'#7c2d12',glass:'rgba(180,83,9,0.15)'},
+};
+
+const FARM_PERIODS={
+  kasetsart50:[
+    {w:[1,2],season:'🌱 เตรียมดิน',tasks:[
+      {t:'ไถดิน 2 รอบ ลึก 30-40 ซม.',d:'รถไถ'},
+      {t:'ตรวจ pH ดิน เป้าหมาย 5.5-7.0',d:'pH meter'},
+      {t:'ใส่ปูนขาว ถ้า pH < 5.5 อัตรา 100-200 กก./ไร่',d:'ปูนขาว'},
+      {t:'เตรียมท่อนพันธุ์ ยาว 20-25 ซม. แข็งแรง ไม่มีโรค',d:'พันธุ์ KU50'},
+    ]},
+    {w:[3,4],season:'🌱 ปลูก',tasks:[
+      {t:'ปักท่อนพันธุ์เฉียง 45° ลึก 10-15 ซม.',d:'ระยะ 1×1 ม.'},
+      {t:'ใส่ปุ๋ยรองพื้น 15-7-18 อัตรา 30 กก./ไร่',d:'ปุ๋ยรองพื้น'},
+      {t:'รดน้ำหลังปลูกถ้าดินแห้ง',d:'น้ำ'},
+      {t:'ตรวจความชื้นดิน ไม่ให้แฉะ',d:'ดินชื้น 60-70%'},
+    ]},
+    {w:[5,8],season:'🌿 งอกและแตกใบ',tasks:[
+      {t:'กำจัดวัชพืชรอบ 1 ก่อนมันงอก',d:'ยาคุม/ถอนมือ'},
+      {t:'ตรวจการงอก เป้าหมาย >80%',d:'นับ%งอก'},
+      {t:'ป้องกันไรแดง พ่น abamectin',d:'ไรแดง'},
+      {t:'เติมต้นในจุดที่ไม่งอก',d:'ซ่อมแซม'},
+    ]},
+    {w:[9,12],season:'🌿 เจริญเติบโต',tasks:[
+      {t:'ใส่ปุ๋ย 46-0-0 อัตรา 25 กก./ไร่',d:'ยูเรีย'},
+      {t:'พ่นสารป้องกันเพลี้ยแป้ง imidacloprid',d:'เพลี้ยแป้ง'},
+      {t:'ตรวจโรคใบไหม้จากเชื้อรา',d:'fungicide'},
+      {t:'กำจัดวัชพืชรอบ 2',d:'พรวนดิน'},
+    ]},
+    {w:[13,16],season:'🌿 สร้างหัว',tasks:[
+      {t:'ใส่ปุ๋ย 13-13-21 อัตรา 30 กก./ไร่',d:'ปุ๋ยสูตรหัว'},
+      {t:'กำจัดวัชพืชรอบ 3',d:'กำจัดวัชพืช'},
+      {t:'ตรวจ%แป้งเบื้องต้น (เจาะตัวอย่าง)',d:'%แป้ง ~12-15%'},
+      {t:'ลดปริมาณน้ำ ไม่ให้ดินชื้นเกิน',d:'ลดน้ำ'},
+    ]},
+    {w:[17,20],season:'🍃 หัวพัฒนา',tasks:[
+      {t:'สังเกตสีใบ ถ้าเหลือง=ขาด N ให้ฉีด 46-0-0 ทางใบ',d:'ตรวจสีใบ'},
+      {t:'ใส่ปุ๋ย K สูง 0-0-60 อัตรา 15 กก./ไร่',d:'โพแทส'},
+      {t:'ตรวจเพลี้ยแป้งและไรแดงต่อเนื่อง',d:'IPM'},
+      {t:'บันทึก%แป้งประจำสัปดาห์',d:'เป้า >18%'},
+    ]},
+    {w:[21,24],season:'🍃 สะสมแป้ง',tasks:[
+      {t:'ตรวจ%แป้ง เป้าหมาย >22%',d:'%แป้ง ≥22%'},
+      {t:'ลดปุ๋ย N อย่างเด็ดขาด',d:'ห้ามใส่ยูเรีย'},
+      {t:'เพิ่ม K ทางใบ 0-0-60 ละลายน้ำ',d:'K foliar'},
+      {t:'ตัดแต่งกิ่งล่างที่ดูสมบูรณ์น้อย',d:'ตัดแต่งกิ่ง'},
+    ]},
+    {w:[25,28],season:'🍃 ใกล้เก็บ',tasks:[
+      {t:'ตรวจ%แป้งทุกสัปดาห์ เป้า ≥25%',d:'%แป้ง ≥25%'},
+      {t:'หยุดใส่ปุ๋ยทุกชนิด',d:'หยุดปุ๋ย'},
+      {t:'วางแผนนัดรถขุดล่วงหน้า 2-3 สัปดาห์',d:'จองรถขุด'},
+      {t:'ติดต่อโรงงานแจ้งปริมาณและวันส่ง',d:'ติดต่อโรงงาน'},
+    ]},
+    {w:[29,32],season:'🧺 เก็บเกี่ยว',tasks:[
+      {t:'ตัดเถา/ต้นก่อนขุด 1-2 วัน',d:'มีด/เครื่องตัด'},
+      {t:'ขุดด้วยรถขุด ระวังหัวแตก',d:'รถขุดมัน'},
+      {t:'ขนส่งไปโรงงานภายใน 24 ชม. หลังขุด',d:'รถบรรทุก'},
+      {t:'ชั่งน้ำหนักและตรวจ%แป้งที่โรงงาน',d:'ชั่งน้ำหนัก'},
+      {t:'รับเงินและบันทึกผลผลิตต่อไร่',d:'บันทึกผล'},
+    ]},
+    {w:[33,36],season:'🌱 เตรียมรอบถัดไป',tasks:[
+      {t:'ไถกลบเศษพืชและราก',d:'ไถกลบ'},
+      {t:'ตรวจ pH ดินและปรับถ้าจำเป็น',d:'pH ดิน'},
+      {t:'เก็บท่อนพันธุ์จากต้นแข็งแรง',d:'ท่อนพันธุ์ใหม่'},
+      {t:'วางแผนปฏิทินรอบถัดไป',d:'วางแผน'},
+    ]},
+    {w:[37,44],season:'🌿 ปลูกรอบสอง',tasks:[
+      {t:'ปักท่อนพันธุ์รอบ 2 ตามปฏิทิน',d:'ปลูกรอบ 2'},
+      {t:'ดูแลตามปฏิทินเดิมสัปดาห์ 3-8',d:'ดูแลต่อเนื่อง'},
+      {t:'ใส่ปุ๋ยรองพื้น 15-7-18',d:'ปุ๋ยรองพื้น'},
+      {t:'กำจัดวัชพืชรอบ 1',d:'วัชพืช'},
+    ]},
+    {w:[45,52],season:'🍃 สะสมแป้งรอบสอง',tasks:[
+      {t:'ดูแลต่อเนื่องตามปฏิทินรอบ 1',d:'ดูแลต่อเนื่อง'},
+      {t:'ตรวจ%แป้งรอบสองทุกสัปดาห์',d:'%แป้ง'},
+      {t:'เตรียมวางแผนเก็บเกี่ยวรอบ 2',d:'วางแผนเก็บ'},
+      {t:'บำรุงดินและพักดินบางแปลง',d:'พักดิน'},
+    ]},
+  ],
+  rayong11:[
+    {w:[1,2],season:'🌱 เตรียมดิน',tasks:[
+      {t:'ไถดินลึก 40-50 ซม. เพื่อระบายน้ำดี',d:'ไถดิน'},
+      {t:'ใส่ปูนโดโลไมท์ปรับ pH 6.0-7.0',d:'ปูนโดโลไมท์'},
+      {t:'ใส่อินทรียวัตถุ ปุ๋ยคอก 500 กก./ไร่',d:'ปุ๋ยคอก'},
+      {t:'เตรียมท่อนพันธุ์ระยอง11',d:'ท่อนพันธุ์'},
+    ]},
+    {w:[3,4],season:'🌱 ปลูก',tasks:[
+      {t:'ปักท่อนพันธุ์ระยะ 1×1 ม. หรือ 0.8×1.2 ม.',d:'ระยะปลูก'},
+      {t:'ใส่ปุ๋ยรองพื้น 15-15-15 อัตรา 25 กก./ไร่',d:'ปุ๋ยรองพื้น'},
+      {t:'คลุมดินด้วยเศษพืช ลดการสูญเสียน้ำ',d:'คลุมดิน'},
+      {t:'รดน้ำหลังปลูกถ้าแห้งแล้ง',d:'น้ำ'},
+    ]},
+    {w:[5,10],season:'🌿 เจริญเติบโต',tasks:[
+      {t:'กำจัดวัชพืชรอบ 1',d:'วัชพืช'},
+      {t:'ใส่ปุ๋ย 46-0-0 อัตรา 20 กก./ไร่',d:'ยูเรีย'},
+      {t:'ตรวจเพลี้ยแป้งและไรแดง',d:'แมลง'},
+      {t:'ตรวจโรคใบจุดและใบไหม้',d:'โรคพืช'},
+    ]},
+    {w:[11,18],season:'🌿 สร้างหัวและสะสม',tasks:[
+      {t:'ใส่ปุ๋ย 13-13-21 อัตรา 30 กก./ไร่',d:'ปุ๋ยหัว'},
+      {t:'ตรวจ%แป้งทุก 2 สัปดาห์',d:'%แป้ง'},
+      {t:'ลดน้ำ ลดปุ๋ย N',d:'ลดน้ำ-N'},
+      {t:'พ่นสารป้องกันโรคราตามอาการ',d:'fungicide'},
+    ]},
+    {w:[19,30],season:'🍃 สะสมแป้งและใกล้เก็บ',tasks:[
+      {t:'ตรวจ%แป้งทุกสัปดาห์ เป้า ≥25%',d:'%แป้ง ≥25%'},
+      {t:'หยุดใส่ปุ๋ย N เพิ่ม K',d:'K sulf'},
+      {t:'วางแผนรถขุดและโรงงาน',d:'วางแผน'},
+      {t:'ตัดแต่งกิ่ง ลดการใช้อาหาร',d:'ตัดแต่ง'},
+    ]},
+    {w:[31,40],season:'🧺 เก็บเกี่ยว',tasks:[
+      {t:'ตัดเถาและขุดมัน',d:'รถขุด'},
+      {t:'ขนส่งโรงงานภายใน 24 ชม.',d:'ขนส่ง'},
+      {t:'รับเงินและบันทึกผล',d:'บันทึก'},
+      {t:'ไถกลบและเตรียมรอบใหม่',d:'ไถกลบ'},
+    ]},
+    {w:[41,52],season:'🌱 เตรียมรอบใหม่',tasks:[
+      {t:'พักดิน ปรับสภาพดิน',d:'พักดิน'},
+      {t:'วางแผนปฏิทินรอบถัดไป',d:'วางแผน'},
+      {t:'เก็บท่อนพันธุ์ดี',d:'ท่อนพันธุ์'},
+      {t:'ตรวจสอบอุปกรณ์การเกษตร',d:'อุปกรณ์'},
+    ]},
+  ],
+  rayong72:[
+    {w:[1,2],season:'🌱 เตรียมดิน',tasks:[
+      {t:'ไถดินสองชั้น ลึก 50 ซม.',d:'ไถดิน'},
+      {t:'ปรับ pH ดิน 5.5-6.5',d:'pH'},
+      {t:'ใส่ปุ๋ยหมัก 1 ตัน/ไร่',d:'ปุ๋ยหมัก'},
+      {t:'เตรียมท่อนพันธุ์ระยอง72',d:'ท่อนพันธุ์'},
+    ]},
+    {w:[3,6],season:'🌱 ปลูกและงอก',tasks:[
+      {t:'ปักท่อนพันธุ์ระยะ 1×1 ม.',d:'ระยะปลูก'},
+      {t:'ใส่ปุ๋ยรองพื้น 15-7-18',d:'ปุ๋ยรองพื้น'},
+      {t:'ตรวจการงอก',d:'%งอก'},
+      {t:'กำจัดวัชพืชรอบ 1',d:'วัชพืช'},
+    ]},
+    {w:[7,16],season:'🌿 เจริญเติบโต',tasks:[
+      {t:'ใส่ปุ๋ย 46-0-0 อัตรา 25 กก./ไร่',d:'ยูเรีย'},
+      {t:'ตรวจโรคและแมลง',d:'IPM'},
+      {t:'กำจัดวัชพืชรอบ 2-3',d:'วัชพืช'},
+      {t:'ใส่ปุ๋ย 13-13-21 เสริม',d:'ปุ๋ยสูตรหัว'},
+    ]},
+    {w:[17,36],season:'🍃 สะสมแป้งระยะยาว',tasks:[
+      {t:'ตรวจ%แป้งทุกสัปดาห์',d:'%แป้ง'},
+      {t:'เพิ่ม K ลด N',d:'K↑ N↓'},
+      {t:'ป้องกันโรคและแมลงต่อเนื่อง',d:'IPM'},
+      {t:'บันทึกผลผลิตรายเดือน',d:'บันทึก'},
+    ]},
+    {w:[37,48],season:'🧺 เก็บเกี่ยวและสรุปผล',tasks:[
+      {t:'ตรวจ%แป้ง ≥25% ก่อนขุด',d:'%แป้ง ≥25%'},
+      {t:'ตัดเถาและขุด',d:'รถขุด'},
+      {t:'ขนส่งโรงงาน',d:'ขนส่ง'},
+      {t:'สรุปผลผลิตและวางแผนรอบใหม่',d:'สรุป'},
+    ]},
+    {w:[49,52],season:'🌱 เตรียมฤดูใหม่',tasks:[
+      {t:'พักดิน ปรับสภาพ',d:'พักดิน'},
+      {t:'วางแผนปฏิทินปีหน้า',d:'วางแผน'},
+      {t:'เก็บท่อนพันธุ์ที่ดีที่สุด',d:'ท่อนพันธุ์'},
+      {t:'ตรวจสอบเครื่องมืออุปกรณ์',d:'อุปกรณ์'},
+    ]},
+  ],
+};
+
+const GRADE_DATA={
+  kasetsart50:{grades:[
+    {min:85,g:'A',sub:'25%+',title:'%แป้งสูง ≥25% — ราคาดีสุด',priceRef:3.50,tip:'ดูแลครบ N-P-K สมดุล ลดน้ำก่อนเก็บ'},
+    {min:68,g:'B',sub:'22-24%',title:'%แป้งดี 22-24%',priceRef:3.00,tip:'ยังดี แต่ควรเพิ่ม K ก่อนเก็บ'},
+    {min:45,g:'C',sub:'18-21%',title:'%แป้งปานกลาง',priceRef:2.40,tip:'ราคาลด ควรปรับการให้ปุ๋ย'},
+    {min:0,g:'D',sub:'<18%',title:'%แป้งต่ำ — ควรระวัง',priceRef:1.80,tip:'ต้องแก้ไขด่วน ตรวจโรคและปุ๋ย'},
+  ]},
+  rayong11:{grades:[
+    {min:85,g:'A',sub:'25%+',title:'%แป้งสูง ≥25%',priceRef:3.50,tip:'ระยอง11 มีศักยภาพสูง ดูแลดีเยี่ยม'},
+    {min:68,g:'B',sub:'22-24%',title:'%แป้งดี 22-24%',priceRef:3.00,tip:'ดีมาก เพิ่ม K เพื่อยกเกรด'},
+    {min:45,g:'C',sub:'18-21%',title:'%แป้งปานกลาง',priceRef:2.40,tip:'ปรับปฏิทินปุ๋ยใหม่'},
+    {min:0,g:'D',sub:'<18%',title:'%แป้งต่ำ',priceRef:1.80,tip:'ตรวจโรค แมลง และปุ๋ยโพแทส'},
+  ]},
+  rayong72:{grades:[
+    {min:85,g:'A',sub:'25%+',title:'%แป้งสูง ≥25%',priceRef:3.50,tip:'ระยอง72 อายุยาว — ได้%แป้งสูงตามธรรมชาติ'},
+    {min:68,g:'B',sub:'22-24%',title:'%แป้งดี',priceRef:3.00,tip:'ดีมาก รอให้ครบอายุ 12 เดือน'},
+    {min:45,g:'C',sub:'18-21%',title:'%แป้งปานกลาง',priceRef:2.40,tip:'ยังไม่ถึงอายุเก็บ รอต่อไป'},
+    {min:0,g:'D',sub:'<18%',title:'%แป้งต่ำ',priceRef:1.80,tip:'ยังเร็วเกินไป หรือมีปัญหาดิน'},
+  ]},
+};
+
+// ===== STATE =====
+let state={crop:'kasetsart50',currentWeek:1,tasks:{},logs:[]};
+
+function loadState(){
+  try{const s=JSON.parse(localStorage.getItem('g2g-cassava-state')||'{}');Object.assign(state,s);}catch(e){}
+}
+function saveState(){
+  try{localStorage.setItem('g2g-cassava-state',JSON.stringify(state));}catch(e){}
+}
+
+// ===== INIT =====
+function startApp(){
+  document.getElementById('splash').classList.add('out');
+  setTimeout(()=>{
+    document.getElementById('app').style.display='';
+    document.getElementById('bottom-nav').style.display='';
+    document.getElementById('ai-fab').style.display='';
+    document.getElementById('splash').style.display='none';
+    loadState();
+    calcCurrentWeek();
+    renderCropTabs();
+    renderWeekScreen();
+    renderGradeCard();
+    renderLogs();
+    updateHeaderDate();
+    initHarvestDate();
+  },600);
+}
+
+function calcCurrentWeek(){
+  const plantDate=localStorage.getItem('g2g-cassava-plant-date');
+  if(!plantDate){state.currentWeek=1;return;}
+  const planted=new Date(plantDate);
+  const today=new Date();
+  const diff=Math.floor((today-planted)/(7*24*60*60*1000))+1;
+  state.currentWeek=Math.max(1,Math.min(52,diff));
+}
+
+function updateHeaderDate(){
+  const today=new Date();
+  const thDate=today.toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'numeric'});
+  document.getElementById('hdr-date').textContent=thDate;
+  document.getElementById('hdr-week-badge').textContent='สัปดาห์ที่ '+state.currentWeek;
+}
+
+function initHarvestDate(){
+  const today=new Date();
+  const fmt=today.toISOString().split('T')[0];
+  const hi=document.getElementById('h-plant');
+  if(hi&&!hi.value)hi.value=fmt;
+}
+
+// ===== CROP TABS =====
+function renderCropTabs(){
+  const el=document.getElementById('crop-scroll');
+  el.innerHTML='';
+  Object.values(CROPS).forEach(c=>{
+    const div=document.createElement('div');
+    div.className='crop-tab'+(state.crop===c.key?' active':'');
+    div.innerHTML=c.emoji+' '+c.shortName;
+    div.onclick=()=>selectCrop(c.key);
+    el.appendChild(div);
+  });
+}
+
+function selectCrop(key){
+  state.crop=key;
+  saveState();
+  const c=CROPS[key];
+  document.documentElement.style.setProperty('--cr-color',c.color);
+  document.documentElement.style.setProperty('--cr-soft',c.soft);
+  document.documentElement.style.setProperty('--cr-dark',c.dark);
+  document.documentElement.style.setProperty('--cr-glass',c.glass);
+  document.querySelectorAll('.crop-tab').forEach((t,i)=>{
+    t.classList.toggle('active',Object.keys(CROPS)[i]===key);
+  });
+  document.getElementById('hdr-crop-name').textContent=c.shortName;
+  renderWeekScreen();
+  renderGradeCard();
+}
+
+// ===== WEEK SCREEN =====
+function getPeriod(crop,week){
+  const periods=FARM_PERIODS[crop]||FARM_PERIODS.kasetsart50;
+  for(const p of periods){
+    if(week>=p.w[0]&&week<=p.w[1])return p;
+  }
+  return periods[periods.length-1];
+}
+
+function getPhaseGradient(crop,season){
+  const c=CROPS[crop]||{};const color=c.color||'#f59e0b';const dark=c.dark||'#78350f';
+  if(season.includes('เตรียม'))return`linear-gradient(135deg,#1a0a00 0%,#4a2a00 60%,${color}22 100%)`;
+  if(season.includes('ปลูก')||season.includes('งอก'))return`linear-gradient(135deg,#0a1a00 0%,#1a4a00 60%,${color}33 100%)`;
+  if(season.includes('เจริญ')||season.includes('สร้างหัว'))return`linear-gradient(135deg,#0d2b00 0%,${color}44 60%,rgba(6,4,15,0.8) 100%)`;
+  if(season.includes('สะสม')||season.includes('หัวพัฒนา'))return`linear-gradient(135deg,${dark}cc 0%,${color}55 60%,rgba(6,4,15,0.8) 100%)`;
+  if(season.includes('เก็บ'))return`linear-gradient(135deg,#2a1a00 0%,#7a4400 50%,#d4a84333 100%)`;
+  return`linear-gradient(135deg,${dark}aa 0%,${color}44 100%)`;
+}
+
+function renderWeekScreen(){
+  const periods=FARM_PERIODS[state.crop]||FARM_PERIODS.kasetsart50;
+  const cur=getPeriod(state.crop,state.currentWeek);
+
+  // update ring
+  document.getElementById('ring-wnum').textContent=state.currentWeek;
+  document.getElementById('ring-stage').textContent=cur.season.replace(/^\S+\s/,'');
+  document.getElementById('ring-season').textContent=cur.season;
+  document.getElementById('ring-period').textContent='สัปดาห์ที่ '+cur.w[0]+'-'+cur.w[1];
+  const pct=(state.currentWeek/52);
+  const circ=2*Math.PI*44;
+  const offset=circ*(1-pct);
+  document.getElementById('ring-arc').style.strokeDashoffset=offset;
+
+  // render weeks
+  const container=document.getElementById('weeks-list');
+  container.innerHTML='';
+  periods.forEach(p=>{
+    const isCurrent=(state.currentWeek>=p.w[0]&&state.currentWeek<=p.w[1]);
+    const card=document.createElement('div');
+    card.className='week-card'+(isCurrent?' current':'');
+    if(isCurrent)card.classList.add('open');
+
+    const tasksDone=p.tasks.filter((_,i)=>state.tasks[state.crop+'_w'+p.w[0]+'_'+i]).length;
+    const phaseBg=getPhaseGradient(state.crop,p.season);
+
+    card.innerHTML=`
+      <div class="wc-phase-img-wrap" style="background:${phaseBg}">
+        <div class="wc-phase-cap">${p.season}</div>
+      </div>
+      <div class="wc-header" onclick="toggleCard(this.parentElement)">
+        <div class="wc-num">${p.w[0]}</div>
+        <div class="wc-info">
+          <div class="wc-title">${p.season.replace(/^\S+\s/,'')}</div>
+          <div class="wc-subtitle">สัปดาห์ ${p.w[0]}-${p.w[1]} · ${tasksDone}/${p.tasks.length} งาน</div>
+        </div>
+        <span class="wc-toggle">▼</span>
+      </div>
+      <div class="wc-body">
+        <div class="wc-tasks">
+          ${p.tasks.map((t,i)=>{
+            const key=state.crop+'_w'+p.w[0]+'_'+i;
+            const done=!!state.tasks[key];
+            return`<div class="task-item${done?' done':''}" onclick="toggleTask('${key}',this)">
+              <div class="ti-check">${done?'✓':''}</div>
+              <div class="ti-content">
+                <div class="ti-text">${t.t}</div>
+                ${t.d?`<div class="ti-dose">${t.d}</div>`:''}
+              </div>
+            </div>`;
+          }).join('')}
+        </div>
+        <div class="wc-ai-row">
+          <button class="wc-ai-btn" onclick="openDrawerWith('ช่วยอธิบายงานในช่วง${p.season.replace(/^\S+\s/,'')}')">🤖 ถาม AI</button>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function toggleCard(card){
+  card.classList.toggle('open');
+}
+
+function toggleTask(key,el){
+  state.tasks[key]=!state.tasks[key];
+  el.classList.toggle('done');
+  const check=el.querySelector('.ti-check');
+  check.textContent=state.tasks[key]?'✓':'';
+  saveState();
+  // update subtitle
+  const card=el.closest('.week-card');
+  if(card){
+    const allTasks=card.querySelectorAll('.task-item');
+    const done=card.querySelectorAll('.task-item.done').length;
+    const sub=card.querySelector('.wc-subtitle');
+    if(sub){
+      const text=sub.textContent;
+      sub.textContent=text.replace(/\d+\/\d+/,done+'/'+allTasks.length);
+    }
+  }
+}
+
+// ===== GRADE CARD =====
+function renderGradeCard(){
+  const c=CROPS[state.crop];
+  const gd=GRADE_DATA[state.crop]||GRADE_DATA.kasetsart50;
+  const weekPct=Math.min(100,Math.round((state.currentWeek/52)*100));
+  const grade=gd.grades.find(g=>weekPct>=g.min)||gd.grades[gd.grades.length-1];
+
+  document.getElementById('gc-crop-nm').textContent=c.shortName;
+  document.getElementById('gc-week-tag').textContent='สัปดาห์ที่ '+state.currentWeek;
+  document.getElementById('gc-letter').textContent=grade.g;
+  document.getElementById('gc-sub').textContent=grade.sub;
+  document.getElementById('gc-grade-title').textContent=grade.title;
+  document.getElementById('gc-price-line').textContent='ราคาอ้างอิง: '+grade.priceRef.toFixed(2)+' บ./กก.';
+  document.getElementById('gc-tip').textContent=grade.tip;
+  document.getElementById('gb-starch').textContent=weekPct+'%';
+  document.getElementById('gb-health').textContent=Math.max(40,weekPct-7)+'%';
+  document.getElementById('gb-age').textContent=Math.max(20,weekPct-20)+'%';
+  setTimeout(()=>{
+    document.getElementById('gbar-starch').style.width=weekPct+'%';
+    document.getElementById('gbar-health').style.width=Math.max(40,weekPct-7)+'%';
+    document.getElementById('gbar-age').style.width=Math.max(20,weekPct-20)+'%';
+  },100);
+  document.getElementById('gc-msg-text').textContent='ไร่ '+c.shortName+' สัปดาห์ที่ '+state.currentWeek+' — ดำเนินการตามปฏิทินปกติ';
+  document.getElementById('gc-msg-cta').textContent='→ เป้าหมาย %แป้ง ≥25% เพื่อราคาสูงสุด '+grade.priceRef.toFixed(2)+' บ./กก.';
+}
+
+// ===== TOOLS =====
+function showTool(name){
+  document.getElementById('tools-home').style.display='none';
+  document.getElementById('tool-'+name).style.display='block';
+}
+function hideTool(name){
+  document.getElementById('tool-'+name).style.display='none';
+  document.getElementById('tools-home').style.display='block';
+  document.getElementById('tool-'+name).querySelector('.tp-result,.starch-result-card')&&
+    document.getElementById('tool-'+name).querySelectorAll('.tp-result,.starch-result-card').forEach(e=>e.classList.remove('show'));
+}
+
+function calcStarch(){
+  const fresh=parseFloat(document.getElementById('s-fresh').value)||1000;
+  const dry=parseFloat(document.getElementById('s-dry').value)||280;
+  const pct=Math.round((dry/fresh)*100*10)/10;
+  const price=pct>=25?3.5:pct>=22?3.0:pct>=18?2.4:1.8;
+  const grade=pct>=25?'A (ราคาสูงสุด)':pct>=22?'B (ดี)':pct>=18?'C (ปานกลาง)':'D (ต่ำ)';
+  const gradeColor=pct>=25?'#4ade80':pct>=22?'#fbbf24':pct>=18?'#fb923c':'#f87171';
+  const card=document.getElementById('starch-result');
+  document.getElementById('sr-pct-val').textContent=pct+'%';
+  document.getElementById('sr-price-val').textContent='ราคาอ้างอิง: '+price.toFixed(2)+' บ./กก.';
+  const grEl=document.getElementById('sr-grade-val');
+  grEl.textContent='เกรด '+grade;
+  grEl.style.background=gradeColor+'22';
+  grEl.style.color=gradeColor;
+  grEl.style.border='1px solid '+gradeColor+'44';
+  card.classList.add('show');
+}
+
+function calcCost(){
+  const rai=parseFloat(document.getElementById('c-rai').value)||1;
+  const plow=parseFloat(document.getElementById('c-plow').value)||450;
+  const fert=parseFloat(document.getElementById('c-fert').value)||800;
+  const labor=parseFloat(document.getElementById('c-labor').value)||600;
+  const trans=parseFloat(document.getElementById('c-trans').value)||200;
+  const total=(plow+fert+labor+trans)*rai;
+  const perRai=plow+fert+labor+trans;
+  const res=document.getElementById('cost-result');
+  res.textContent=`ต้นทุนต่อไร่: ${perRai.toLocaleString()} บาท\nรวม ${rai} ไร่: ${total.toLocaleString()} บาท\n\nแยกตามประเภท:\n  ค่าไถ: ${(plow*rai).toLocaleString()} บาท\n  ค่าปุ๋ย: ${(fert*rai).toLocaleString()} บาท\n  ค่าแรงงาน: ${(labor*rai).toLocaleString()} บาท\n  ค่าขนส่ง: ${(trans*rai).toLocaleString()} บาท\n\nจุดคุ้มทุน (ที่ราคา 3.0 บ./กก.):\n  ผลผลิตขั้นต่ำ ${Math.ceil(total/3.0/rai)} กก./ไร่`;
+  res.classList.add('show');
+}
+
+function calcNPK(){
+  const rai=parseFloat(document.getElementById('n-rai').value)||1;
+  const stage=document.getElementById('n-stage').value;
+  const plans={
+    plant:{formula:'15-7-18',rate:30,note:'ปุ๋ยรองพื้น ใส่พร้อมปลูกหรือหลังปลูก 7 วัน'},
+    grow:{formula:'46-0-0 (ยูเรีย)',rate:25,note:'ใส่เมื่ออายุ 2-3 เดือน ต้นกำลังโต'},
+    tuber:{formula:'13-13-21',rate:30,note:'ใส่เมื่ออายุ 3-4 เดือน ช่วงสร้างหัว'},
+    pre:{formula:'0-0-60 (โพแทสเซียม)',rate:15,note:'ใส่ก่อนเก็บ 2-3 เดือน เพิ่ม%แป้ง'},
+  };
+  const p=plans[stage];
+  const total=p.rate*rai;
+  const res=document.getElementById('npk-result');
+  res.textContent=`สูตรปุ๋ยแนะนำ: ${p.formula}\nอัตรา: ${p.rate} กก./ไร่\nจำนวน ${rai} ไร่: ${total} กก.\n\nวิธีใช้:\n${p.note}\n\nราคาประมาณ: ${Math.round(total*12).toLocaleString()} บาท (12 บ./กก.)`;
+  res.classList.add('show');
+}
+
+function calcHarvest(){
+  const plantDate=document.getElementById('h-plant').value;
+  const months=parseInt(document.getElementById('h-variety').value);
+  if(!plantDate){alert('กรุณาระบุวันที่ปลูก');return;}
+  const planted=new Date(plantDate);
+  const earliest=new Date(planted);
+  earliest.setMonth(earliest.getMonth()+months);
+  const latest=new Date(earliest);
+  latest.setMonth(latest.getMonth()+1);
+  const toThai=d=>d.toLocaleDateString('th-TH',{day:'numeric',month:'long',year:'numeric'});
+  const today=new Date();
+  const daysLeft=Math.max(0,Math.floor((earliest-today)/(24*60*60*1000)));
+  const res=document.getElementById('harvest-result');
+  res.textContent=`วันที่ปลูก: ${toThai(planted)}\nเก็บเกี่ยวได้เร็วที่สุด: ${toThai(earliest)}\nช่วงเวลาดีที่สุด: ${toThai(earliest)} - ${toThai(latest)}\n\nอีก ${daysLeft} วัน จึงจะถึงช่วงเก็บเกี่ยว\n\nหมายเหตุ: ตรวจ%แป้ง ≥25% ก่อนตัดสินใจเก็บ`;
+  res.classList.add('show');
+}
+
+// ===== LOG =====
+function saveLog(){
+  const text=document.getElementById('log-text').value.trim();
+  if(!text)return;
+  const crop=document.getElementById('log-crop').value;
+  const type=document.getElementById('log-type').value;
+  const entry={id:Date.now(),text,crop,type,date:new Date().toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'numeric'})};
+  state.logs.unshift(entry);
+  saveState();
+  document.getElementById('log-text').value='';
+  renderLogs();
+}
+
+function renderLogs(){
+  const container=document.getElementById('log-list');
+  container.innerHTML='';
+  if(!state.logs.length){
+    container.innerHTML='<div style="text-align:center;padding:30px;color:var(--text3);font-size:.85rem">ยังไม่มีบันทึก</div>';
+    return;
+  }
+  state.logs.forEach(e=>{
+    const div=document.createElement('div');
+    div.className='log-entry';
+    div.innerHTML=`<div class="le-header"><div class="le-crop">${e.type||e.crop}</div><div class="le-date">${e.date}</div></div><div class="le-text">${e.text}</div>`;
+    container.appendChild(div);
+  });
+}
+
+// ===== NAV =====
+function navTo(screen,btn){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('screen-'+screen).classList.add('active');
+  btn.classList.add('active');
+  // reset tools
+  if(screen==='tools'){
+    document.getElementById('tools-home').style.display='';
+    ['starch','cost','npk','harvest'].forEach(t=>{
+      const el=document.getElementById('tool-'+t);
+      if(el)el.style.display='none';
+    });
+  }
+}
+
+// ===== AI DRAWER =====
+function openDrawer(){document.getElementById('ai-drawer').classList.add('open');}
+function closeDrawer(){document.getElementById('ai-drawer').classList.remove('open');}
+function openDrawerWith(msg){
+  openDrawer();
+  setTimeout(()=>{
+    document.getElementById('drawer-input').value=msg;
+    sendMsg();
+  },400);
+}
+function sendQuick(msg){
+  document.getElementById('drawer-input').value=msg;
+  sendMsg();
+}
+
+const AI_KB={
+  '%แป้ง':'%แป้งที่ดีคือ ≥25% ซึ่งได้ราคาสูงสุด 3.50 บ./กก.\nตรวจได้โดยการชั่งน้ำหนักก้อนมันสดและแห้ง\n%แป้ง = (น้ำหนักแห้ง/น้ำหนักสด) × 100',
+  'ใบเหลือง':'ใบเหลืองในมันสำปะหลัง:\n• ถ้าเหลืองสม่ำเสมอ = ขาดไนโตรเจน → ฉีดยูเรีย 46-0-0 ทางใบ\n• เหลืองจุดๆ = ไรแดง → พ่น abamectin\n• เหลืองแล้วร่วง = โรคราสนิม → พ่น mancozeb',
+  'ราคา':'ราคามันสำปะหลัง ปี 2568:\n• %แป้ง 25%+: 3.50 บ./กก.\n• %แป้ง 22-24%: 3.00 บ./กก.\n• %แป้ง 18-21%: 2.40 บ./กก.\n• %แป้ง <18%: 1.80 บ./กก.\nมันอัดเม็ดส่งออก: 7,500-8,500 บ./ตัน',
+  'เก็บ':'วางแผนเก็บเกี่ยว:\n• ตรวจ%แป้ง ≥25% ก่อนตัดสินใจ\n• จองรถขุดล่วงหน้า 2-3 สัปดาห์\n• ตัดเถาก่อนขุด 1-2 วัน\n• ขนส่งโรงงานภายใน 24 ชม. หลังขุด',
+  'เพลี้ยแป้ง':'รักษาเพลี้ยแป้ง:\n• ระยะแรก: พ่น imidacloprid 10%SL อัตรา 20 มล./น้ำ 20 ลิตร\n• ระยะหนัก: chlorpyrifos + white oil\n• ป้องกัน: ทำลายมดที่ช่วยแพร่เพลี้ย\n• ไม่ให้เพลี้ยติดท่อนพันธุ์',
+  'ปุ๋ย':'ปฏิทินปุ๋ยมันสำปะหลัง:\n• ปลูก: 15-7-18 (30 กก./ไร่)\n• 2-3 เดือน: 46-0-0 ยูเรีย (25 กก./ไร่)\n• 3-4 เดือน: 13-13-21 (30 กก./ไร่)\n• ก่อนเก็บ 2 เดือน: 0-0-60 โพแทส (15 กก./ไร่)',
+};
+
+async function sendMsg(){
+  const input=document.getElementById('drawer-input');
+  const msg=input.value.trim();
+  if(!msg)return;
+  input.value='';
+  addMsg(msg,'user');
+  const btn=document.getElementById('drawer-send-btn');
+  btn.disabled=true;
+  const loadEl=addMsg('กำลังคิด...','ai');
+  await new Promise(r=>setTimeout(r,800));
+  const reply=generateReply(msg);
+  loadEl.textContent=reply;
+  btn.disabled=false;
+  const msgs=document.getElementById('drawer-msgs');
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+function addMsg(text,role){
+  const msgs=document.getElementById('drawer-msgs');
+  const div=document.createElement('div');
+  div.className='dmsg '+role;
+  div.textContent=text;
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+  return div;
+}
+
+function generateReply(msg){
+  const m=msg.toLowerCase();
+  for(const [key,val] of Object.entries(AI_KB)){
+    if(m.includes(key.toLowerCase()))return val;
+  }
+  const c=CROPS[state.crop];
+  const p=getPeriod(state.crop,state.currentWeek);
+  return`ไร่ ${c.shortName} สัปดาห์ที่ ${state.currentWeek} — ${p.season}\n\nงานสำคัญตอนนี้:\n${p.tasks.slice(0,3).map((t,i)=>`${i+1}. ${t.t}`).join('\n')}\n\nถามเรื่องอื่นได้เลยครับ: %แป้ง, ใบเหลือง, ราคา, เพลี้ยแป้ง, ปุ๋ย`;
+}
+
+// ===== AUTO-INIT =====
+window.addEventListener('DOMContentLoaded',()=>{
+  updateHeaderDate();
+});
+</script>
+</body>
+</html>

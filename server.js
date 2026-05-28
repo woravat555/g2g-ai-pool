@@ -1384,7 +1384,7 @@ async function getChannel(channelIdExt, channelKey) {
     type: f.channel_type,
     tier: f.tier,
     channel_adjust: f.channel_adjust ?? 1.0,
-    daily_quota_tokens: f.daily_quota_tokens ?? 5000,
+    daily_quota_tokens: f.daily_quota_tokens ?? 500000,
     webhook_secret: f.webhook_secret,
   };
   if (ch.webhook_secret && ch.webhook_secret !== channelKey) return null;
@@ -2290,6 +2290,91 @@ app.get("/health", (_req, res) => {
   res.json({ ok: true, service: "g2g_ai_pool", ts: new Date().toISOString() });
 });
 
+// ---------------------------------------------------------------------------
+// /admin/audit · self-healing webhook auditor (g2g-ai-pool variant)
+// route pattern: /line/webhook/<SLUG> where SLUG = LINE_TOKEN_<SLUG> env var name
+// Auto-detects every LINE_TOKEN_* env var and audits its webhook endpoint
+// Protected by X-Admin-Token header (env ADMIN_API_TOKEN)
+// ---------------------------------------------------------------------------
+const POOL_AXIOS = require("axios");
+const POOL_EXPECTED_BASE = "https://g2g-ai-pool.fly.dev/line/webhook";
+
+function poolAdminCheck(req, res) {
+  const expected = process.env.ADMIN_API_TOKEN;
+  if (!expected) { res.status(503).json({ error: "ADMIN_API_TOKEN not set" }); return false; }
+  if (req.get("X-Admin-Token") !== expected) { res.status(401).json({ error: "unauthorized" }); return false; }
+  return true;
+}
+
+function poolListSlugs() {
+  return Object.keys(process.env)
+    .filter(k => k.startsWith("LINE_TOKEN_") && process.env[k])
+    .map(k => k.replace(/^LINE_TOKEN_/, ""));
+}
+
+async function poolProbe(slug) {
+  const token = process.env[`LINE_TOKEN_${slug}`];
+  const result = {
+    slug, expected: `${POOL_EXPECTED_BASE}/${slug}`,
+    hasToken: Boolean(token),
+    hasSecret: Boolean(process.env[`LINE_SECRET_${slug}`]),
+    channelIdHint: process.env[`LINE_CHANNELID_${slug}`] || null,
+    current: null, active: null, ok: false, error: null,
+  };
+  if (!token) { result.error = "missing token"; return result; }
+  try {
+    const r = await POOL_AXIOS.get("https://api.line.me/v2/bot/channel/webhook/endpoint",
+      { headers: { Authorization: `Bearer ${token}` }, timeout: 8000, validateStatus: () => true });
+    if (r.status === 200) {
+      result.current = r.data.endpoint || "";
+      result.active = Boolean(r.data.active);
+      result.ok = result.current === result.expected && result.active;
+    } else {
+      result.error = `LINE API ${r.status}: ${JSON.stringify(r.data).slice(0, 120)}`;
+    }
+  } catch (err) { result.error = err.message; }
+  return result;
+}
+
+app.get("/admin/audit", async (req, res) => {
+  if (!poolAdminCheck(req, res)) return;
+  const slugs = poolListSlugs();
+  const results = [];
+  for (const slug of slugs) { results.push(await poolProbe(slug)); }
+  const summary = {
+    ok: results.filter(r => r.ok).length,
+    misconfigured: results.filter(r => !r.ok && r.hasToken && !r.error).length,
+    errors: results.filter(r => r.error).length,
+    total: results.length,
+  };
+  res.json({ ts: new Date().toISOString(), service: "g2g_ai_pool", summary, results });
+});
+
+app.post("/admin/audit/repair", async (req, res) => {
+  if (!poolAdminCheck(req, res)) return;
+  const slugs = poolListSlugs();
+  const repaired = []; const skipped = [];
+  for (const slug of slugs) {
+    const probe = await poolProbe(slug);
+    if (probe.ok) { skipped.push({ slug, reason: "already correct", current: probe.current }); continue; }
+    if (probe.error && !probe.current) { skipped.push({ slug, reason: probe.error }); continue; }
+    const token = process.env[`LINE_TOKEN_${slug}`];
+    try {
+      const r = await POOL_AXIOS.put("https://api.line.me/v2/bot/channel/webhook/endpoint",
+        { endpoint: probe.expected },
+        { headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" }, timeout: 8000, validateStatus: () => true });
+      if (r.status === 200) {
+        repaired.push({ slug, from: probe.current, to: probe.expected });
+        await POOL_AXIOS.post("https://api.line.me/v2/bot/channel/webhook/test", {},
+          { headers: { Authorization: `Bearer ${token}` }, timeout: 8000, validateStatus: () => true });
+      } else {
+        skipped.push({ slug, reason: `PUT ${r.status}: ${JSON.stringify(r.data).slice(0, 100)}` });
+      }
+    } catch (err) { skipped.push({ slug, reason: err.message }); }
+  }
+  res.json({ ts: new Date().toISOString(), service: "g2g_ai_pool", repaired, skipped });
+});
+
 // --- TikTok URL ownership verification file ---
 app.get("/tiktokUYxxqBvp83IoRTKxwrUXN6ah4xAqTUhI.txt", (_req, res) => {
   res.setHeader("Content-Type", "text/plain");
@@ -2421,9 +2506,9 @@ app.post("/line/webhook/:channelIdExt", async (req, res) => {
           channel_id_ext: channelIdExt,
           name: cf.channel_name || channelIdExt,
           type: cf.channel_type?.name || cf.channel_type || "line_oa",
-          tier: cf.tier?.name || cf.tier || "free",
+          tier: cf.tier?.name || cf.tier || "pro", // LINE OA = internal tools, never throttle by default
           channel_adjust: cf.channel_adjust ?? 1.0,
-          daily_quota_tokens: cf.daily_quota_tokens ?? 200000,
+          daily_quota_tokens: cf.daily_quota_tokens ?? 999999999,
           webhook_secret: null,
         });
       }
@@ -6717,6 +6802,42 @@ app.get("/api/briefing/all-latest", (req, res) => {
 });
 
 console.log("[G2G] Daily Briefing System registered ✅");
+
+// --- Scheduler: Daily Quota Reset 00:00 ICT (17:00 UTC prev day) ---
+// Resets daily_used_tokens for ALL wallets so LINE bots never stay blocked
+async function resetDailyWalletTokens() {
+  try {
+    console.log("[quota-reset] Resetting daily_used_tokens for all wallets...");
+    const r = await airtableGet("Customer_Wallet", { maxRecords: 500 });
+    const records = r.records || [];
+    let count = 0;
+    for (const rec of records) {
+      if ((rec.fields.daily_used_tokens || 0) > 0) {
+        await airtablePatch("Customer_Wallet", rec.id, { daily_used_tokens: 0 });
+        count++;
+      }
+    }
+    console.log(`[quota-reset] Reset ${count}/${records.length} wallets ✅`);
+  } catch (err) {
+    console.error("[quota-reset] Error:", err.message);
+  }
+}
+function scheduleDailyQuotaReset() {
+  const now = new Date();
+  const nextMidnight = new Date();
+  nextMidnight.setUTCHours(17, 0, 0, 0); // 00:00 ICT = 17:00 UTC
+  if (nextMidnight <= now) nextMidnight.setDate(nextMidnight.getDate() + 1);
+  const msUntil = nextMidnight - now;
+  const hUntil = Math.round(msUntil / 3600000 * 10) / 10;
+  console.log(`[quota-reset] Next reset in ${hUntil}h (${nextMidnight.toISOString()})`);
+  setTimeout(async () => {
+    await resetDailyWalletTokens();
+    scheduleDailyQuotaReset(); // reschedule for next midnight
+  }, msUntil);
+}
+// Run once at startup to clear any stale counters from today
+resetDailyWalletTokens();
+scheduleDailyQuotaReset();
 
 // --- Scheduler: Daily Briefing 08:00 ICT (01:00 UTC) ---
 function scheduleDailyBriefing() {
